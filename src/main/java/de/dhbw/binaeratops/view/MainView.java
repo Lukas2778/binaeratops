@@ -1,31 +1,26 @@
-package de.dhbw.binaeratops.views.main;
-
-import java.util.Optional;
+package de.dhbw.binaeratops.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
-import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.PageTitle;
-import de.dhbw.binaeratops.views.main.MainView;
-import de.dhbw.binaeratops.views.helloworld.HelloWorldView;
-import de.dhbw.binaeratops.views.list.ListView;
-import de.dhbw.binaeratops.views.personal.PersonalView;
-import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.dependency.CssImport;
+import de.dhbw.binaeratops.model.entitys.Dummy;
+
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -85,8 +80,9 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Hello World", HelloWorldView.class), createTab("List", ListView.class),
-                createTab("Personal", PersonalView.class)};
+        return new Tab[]{createTab("Dummy", DummyView.class)};
+//        return new Tab[]{createTab("List", ListView.class), // Beispiel
+//                createTab("Personal", PersonalView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
