@@ -6,8 +6,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.vaadin.artur.helpers.LaunchUtil;
 
 /**
- * The entry point of the Spring Boot application. Jeah!
+ * The entry point of the Spring Boot application.
  */
+
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
