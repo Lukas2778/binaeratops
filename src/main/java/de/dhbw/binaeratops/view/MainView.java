@@ -18,7 +18,6 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import de.dhbw.binaeratops.model.entitys.Dummy;
 
 import java.util.Optional;
 
