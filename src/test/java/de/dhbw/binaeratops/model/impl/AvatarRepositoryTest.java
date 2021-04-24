@@ -37,7 +37,7 @@ import java.util.List;
  * @see Avatar
  */
 @RunWith(SpringRunner.class)
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class AvatarRepositoryTest {
