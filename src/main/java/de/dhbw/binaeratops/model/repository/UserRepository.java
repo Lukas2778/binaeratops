@@ -2,15 +2,33 @@ package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.model.entitys.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * Repository für einen Benutzer.
+ *
+ * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Benutzers aus der Datenbank bereit.
+ *
+ * @see User
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {
 
+    /**
+     * Sucht alle Benutzereinträge aus der Datenbank zurück.
+     * @return Alle Benutzereinträge aus der Datenbank.
+     */
     @Override
-    public List<User> findAll();
+    @NonNull
+    List<User> findAll();
 
-    public List<User> findByName(String name);
+    /**
+     * Sucht den Benutzer mit dem übergebenen Benutzernamen.
+     * @param AName Zu suchender Benutzername.
+     * @return Benutzer mit diesem Benutzernamen.
+     */
+    User findByName(String AName);
 }
