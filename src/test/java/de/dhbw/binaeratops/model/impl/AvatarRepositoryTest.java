@@ -5,16 +5,16 @@ import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Gender;
 import de.dhbw.binaeratops.model.repository.AvatarRepository;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,14 +33,13 @@ import java.util.List;
  * @see AvatarI
  * @see Avatar
  */
-@RunWith(SpringRunner.class)
-@ActiveProfiles("test")
-@DataJpaTest
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@RunWith(MockitoJUnitRunner.class)
 public class AvatarRepositoryTest {
 
-    @Autowired
-    AvatarRepository avatarRepo;
+    @Mock
+    private AvatarRepository avatarRepo;
+
+    ArrayList<Avatar> createdAvatars = new ArrayList<>();
 
     private Avatar avatar2;
     private Avatar avatar3;
@@ -51,19 +50,27 @@ public class AvatarRepositoryTest {
     @Before
     public void init() {
         Avatar avatar1 = new Avatar();
+        avatar1.setAvatarId(1L);
         avatar1.setGender(Gender.MALE);
         avatar1.setName("Test");
-        avatarRepo.save(avatar1);
+        createdAvatars.add(avatar1);
 
         avatar2 = new Avatar();
+        avatar2.setAvatarId(2L);
         avatar2.setName("Pedro Alfonso");
         avatar2.setGender(Gender.DIVERSE);
-        avatarRepo.save(avatar2);
+        createdAvatars.add(avatar2);
 
         avatar3 = new Avatar();
+        avatar3.setAvatarId(3L);
         avatar3.setName("Marko Polo");
         avatar3.setGender(Gender.FEMALE);
-        avatarRepo.save(avatar3);
+        createdAvatars.add(avatar3);
+    }
+
+    @After
+    public void reset() {
+        createdAvatars = new ArrayList<>();
     }
 
     /**
@@ -72,6 +79,7 @@ public class AvatarRepositoryTest {
      */
     @Test
     public void testFindAll() {
+        Mockito.when(avatarRepo.findAll()).thenReturn(createdAvatars);
         List<Avatar> avatars = avatarRepo.findAll();
         Assert.assertEquals(3, avatars.size());
     }
@@ -82,8 +90,8 @@ public class AvatarRepositoryTest {
      */
     @Test
     public void testFindByAvatarId() {
+        Mockito.when(avatarRepo.findByAvatarId(avatar2.getAvatarId())).thenReturn(avatar2);
         AvatarI avatar = avatarRepo.findByAvatarId(avatar2.getAvatarId());
-        System.out.println(avatar.toString());
         Assert.assertEquals("Pedro Alfonso", avatar.getName());
     }
 
@@ -93,6 +101,7 @@ public class AvatarRepositoryTest {
      */
     @Test
     public void testUpdateAvatar() {
+        Mockito.when(avatarRepo.findByAvatarId(avatar2.getAvatarId())).thenReturn(avatar2);
         AvatarI avatar = avatarRepo.findByAvatarId(avatar2.getAvatarId());
         avatar.setGender(Gender.FEMALE);
         AvatarI avatarModified = avatarRepo.findByAvatarId(avatar2.getAvatarId());
@@ -105,7 +114,10 @@ public class AvatarRepositoryTest {
      */
     @Test
     public void testDeleteAvatar() {
+        Mockito.doNothing().when(avatarRepo).delete(avatar3);
         avatarRepo.delete(avatar3);
+        createdAvatars.remove(avatar3);
+        Mockito.when(avatarRepo.findAll()).thenReturn(createdAvatars);
         List<Avatar> avatars = avatarRepo.findAll();
         Assert.assertEquals(2, avatars.size());
     }
