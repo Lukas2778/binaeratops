@@ -21,21 +21,21 @@ public class AuthServiceTest {
 
     //@TODO tests mocken für datenbank
 
-    @Test
-    void authenticateTest(){
-
-        try {
-            as.authenticate("Hans","pass");
-        } catch (AuthException e) {
-            e.printStackTrace();
-        }
-        assertEquals(VaadinSession.getCurrent().getAttribute(User.class),user);
-    }
-
-    @Test
-    void bestätigeTest(){
-
-
-    }
+//    @Test
+//    void authenticateTest(){
+//
+//        try {
+//            as.authenticate("Hans","pass");
+//        } catch (AuthException e) {
+//            e.printStackTrace();
+//        }
+//        assertEquals(VaadinSession.getCurrent().getAttribute(User.class),user);
+//    }
+//
+//    @Test
+//    void bestätigeTest(){
+//
+//
+//    }
 
 }
