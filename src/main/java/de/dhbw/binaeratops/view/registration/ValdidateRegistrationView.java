@@ -18,17 +18,20 @@ public class ValdidateRegistrationView extends VerticalLayout {
     @Autowired
     AuthServiceI authServiceI;
 
+    /**
+     * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
+     */
     public ValdidateRegistrationView() {
         TextField name=new TextField("Benutzername");
         IntegerField code=new IntegerField("Code");
-        Button submit=new Button("Validieren");
+        Button submit=new Button("Account validieren");
         submit.addClickListener(e->{
                     authServiceI.confirm(name.getValue(),code.getValue());
                     UI.getCurrent().getPage().setLocation("dummy");
                 });
 
         add(
-                new H1("bestätige deine E-Mail"),
+                new H1("Bitte bestätige deine E-Mail Adresse!"),
                 name,
                 code,
                 submit

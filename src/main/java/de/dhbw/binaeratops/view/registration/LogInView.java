@@ -14,14 +14,15 @@ import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-
-
 @Route("login")
-@PageTitle("Binäratops Anmeldung")
+@PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
 
-
+    /**
+     * Login Fenster auf der Webapplikation.
+     * Dies ist das erste Fenster, das der Benutzer sieht.
+     * @param authServiceI Übergabe des Authentifizierungsservices.
+     */
     public LogInView(@Autowired AuthServiceI authServiceI) {
 
         TextField name=new TextField("Benutzername");
@@ -37,7 +38,7 @@ public class LogInView extends VerticalLayout {
             }
         });
         add(
-                new H1("Binäratops Dungeon Anmeldung"),
+                new H1("Binäratops - Anmeldung"),
                 name,
                 password,
                 loginButton,

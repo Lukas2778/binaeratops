@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.service.impl.registration;
 
-
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 
@@ -28,60 +27,59 @@ public class AuthService implements AuthServiceI {
     @Autowired
     MailService mailService;
 
-
-
     @Override
-    public void authenticate(String name, String password) throws AuthException  {
-        User user=userRepository.findByName(name);
+    public void authenticate(String AName, String APassword) throws AuthException  {
+        User user=userRepository.findByName(AName);
 
-        if(user != null && user.checkPassword(password)){
+        if(user != null && user.checkPassword(APassword)){
             VaadinSession.getCurrent().setAttribute(User.class,user);
             createRoutes();
         }else {
             throw new AuthException();
         }
-
     }
 
     @Override
-    public void register(String name, String password, String eMail) throws RegistrationException {
+    public void register(String AName, String APassword, String AEMail) throws RegistrationException {
         int code=new Random().nextInt(999999);
 
-        if(userRepository.findByName(name)!=null){
+        if(userRepository.findByName(AName)!=null){
             throw new RegistrationException();
         }
 
-        User user= new User(name,eMail,password,code,false);
+        User user= new User(AName,AEMail,APassword,code,false);
         mailService.sendVerificationMail(user,code);
         userRepository.save(user);
     }
 
     @Override
-    public boolean confirm(String userName, int code) {
-        User user = userRepository.findByName(userName);
-        if(user.getCode()==code && !user.isVerified())
+    public boolean confirm(String AUserName, int ACode) {
+        User user = userRepository.findByName(AUserName);
+        if(user.getCode()==ACode && !user.isVerified())
             return true;
         return false;
     }
 
     @Override
-    public void sendConfirmationEmail(long userID) {
+    public void sendConfirmationEmail(long AUserId) {
 
     }
 
     @Override
-    public void changePassword(long userID, String newPassword, int code) {
+    public void changePassword(long AUserId, String ANewPassword, int ACode) {
 
     }
 
     @Override
-    public void changePassword(long userID, String newPassword, String oldPassword) {
+    public void changePassword(long AUserId, String ANewPassword, String AOldPassword) {
 
     }
 
-
+    /**
+     * Seiten Verlinkung vornehmen. @TODO
+     */
     private void createRoutes(){
-        getRoutsForMenue().stream()
+        getRoutsForMenu().stream()
                 .forEach(r->
                         RouteConfiguration.forSessionScope().setRoute(r.getRout(),r.getView(), MainView.class));
         getRouts().stream()
@@ -89,19 +87,22 @@ public class AuthService implements AuthServiceI {
                         RouteConfiguration.forSessionScope().setRoute(r.getRout(),r.getView()));
     }
 
-    private List<AuthorizedRoute> getRoutsForMenue(){
+    /**
+     * Auflisten der Routen. @TODO
+     * @return Rückgabe Routen.
+     */
+    private List<AuthorizedRoute> getRoutsForMenu(){
         List<AuthorizedRoute> returnList= new ArrayList<>();
-
         returnList.add(new AuthorizedRoute("dummy","Dumm", DummyView.class));
-
         return returnList;
     }
 
+    /**
+     * @TODO
+     * @return @TODO
+     */
     private  List<AuthorizedRoute> getRouts(){
         List<AuthorizedRoute> returnList= new ArrayList<>();
-
-
-
         return returnList;
     }
 }

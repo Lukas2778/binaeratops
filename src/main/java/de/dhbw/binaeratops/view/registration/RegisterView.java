@@ -12,35 +12,36 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
-import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
 @Route("register")
-@PageTitle("Binäratops Registrierung")
+@PageTitle("Binäratops - Registrierung")
 public class RegisterView extends VerticalLayout {
     @Autowired
     AuthServiceI authServiceI;
 
+    /**
+     * Registrierungs Fenster. Erscheint, wenn auf den Button 'Registrieren' geklickt wird.
+     */
     public RegisterView() {
         TextField name=new TextField("Benutzername");
         TextField eMail = new TextField("E-Mail Adresse");
         PasswordField password=new PasswordField("Passwort");
-        PasswordField password2=new PasswordField("wiederhole Passwort");
+        PasswordField verPassword=new PasswordField("Passwort wiederholen");
 
         Button submit=new Button("Registrieren");
 
         submit.addClickListener(e->
                 {
-                    register(name.getValue(),eMail.getValue(),password.getValue(),password2.getValue());
+                    checkRegistration(name.getValue(),eMail.getValue(),password.getValue(),verPassword.getValue());
                 });
 
         add(
-                new H1("Registrierung"),
+                new H1("Binäratops - Registrierung"),
                 name,
                 eMail,
                 password,
-                password2,
+                verPassword,
                 submit,
                 new RouterLink("Anmeldung",LogInView.class),
                 new RouterLink("Validierung",ValdidateRegistrationView.class)
@@ -48,20 +49,26 @@ public class RegisterView extends VerticalLayout {
 
     }
 
-    private void register(String name,String eMail,String password, String password2) {
-        if (name.trim().isEmpty()) {
-            Notification.show("geben Sie einen namen ein");
-        } else if (password.isEmpty()) {
-            Notification.show("geben sie ein Passwort ein");
-        } else if (!password.equals(password2)) {
-            Notification.show("beide Passwörter müssen gleich sein");
+    /**
+     * Überprüfung der Eingaben der Registrierung.
+     * @param AName Übergabe des eingegebenen Benutzernamen.
+     * @param AEMail Übergabe der eingegebenen E-Mail Adresse.
+     * @param APassword Übergabe des eingegebenen Passworts.
+     * @param AVerPassword Übergabe des eingegebenen Passworts zur Verifizierung.
+     */
+    private void checkRegistration(String AName,String AEMail,String APassword, String AVerPassword) {
+        if (AName.trim().isEmpty()) {
+            Notification.show("Du musst einen Benutzernamen eingeben!");
+        } else if (APassword.isEmpty()) {
+            Notification.show("Du musst ein Passwort erstellen!");
+        } else if (!APassword.equals(AVerPassword)) {
+            Notification.show("Die Passwörter sind nicht identisch!");
         } else {
             try {
-                authServiceI.register(name, password, eMail);
-
+                authServiceI.register(AName, APassword, AEMail);
                 UI.getCurrent().getPage().setLocation("validateRegistration");
             } catch (RegistrationException e) {
-                Notification.show("der Name ist bereits vergeben");
+                Notification.show("Der eingegebene Benutzername ist leider bereits vergeben. Wähle einen anderen!");
 
             }
 
