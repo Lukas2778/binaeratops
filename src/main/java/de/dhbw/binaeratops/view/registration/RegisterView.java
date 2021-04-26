@@ -14,6 +14,8 @@ import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ValidationException;
+
 @Route("register")
 @PageTitle("Binäratops - Registrierung")
 public class RegisterView extends VerticalLayout {
@@ -28,8 +30,10 @@ public class RegisterView extends VerticalLayout {
         TextField eMail = new TextField("E-Mail Adresse");
         PasswordField password=new PasswordField("Passwort");
         PasswordField verPassword=new PasswordField("Passwort wiederholen");
-
         Button submit=new Button("Registrieren");
+
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
 
         submit.addClickListener(e->
                 {
@@ -64,12 +68,14 @@ public class RegisterView extends VerticalLayout {
         } else if (!APassword.equals(AVerPassword)) {
             Notification.show("Die Passwörter sind nicht identisch!");
         } else {
-            try {
+            try{
                 authServiceI.register(AName, APassword, AEMail);
                 UI.getCurrent().getPage().setLocation("validateRegistration");
             } catch (RegistrationException e) {
                 Notification.show("Der eingegebene Benutzername ist leider bereits vergeben. Wähle einen anderen!");
 
+            }catch (Exception e){
+                Notification.show("Überprüfe bitte deine E-Mail Adresse!");
             }
 
         }

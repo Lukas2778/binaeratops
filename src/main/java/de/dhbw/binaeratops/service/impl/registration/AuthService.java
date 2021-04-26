@@ -50,9 +50,6 @@ public class AuthService implements AuthServiceI {
         User user= new User(AName,AEMail,APassword,code,false);
         userRepository.save(user);
         mailService.sendVerificationMail(user,code);
-
-
-
     }
 
     @Override

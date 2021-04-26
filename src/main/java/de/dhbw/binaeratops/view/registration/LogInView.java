@@ -9,6 +9,7 @@ import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -16,6 +17,7 @@ import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@RouteAlias("") //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @Route("login")
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
@@ -30,6 +32,10 @@ public class LogInView extends VerticalLayout {
         TextField name=new TextField("Benutzername");
         PasswordField password=new PasswordField("Passwort");
         Button loginButton =new Button("Anmelden");
+
+        setSizeFull();
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
 
         loginButton.addClickListener(e->
         {

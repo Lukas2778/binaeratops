@@ -25,6 +25,10 @@ public class ValdidateRegistrationView extends VerticalLayout {
         TextField name=new TextField("Benutzername");
         IntegerField code=new IntegerField("Code");
         Button submit=new Button("Account validieren");
+
+        setJustifyContentMode(JustifyContentMode.CENTER);
+        setAlignItems(Alignment.CENTER);
+
         submit.addClickListener(e->{
                     authServiceI.confirm(name.getValue(),code.getValue());
                     UI.getCurrent().getPage().setLocation("login");
