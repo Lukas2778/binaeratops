@@ -53,7 +53,7 @@ public class LogInView extends VerticalLayout {
                     Notification.show("Sie sind bereits angemeldet.");
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());
-                    UI.getCurrent().navigate("dummy");
+                    UI.getCurrent().navigate("aboutUs");
                 }
 
 

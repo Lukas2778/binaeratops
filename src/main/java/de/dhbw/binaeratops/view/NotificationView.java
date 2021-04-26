@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 /**
  * Oberfläche des Tabs 'Mitteilungen'
  */
-@Route(value = "notification",layout = MainView.class)
+//@Route(value = "notification",layout = MainView.class)
 @PageTitle("Mitteilungen")
 public class NotificationView extends HorizontalLayout {
     /**

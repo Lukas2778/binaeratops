@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 /**
  * Oberfläche des Tabs 'Eigene Dungeons'
  */
-@Route(value = "myDungeons",layout = MainView.class)
+//@Route(value = "myDungeons",layout = MainView.class)
 @PageTitle("Eigene Dungeons")
 public class MyDungeonsView extends HorizontalLayout {
     /**

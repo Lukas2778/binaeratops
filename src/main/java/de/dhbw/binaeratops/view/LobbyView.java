@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 /**
  * Oberfläche des Tabs 'Lobby'
  */
-@Route(value = "lobby",layout = MainView.class)
+//@Route(value = "lobby",layout = MainView.class)
 @PageTitle("Lobby")
 public class LobbyView extends HorizontalLayout {
     /**

@@ -6,13 +6,10 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.UserRepository;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.view.DummyView;
-import de.dhbw.binaeratops.view.MainView;
+import de.dhbw.binaeratops.view.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +62,6 @@ public class AuthService implements AuthServiceI {
             userRepository.save(user);
             return true;
         }
-
         return false;
     }
 
@@ -76,13 +72,11 @@ public class AuthService implements AuthServiceI {
             int code=new Random().nextInt(999999);
             mailService.sendPasswordMail(user, code);
             user.setCode(code);
-            user.setVerified(false);
+            //user.setVerified(false);
             userRepository.save(user);
         }else{
             throw new FalseUserException();
         }
-
-
     }
 
     @Override
@@ -122,7 +116,10 @@ public class AuthService implements AuthServiceI {
      */
     private List<AuthorizedRoute> getRoutsForMenu(){
         List<AuthorizedRoute> returnList= new ArrayList<>();
-        returnList.add(new AuthorizedRoute("dummy","Dumm", DummyView.class));
+        returnList.add(new AuthorizedRoute("aboutUs","Über uns", AboutUsView.class));
+        returnList.add(new AuthorizedRoute("lobby","Lobby", LobbyView.class));
+        returnList.add(new AuthorizedRoute("myDungeons","Eigene Dungeons", MyDungeonsView.class));
+        returnList.add(new AuthorizedRoute("notification","Mitteilungen", NotificationView.class));
         return returnList;
     }
 

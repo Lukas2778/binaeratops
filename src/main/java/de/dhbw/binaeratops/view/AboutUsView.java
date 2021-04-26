@@ -9,7 +9,7 @@ import com.vaadin.flow.router.Route;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-@Route(value = "aboutUs",layout = MainView.class)
+//@Route(value = "aboutUs",layout = MainView.class)
 @PageTitle("Über Uns")
 public class AboutUsView extends HorizontalLayout {
 

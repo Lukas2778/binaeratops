@@ -51,7 +51,8 @@
     "@vaadin/vaadin-upload": "4.4.1",
     "@wdio/cli": "^7.5.2",
     "@webcomponents/webcomponentsjs": "^2.2.10",
-    "lit-element": "2.4.0"
+    "lit-element": "2.4.0",
+    "@vaadin/vaadin-core-shrinkwrap": "14.5.2"
   },
   "devDependencies": {
     "@wdio/allure-reporter": "^7.5.2",
@@ -137,6 +138,6 @@
       "ts-loader": "8.0.12",
       "typescript": "4.0.3"
     },
-    "hash": "a0428fc7dddfcf7426c5046c239e50d97623efd2d9c9888a899dcf6ad2bec631"
+    "hash": "f79ee3b1d045cfc2c0595648c45da42ddef65301038a86bee23fdd3704f8166e"
   }
 }
