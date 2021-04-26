@@ -27,7 +27,7 @@ import org.junit.Test;
 //@DataJpaTest
 //@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
 public class AvatarRepositoryTest {
-
+//
 //    @Autowired
 //    AvatarRepository avatarRepo;
 //

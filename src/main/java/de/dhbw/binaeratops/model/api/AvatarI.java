@@ -94,15 +94,17 @@ public interface AvatarI {
      */
     void setName(String AName);
 
+    // TODO Invenatar hinzufügen zum Avatar.
+
     /**
-     * TODO Überarbeiten: Inventar hinzufügen zum Avatar.
-     * @return
+     * Gibt die Inventar-ID zurück.
+     * @return Inventar-ID.
      */
     Long getInventoryId();
 
     /**
-     * TODO Überarbeiten: Inventar hinzufügen zum Avatar.
-     * @param AInventoryId
+     * Setzt die InventarID.
+     * @param AInventoryId Inventar-ID.
      */
     void setInventoryId(Long AInventoryId);
 
