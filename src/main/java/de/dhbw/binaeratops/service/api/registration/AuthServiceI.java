@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.api.registration;
 
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
+import de.dhbw.binaeratops.service.impl.registration.FalseUserException;
 import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
 
@@ -36,17 +37,17 @@ public interface AuthServiceI {
 
     /**
      * Senden der E-Mail zur Bestätigung nach der Codeeingabe zur erfolgreichen Registrierung an der Webapplikation.
-     * @param AUserId Übergabe der BenutzerID
+     * @param AUserName Übergabe der BenutzerID
      */
-    void sendConfirmationEmail(long AUserId);
+    void sendConfirmationEmail(String AUserName) throws FalseUserException;
 
     /**
      * Bestätigung zur Passwortänderung eines Benutzers.
-     * @param AUserId Übergabe der BenutzerID.
+     * @param AUserName Übergabe der BenutzerID.
      * @param ANewPassword Neu zu setzendes Passwort.
-     * @param ACode Bestätigungscode, welcher per E-Mail gesendet wurde.
+     * @param ACode
      */
-    void changePassword(long AUserId, String ANewPassword, int ACode);
+    void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException;
 
     /**
      * Passwortänderung eines Benutzers.
