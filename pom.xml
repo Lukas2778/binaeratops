@@ -11,6 +11,7 @@
     <properties>
         <java.version>11</java.version>
         <vaadin.version>14.5.2</vaadin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     </properties>
 
     <parent>
