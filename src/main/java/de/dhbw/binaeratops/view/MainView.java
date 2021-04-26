@@ -65,7 +65,7 @@ public class MainView extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "Binäratops logo"));
+        logoLayout.add(new Image("images/Binaeratops.png", "Binäratops logo"));
         logoLayout.add(new H1("Binäratops"));
         layout.add(logoLayout, menu);
         return layout;
@@ -81,7 +81,12 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Dummy", DummyView.class)};
+        return new Tab[]{
+                createTab("Über uns", AboutUsView.class),
+                createTab("Mitteilungen", NotificationView.class),
+                createTab("Lobby", LobbyView.class),
+                createTab("Eigene Dungeons", MyDungeonsView.class)
+        };
 //        return new Tab[]{createTab("List", ListView.class), // Beispiel
 //                createTab("Personal", PersonalView.class)};
     }

@@ -1,6 +1,11 @@
 {
   "name": "no-name",
   "license": "UNLICENSED",
+  "scripts": {
+    "test": "mvn test",
+    "e2e": "npx wdio run ./wdio.conf.js",
+    "allure": "allure generate ./target/webdriver/allure-results && allure open"
+  },
   "dependencies": {
     "@polymer/iron-icon": "3.0.1",
     "@polymer/iron-list": "3.1.0",
@@ -44,16 +49,27 @@
     "@vaadin/vaadin-text-field": "2.8.4",
     "@vaadin/vaadin-time-picker": "2.4.0",
     "@vaadin/vaadin-upload": "4.4.1",
+    "@wdio/cli": "^7.5.2",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "lit-element": "2.4.0"
   },
   "devDependencies": {
+    "@wdio/allure-reporter": "^7.5.2",
+    "@wdio/cli": "^7.5.2",
+    "@wdio/dot-reporter": "^7.5.2",
+    "@wdio/local-runner": "^7.5.2",
+    "@wdio/mocha-framework": "^7.5.2",
+    "@wdio/sync": "^7.3.1",
+    "allure-commandline": "^2.13.8",
     "chokidar": "^3.5.0",
+    "chromedriver": "^90.0.0",
     "compression-webpack-plugin": "4.0.1",
     "copy-webpack-plugin": "5.1.2",
     "raw-loader": "3.1.0",
     "ts-loader": "8.0.12",
     "typescript": "4.0.3",
+    "wdio-allure-reporter": "^0.8.3",
+    "wdio-chromedriver-service": "^7.0.0",
     "webpack": "4.42.0",
     "webpack-babel-multi-target-plugin": "2.3.3",
     "webpack-cli": "3.3.11",

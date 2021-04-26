@@ -121,10 +121,10 @@ public class User implements UserI {
     // TODO Equals Methoden anpassen + Javadoc
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+    public boolean equals(Object AObject) {
+        if (this == AObject) return true;
+        if (AObject == null || getClass() != AObject.getClass()) return false;
+        User user = (User) AObject;
         return id == user.id && name.equals(user.name);
     }
 

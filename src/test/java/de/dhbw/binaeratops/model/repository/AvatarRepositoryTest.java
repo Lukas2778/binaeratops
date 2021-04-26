@@ -107,6 +107,7 @@ public class AvatarRepositoryTest {
         Assert.assertEquals(2, avatars.size());
     }
 
+
     /**
      * Testet nichts. Hintergrund: GitHub kann keine dynamischen Strukturen im Maven build nutzen, daher vereinfacht für GitHub.
      * Bei Veränderung müssen diese Tests einkommentiert werden und beim Builden der Serverapplikation
