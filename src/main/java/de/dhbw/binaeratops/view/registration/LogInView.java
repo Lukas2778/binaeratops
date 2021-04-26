@@ -15,7 +15,10 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
+import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.ValidationException;
 
 @RouteAlias("") //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @Route("login")
@@ -52,6 +55,9 @@ public class LogInView extends VerticalLayout {
 
             } catch (AuthException authException) {
                 Notification.show("Fehler bei der Anmeldung. Prüfen Sie ihre Daten!");
+            } catch (NotVerifiedException notVerifiedException){
+                Notification.show("Dein Account ist noch nicht validiert! Bitte gib deinen Code, den du von uns per E-Mail erhalten hast ein.");
+                UI.getCurrent().navigate("validateRegistration");
             }
         });
         add(

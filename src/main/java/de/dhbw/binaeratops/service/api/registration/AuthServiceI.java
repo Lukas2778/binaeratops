@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.api.registration;
 
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
+import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
 
 /**
@@ -14,7 +15,7 @@ public interface AuthServiceI {
      * @param APassword Hier muss das Benutzerpasswort eingegeben werden, mit dem der Benutzer sich registriert hat.
      * @throws AuthException Ist der Benutzer nicht registriert, wird eine Exception geworfen.
      */
-    void authenticate(String AName, String APassword) throws AuthException;
+    void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException;
 
     /**
      * Registrierung eines Benutzers an der Webapplikation.

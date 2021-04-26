@@ -28,12 +28,17 @@ public class AuthService implements AuthServiceI {
     MailService mailService;
 
     @Override
-    public void authenticate(String AName, String APassword) throws AuthException  {
+    public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
         User user=userRepository.findByName(AName);
 
         if(user != null && user.checkPassword(APassword)){
-            VaadinSession.getCurrent().setAttribute(User.class,user);
-            createRoutes();
+            if(!user.isVerified()){
+                throw new NotVerifiedException();
+            }
+            else {
+                VaadinSession.getCurrent().setAttribute(User.class, user);
+                createRoutes();
+            }
         }else {
             throw new AuthException();
         }

@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -30,9 +31,13 @@ public class ValdidateRegistrationView extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
 
         submit.addClickListener(e->{
-                    authServiceI.confirm(name.getValue(),code.getValue());
-                    UI.getCurrent().getPage().setLocation("login");
-                });
+            if(authServiceI.confirm(name.getValue(),code.getValue())){
+                UI.getCurrent().getPage().setLocation("login");
+            }
+            else{
+                Notification.show("Bitte überprüfe den eingegebenen Code!");
+            }
+        });
 
         add(
                 new H1("Bitte bestätige deine E-Mail Adresse!"),
