@@ -4,6 +4,7 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
 import de.dhbw.binaeratops.service.impl.registration.AuthService;
+import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -21,21 +22,23 @@ public class AuthServiceTest {
 
     //@TODO tests mocken für datenbank
 
-//    @Test
-//    void authenticateTest(){
-//
-//        try {
-//            as.authenticate("Hans","pass");
-//        } catch (AuthException e) {
-//            e.printStackTrace();
-//        }
-//        assertEquals(VaadinSession.getCurrent().getAttribute(User.class),user);
-//    }
-//
-//    @Test
-//    void bestätigeTest(){
-//
-//
-//    }
+    @Test
+    void authenticateTest(){
+
+        try {
+            as.authenticate("Hans","pass");
+        } catch (AuthException e) {
+            e.printStackTrace();
+        } catch (NotVerifiedException e){
+            e.printStackTrace();
+        }
+        assertEquals(VaadinSession.getCurrent().getAttribute(User.class),user);
+    }
+
+    @Test
+    void verifyTest(){
+
+
+    }
 
 }
