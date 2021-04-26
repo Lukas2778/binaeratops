@@ -7,6 +7,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -18,7 +19,6 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
-import de.dhbw.binaeratops.model.entitys.Dummy;
 
 import java.util.Optional;
 
@@ -51,6 +51,7 @@ public class MainView extends AppLayout {
         viewTitle = new H1();
         layout.add(viewTitle);
         layout.add(new Avatar());
+        layout.add(new Anchor("/logout","Log out    "));
         return layout;
     }
 
@@ -64,7 +65,7 @@ public class MainView extends AppLayout {
         HorizontalLayout logoLayout = new HorizontalLayout();
         logoLayout.setId("logo");
         logoLayout.setAlignItems(FlexComponent.Alignment.CENTER);
-        logoLayout.add(new Image("images/logo.png", "Binäratops logo"));
+        logoLayout.add(new Image("images/Binaeratops.png", "Binäratops logo"));
         logoLayout.add(new H1("Binäratops"));
         layout.add(logoLayout, menu);
         return layout;
@@ -80,7 +81,12 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Dummy", DummyView.class)};
+        return new Tab[]{
+                createTab("Über uns", AboutUsView.class),
+                createTab("Mitteilungen", NotificationView.class),
+                createTab("Lobby", LobbyView.class),
+                createTab("Eigene Dungeons", MyDungeonsView.class)
+        };
 //        return new Tab[]{createTab("List", ListView.class), // Beispiel
 //                createTab("Personal", PersonalView.class)};
     }

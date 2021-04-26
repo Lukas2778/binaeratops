@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.dhbw.binaeratops</groupId>
-    <artifactId>binratops</artifactId>
+    <artifactId>binaeratops</artifactId>
     <name>Project base for Spring Boot and Vaadin Flow</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -11,6 +11,7 @@
     <properties>
         <java.version>11</java.version>
         <vaadin.version>14.5.2</vaadin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
     </properties>
 
     <parent>
@@ -126,6 +127,14 @@
         </dependency>
 
     <!--database    -->
+
+        <!--Mail-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.3.4.RELEASE</version>
+        </dependency>
+        <!--Mail-->
 <!--
         <dependency>
             <groupId>com.h2database</groupId>
@@ -133,10 +142,6 @@
         </dependency>
 -->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -181,11 +186,68 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.6.28</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
         <plugins>
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <show>public</show>
+                    <groups>
+                        <group>
+                            <title>(11) Model API</title>
+                            <packages>de.dhbw.binaeratops.model.api*</packages>
+                        </group>
+                        <group>
+                            <title>(12) Model Entitys</title>
+                            <packages>de.dhbw.binaeratops.model.entitys*</packages>
+                        </group>
+                        <group>
+                            <title>(13) Model Repositorys</title>
+                            <packages>de.dhbw.binaeratops.model.repository*</packages>
+                        </group>
+                        <group>
+                            <title>(21) Service API</title>
+                            <packages>de.dhbw.binaeratops.service.api*</packages>
+                        </group>
+                        <group>
+                            <title>(22) Service Implementierung</title>
+                            <packages>de.dhbw.binaeratops.service.impl*</packages>
+                        </group>
+                        <group>
+                            <title>(23) Service Exceptions</title>
+                            <packages>de.dhbw.binaeratops.service.exceptions*</packages>
+                        </group>
+                        <group>
+                            <title>(30) View</title>
+                            <packages>de.dhbw.binaeratops.view*</packages>
+                        </group>
+                    </groups>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
