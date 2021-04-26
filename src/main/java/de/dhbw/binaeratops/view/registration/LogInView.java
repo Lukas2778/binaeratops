@@ -21,16 +21,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ValidationException;
 
+/**
+ * Login Fenster auf der Webapplikation.
+ * Dies ist das erste Fenster, das der Benutzer sieht.
+ *
+ */
 @RouteAlias("")
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @Route("login")
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
-
     /**
-     * Login Fenster auf der Webapplikation.
-     * Dies ist das erste Fenster, das der Benutzer sieht.
-     *
+     * Dies ist der Konstruktor, zum Erzeugen der Login Seite.
      * @param authServiceI Übergabe des Authentifizierungsservices.
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {
@@ -66,7 +68,7 @@ public class LogInView extends VerticalLayout {
                 new H1("Binäratops - Anmeldung"),
                 name,
                 password,
-                new RouterLink("Passwort vergessen", RegisterView.class),//@TODO
+                new RouterLink("Passwort vergessen", ForgotPasswordView.class),
                 loginButton,
                 new RouterLink("Registrieren", RegisterView.class)
         );

@@ -16,6 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ValidationException;
 
+/**
+ * Registrierungs Fenster. Erscheint, wenn auf den Button 'Registrieren' geklickt wird.
+ * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
+ */
 @Route("register")
 @PageTitle("Binäratops - Registrierung")
 public class RegisterView extends VerticalLayout {
@@ -23,7 +27,7 @@ public class RegisterView extends VerticalLayout {
     AuthServiceI authServiceI;
 
     /**
-     * Registrierungs Fenster. Erscheint, wenn auf den Button 'Registrieren' geklickt wird.
+     * Dies ist der Konstruktor, zum Erzeugen der Registrierungsseite.
      */
     public RegisterView() {
         TextField name=new TextField("Benutzername");

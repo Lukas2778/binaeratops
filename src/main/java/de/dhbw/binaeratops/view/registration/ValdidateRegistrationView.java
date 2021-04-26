@@ -12,6 +12,9 @@ import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
+ */
 @Route("validateRegistration")
 @PageTitle("Binäratops Code-Validierung")
 public class ValdidateRegistrationView extends VerticalLayout {
@@ -20,7 +23,7 @@ public class ValdidateRegistrationView extends VerticalLayout {
     AuthServiceI authServiceI;
 
     /**
-     * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
+     * Dies ist der Konstruktor, zum Erzeugen der Validierungs-Registrierungs Seite.
      */
     public ValdidateRegistrationView() {
         TextField name=new TextField("Benutzername");

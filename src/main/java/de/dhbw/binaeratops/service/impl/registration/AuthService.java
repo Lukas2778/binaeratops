@@ -92,12 +92,11 @@ public class AuthService implements AuthServiceI {
             if(ACode==user.getCode()){
                 user.setVerified(true);
                 user.setPassword(ANewPassword);
+                userRepository.save(user);
             }
-
         }else{
             throw new FalseUserException();
         }
-
     }
 
     @Override

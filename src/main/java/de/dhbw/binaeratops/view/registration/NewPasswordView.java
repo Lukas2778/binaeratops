@@ -1,34 +1,36 @@
 package de.dhbw.binaeratops.view.registration;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.FalseUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-
-
-
-
-@Route("newPassword")
+/**
+ * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
+ */
+@Route("setNewPassword")
 public class NewPasswordView extends VerticalLayout {
-
 
     @Autowired
     private AuthServiceI authServiceI;
 
-
+    /**
+     * Dies ist der Konstruktor, zum Erzeugen der Neues-Passwort-wird-gesetzt Seite.
+     */
     public NewPasswordView() {
         TextField name=new TextField("Benutername");
-        PasswordField newPassword=new PasswordField("neues Passwort");
-        PasswordField newPassword2=new PasswordField("neues Passwort");
-        IntegerField code=new IntegerField("Bestätigungscode");
+        PasswordField newPassword=new PasswordField("Neues Passwort");
+        PasswordField newPassword2=new PasswordField("Neues Passwort bestätigen");
+        IntegerField code=new IntegerField("Code eingeben");
         Button submit=new Button("Passwort ändern");
 
         setSizeFull();
@@ -37,14 +39,23 @@ public class NewPasswordView extends VerticalLayout {
 
         submit.addClickListener(e->{
             try {
-                if(newPassword==newPassword2)
-                    authServiceI.changePassword(name.getValue(),newPassword.getValue(), code.getValue());
+                if(newPassword.getValue().equals(newPassword2.getValue())) {
+                    authServiceI.changePassword(name.getValue(), newPassword.getValue(), code.getValue());
+                    UI.getCurrent().navigate("login");
+                }
                 else
-                    Notification.show("beide Passwörter müssen gleich sein");
+                    Notification.show("Die Passwörter stimmen nicht überein!");
             } catch (FalseUserException falseUserException) {
-                Notification.show("Username nicht gefunden");
+                Notification.show("Dieser Benutzername wurde nicht gefunden!");
             }
         });
-
+        add(
+                new H1("Passwort ändern"),
+                name,
+                newPassword,
+                newPassword2,
+                code,
+                submit
+        );
     }
 }
