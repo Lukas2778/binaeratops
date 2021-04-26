@@ -38,4 +38,20 @@ public class MailService{
 
         javaMailSender.send(mail);
     }
+
+    public void sendPasswordMail(User AUser,int ACode) {
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(AUser.getEmail());
+        mail.setFrom("binaeratops@gmail.com");
+        mail.setSubject("Bitte bestätige deine E-Mail Adresse");
+        mail.setText("Hallo "+AUser.getName()+
+                ",\nbitte bestätige, dass du dein Passwort wirklich ändern willst," +
+                " indem du den folgenden Code auf unserer Webseite eingibst:" +
+                "\n\n" +Integer.toString(ACode) +
+                "\n\n" +
+                "Mit freundlichen Grüßen,\n" +
+                "dein Binäratops-Team");
+
+        javaMailSender.send(mail);
+    }
 }

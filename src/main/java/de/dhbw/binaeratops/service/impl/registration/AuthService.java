@@ -25,7 +25,7 @@ public class AuthService implements AuthServiceI {
     UserRepository userRepository;
 
     @Autowired
-    MailService mailService;
+    private MailService mailService;
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
@@ -70,12 +70,33 @@ public class AuthService implements AuthServiceI {
     }
 
     @Override
-    public void sendConfirmationEmail(long AUserId) {
+    public void sendConfirmationEmail(String AUserName) throws FalseUserException {
+        User user= userRepository.findByName(AUserName);
+        if(user!=null){
+            int code=new Random().nextInt(999999);
+            mailService.sendPasswordMail(user, code);
+            user.setCode(code);
+            user.setVerified(false);
+            userRepository.save(user);
+        }else{
+            throw new FalseUserException();
+        }
+
 
     }
 
     @Override
-    public void changePassword(long AUserId, String ANewPassword, int ACode) {
+    public void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException {
+        User user=userRepository.findByName(AUserName);
+        if(user!= null){
+            if(ACode==user.getCode()){
+                user.setVerified(true);
+                user.setPassword(ANewPassword);
+            }
+
+        }else{
+            throw new FalseUserException();
+        }
 
     }
 
@@ -85,7 +106,7 @@ public class AuthService implements AuthServiceI {
     }
 
     /**
-     * Seiten Verlinkung vornehmen. @TODO
+     * Seiten Verlinkung vornehmen ohne Menüe. @TODO
      */
     private void createRoutes(){
         getRoutsForMenu().stream()
@@ -97,7 +118,7 @@ public class AuthService implements AuthServiceI {
     }
 
     /**
-     * Auflisten der Routen. @TODO
+     * Auflisten der Routen, die mit Menüband angezeigt werden. @TODO
      * @return Rückgabe Routen.
      */
     private List<AuthorizedRoute> getRoutsForMenu(){
