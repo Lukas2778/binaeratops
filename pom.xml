@@ -127,6 +127,14 @@
         </dependency>
 
     <!--database    -->
+
+        <!--Mail-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+            <version>2.3.4.RELEASE</version>
+        </dependency>
+        <!--Mail-->
 <!--
         <dependency>
             <groupId>com.h2database</groupId>
@@ -134,10 +142,6 @@
         </dependency>
 -->
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
