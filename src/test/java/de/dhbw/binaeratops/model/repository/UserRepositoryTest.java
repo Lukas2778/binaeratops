@@ -97,13 +97,4 @@ public class UserRepositoryTest {
         List<User> avatars = userRepo.findAll();
         Assert.assertEquals(1, avatars.size());
     }
-
-    /**
-     * Testet nichts. Hintergrund: GitHub kann keine dynamischen Strukturen im Maven build nutzen, daher vereinfacht für GitHub.
-     * Bei Veränderung müssen diese Tests einkommentiert werden und beim Builden der Serverapplikation
-     */
-    @Test
-    public void testNothing() {
-        Assert.assertTrue(true);
-    }
 }
