@@ -27,7 +27,7 @@ public class ValdidateRegistrationView extends VerticalLayout {
         Button submit=new Button("Account validieren");
         submit.addClickListener(e->{
                     authServiceI.confirm(name.getValue(),code.getValue());
-                    UI.getCurrent().getPage().setLocation("dummy");
+                    UI.getCurrent().getPage().setLocation("login");
                 });
 
         add(

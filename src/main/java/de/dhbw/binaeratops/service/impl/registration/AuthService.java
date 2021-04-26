@@ -48,15 +48,22 @@ public class AuthService implements AuthServiceI {
         }
 
         User user= new User(AName,AEMail,APassword,code,false);
-        mailService.sendVerificationMail(user,code);
         userRepository.save(user);
+        mailService.sendVerificationMail(user,code);
+
+
+
     }
 
     @Override
     public boolean confirm(String AUserName, int ACode) {
         User user = userRepository.findByName(AUserName);
-        if(user.getCode()==ACode && !user.isVerified())
+        if(user.getCode()==ACode && !user.isVerified()){
+            user.setVerified(true);
+            userRepository.save(user);
             return true;
+        }
+
         return false;
     }
 

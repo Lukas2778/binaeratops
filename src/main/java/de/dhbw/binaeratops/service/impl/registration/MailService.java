@@ -30,7 +30,7 @@ public class MailService{
         mail.setFrom("binaeratops@gmail.com");
         mail.setSubject("Bitte bestätige deine E-Mail Adresse");
         mail.setText("Hallo "+AUser.getName()+
-                ",\nbitte bestätige deine E-Mail Adreese, indem du den folgenden Code auf unserer Webseite eingibst:" +
+                ",\nbitte bestätige deine E-Mail Adresse, indem du den folgenden Code auf unserer Webseite eingibst:" +
                 "\n\n" +Integer.toString(ACode) +
                         "\n\n" +
                 "Mit freundlichen Grüßen,\n" +
