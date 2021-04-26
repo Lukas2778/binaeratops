@@ -15,6 +15,7 @@ public interface AuthServiceI {
      * @param AName Hier muss der Benutzername eingegeben werden, mit dem der Benutzer sich registriert hat.
      * @param APassword Hier muss das Benutzerpasswort eingegeben werden, mit dem der Benutzer sich registriert hat.
      * @throws AuthException Ist der Benutzer nicht registriert, wird eine Exception geworfen.
+     * @throws NotVerifiedException Hat der Benutzer die E-Mail Verifikation noch nicht abgeschlossen, wird eine Exception geworfen.
      */
     void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException;
 
@@ -38,6 +39,7 @@ public interface AuthServiceI {
     /**
      * Senden der E-Mail zur Bestätigung nach der Codeeingabe zur erfolgreichen Registrierung an der Webapplikation.
      * @param AUserName Übergabe der BenutzerID
+     * @throws FalseUserException Wenn der eingegebene Benutzername nicht existiert, wird eine Exception geworfen.
      */
     void sendConfirmationEmail(String AUserName) throws FalseUserException;
 
@@ -45,7 +47,8 @@ public interface AuthServiceI {
      * Bestätigung zur Passwortänderung eines Benutzers.
      * @param AUserName Übergabe der BenutzerID.
      * @param ANewPassword Neu zu setzendes Passwort.
-     * @param ACode
+     * @param ACode Eingabe des Verifizierungscodes, welcher per E-Mail an den Benutzer gesandt wurde.
+     * @throws FalseUserException Wenn der eingegebene Benutzername nicht existiert, wird eine Exception geworfen.
      */
     void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException;
 
