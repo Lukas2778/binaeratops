@@ -46,12 +46,13 @@ public class MainView extends AppLayout {
         layout.getThemeList().set("dark", true);
         layout.setWidthFull();
         layout.setSpacing(false);
+        layout.setPadding(true);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
         layout.add(new Avatar());
-        layout.add(new Anchor("/logout","Log out    "));
+        layout.add(new Anchor("/logout","Log out"));
         return layout;
     }
 

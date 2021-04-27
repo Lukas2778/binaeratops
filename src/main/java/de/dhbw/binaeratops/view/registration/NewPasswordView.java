@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.view.registration;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -37,6 +38,7 @@ public class NewPasswordView extends VerticalLayout {
         setJustifyContentMode(JustifyContentMode.CENTER);
         setAlignItems(Alignment.CENTER);
 
+        submit.addClickShortcut(Key.ENTER);
         submit.addClickListener(e->{
             try {
                 if(newPassword.getValue().equals(newPassword2.getValue())) {

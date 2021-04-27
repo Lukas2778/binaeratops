@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.view.registration;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -45,6 +46,7 @@ public class LogInView extends VerticalLayout {
         setJustifyContentMode(JustifyContentMode.CENTER);
         setAlignItems(Alignment.CENTER);
 
+        loginButton.addClickShortcut(Key.ENTER);
         loginButton.addClickListener(e ->
         {
             try {
@@ -55,8 +57,6 @@ public class LogInView extends VerticalLayout {
                     authServiceI.authenticate(name.getValue(), password.getValue());
                     UI.getCurrent().navigate("aboutUs");
                 }
-
-
             } catch (AuthException authException) {
                 Notification.show("Fehler bei der Anmeldung. Prüfen Sie ihre Daten!");
             } catch (NotVerifiedException notVerifiedException) {
