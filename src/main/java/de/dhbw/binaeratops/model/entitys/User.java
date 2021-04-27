@@ -98,6 +98,9 @@ public class User implements UserI {
     public void setPasswordHash(String APasswordHash) {
         this.passwordHash = APasswordHash;
     }
+    public void setPassword(String APassword) {
+        this.passwordHash = DigestUtils.sha1Hex(APassword);
+    }
 
     public Integer getCode() {
         return code;

@@ -1,11 +1,14 @@
 package de.dhbw.binaeratops.model.entitys;
 
 
+import de.dhbw.binaeratops.groups.UserGroup;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.*;
 
+@Category({UserGroup.class})
 public class UserTest {
     public User user;
     String password = "12345";
