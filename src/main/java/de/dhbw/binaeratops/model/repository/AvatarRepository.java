@@ -13,6 +13,8 @@ import java.util.List;
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Avatars aus der Datenbank bereit.
  *
  * @see Avatar
+ *
+ * @author Nicolas Haug
  */
 @Repository
 public interface AvatarRepository extends JpaRepository<Avatar, Long> {

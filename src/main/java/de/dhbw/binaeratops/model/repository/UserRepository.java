@@ -13,6 +13,8 @@ import java.util.List;
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Benutzers aus der Datenbank bereit.
  *
  * @see User
+ *
+ * @author Nicolas Haug
  */
 @Repository
 public interface UserRepository extends JpaRepository<User,Long> {

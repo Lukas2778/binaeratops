@@ -1,17 +1,23 @@
 package de.dhbw.binaeratops.model.entitys;
 
 import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Entity Objekt für einen Avatar.
- *
+ * <p>
  * Es repräsentiert die Entity "Avatar" der Datenbank in der Programmlogik.
- *
+ * <p>
  * Es implementiert dazu alle Funktionalitäten der Avatar Schnittstelle.
- *
+ * <p>
  * @see AvatarI
+ *
+ * @author Nicolas Haug
  */
 @Entity
 public class Avatar implements AvatarI {
@@ -157,7 +163,24 @@ public class Avatar implements AvatarI {
         roleId = ARoleId;
     }
 
+    @Override
+    public boolean equals(Object AOther) {
+        boolean equals = this == AOther;
 
+        if (!equals && AOther instanceof Avatar) {
+            Avatar other = (Avatar) AOther;
+            equals = (avatarId == other.avatarId);
+            // && (name == other.name || (name != null &&
+            //                    name.equalsIgnoreCase(other.name)))
+        }
+
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(avatarId);
+    }
 
     @Override
     public String toString() {
@@ -170,5 +193,23 @@ public class Avatar implements AvatarI {
                 .append(name)
                 .append("]");
         return s.toString();
+    }
+
+    /**
+     * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
+     * erwarteten Klasse der Implementation.
+     *
+     * @param AAvatar Objekt.
+     * @return Objekt.
+     * @throws InvalidImplementationException Objekt ungültig.
+     */
+    public static Avatar check(AvatarI AAvatar) throws InvalidImplementationException {
+        if (!(AAvatar instanceof Avatar)) {
+            throw new InvalidImplementationException(-1,
+                    MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
+                            Avatar.class, AAvatar.getClass()));
+        }
+
+        return (Avatar) AAvatar;
     }
 }

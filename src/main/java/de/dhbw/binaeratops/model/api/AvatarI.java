@@ -4,10 +4,14 @@ import de.dhbw.binaeratops.model.entitys.Gender;
 
 /**
  * Schnittstelle für einen Avatar.
- *
+ * <p>
  * Sie stellt alle Funktionalitäten zum Umgang mit einem Avatar bereit.
- *
+ * <p>
  * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.AvatarRepository}.
+ * <p>
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.model.entitys.Avatar}
+ *
+ * @author Nicolas Haug
  */
 public interface AvatarI {
 

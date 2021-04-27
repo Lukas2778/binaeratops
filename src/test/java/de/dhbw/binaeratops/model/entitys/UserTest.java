@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.model.entitys;
 
 
 import de.dhbw.binaeratops.groups.UserGroup;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,5 +28,18 @@ public class UserTest {
     @Before
     public void setup() {
         this.user = new User("Hans", "i19036@hb.dhbw-stuttgart.de", "12345", 345433, true);
+    }
+
+    @Test
+    public void testEquals() {
+        User u = new User();
+        u.setId(23L);
+        u.setName("Pedro");
+
+        User u2 = new User();
+        u2.setId(23L);
+        u2.setName("pedro");
+
+        Assert.assertEquals(true, u.equals(u2));
     }
 }

@@ -1,11 +1,19 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Avatar;
+
+import java.util.List;
+
 /**
  * Schnittstelle für einen Benutzer.
- *
+ * <p>
  * Sie stellt alle Funktionalitäten zum Umgang mit einem Benutzer bereit.
- *
+ * <p>
  * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.UserRepository}.
+ * <p>
+ * Für die Implementierung siehe {@link de.dhbw.binaeratops.model.entitys.User}.
+ *
+ * @author Nicolas Haug
  */
 public interface UserI {
 
@@ -100,4 +108,10 @@ public interface UserI {
      * @param AIsVerified Zu setzender Verifizierungsstatus.
      */
     void setVerified(Boolean AIsVerified);
+
+    /**
+     * Gibt die Liste der Spieleravatare zurück.
+     * @return Avatarliste.
+     */
+    List<Avatar> getAvatars();
 }

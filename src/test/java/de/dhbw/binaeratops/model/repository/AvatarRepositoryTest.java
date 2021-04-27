@@ -30,6 +30,8 @@ import java.util.List;
  * @see AvatarRepository
  * @see AvatarI
  * @see Avatar
+ *
+ * @author Nicolas Haug
  */
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")

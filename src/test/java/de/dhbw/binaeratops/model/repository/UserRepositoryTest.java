@@ -1,7 +1,10 @@
 package de.dhbw.binaeratops.model.repository;
 
 
+import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Gender;
 import de.dhbw.binaeratops.model.entitys.User;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,11 +28,15 @@ import java.util.List;
  *     <li>Einen bestimmten Eintrag mittels Benutzername finden</li>
  *     <li>Einen bestimmten Eintrag aktualisieren</li>
  *     <li>Einen bestimmten Eintrag löschen</li>
+ *     <li>Einen bestimmten Eintrag mit Avatarliste zu speichern</li>
+ *     <li>Einen bestimmten Eintrag mit Avatarliste zu laden</li>
  * </ul>
  *
  * @see UserRepository
  * @see UserI
  * @see User
+ *
+ * @author Nicolas Haug
  */
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -40,7 +47,15 @@ public class UserRepositoryTest {
     @Autowired
     UserRepository userRepo;
 
+    @Autowired
+    AvatarRepository avatarRepo;
+
     private User user2;
+
+    // Zum Testen der Listen Funktionalität.
+    private AvatarI avatar;
+    private AvatarI avatarI;
+
 
     /**
      * Initialisierungsmethode, zum Befüllen der In-Memory-Datenbank.
@@ -51,6 +66,21 @@ public class UserRepositoryTest {
         userRepo.save(user1);
 
         user2 = new User("avh", "a.vanhoof@hb.dhbw-stuttgart.de", "36353", 345433, true);
+
+
+        avatar = new Avatar();
+        avatar.setName("Timon");
+        avatar.setGender(Gender.MALE);
+        avatarRepo.save((Avatar) avatar);
+
+        avatarI = new Avatar();
+        avatarI.setName("Pumba");
+        avatarI.setGender(Gender.DIVERSE);
+        avatarRepo.save((Avatar) avatarI);
+
+        user2.getAvatars().add((Avatar) avatar);
+        user2.getAvatars().add((Avatar) avatarI);
+
         userRepo.save(user2);
     }
 
@@ -96,5 +126,44 @@ public class UserRepositoryTest {
         userRepo.delete(user2);
         List<User> avatars = userRepo.findAll();
         Assert.assertEquals(1, avatars.size());
+    }
+
+    /**
+     * Testet das Speichern von Avataren zu einem Benutzer.
+     * Erwartet, dass die Anzahl der in der Datenbank gespeicherten Einträge, der tatsächlichen entspricht.
+     */
+    @Test
+    public void testSaveAvatarList() {
+        AvatarI avatar1 = new Avatar();
+        avatar1.setName("Test1");
+        avatar1.setGender(Gender.MALE);
+        avatarRepo.save((Avatar) avatar1);
+
+        AvatarI avatar2 = new Avatar();
+        avatar2.setName("Test2");
+        avatar2.setGender(Gender.DIVERSE);
+        avatarRepo.save((Avatar) avatar2);
+
+        UserI user = new User();
+        user.setEmail("g@g.g");
+        user.setName("test");
+        user.setPasswordHash("435n3rtr3");
+        user.getAvatars().add((Avatar) avatar1);
+        user.getAvatars().add((Avatar) avatar2);
+        userRepo.save((User) user);
+
+        UserI testUser = userRepo.findByName("test");
+        Assert.assertEquals(2,testUser.getAvatars().size());
+        Assert.assertEquals("Test2", testUser.getAvatars().get(1).getName());
+    }
+
+    /**
+     * Testet, dass das Laden einer Avatarliste eines Benutzers korrekt funktioniert.
+     * Erwartet, dass der tatsächliche Avatarname dem orginalen Avatarnamen entspricht.
+     */
+    @Test
+    public void testLoadAvatarList() {
+        UserI u = userRepo.findByName("avh");
+        Assert.assertEquals(avatarI.getName(), u.getAvatars().get(1).getName());
     }
 }

@@ -2,23 +2,28 @@ package de.dhbw.binaeratops.model.entitys;
 
 
 import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Entity Objekt für einen Benutzer.
- *
+ * <p>
  * Es repräsentiert die Entity "Benutzer" der Datenbank in der Programmlogik.
- *
+ * <p>
  * Es implementiert dazu alle Funktionalitäten der Benutzer Schnittstelle.
  *
  * @see UserI
+ *
+ * @author Matthias Rall, Nicolas Haug
  */
 @Entity
 public class User implements UserI {
@@ -40,12 +45,16 @@ public class User implements UserI {
 
     private Boolean isVerified;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private final List<Avatar> myAvatars = new ArrayList<>();
+
     /**
      * Konstruktor zum Erzeugen eines Benutzers mit allen Eigenschaften.
-     * @param AName Name des Benutzers.
-     * @param AEmail E-Mail des Benutzers.
-     * @param APassword Passwort des Benutzers.
-     * @param ACode Verifizierungscode des Benutzers.
+     *
+     * @param AName       Name des Benutzers.
+     * @param AEmail      E-Mail des Benutzers.
+     * @param APassword   Passwort des Benutzers.
+     * @param ACode       Verifizierungscode des Benutzers.
      * @param AIsVerified Verifizierungsstatus, ob Konto verifiziert ist.
      */
     public User(@NotEmpty String AName, @NotEmpty @Email String AEmail, @NotEmpty String APassword, @NotEmpty int ACode, @NotEmpty boolean AIsVerified) {
@@ -98,6 +107,7 @@ public class User implements UserI {
     public void setPasswordHash(String APasswordHash) {
         this.passwordHash = APasswordHash;
     }
+
     public void setPassword(String APassword) {
         this.passwordHash = DigestUtils.sha1Hex(APassword);
     }
@@ -118,14 +128,22 @@ public class User implements UserI {
         this.isVerified = AIsVerified;
     }
 
-    // TODO Equals Methoden anpassen + Javadoc
+    public List<Avatar> getAvatars() {
+        return myAvatars;
+    }
 
     @Override
-    public boolean equals(Object AObject) {
-        if (this == AObject) return true;
-        if (AObject == null || getClass() != AObject.getClass()) return false;
-        User user = (User) AObject;
-        return id == user.id && name.equals(user.name);
+    public boolean equals(Object AOther) {
+        boolean equals = this == AOther;
+
+        if (!equals && AOther instanceof User) {
+            User other = (User) AOther;
+            equals = (id == other.id
+                    && (name == other.name || (name != null &&
+                    name.equalsIgnoreCase(other.name))));
+        }
+
+        return equals;
     }
 
     @Override
@@ -135,9 +153,26 @@ public class User implements UserI {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        StringBuilder s = new StringBuilder();
+        s.append("User[id = ").append(id).append(" | name = ").append(name).append("]");
+        return s.toString();
+    }
+
+    /**
+     * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
+     * erwarteten Klasse der Implementation.
+     *
+     * @param AUser Objekt.
+     * @return Objekt.
+     * @throws InvalidImplementationException Objekt ungültig.
+     */
+    public static User check(UserI AUser) throws InvalidImplementationException {
+        if (!(AUser instanceof User)) {
+            throw new InvalidImplementationException(-1,
+                    MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
+                            User.class, AUser.getClass()));
+        }
+
+        return (User) AUser;
     }
 }
