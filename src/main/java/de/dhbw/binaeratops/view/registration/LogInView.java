@@ -5,7 +5,6 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,8 +18,6 @@ import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.impl.registration.AuthException;
 import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ValidationException;
 
 /**
  * Login Fenster auf der Webapplikation.
@@ -51,7 +48,7 @@ public class LogInView extends VerticalLayout {
         {
             try {
                 if (VaadinSession.getCurrent().getAttribute(User.class) != null &&
-                        VaadinSession.getCurrent().getAttribute(User.class).getName().equals(name.getValue())) {
+                        VaadinSession.getCurrent().getAttribute(User.class).getUsername().equals(name.getValue())) {
                     Notification.show("Sie sind bereits angemeldet.");
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());

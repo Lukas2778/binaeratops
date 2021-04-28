@@ -32,7 +32,7 @@ public class User implements UserI {
     private Long id;
 
     @NotEmpty
-    private String name;
+    private String username;
 
     @NotEmpty
     @Email
@@ -45,8 +45,11 @@ public class User implements UserI {
 
     private Boolean isVerified;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     private final List<Avatar> myAvatars = new ArrayList<>();
+
+    @OneToMany
+    private final List<Dungeon> myDungeons = new ArrayList<>();
 
     /**
      * Konstruktor zum Erzeugen eines Benutzers mit allen Eigenschaften.
@@ -58,7 +61,7 @@ public class User implements UserI {
      * @param AIsVerified Verifizierungsstatus, ob Konto verifiziert ist.
      */
     public User(@NotEmpty String AName, @NotEmpty @Email String AEmail, @NotEmpty String APassword, @NotEmpty int ACode, @NotEmpty boolean AIsVerified) {
-        this.name = AName;
+        this.username = AName;
         this.email = AEmail;
         this.passwordHash = DigestUtils.sha1Hex(APassword);
         this.code = ACode;
@@ -84,12 +87,12 @@ public class User implements UserI {
         this.id = AId;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String AName) {
-        this.name = AName;
+    public void setUsername(String AUsername) {
+        this.username = AUsername;
     }
 
     public String getEmail() {
@@ -132,6 +135,10 @@ public class User implements UserI {
         return myAvatars;
     }
 
+    public List<Dungeon> getMyDungeons() {
+        return myDungeons;
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
@@ -139,8 +146,8 @@ public class User implements UserI {
         if (!equals && AOther instanceof User) {
             User other = (User) AOther;
             equals = (id == other.id
-                    && (name == other.name || (name != null &&
-                    name.equalsIgnoreCase(other.name))));
+                    && (username == other.username || (username != null &&
+                    username.equalsIgnoreCase(other.username))));
         }
 
         return equals;
@@ -148,13 +155,13 @@ public class User implements UserI {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, username);
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append("User[id = ").append(id).append(" | name = ").append(name).append("]");
+        s.append("User[id = ").append(id).append(" | name = ").append(username).append("]");
         return s.toString();
     }
 

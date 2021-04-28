@@ -1,11 +1,13 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Gender;
+import de.dhbw.binaeratops.model.enums.Gender;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -27,12 +29,13 @@ import java.util.List;
  *     <li>Einen bestimmten Eintrag löschen</li>
  * </ul>
  *
- * @see AvatarRepository
+ * @see AvatarRepositoryI
  * @see AvatarI
  * @see Avatar
  *
  * @author Nicolas Haug
  */
+@Category({RepositoryGroup.class})
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @DataJpaTest
@@ -40,7 +43,7 @@ import java.util.List;
 public class AvatarRepositoryTest {
 
     @Autowired
-    AvatarRepository avatarRepo;
+    AvatarRepositoryI avatarRepo;
 
     private Avatar avatar2;
     private Avatar avatar3;

@@ -17,7 +17,7 @@ import java.util.List;
  * @author Nicolas Haug
  */
 @Repository
-public interface AvatarRepository extends JpaRepository<Avatar, Long> {
+public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
 
     /**
      * Sucht alle Avatareinträge aus der Datenbank zurück.

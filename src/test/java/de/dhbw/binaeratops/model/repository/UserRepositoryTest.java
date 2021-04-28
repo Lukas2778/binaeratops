@@ -1,14 +1,16 @@
 package de.dhbw.binaeratops.model.repository;
 
 
+import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Gender;
+import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.model.entitys.User;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -32,12 +34,13 @@ import java.util.List;
  *     <li>Einen bestimmten Eintrag mit Avatarliste zu laden</li>
  * </ul>
  *
- * @see UserRepository
+ * @see UserRepositoryI
  * @see UserI
  * @see User
  *
  * @author Nicolas Haug
  */
+@Category({RepositoryGroup.class})
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @DataJpaTest
@@ -45,10 +48,10 @@ import java.util.List;
 public class UserRepositoryTest {
 
     @Autowired
-    UserRepository userRepo;
+    UserRepositoryI userRepo;
 
     @Autowired
-    AvatarRepository avatarRepo;
+    AvatarRepositoryI avatarRepo;
 
     private User user2;
 
@@ -101,7 +104,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void testFindByUsername() {
-        UserI avh = userRepo.findByName("avh");
+        UserI avh = userRepo.findByUsername("avh");
         Assert.assertEquals(user2.getEmail(), avh.getEmail());
     }
 
@@ -111,9 +114,9 @@ public class UserRepositoryTest {
      */
     @Test
     public void testUpdateUser() {
-        UserI avh = userRepo.findByName("avh");
+        UserI avh = userRepo.findByUsername("avh");
         avh.setCode(134234);
-        UserI avhModified = userRepo.findByName("avh");
+        UserI avhModified = userRepo.findByUsername("avh");
         Assert.assertEquals(avh.getCode(), avhModified.getCode());
     }
 
@@ -146,13 +149,13 @@ public class UserRepositoryTest {
 
         UserI user = new User();
         user.setEmail("g@g.g");
-        user.setName("test");
+        user.setUsername("test");
         user.setPasswordHash("435n3rtr3");
         user.getAvatars().add((Avatar) avatar1);
         user.getAvatars().add((Avatar) avatar2);
         userRepo.save((User) user);
 
-        UserI testUser = userRepo.findByName("test");
+        UserI testUser = userRepo.findByUsername("test");
         Assert.assertEquals(2,testUser.getAvatars().size());
         Assert.assertEquals("Test2", testUser.getAvatars().get(1).getName());
     }
@@ -163,7 +166,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void testLoadAvatarList() {
-        UserI u = userRepo.findByName("avh");
+        UserI u = userRepo.findByUsername("avh");
         Assert.assertEquals(avatarI.getName(), u.getAvatars().get(1).getName());
     }
 }

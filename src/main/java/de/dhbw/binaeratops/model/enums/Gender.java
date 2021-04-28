@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.model.entitys;
+package de.dhbw.binaeratops.model.enums;
 
 /**
  * Geschlecht-Enumeration für einen Avatar.

@@ -1,10 +1,13 @@
 package de.dhbw.binaeratops.model.entitys;
 
 import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -26,44 +29,40 @@ public class Avatar implements AvatarI {
     @GeneratedValue
     private Long avatarId;
 
-    private Long userId;
-
-    private Long dungeonId;
-
-    private Long roomId;
+    private Long roomId; // CURRENT
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     private String name;
 
-    private Long inventoryId;
+    @OneToMany
+    private final List<Item> inventory = new ArrayList<>();
 
-    private Long raceId;
+    @OneToMany
+    private final List<Item> equipment = new ArrayList<>();
 
-    private Long roleId;
+    @OneToOne
+    private Race race;
+
+    @OneToOne
+    private Role role;
 
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
-     * @param ADungeonId Dungeon, dem der Avatar zugeordnet ist.
-     * @param AUserId Benutzer, dem der Avatar zugeordnet ist.
      * @param ARoomId Raum des Avatars, in dem er sich befindet.
      * @param AGender Geschlecht des Avatars.
      * @param AName Name des Avatars.
-     * @param AInventoryId Inventar des Avatars.
-     * @param ARaceId Rasse des Avatars.
-     * @param ARoleId Rolle des Avatars.
+     * @param ARace Rasse des Avatars.
+     * @param ARole Rolle des Avatars.
      */
-    public Avatar(long ADungeonId, long AUserId, long ARoomId, Gender AGender, String AName, long AInventoryId, long ARaceId, long ARoleId) {
-        this.dungeonId = ADungeonId;
-        this.userId = AUserId;
+    public Avatar(Long ARoomId, Gender AGender, String AName, Race ARace, Role ARole) {
         this.roomId = ARoomId;
         this.gender = AGender;
         this.name = AName;
-        this.inventoryId = AInventoryId;
-        this.raceId = ARaceId;
-        this.roleId = ARoleId;
+        this.race = ARace;
+        this.role = ARole;
     }
 
     /**
@@ -81,26 +80,6 @@ public class Avatar implements AvatarI {
     @Override
     public void setAvatarId(Long AAvatarId) {
         avatarId = AAvatarId;
-    }
-
-    @Override
-    public Long getUserId() {
-        return userId;
-    }
-
-    @Override
-    public void setUserId(Long AUserId) {
-        userId = AUserId;
-    }
-
-    @Override
-    public Long getDungeonId() {
-        return dungeonId;
-    }
-
-    @Override
-    public void setDungeonId(Long ADungeonId) {
-        dungeonId = ADungeonId;
     }
 
     @Override
@@ -133,34 +112,28 @@ public class Avatar implements AvatarI {
         name = AName;
     }
 
-    @Override
-    public Long getInventoryId() {
-        return inventoryId;
+    public Race getRace() {
+        return race;
     }
 
-    @Override
-    public void setInventoryId(Long AInventoryId) {
-        inventoryId = AInventoryId;
+    public void setRace(Race ARace) {
+        this.race = ARace;
     }
 
-    @Override
-    public Long getRaceId() {
-        return raceId;
+    public Role getRole() {
+        return role;
     }
 
-    @Override
-    public void setRaceId(Long ARaceId) {
-        raceId = ARaceId;
+    public void setRole(Role ARole) {
+        this.role = ARole;
     }
 
-    @Override
-    public Long getRoleId() {
-        return roleId;
+    public List<Item> getInventory() {
+        return inventory;
     }
 
-    @Override
-    public void setRoleId(Long ARoleId) {
-        roleId = ARoleId;
+    public List<Item> getEquipment() {
+        return equipment;
     }
 
     @Override

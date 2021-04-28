@@ -17,7 +17,7 @@ import java.util.List;
  * @author Nicolas Haug
  */
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepositoryI extends JpaRepository<User,Long> {
 
     /**
      * Sucht alle Benutzereinträge aus der Datenbank zurück.
@@ -29,8 +29,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     /**
      * Sucht den Benutzer mit dem übergebenen Benutzernamen.
-     * @param AName Zu suchender Benutzername.
+     * @param AUsername Zu suchender Benutzername.
      * @return Benutzer mit diesem Benutzernamen.
      */
-    User findByName(String AName);
+    User findByUsername(String AUsername);
 }

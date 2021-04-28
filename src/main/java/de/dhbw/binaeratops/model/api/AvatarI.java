@@ -1,13 +1,18 @@
 package de.dhbw.binaeratops.model.api;
 
-import de.dhbw.binaeratops.model.entitys.Gender;
+import de.dhbw.binaeratops.model.entitys.Race;
+import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.model.enums.Gender;
+import de.dhbw.binaeratops.model.entitys.Item;
+
+import java.util.List;
 
 /**
  * Schnittstelle für einen Avatar.
  * <p>
  * Sie stellt alle Funktionalitäten zum Umgang mit einem Avatar bereit.
  * <p>
- * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.AvatarRepository}.
+ * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.AvatarRepositoryI}.
  * <p>
  * Für Implementierung siehe {@link de.dhbw.binaeratops.model.entitys.Avatar}
  *
@@ -28,33 +33,6 @@ public interface AvatarI {
      * @param AAvatarId Avatar-ID, die gesetzt werden soll.
      */
     void setAvatarId(Long AAvatarId);
-
-    /**
-     * Gibt die ID des Avatareigentümers zurück.
-     *
-     * @return Eigentümer-ID des Avatars.
-     */
-    Long getUserId();
-
-    /**
-     * Setzt die ID des Avatareigentümers.
-     *
-     * @param AUserId Eigentümer-ID des Avatars.
-     */
-    void setUserId(Long AUserId);
-    /**
-     * Gibt die ID des Dungeons zurück, in dem der Avatar sich befindet.
-     *
-     * @return ID des Dungeons, in dem der Avatar sich befindet.
-     */
-    Long getDungeonId();
-
-    /**
-     * Setzt die ID des Dungeons, in dem der Avatar sich befindet.
-     *
-     * @param ADungeonId ID des Dungeons, in dem der Avatar sich befindet.
-     */
-    void setDungeonId(Long ADungeonId);
 
     /**
      * Gibt die Raum-ID des Raumes zurück, in dem der Avatar sich aktuell befindet.
@@ -98,41 +76,39 @@ public interface AvatarI {
      */
     void setName(String AName);
 
-    // TODO Invenatar hinzufügen zum Avatar.
+    /**
+     * Gibt die Rasse des Avatars zurück.
+     * @return Rasse des Avatars.
+     */
+    Race getRace();
 
     /**
-     * Gibt die Inventar-ID zurück.
-     * @return Inventar-ID.
+     * Setzt die Rasse des Avatars.
+     * @param ARace Zu setzende Rasse.
      */
-    Long getInventoryId();
+    void setRace(Race ARace);
 
     /**
-     * Setzt die InventarID.
-     * @param AInventoryId Inventar-ID.
+     * Gibt die Rolle des Avatars zurück.
+     * @return Rolle des Avatars.
      */
-    void setInventoryId(Long AInventoryId);
+    Role getRole();
 
     /**
-     * Gibt die ID der Rasse des Avatars zurück.
-     * @return ID der Rasse.
+     * Setzt die Rolle des Avatars.
+     * @param ARole Zu setzende Rolle.
      */
-    Long getRaceId();
+    void setRole(Role ARole);
 
     /**
-     * Setzt die ID der Rasse des Avatars.
-     * @param ARaceId ID der Rasse.
+     * TODO Kommentar schreiben
+     * @return
      */
-    void setRaceId(Long ARaceId);
+    List<Item> getInventory();
 
     /**
-     * Gibt die ID der Rolle des Avatars zurück.
-     * @return ID der Rolle.
+     * TODO Kommentar schreiben
+     * @return
      */
-    Long getRoleId();
-
-    /**
-     * Setzt die ID der Rolle des Avatars.
-     * @param ARoleId ID der Rolle.
-     */
-    void setRoleId(Long ARoleId);
+    List<Item> getEquipment();
 }
