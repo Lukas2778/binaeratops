@@ -8,6 +8,10 @@ import de.dhbw.binaeratops.model.repository.UserRepository;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.view.*;
 
+import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
+import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
+import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
+import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
