@@ -3,11 +3,15 @@ package de.dhbw.binaeratops.model.entitys;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Entity Objekt für einen Dungeon.
@@ -189,5 +193,65 @@ public class Dungeon implements DungeonI {
 
     public List<Race> getRaces() {
         return races;
+    }
+
+    @Override
+    public boolean equals(Object AOther) {
+        boolean equals = this == AOther;
+
+        if (!equals && AOther instanceof Dungeon) {
+            Dungeon other = (Dungeon) AOther;
+            equals = (dungeonId == other.dungeonId);
+        }
+
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dungeonId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("Dungeon[ID = ")
+                .append(dungeonId)
+                .append(" | Name = ")
+                .append(dungeonName)
+                .append(" | Sichtbarkeit = ")
+                .append(dungeonVisibility)
+                .append(" | Status = ")
+                .append(dungeonStatus)
+                .append(" | Dungeon-Master = ")
+                .append(dungeonMasterId)
+                .append(" | Maximale Spieleranzahl = ")
+                .append(playerMaxSize)
+                .append(" | Startraum = ")
+                .append(startRoomId)
+                .append(" | Inventarkapazität = ")
+                .append(defaultInventoryCapacity)
+                .append(" | Befehlszeichen = ")
+                .append(commandSymbol)
+                .append("]");
+        return s.toString();
+    }
+
+    /**
+     * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
+     * erwarteten Klasse der Implementation.
+     *
+     * @param ADungeon Objekt.
+     * @return Objekt.
+     * @throws InvalidImplementationException Objekt ungültig.
+     */
+    public static Dungeon check(DungeonI ADungeon) throws InvalidImplementationException {
+        if (!(ADungeon instanceof Dungeon)) {
+            throw new InvalidImplementationException(-1,
+                    MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
+                            Dungeon.class, ADungeon.getClass()));
+        }
+
+        return (Dungeon) ADungeon;
     }
 }
