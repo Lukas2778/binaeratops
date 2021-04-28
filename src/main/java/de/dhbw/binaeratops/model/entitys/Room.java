@@ -49,11 +49,20 @@ public class Room implements RoomI {
     @OneToMany
     private final List<NPC> npcs = new ArrayList<>();
 
+    /**
+     * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
+     *
+     * @param ARoomName Name des Raumes.
+     * @param ADescription Beschreibung des Raumes.
+     */
     public Room(String ARoomName, String ADescription) {
         this.roomName = ARoomName;
         this.description = ADescription;
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen eines Raumes.
+     */
     public Room() {
 
     }

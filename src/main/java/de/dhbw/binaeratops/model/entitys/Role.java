@@ -32,10 +32,19 @@ public class Role implements RoleI {
 
     private String description;
 
+    /**
+     * Konstruktor zum Erzeugen einer Rolle mit allen Eigenschaften.
+     *
+     * @param ARoleName Name der Rolle.
+     * @param ADescription Beschreibung der Rolle.
+     */
     public Role(String ARoleName, String ADescription) {
 
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen einer Rolle.
+     */
     public Role() {
 
     }

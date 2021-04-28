@@ -32,14 +32,14 @@ public interface UserI {
      *
      * @return Benutzer-ID des Benutzers.
      */
-    Long getId();
+    Long getUserId();
 
     /**
      * Setzt die Benutzer-ID des Benutzers.
      *
-     * @param AId Zu setzende Benutzer-ID.
+     * @param AUserId Zu setzende Benutzer-ID.
      */
-    void setId(Long AId);
+    void setUserId(Long AUserId);
 
     /**
      * Gibt den Benutzernamen des Benutzers zurück.

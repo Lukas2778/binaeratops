@@ -77,6 +77,16 @@ public class Dungeon implements DungeonI {
     @OneToMany
     private final List<Race> races = new ArrayList<>();
 
+    /**
+     * Konstruktor zum Erzeugen eines Dungeons mit allen Eigenschaften.
+     *
+     * @param ADungeonName Name des Dungeons.
+     * @param ADungeonMaster ID des Dungeon-Masters.
+     * @param APlayerMaxSize Maximale Spieleranzahl.
+     * @param AStartRoomId ID des Startraumes.
+     * @param ADefaultInventoryCapacity Standardinventarkapazität des Dungeons.
+     * @param ACommandSymbol Befehlszeichen des Dungeons.
+     */
     public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize,
                    Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol) {
         this.dungeonName = ADungeonName;
@@ -87,6 +97,9 @@ public class Dungeon implements DungeonI {
         this.commandSymbol = ACommandSymbol;
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen eines Dungeons.
+     */
     public Dungeon() {
 
     }

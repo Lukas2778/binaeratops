@@ -1,9 +1,9 @@
 package de.dhbw.binaeratops.model.exceptions;
 
 /**
- * Exception für generische Datenbankfehler.
+ * Exception für einen Implementierungsfehler.
  * <p>
- * Wird z.B. geworfen, wenn ein SQL Statement Fehler aufruft.
+ * Wird z.B. geworfen, wenn die Implementierung einer Schnittstelle das falsche Objekt beinhaltet.
  * <p>
  *
  * @author Nicolas Haug

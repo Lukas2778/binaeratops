@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
 public class User implements UserI {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long userId;
 
     @NotEmpty
     private String username;
@@ -79,12 +79,12 @@ public class User implements UserI {
         return DigestUtils.sha1Hex(APassword).equals(passwordHash);
     }
 
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long AId) {
-        this.id = AId;
+    public void setUserId(Long AId) {
+        this.userId = AId;
     }
 
     public String getUsername() {
@@ -145,7 +145,7 @@ public class User implements UserI {
 
         if (!equals && AOther instanceof User) {
             User other = (User) AOther;
-            equals = (id == other.id
+            equals = (userId == other.userId
                     && (username == other.username || (username != null &&
                     username.equalsIgnoreCase(other.username))));
         }
@@ -155,13 +155,13 @@ public class User implements UserI {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(userId, username);
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append("User[id = ").append(id).append(" | name = ").append(username).append("]");
+        s.append("User[id = ").append(userId).append(" | name = ").append(username).append("]");
         return s.toString();
     }
 

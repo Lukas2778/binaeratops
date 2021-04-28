@@ -52,6 +52,8 @@ public interface AvatarI {
      * Gibt das Geschlecht des Avatars zurück.
      *
      * @return Gechlecht des Avatars.
+     *
+     * @see Gender
      */
     Gender getGender();
 
@@ -59,6 +61,8 @@ public interface AvatarI {
      * Setzt das Geschlecht des Avatars.
      *
      * @param AGender Geschlecht des Avatars.
+     *
+     * @see Gender
      */
     void setGender(Gender AGender);
 
@@ -78,37 +82,44 @@ public interface AvatarI {
 
     /**
      * Gibt die Rasse des Avatars zurück.
+     *
      * @return Rasse des Avatars.
      */
     Race getRace();
 
     /**
      * Setzt die Rasse des Avatars.
+     *
      * @param ARace Zu setzende Rasse.
      */
     void setRace(Race ARace);
 
     /**
      * Gibt die Rolle des Avatars zurück.
+     *
      * @return Rolle des Avatars.
      */
     Role getRole();
 
     /**
      * Setzt die Rolle des Avatars.
+     *
      * @param ARole Zu setzende Rolle.
      */
     void setRole(Role ARole);
 
     /**
-     * TODO Kommentar schreiben
-     * @return
+     * Gibt das Inventar eines Avatars als Liste von Gegenständen zurück.
+     *
+     * @return Liste von Gegenständen (Inventar).
      */
     List<Item> getInventory();
 
     /**
-     * TODO Kommentar schreiben
-     * @return
+     * Gibt das ausgerüstete Equipment eines Avatars als Liste von Gegenständen zurück.
+     * <p>
+     * WICHTIG: Diese Liste darf jeden Gegenstandstyp nur 1x beinhalten.
+     * @return Liste von Gegenständen (Equipment)
      */
     List<Item> getEquipment();
 }

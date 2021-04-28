@@ -11,6 +11,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 
+    /**
+     * Main-Methode der Applikation.
+     * @param args Argumente zum Starten der Anwendung.
+     */
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

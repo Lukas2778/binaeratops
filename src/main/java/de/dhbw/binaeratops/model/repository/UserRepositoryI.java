@@ -28,6 +28,13 @@ public interface UserRepositoryI extends JpaRepository<User,Long> {
     List<User> findAll();
 
     /**
+     * Sucht den Benutzer mit der übergebenen ID in der Datenbank.
+     * @param AUserId ID des gesuchten Benutzers.
+     * @return Gesuchter Benutzer.
+     */
+    User findByUserId(Long AUserId);
+
+    /**
      * Sucht den Benutzer mit dem übergebenen Benutzernamen.
      * @param AUsername Zu suchender Benutzername.
      * @return Benutzer mit diesem Benutzernamen.

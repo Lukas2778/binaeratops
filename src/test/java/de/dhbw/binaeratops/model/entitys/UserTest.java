@@ -33,11 +33,11 @@ public class UserTest {
     @Test
     public void testEquals() {
         User u = new User();
-        u.setId(23L);
+        u.setUserId(23L);
         u.setUsername("Pedro");
 
         User u2 = new User();
-        u2.setId(23L);
+        u2.setUserId(23L);
         u2.setUsername("pedro");
 
         Assert.assertEquals(true, u.equals(u2));

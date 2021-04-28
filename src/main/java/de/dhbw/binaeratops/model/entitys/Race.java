@@ -32,10 +32,20 @@ public class Race implements RaceI {
 
     private String description;
 
+    /**
+     * Konstruktor zum Erzeugen einer Rasse mit allen Eigenschaften.
+     *
+     * @param ARaceName Name der Rasse.
+     * @param ADescription Beschreibung der Rasse.
+     */
     public Race(String ARaceName, String ADescription) {
         this.raceName = ARaceName;
         this.description = ADescription;
     }
+
+    /**
+     * Standardkonstruktor zum Erzeugen einer Rasse.
+     */
     public Race() {
 
     }

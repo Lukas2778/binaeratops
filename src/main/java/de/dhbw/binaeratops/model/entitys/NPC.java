@@ -10,6 +10,17 @@ import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+/**
+ * Entity Objekt für einen NPC.
+ * <p>
+ * Es repräsentiert die Entity "NPC" der Datenbank in der Programmlogik.
+ * <p>
+ * Es implementiert dazu alle Funktionalitäten der NPC Schnittstelle.
+ * <p>
+ * @see NPCI
+ *
+ * @author Nicolas Haug
+ */
 @Entity
 public class NPC implements NPCI {
 
@@ -27,12 +38,22 @@ public class NPC implements NPCI {
     @OneToMany
     private final List<Item> luggage = new ArrayList<>();
 
+    /**
+     * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
+     *
+     * @param ANpcName Name des NPCs.
+     * @param ARace Rasse des NPCs.
+     * @param ADescription Beschreibung des NPCs.
+     */
     public NPC(String ANpcName, Race ARace, String ADescription) {
         this.npcName = ANpcName;
         this.race = ARace;
         this.description = ADescription;
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen eines NPCs.
+     */
     public NPC() {
 
     }

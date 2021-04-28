@@ -36,10 +36,20 @@ public class Item implements ItemI {
     @Enumerated(EnumType.STRING)
     private ItemType type;
 
+    /**
+     * Konstruktor zum Erzeugen eines Gegenstandes mit allen Eigenschaften.
+     *
+     * @param AName Name des Gegenstandes.
+     * @param ASize Größe des Gegenstandes.
+     * @param ADescription Beschreibung des Gegenstandes.
+     */
     public Item(String AName, Long ASize, String ADescription) {
 
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen eines Gegenstandes.
+     */
     public Item() {
 
     }
