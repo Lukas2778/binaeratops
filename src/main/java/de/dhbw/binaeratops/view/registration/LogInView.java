@@ -24,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Dies ist das erste Fenster, das der Benutzer sieht.
  *
  */
-@RouteAlias("")
+//@RouteAlias("")
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
-@Route("login")
+//@Route("login")
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
     /**
