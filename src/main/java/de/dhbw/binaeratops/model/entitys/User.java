@@ -139,6 +139,11 @@ public class User implements UserI {
         return myDungeons;
     }
 
+    /**
+     *
+     * @param AOther Das zu vergleichende Username-Objekt
+     * @return Boolean
+     */
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;

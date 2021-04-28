@@ -74,6 +74,11 @@ public class Race implements RaceI {
         this.description = ADescription;
     }
 
+    /**
+     *
+     * @param AOther Das zu vergleichende Race-Objekt
+     * @return
+     */
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
