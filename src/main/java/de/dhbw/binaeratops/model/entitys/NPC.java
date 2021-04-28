@@ -1,10 +1,14 @@
 package de.dhbw.binaeratops.model.entitys;
 
 import de.dhbw.binaeratops.model.api.NPCI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 @Entity
 public class NPC implements NPCI {
@@ -67,5 +71,57 @@ public class NPC implements NPCI {
 
     public List<Item> getLuggage() {
         return luggage;
+    }
+
+    @Override
+    public boolean equals(Object AOther) {
+        boolean equals = this == AOther;
+
+        if (!equals && AOther instanceof NPC) {
+            NPC other = (NPC) AOther;
+            equals = (npcId == other.npcId);
+            // && (name == other.name || (name != null &&
+            //                    name.equalsIgnoreCase(other.name)))
+        }
+
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(npcId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("NPC[ID = ")
+                .append(npcId)
+                .append(" | Name = ")
+                .append(npcName)
+                .append(" | Rasse = ")
+                .append(race.getRaceName())
+                .append(" | Beschreibung = ")
+                .append(description)
+                .append("]\n");
+        return s.toString();
+    }
+
+    /**
+     * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
+     * erwarteten Klasse der Implementation.
+     *
+     * @param ANpc Objekt.
+     * @return Objekt.
+     * @throws InvalidImplementationException Objekt ungültig.
+     */
+    public static NPC check(NPCI ANpc) throws InvalidImplementationException {
+        if (!(ANpc instanceof NPC)) {
+            throw new InvalidImplementationException(-1,
+                    MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
+                            NPC.class, ANpc.getClass()));
+        }
+
+        return (NPC) ANpc;
     }
 }

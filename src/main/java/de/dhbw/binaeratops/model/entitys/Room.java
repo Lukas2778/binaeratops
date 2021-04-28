@@ -1,13 +1,17 @@
 package de.dhbw.binaeratops.model.entitys;
 
 import de.dhbw.binaeratops.model.api.RoomI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * Entity Objekt für einen Raum.
@@ -116,5 +120,55 @@ public class Room implements RoomI {
 
     public List<NPC> getNpcs() {
         return npcs;
+    }
+
+    @Override
+    public boolean equals(Object AOther) {
+        boolean equals = this == AOther;
+
+        if (!equals && AOther instanceof Room) {
+            Room other = (Room) AOther;
+            equals = (roomId == other.roomId);
+            // && (name == other.name || (name != null &&
+            //                    name.equalsIgnoreCase(other.name)))
+        }
+
+        return equals;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomId);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append("Raum[ID = ")
+                .append(roomId)
+                .append(" | Name = ")
+                .append(roomName)
+                .append(" | Beschreibung = ")
+                .append(description)
+                .append("]\n");
+        return s.toString();
+    }
+
+    /**
+     * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
+     * erwarteten Klasse der Implementation.
+     *
+     * @param ARoom Objekt.
+     * @return Objekt.
+     * @throws InvalidImplementationException Objekt ungültig.
+     */
+    public static Room check(RoomI ARoom) throws InvalidImplementationException {
+        if (!(ARoom instanceof Room)) {
+            throw new InvalidImplementationException(-1,
+                    MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
+                            Room.class, ARoom.getClass()));
+        }
+
+        return (Room) ARoom;
     }
 }

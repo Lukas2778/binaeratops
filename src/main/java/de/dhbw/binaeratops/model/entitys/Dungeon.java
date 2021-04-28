@@ -233,7 +233,7 @@ public class Dungeon implements DungeonI {
                 .append(defaultInventoryCapacity)
                 .append(" | Befehlszeichen = ")
                 .append(commandSymbol)
-                .append("]");
+                .append("]\n");
         return s.toString();
     }
 

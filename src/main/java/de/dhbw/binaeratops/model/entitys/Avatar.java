@@ -164,7 +164,7 @@ public class Avatar implements AvatarI {
                 .append(gender)
                 .append(" | Name = ")
                 .append(name)
-                .append("]");
+                .append("]\n");
         return s.toString();
     }
 
