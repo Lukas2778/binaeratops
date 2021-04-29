@@ -4,12 +4,14 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,10 +47,13 @@ public class ValdidateRegistrationView extends VerticalLayout {
         });
 
         add(
-                new H1("Bitte bestätige deine E-Mail Adresse!"),
+                new H1("E-Mail Adresse bestätigen"),
+                new H4("Wir haben dir soeben eine E-Mail mit deinem persönlichen Zugangscode an die von dir eingegebene E-Mail Adresse gesendet."),
+                new H4("Bitte gib diesen Code zur Verifikation deiner Identität hier ein."),
                 name,
                 code,
-                submit
+                submit,
+                new RouterLink("Anmelden",LogInView.class)
         );
     }
 }
