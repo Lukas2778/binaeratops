@@ -1,14 +1,14 @@
-package de.dhbw.binaeratops.view.player;
+package de.dhbw.binaeratops.view.player.Map;
 
-import com.vaadin.flow.component.ClickEvent;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+@CssImport("./views/player/map/map.css")
 
 @RouteAlias("")
 @Route("login")
@@ -23,9 +23,10 @@ public class MapView extends VerticalLayout {
         VerticalLayout lines = new VerticalLayout();
         lines.setSpacing(false);
 
+        HorizontalLayout lineRoomBorder;
         HorizontalLayout line;
 
-        int width = 20;
+        int width=10;
         //int counter = 0;
         Boolean clicked[][] = new Boolean[width][width];
         //alle Werte auf false setzen
@@ -38,15 +39,28 @@ public class MapView extends VerticalLayout {
             Arrays.fill(tmp[i], Boolean.FALSE);
         }
 
+
         for (int i = 0; i < width; ++i) {
             line = new HorizontalLayout();
             line.setSpacing(false);
             line.setSizeFull();
+
+            lineRoomBorder = new HorizontalLayout();
+            lineRoomBorder.setSpacing(false);
+            lineRoomBorder.setSizeFull();
             for (int j = 0; j < width; ++j) {
-                Button myButt = new Button();
-                myButt.getStyle().set("border-radius", "0px");
-                myButt.getStyle().set("background", "grey");
-                myButt.setHeight("73px");
+                NativeButton myButt = new NativeButton();
+                myButt.addClassName("button-container");
+                myButt.addClassName("buttRoom");
+
+                NativeButton borderButtHorizon = new NativeButton();
+                borderButtHorizon.addClassName("button-container");
+                borderButtHorizon.addClassName("buttHorizontal");
+
+                NativeButton borderButtVert = new NativeButton();
+                borderButtVert.addClassName("button-container");
+                borderButtVert.addClassName("buttVertical");
+
                 int finalI = i;
                 int finalJ = j;
                 myButt.addClickListener(
@@ -96,45 +110,45 @@ public class MapView extends VerticalLayout {
                             //Feld abwählen
                             else {
                                 //wenn mehr als einen Nachbar, ist Feld nicht löschbar, außer es gibt vier Felder bei denen eines davon gelöscht werden soll, aber keine Felder sonst anschließen
-                                boolean deleatable=false;
+                                boolean deleatable = false;
 
                                 //überprüfen, ob weniger als zwei Nachbarn
-                                int neighborCount=0;
-                                boolean neighborNorth=false;
-                                boolean neighborEast=false;
-                                boolean neighborSouth=false;
-                                boolean neighborWest=false;
+                                int neighborCount = 0;
+                                boolean neighborNorth = false;
+                                boolean neighborEast = false;
+                                boolean neighborSouth = false;
+                                boolean neighborWest = false;
                                 //Nachbar Norden
                                 if (!(finalI - 1 < 0)) {
                                     if (clicked[finalI - 1][finalJ]) {
-                                       neighborCount++;
-                                        neighborNorth=true;
+                                        neighborCount++;
+                                        neighborNorth = true;
                                     }
                                 }
                                 //Nachbar Osten
                                 if (!(finalJ + 1 > width - 1)) {
                                     if (clicked[finalI][finalJ + 1]) {
                                         neighborCount++;
-                                        neighborEast=true;
+                                        neighborEast = true;
                                     }
                                 }
                                 //Nachbar Süden
                                 if (!(finalI + 1 > width - 1)) {
                                     if (clicked[finalI + 1][finalJ]) {
                                         neighborCount++;
-                                        neighborSouth=true;
+                                        neighborSouth = true;
                                     }
                                 }
                                 //Nachbar Westen
                                 if (!(finalJ - 1 < 0)) {
                                     if (clicked[finalI][finalJ - 1]) {
                                         neighborCount++;
-                                        neighborWest=true;
+                                        neighborWest = true;
                                     }
                                 }
                                 //Ergebnis prüfen
-                                if(neighborCount<2){
-                                    deleatable=true;
+                                if (neighborCount < 2) {
+                                    deleatable = true;
                                 }
 //                                else{
 //                                    //es gibt vier Felder bei denen eines davon gelöscht werden soll, aber keine Felder sonst anschließen
@@ -142,18 +156,23 @@ public class MapView extends VerticalLayout {
 //
 //                                    }
 //                                }
-                                if(deleatable) {
+                                if (deleatable) {
                                     myButt.getStyle().set("background", "grey");
                                     clicked[finalI][finalJ] = false;
                                 }
                             }
                         });
                 line.add(myButt);
+                if (finalJ < width - 1) {
+                    line.add(borderButtVert);
+                }
+                if (finalI < width - 1) {
+                    lineRoomBorder.add(borderButtHorizon);
+                }
                 //++counter;
             }
-            line.getStyle().set("margin", "-4px");
-            line.getStyle().set("padding", "0px");
             lines.add(line);
+            lines.add(lineRoomBorder);
         }
 
         lines.setJustifyContentMode(JustifyContentMode.CENTER);
