@@ -36,8 +36,8 @@ public interface UserRepositoryI extends JpaRepository<User,Long> {
 
     /**
      * Sucht den Benutzer mit dem übergebenen Benutzernamen.
-     * @param AUsername Zu suchender Benutzername.
+     * @param AName Zu suchender Benutzername.
      * @return Benutzer mit diesem Benutzernamen.
      */
-    User findByUsername(String AUsername);
+    User findByName(String AName);
 }

@@ -54,7 +54,7 @@ public class LogInView extends VerticalLayout {
         {
             try {
                 if (VaadinSession.getCurrent().getAttribute(User.class) != null &&
-                        VaadinSession.getCurrent().getAttribute(User.class).getUsername().equals(name.getValue())) {
+                        VaadinSession.getCurrent().getAttribute(User.class).getName().equals(name.getValue())) {
                     Notification.show("Sie sind bereits angemeldet.");
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());

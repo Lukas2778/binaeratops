@@ -49,6 +49,7 @@ public class Role implements RoleI {
 
     }
 
+
     public Long getRoleId() {
         return roleId;
     }
@@ -73,6 +74,12 @@ public class Role implements RoleI {
         this.description = ADescription;
     }
 
+    /**
+     *Vergleicht die zwei Role-Objekte, ob die Gleich sind
+     *
+     * @param AOther Das zu vergleichende Role-Objekt
+     * @return Boolean
+     */
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
