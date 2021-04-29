@@ -3,8 +3,9 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -24,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Dies ist das erste Fenster, das der Benutzer sieht.
  *
  */
-@RouteAlias("")
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
+@RouteAlias("")
 @Route("login")
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
@@ -38,6 +39,11 @@ public class LogInView extends VerticalLayout {
         TextField name = new TextField("Benutzername");
         PasswordField password = new PasswordField("Passwort");
         Button loginButton = new Button("Anmelden");
+
+        HorizontalLayout changePasswRegisterLay=new HorizontalLayout();
+        RouterLink changePasswLink=new RouterLink("Passwort vergessen", ForgotPasswordView.class);
+        RouterLink registerLink = new RouterLink("Registrieren", RegisterView.class);
+        changePasswRegisterLay.add(registerLink,new Label(" - "),changePasswLink);
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -63,11 +69,11 @@ public class LogInView extends VerticalLayout {
         });
         add(
                 new H1("Binäratops - Anmeldung"),
+                new H4("Bitte registriere dich zuerst, sofern du noch keinen Account hast."),
                 name,
                 password,
-                new RouterLink("Passwort vergessen", ForgotPasswordView.class),
                 loginButton,
-                new RouterLink("Registrieren", RegisterView.class)
+                changePasswRegisterLay
         );
     }
 }
