@@ -10,9 +10,8 @@ import de.dhbw.binaeratops.service.impl.player.map.MapService;
 
 
 @CssImport("./views/player/map/map.css")
-
-@RouteAlias("")
-@Route("login")
+//@RouteAlias("")
+//@Route("login")
 public class MapView extends VerticalLayout {
 
     MapService myMapService;
