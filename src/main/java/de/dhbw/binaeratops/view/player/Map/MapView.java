@@ -8,7 +8,9 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
 
-
+/**
+ * Karten-Komponente für den Konfigurator, sowie die Spielansicht.
+ */
 @CssImport("./views/player/map/map.css")
 //@RouteAlias("")
 //@Route("login")
@@ -16,6 +18,9 @@ public class MapView extends VerticalLayout {
 
     MapService myMapService;
 
+    /**
+     * Dies ist der Konstruktor zum Erzeugen der Karte.
+     */
     public MapView() {
         addClassName("map-view");
         int width = 10;

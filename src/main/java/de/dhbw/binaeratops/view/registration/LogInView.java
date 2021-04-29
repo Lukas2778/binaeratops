@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
     /**
-     * Dies ist der Konstruktor, zum Erzeugen der Login Seite.
+     * Dies ist der Konstruktor zum Erzeugen der Login Seite.
      * @param authServiceI Übergabe des Authentifizierungsservices.
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {
