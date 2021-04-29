@@ -37,11 +37,11 @@ public class UserTest {
     public void testEquals() {
         User u = new User();
         u.setUserId(23L);
-        u.setUsername("Pedro");
+        u.setName("Pedro");
 
         User u2 = new User();
         u2.setUserId(23L);
-        u2.setUsername("pedro");
+        u2.setName("pedro");
 
         Assert.assertEquals(true, u.equals(u2));
     }
