@@ -4,10 +4,14 @@ import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.server.VaadinSession;
 
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.repository.UserRepository;
+import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.view.*;
 
+import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
+import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
+import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
+import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,16 +23,16 @@ import java.util.Random;
 public class AuthService implements AuthServiceI {
 
     @Autowired
-    UserRepository userRepository;
+    UserRepositoryI userRepository;
 
     @Autowired
     private MailService mailService;
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
-        User user=userRepository.findByName(AName);
-
-        if(user != null && user.checkPassword(APassword)){
+        try {
+        User user=userRepository.findByUsername(AName);
+        if(user.checkPassword(APassword)){
             if(!user.isVerified()){
                 throw new NotVerifiedException();
             }
@@ -36,7 +40,8 @@ public class AuthService implements AuthServiceI {
                 VaadinSession.getCurrent().setAttribute(User.class, user);
                 createRoutes();
             }
-        }else {
+            }
+        } catch (NullPointerException e) {
             throw new AuthException();
         }
     }
@@ -45,7 +50,7 @@ public class AuthService implements AuthServiceI {
     public void register(String AName, String APassword, String AEMail) throws RegistrationException {
         int code=new Random().nextInt(999999);
 
-        if(userRepository.findByName(AName)!=null){
+        if(userRepository.findByUsername(AName)!=null){
             throw new RegistrationException();
         }
 
@@ -56,7 +61,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public boolean confirm(String AUserName, int ACode) {
-        User user = userRepository.findByName(AUserName);
+        User user = userRepository.findByUsername(AUserName);
         if(user.getCode()==ACode && !user.isVerified()){
             user.setVerified(true);
             userRepository.save(user);
@@ -67,7 +72,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void sendConfirmationEmail(String AUserName) throws FalseUserException {
-        User user= userRepository.findByName(AUserName);
+        User user= userRepository.findByUsername(AUserName);
         if(user!=null){
             int code=new Random().nextInt(999999);
             mailService.sendPasswordMail(user, code);
@@ -81,7 +86,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException {
-        User user=userRepository.findByName(AUserName);
+        User user=userRepository.findByUsername(AUserName);
         if(user!= null){
             if(ACode==user.getCode()){
                 user.setVerified(true);

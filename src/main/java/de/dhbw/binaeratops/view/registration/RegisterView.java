@@ -1,9 +1,13 @@
 package de.dhbw.binaeratops.view.registration;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -36,9 +40,15 @@ public class RegisterView extends VerticalLayout {
         PasswordField verPassword=new PasswordField("Passwort wiederholen");
         Button submit=new Button("Registrieren");
 
+        HorizontalLayout validLoginLay=new HorizontalLayout();
+        RouterLink loginLink=new RouterLink("Anmeldung",LogInView.class);
+        RouterLink validLink=new RouterLink("Validierung",ValdidateRegistrationView.class);
+        validLoginLay.add(loginLink,new Label(" - "),validLink);
+
         setJustifyContentMode(JustifyContentMode.CENTER);
         setAlignItems(Alignment.CENTER);
 
+        submit.addClickShortcut(Key.ENTER);
         submit.addClickListener(e->
                 {
                     checkRegistration(name.getValue(),eMail.getValue(),password.getValue(),verPassword.getValue());
@@ -46,13 +56,14 @@ public class RegisterView extends VerticalLayout {
 
         add(
                 new H1("Binäratops - Registrierung"),
+                new H4("Bitte registriere dich mit deinen Daten."),
+                new H4("Du bekommst nach Klick auf 'Registrieren' eine E-Mail von uns mit deinem persönlichen Code zugesandt."),
                 name,
                 eMail,
                 password,
                 verPassword,
                 submit,
-                new RouterLink("Anmeldung",LogInView.class),
-                new RouterLink("Validierung",ValdidateRegistrationView.class)
+                validLoginLay
         );
 
     }

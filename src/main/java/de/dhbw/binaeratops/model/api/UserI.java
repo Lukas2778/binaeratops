@@ -1,11 +1,20 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Dungeon;
+
+import java.util.List;
+
 /**
  * Schnittstelle für einen Benutzer.
- *
+ * <p>
  * Sie stellt alle Funktionalitäten zum Umgang mit einem Benutzer bereit.
+ * <p>
+ * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.UserRepositoryI}.
+ * <p>
+ * Für die Implementierung siehe {@link de.dhbw.binaeratops.model.entitys.User}.
  *
- * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.UserRepository}.
+ * @author Nicolas Haug
  */
 public interface UserI {
 
@@ -23,28 +32,28 @@ public interface UserI {
      *
      * @return Benutzer-ID des Benutzers.
      */
-    Long getId();
+    Long getUserId();
 
     /**
      * Setzt die Benutzer-ID des Benutzers.
      *
-     * @param AId Zu setzende Benutzer-ID.
+     * @param AUserId Zu setzende Benutzer-ID.
      */
-    void setId(Long AId);
+    void setUserId(Long AUserId);
 
     /**
      * Gibt den Benutzernamen des Benutzers zurück.
      *
      * @return Benutzername des Benutzers.
      */
-    String getName();
+    String getUsername();
 
     /**
      * Setzt den Benutzernamen des Benutzers.
      *
-     * @param AName Zu setzender Benutzername.
+     * @param AUsername Zu setzender Benutzername.
      */
-    void setName(String AName);
+    void setUsername(String AUsername);
 
     /**
      * Gibt die E-Mail des Benutzers zurück.
@@ -100,4 +109,16 @@ public interface UserI {
      * @param AIsVerified Zu setzender Verifizierungsstatus.
      */
     void setVerified(Boolean AIsVerified);
+
+    /**
+     * Gibt die Liste der Spieleravatare zurück.
+     * @return Avatarliste.
+     */
+    List<Avatar> getAvatars();
+
+    /**
+     * Gibt die Liste der eigenen Dungeons zurück.
+     * @return Dungeonliste.
+     */
+    List<Dungeon> getMyDungeons();
 }

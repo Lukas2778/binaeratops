@@ -1,0 +1,38 @@
+
+.map-view{
+background: grey;
+}
+
+.button-container {
+background: grey;
+border-radius: 0px;
+border: none;
+}
+
+.button-container:hover {
+background: highlight;
+}
+
+.buttRoom{
+width: 50px;
+height: 50px
+margin-top: -5px;
+margin-bottom: -5px;
+margin-left: -6px;
+}
+
+.buttVertical{
+width: 5px;
+height: 50px;
+background: none;
+margin-bottom: -5px;
+margin-left: -6px;
+}
+
+.buttHorizontal{
+width: 50px;
+height: 5px;
+background: none;
+margin-left: -5px;
+margin-right: 5px;
+}

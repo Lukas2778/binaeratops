@@ -19,6 +19,10 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
+import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
+import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
+import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 
 import java.util.Optional;
 
@@ -46,12 +50,13 @@ public class MainView extends AppLayout {
         layout.getThemeList().set("dark", true);
         layout.setWidthFull();
         layout.setSpacing(false);
+        layout.setPadding(true);
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
         layout.add(new Avatar());
-        layout.add(new Anchor("/logout","Log out    "));
+        layout.add(new Anchor("/logout","Log out"));
         return layout;
     }
 

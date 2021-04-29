@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view;
+package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
