@@ -8,6 +8,10 @@ import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.view.*;
 
+import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
+import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
+import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
+import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +30,11 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
-        User user=userRepository.findByName(AName);
+
+        
+
+        try {
+          User user=userRepository.findByName(AName);
 
         if(user != null && user.checkPassword(APassword)){
             if(!user.isVerified()){
@@ -36,7 +44,8 @@ public class AuthService implements AuthServiceI {
                 VaadinSession.getCurrent().setAttribute(User.class, user);
                 createRoutes();
             }
-        }else {
+            }
+        } catch (NullPointerException e) {
             throw new AuthException();
         }
     }

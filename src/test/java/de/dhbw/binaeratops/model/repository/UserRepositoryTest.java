@@ -99,7 +99,7 @@ public class UserRepositoryTest {
     }
 
     /**
-     * Testet die Funktionalität 'findByName()'.
+     * Testet die Funktionalität 'findByUsername()'.
      * Erwartet als Ergebnis den richtigen Benutzer zu holen.
      */
     @Test
