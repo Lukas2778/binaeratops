@@ -32,7 +32,7 @@ public class User implements UserI {
     private Long userId;
 
     @NotEmpty
-    private String username;
+    private String name;
 
     @NotEmpty
     @Email
@@ -61,7 +61,7 @@ public class User implements UserI {
      * @param AIsVerified Verifizierungsstatus, ob Konto verifiziert ist.
      */
     public User(@NotEmpty String AName, @NotEmpty @Email String AEmail, @NotEmpty String APassword, @NotEmpty int ACode, @NotEmpty boolean AIsVerified) {
-        this.username = AName;
+        this.name = AName;
         this.email = AEmail;
         this.passwordHash = DigestUtils.sha1Hex(APassword);
         this.code = ACode;
@@ -87,12 +87,12 @@ public class User implements UserI {
         this.userId = AId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String AUsername) {
-        this.username = AUsername;
+    public void setName(String AUsername) {
+        this.name = AUsername;
     }
 
     public String getEmail() {
@@ -151,8 +151,8 @@ public class User implements UserI {
         if (!equals && AOther instanceof User) {
             User other = (User) AOther;
             equals = (userId == other.userId
-                    && (username == other.username || (username != null &&
-                    username.equalsIgnoreCase(other.username))));
+                    && (name == other.name || (name != null &&
+                    name.equalsIgnoreCase(other.name))));
         }
 
         return equals;
@@ -160,13 +160,13 @@ public class User implements UserI {
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, username);
+        return Objects.hash(userId, name);
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
-        s.append("User[id = ").append(userId).append(" | name = ").append(username).append("]");
+        s.append("User[id = ").append(userId).append(" | name = ").append(name).append("]");
         return s.toString();
     }
 

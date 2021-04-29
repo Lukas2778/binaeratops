@@ -29,7 +29,7 @@ public class MailService{
         mail.setTo(AUser.getEmail());
         mail.setFrom("binaeratops@gmail.com");
         mail.setSubject("Bitte bestätige deine E-Mail Adresse");
-        mail.setText("Hallo "+AUser.getUsername()+
+        mail.setText("Hallo "+AUser.getName()+
                 ",\nbitte bestätige deine E-Mail Adresse, indem du den folgenden Code auf unserer Webseite eingibst:" +
                 "\n\n" +Integer.toString(ACode) +
                         "\n\n" +
@@ -44,7 +44,7 @@ public class MailService{
         mail.setTo(AUser.getEmail());
         mail.setFrom("binaeratops@gmail.com");
         mail.setSubject("Bitte bestätige deine E-Mail Adresse");
-        mail.setText("Hallo "+AUser.getUsername()+
+        mail.setText("Hallo "+AUser.getName()+
                 ",\nbitte bestätige, dass du dein Passwort wirklich ändern willst," +
                 " indem du den folgenden Code auf unserer Webseite eingibst:" +
                 "\n\n" +Integer.toString(ACode) +

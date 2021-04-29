@@ -46,14 +46,14 @@ public interface UserI {
      *
      * @return Benutzername des Benutzers.
      */
-    String getUsername();
+    String getName();
 
     /**
      * Setzt den Benutzernamen des Benutzers.
      *
      * @param AUsername Zu setzender Benutzername.
      */
-    void setUsername(String AUsername);
+    void setName(String AUsername);
 
     /**
      * Gibt die E-Mail des Benutzers zurück.

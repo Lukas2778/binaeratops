@@ -26,7 +26,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
-        User user=userRepository.findByUsername(AName);
+        User user=userRepository.findByName(AName);
 
         if(user != null && user.checkPassword(APassword)){
             if(!user.isVerified()){
@@ -45,7 +45,7 @@ public class AuthService implements AuthServiceI {
     public void register(String AName, String APassword, String AEMail) throws RegistrationException {
         int code=new Random().nextInt(999999);
 
-        if(userRepository.findByUsername(AName)!=null){
+        if(userRepository.findByName(AName)!=null){
             throw new RegistrationException();
         }
 
@@ -56,7 +56,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public boolean confirm(String AUserName, int ACode) {
-        User user = userRepository.findByUsername(AUserName);
+        User user = userRepository.findByName(AUserName);
         if(user.getCode()==ACode && !user.isVerified()){
             user.setVerified(true);
             userRepository.save(user);
@@ -67,7 +67,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void sendConfirmationEmail(String AUserName) throws FalseUserException {
-        User user= userRepository.findByUsername(AUserName);
+        User user= userRepository.findByName(AUserName);
         if(user!=null){
             int code=new Random().nextInt(999999);
             mailService.sendPasswordMail(user, code);
@@ -81,7 +81,7 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException {
-        User user=userRepository.findByUsername(AUserName);
+        User user=userRepository.findByName(AUserName);
         if(user!= null){
             if(ACode==user.getCode()){
                 user.setVerified(true);
