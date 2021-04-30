@@ -44,7 +44,9 @@ public class Item implements ItemI {
      * @param ADescription Beschreibung des Gegenstandes.
      */
     public Item(String AName, Long ASize, String ADescription) {
-
+        this.itemName = AName;
+        this.size = ASize;
+        this.description = ADescription;
     }
 
     /**

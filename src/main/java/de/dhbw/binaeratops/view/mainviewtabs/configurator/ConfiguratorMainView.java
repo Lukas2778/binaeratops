@@ -1,20 +1,14 @@
 package de.dhbw.binaeratops.view.mainviewtabs.configurator;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
-import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
-import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
-import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
-import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.ItemsConfigurator;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.RoomConfigurator;
 
 import java.util.HashMap;
@@ -38,6 +32,7 @@ public class ConfiguratorMainView extends Div {
         super();
 
         roomConfigurator = new RoomConfigurator();
+        itemsConfigurator = new ItemsConfigurator();
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
     }

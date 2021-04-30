@@ -39,7 +39,8 @@ public class Role implements RoleI {
      * @param ADescription Beschreibung der Rolle.
      */
     public Role(String ARoleName, String ADescription) {
-
+        this.roleName = ARoleName;
+        this.description = ADescription;
     }
 
     /**
