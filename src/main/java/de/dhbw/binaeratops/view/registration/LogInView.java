@@ -58,8 +58,8 @@ public class LogInView extends VerticalLayout {
                     Notification.show("Sie sind bereits angemeldet.");
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());
-                    UI.getCurrent().navigate("aboutUs");
                 }
+                UI.getCurrent().navigate("aboutUs");
             } catch (AuthException authException) {
                 Notification.show("Fehler bei der Anmeldung. Prüfen Sie ihre Daten!");
             } catch (NotVerifiedException notVerifiedException) {
