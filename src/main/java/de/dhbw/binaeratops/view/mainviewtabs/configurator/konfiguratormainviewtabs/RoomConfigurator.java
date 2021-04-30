@@ -2,69 +2,120 @@ package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewt
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.tabs.Tab;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+
 
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class RoomConfigurator extends VerticalLayout {
 
-    VerticalLayout room = new VerticalLayout();
+    VerticalLayout roomArea = new VerticalLayout();
+    HorizontalLayout mapArea = new HorizontalLayout();
+    VerticalLayout myRoomArea;
+
+
 
     public RoomConfigurator() {
         initRoom();
-        add(new H1("My Room Configurator"), room);
+        initMap();
+
+        SplitLayout layout = new SplitLayout();
+        layout.addToPrimary(mapArea);
+        layout.addToSecondary(myRoomArea);
+        layout.setWidth("100%");
+        add(layout);
+    }
+
+    private void initMap() {
+        mapArea.setMinHeight(1000, Unit.PIXELS);
+        mapArea.setMinWidth(500, Unit.PIXELS);
+
+        mapArea.add(new H1("MAP - Coming Soon ..."));
 
 
+        mapArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
+        mapArea.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
     }
 
     private void initRoom() {
-        TextArea beschreibung = new TextArea();
-        beschreibung.setLabel("Beschreibung");
-        beschreibung.setValue("123455");
-        beschreibung.setMinHeight(200, Unit.PIXELS);
-        beschreibung.setMinWidth(250, Unit.PIXELS);
+        H2 roomName = new H2("Raumbezeichnung");
+        TextArea description = new TextArea();
+        description.setLabel("Beschreibung");
+        description.setValue("123455");
+        description.setMinHeight(200, Unit.PIXELS);
+        description.setMinWidth(250, Unit.PIXELS);
 
-        ComboBox north = new ComboBox("Norden");
+        H2 neighborroomsTitle = new H2("Nachbarräume");
 
-        ComboBox east = new ComboBox("Osten");
+        TextField north = new TextField("Norden");
+        north.setEnabled(false);
 
-        ComboBox south = new ComboBox("Süden");
+        TextField east = new TextField("Osten");
+        east.setEnabled(false);
 
-        ComboBox west = new ComboBox("Westen");
+        TextField south = new TextField("Süden");
+        south.setEnabled(false);
 
-        Button editItemButton = new Button("Gegenstand bearbeiten");
-        ListBox itemListe = new ListBox();
+        TextField west = new TextField("Westen");
+        west.setEnabled(false);
 
-        editItemButton.addClickListener(t->{
-            itemListe.add(new Label("neuer Gegenstand"));
+        VerticalLayout neigborRoomsArea = new VerticalLayout();
+        neigborRoomsArea.add(neighborroomsTitle, new HorizontalLayout(north, east),new HorizontalLayout(south, west));
+
+        H2 itemsHeadline = new H2("Gegenstände");
+        Button editItemButton = new Button("hinzufügen");
+        ListBox itemList = new ListBox();
+
+        HorizontalLayout itemsHeader = new HorizontalLayout();
+        itemsHeader.add(itemsHeadline, editItemButton);
+
+        VerticalLayout itemsArea = new VerticalLayout();
+        itemsArea.add(itemsHeader, itemList);
+
+        editItemButton.addClickListener(t -> {
+            Label l = new Label("neuer Gegenstand");
+            l.addClassName("itemLabel");
+            itemList.add(l);
         });
 
-        Button editNPCButton = new Button("Gegenstand bearbeiten");
-        ListBox npcListe = new ListBox();
+        H2 npcsHeadline = new H2("NPCs");
+        Button editNPCButton = new Button("hinzufügen");
+        ListBox npcList = new ListBox();
 
-        editNPCButton.addClickListener(t->{
-            npcListe.add(new Label("neuer gegenstand"));
+        HorizontalLayout npcsHeader = new HorizontalLayout();
+        npcsHeader.add(npcsHeadline, editNPCButton);
+
+        VerticalLayout npcsArea = new VerticalLayout();
+        npcsArea.add(npcsHeader, npcList);
+
+        editNPCButton.addClickListener(t -> {
+            npcList.add(new Label("neuer gegenstand"));
         });
 
-        Div myRoom = new Div();
+        roomArea.add(description, neigborRoomsArea, new HorizontalLayout(itemsArea, npcsArea));
 
+        roomArea.setSizeFull();
 
+        myRoomArea = new VerticalLayout(roomName, roomArea);
 
+        myRoomArea.setSizeFull();
+        myRoomArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
+        myRoomArea.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
 
-        room.add(beschreibung, north, east, south, west,editItemButton, itemListe,editNPCButton, npcListe);
     }
+
+
 
 }

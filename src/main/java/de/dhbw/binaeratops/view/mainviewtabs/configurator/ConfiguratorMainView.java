@@ -23,9 +23,10 @@ import java.util.Map;
 @PageTitle("Konfigurator")
 @Route("configurator")
 @CssImport("./views/main/main-view.css")
-public class ConfiguratorMainView extends VerticalLayout {
+public class ConfiguratorMainView extends Div {
 
     private Tabs configuratorTabs = new Tabs();
+
     private VerticalLayout dungeonsConfigurator = new VerticalLayout();
     private VerticalLayout characterConfigurator = new VerticalLayout();
     private VerticalLayout npcConfigurator = new VerticalLayout();
@@ -39,8 +40,6 @@ public class ConfiguratorMainView extends VerticalLayout {
         roomConfigurator = new RoomConfigurator();
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
-
-
     }
 
     public void createMenuItems() {
@@ -50,15 +49,12 @@ public class ConfiguratorMainView extends VerticalLayout {
         Tab itemsTab = new Tab("Gegenstände");
         Tab roomTab = new Tab("Raum");
 
-
-
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(dungeonTab, dungeonsConfigurator);
         tabsToPages.put(characterTab, characterConfigurator);
         tabsToPages.put(npcTab, npcConfigurator);
         tabsToPages.put(itemsTab, itemsConfigurator);
         tabsToPages.put(roomTab, roomConfigurator);
-
 
         configuratorTabs = new Tabs(dungeonTab, characterTab, npcTab, itemsTab, roomTab);
         Div pages = new Div( dungeonsConfigurator, characterConfigurator, npcConfigurator, itemsConfigurator, roomConfigurator);
