@@ -32,14 +32,19 @@ public class AuthService implements AuthServiceI {
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
         User user;
         try {
+            //Nutzer in der Datenbank finden
             user = userRepository.findByName(AName);
             if (user.checkPassword(APassword)) {
                 if (!user.isVerified()) {
+                    //Benutzer ist nicht verifiziert
                     throw new NotVerifiedException();
                 } else {
                     VaadinSession.getCurrent().setAttribute(User.class, user);
                     createRoutes();
                 }
+            }
+            else {
+                throw new AuthException();//Nur den Benutzernamen eingegeben
             }
         } catch (Exception e) {
             throw new AuthException();
