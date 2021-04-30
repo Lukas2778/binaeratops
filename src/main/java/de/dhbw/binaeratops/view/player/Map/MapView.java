@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.view.player.Map;
 
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,22 +9,26 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
 
+import java.util.concurrent.atomic.AtomicReference;
+
+
 /**
  * Karten-Komponente für den Konfigurator, sowie die Spielansicht.
  */
 @CssImport("./views/player/map/map.css")
-//@RouteAlias("")
-//@Route("login")
+@RouteAlias("")
+@Route("login")
 public class MapView extends VerticalLayout {
 
     MapService myMapService;
+    //Image image =new Image("images/map/KarteNOSW.png","Room");
 
     /**
      * Dies ist der Konstruktor zum Erzeugen der Karte.
      */
     public MapView() {
         addClassName("map-view");
-        int width = 10;
+        int width = 8;
         myMapService = new MapService(width);
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -43,7 +48,7 @@ public class MapView extends VerticalLayout {
             lineRoomBorder.setSpacing(false);
             lineRoomBorder.setSizeFull();
             for (int j = 0; j < width; ++j) {
-                NativeButton myButt = new NativeButton();
+                Image myButt = new Image("map/KarteBack.png", "Room");
                 myButt.addClassName("button-container");
                 myButt.addClassName("buttRoom");
 
@@ -63,14 +68,14 @@ public class MapView extends VerticalLayout {
                                 //Feld anwählen
                                 if (myMapService.canPlaceRoom(finalI, finalJ)) {
                                     myMapService.placeRoom(finalI, finalJ);
-                                    myButt.getStyle().set("background", "blue");
+                                    myButt.setSrc("map/KarteNOSW.png");
                                 }
                             }
                             //Feld abwählen
                             else {
                                 if (myMapService.canDeleteRoom(finalI, finalJ)) {
                                     myMapService.deleteRoom(finalI, finalJ);
-                                    myButt.getStyle().set("background", "grey");
+                                    myButt.setSrc("map/KarteBack.png");
                                 }
                             }
                         });
