@@ -10,6 +10,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.CharacterConfiguration;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.ItemsConfigurator;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.NPCConfigurator;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.RoomConfigurator;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class ConfiguratorMainView extends Div {
         roomConfigurator = new RoomConfigurator();
         characterConfigurator = new CharacterConfiguration();
         itemsConfigurator = new ItemsConfigurator();
+        npcConfigurator = new NPCConfigurator();
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
 

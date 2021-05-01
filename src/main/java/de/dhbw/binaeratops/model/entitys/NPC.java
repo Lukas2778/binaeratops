@@ -38,6 +38,9 @@ public class NPC implements NPCI {
     @OneToMany
     private final List<Item> luggage = new ArrayList<>();
 
+    @OneToMany
+    private List<Action> actions = new ArrayList<>();
+
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
      *
@@ -92,6 +95,14 @@ public class NPC implements NPCI {
 
     public List<Item> getLuggage() {
         return luggage;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(ArrayList<Action> AActions) {
+        this.actions = AActions;
     }
 
     @Override
