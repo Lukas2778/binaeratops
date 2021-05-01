@@ -9,6 +9,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.User;
 
 /**
  * Oberfläche des Tabs 'Eigene Dungeons'
@@ -29,9 +31,13 @@ public class MyDungeonsView extends VerticalLayout {
     public MyDungeonsView() {
         super ();
 
+        User user = VaadinSession.getCurrent().getAttribute(User.class);
+
         initButtonsLayout();
         initnewDungeonButton();
+        dungeonList.setHeightFull();
         add(title, buttonsLayout, dungeonList);
+        setSizeFull();
     }
 
     private void initButtonsLayout(){

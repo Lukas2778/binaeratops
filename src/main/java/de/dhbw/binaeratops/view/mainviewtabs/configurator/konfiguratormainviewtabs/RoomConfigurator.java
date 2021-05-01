@@ -13,18 +13,31 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
+import de.dhbw.binaeratops.model.api.NPCI;
+import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ItemSelectionDialog;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NpcSelectionDialog;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class RoomConfigurator extends VerticalLayout {
 
+    NpcSelectionDialog npcSelectionDialog = new NpcSelectionDialog();
+    ItemSelectionDialog itemSelectionDialog = new ItemSelectionDialog();
     VerticalLayout roomArea = new VerticalLayout();
     HorizontalLayout mapArea = new HorizontalLayout();
     VerticalLayout myRoomArea;
+    ListBox<NPC> npcList = new ListBox<NPC>();
+    ListBox<Item> itemList = new ListBox<Item>();
 
+    private List<NPC> npcs = new ArrayList<>();
 
 
     public RoomConfigurator() {
@@ -76,7 +89,7 @@ public class RoomConfigurator extends VerticalLayout {
 
         H2 itemsHeadline = new H2("Gegenstände");
         Button editItemButton = new Button("hinzufügen");
-        ListBox itemList = new ListBox();
+
 
         HorizontalLayout itemsHeader = new HorizontalLayout();
         itemsHeader.add(itemsHeadline, editItemButton);
@@ -84,15 +97,30 @@ public class RoomConfigurator extends VerticalLayout {
         VerticalLayout itemsArea = new VerticalLayout();
         itemsArea.add(itemsHeader, itemList);
 
+        itemList.setEnabled(false);
+
+        itemList.setRenderer(new ComponentRenderer<>(item ->{
+            Label label = new Label(item.getItemName());
+            label.getStyle().set("propertyName", "value");
+            label.addClassName("itemLabel");
+            return label;
+        }));
+
         editItemButton.addClickListener(t -> {
-            Label l = new Label("neuer Gegenstand");
-            l.addClassName("itemLabel");
-            itemList.add(l);
+            itemSelectionDialog.dialogResult = false;
+            itemSelectionDialog.open();
+        });
+
+        itemSelectionDialog.addOpenedChangeListener(e->{
+            if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
+                itemList.clear();
+                itemList.setItems(itemSelectionDialog.getItemSelection());
+            }
         });
 
         H2 npcsHeadline = new H2("NPCs");
         Button editNPCButton = new Button("hinzufügen");
-        ListBox npcList = new ListBox();
+
 
         HorizontalLayout npcsHeader = new HorizontalLayout();
         npcsHeader.add(npcsHeadline, editNPCButton);
@@ -100,22 +128,32 @@ public class RoomConfigurator extends VerticalLayout {
         VerticalLayout npcsArea = new VerticalLayout();
         npcsArea.add(npcsHeader, npcList);
 
+        npcList.setEnabled(false);
+
+        npcList.setRenderer(new ComponentRenderer<>(item ->{
+            Label label = new Label(item.getNpcName());
+            label.getStyle().set("propertyName", "value");
+            label.addClassName("itemLabel");
+            return label;
+        }));
+
         editNPCButton.addClickListener(t -> {
-            npcList.add(new Label("neuer gegenstand"));
+            npcSelectionDialog.open();
+        });
+
+        npcSelectionDialog.addOpenedChangeListener(e->{
+            if (npcSelectionDialog.dialogResult) {
+                npcList.clear();
+                npcList.setItems(npcSelectionDialog.getNPCSelection());
+            }
         });
 
         roomArea.add(description, neigborRoomsArea, new HorizontalLayout(itemsArea, npcsArea));
-
         roomArea.setSizeFull();
 
         myRoomArea = new VerticalLayout(roomName, roomArea);
-
         myRoomArea.setSizeFull();
         myRoomArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
         myRoomArea.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
-
     }
-
-
-
 }
