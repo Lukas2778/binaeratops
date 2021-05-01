@@ -8,10 +8,7 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.CharacterConfiguration;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.ItemsConfigurator;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.NPCConfigurator;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.RoomConfigurator;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +30,7 @@ public class ConfiguratorMainView extends Div {
     public ConfiguratorMainView() {
         super();
 
+        dungeonsConfigurator = new DungeonConfiguration();
         roomConfigurator = new RoomConfigurator();
         characterConfigurator = new CharacterConfiguration();
         itemsConfigurator = new ItemsConfigurator();
