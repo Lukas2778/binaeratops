@@ -98,6 +98,25 @@ public class Dungeon implements DungeonI {
     }
 
     /**
+     * Konstruktor zum Erzeugen eines Dungeons mit dem Namen.
+     * @param ADungeonName Name des Dungeons.
+     */
+    public Dungeon(String ADungeonName) {
+        this.dungeonName = ADungeonName;
+    }
+
+    /**
+     * Konstruktor zum Erzeugen eines Dungeons mit dem Namen und Dungeon-Master.
+     * @param ADungeonName Name des Dungeons.
+     * @param ADungeonMaster ID des Dungeon-Masters.
+     */
+    public Dungeon(String ADungeonName, Long ADungeonMaster) {
+        this.dungeonName = ADungeonName;
+        this.dungeonMasterId = ADungeonMaster;
+    }
+
+
+    /**
      * Standardkonstruktor zum Erzeugen eines Dungeons.
      */
     public Dungeon() {

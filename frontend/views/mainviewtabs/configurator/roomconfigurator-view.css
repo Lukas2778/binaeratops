@@ -10,3 +10,13 @@
     border-width: 2px;
     margin-bottom: 3px;
 }
+
+.dungeonListbox{
+
+    height: 100%;
+    border-style: solid;
+    width: 98%;
+    border-width: 2px;
+    border-color: lightgray;
+    margin-left: 10px;
+}
