@@ -49,6 +49,10 @@ public class Room implements RoomI {
     @OneToMany
     private final List<NPC> npcs = new ArrayList<>();
 
+    private Integer xCoordinate;
+
+    private Integer yCoordinate;
+
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
      *
@@ -58,6 +62,19 @@ public class Room implements RoomI {
     public Room(String ARoomName, String ADescription) {
         this.roomName = ARoomName;
         this.description = ADescription;
+    }
+
+    /**
+     * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
+     *
+
+     * @param AXCoordinate Positon des Raums.
+     * @param AYCoordinate Positon des Raums.
+     */
+    public Room( int AXCoordinate, int AYCoordinate) {
+
+        this.xCoordinate=AXCoordinate;
+        this.yCoordinate=AYCoordinate;
     }
 
     /**
@@ -131,6 +148,22 @@ public class Room implements RoomI {
         return npcs;
     }
 
+    public Integer getxCoordinate() {
+        return xCoordinate;
+    }
+
+    public void setxCoordinate(Integer xCoordinate) {
+        this.xCoordinate = xCoordinate;
+    }
+
+    public Integer getyCoordinate() {
+        return yCoordinate;
+    }
+
+    public void setyCoordinate(Integer yCoordinate) {
+        this.yCoordinate = yCoordinate;
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
@@ -150,6 +183,7 @@ public class Room implements RoomI {
         return Objects.hash(roomId);
     }
 
+    //TODO position hinzufügen
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
