@@ -11,6 +11,13 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
+import de.dhbw.binaeratops.service.impl.registration.AuthException;
+import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
 
 /**
  * Oberfläche des Tabs 'Eigene Dungeons'
@@ -18,9 +25,6 @@ import de.dhbw.binaeratops.model.entitys.User;
 //@Route(value = "myDungeons",layout = MainView.class)
 @PageTitle("Eigene Dungeons")
 public class MyDungeonsView extends VerticalLayout {
-    /**
-     * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
-     */
 
     private ListBox dungeonList = new ListBox<String>();
     private Button newDungeonButton = new Button("Dungeon erstellen");
@@ -28,7 +32,11 @@ public class MyDungeonsView extends VerticalLayout {
     private HorizontalLayout buttonsLayout = new HorizontalLayout();
     private H1 title = new H1("Meine Dungeons");
 
-    public MyDungeonsView() {
+
+    /**
+     * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
+     */
+    public MyDungeonsView(@Autowired ConfiguratorServiceI configuratorServiceI) {
         super ();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
@@ -38,6 +46,7 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonList.setHeightFull();
         add(title, buttonsLayout, dungeonList);
         setSizeFull();
+        configuratorServiceI.setItems(new ArrayList<>());
     }
 
     private void initButtonsLayout(){

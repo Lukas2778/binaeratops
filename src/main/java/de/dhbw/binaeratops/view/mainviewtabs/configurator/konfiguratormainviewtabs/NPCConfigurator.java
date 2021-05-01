@@ -14,14 +14,20 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Action;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ActionOverviewDialog;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NPCDialog;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurator extends VerticalLayout {
+
+
+    ConfiguratorServiceI configuratorServiceI;
 
     VerticalLayout items = new VerticalLayout();
     ArrayList<NPC> npcList = new ArrayList<>();
@@ -37,10 +43,12 @@ public class NPCConfigurator extends VerticalLayout {
 
     private NPC currentNPC;
 
-    public NPCConfigurator() {
+    public NPCConfigurator(ConfiguratorServiceI configuratorServiceI) {
+        this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();
         add(new H1("NPCs"), items);
+        configuratorServiceI.setItems(new ArrayList<>());
     }
 
     private void initRoom() {
@@ -94,7 +102,7 @@ public class NPCConfigurator extends VerticalLayout {
     }
 
     private NPCDialog createNPCDialog() {
-        npcDialog = new NPCDialog(npcList, raceList, currentNPC, grid);
+        npcDialog = new NPCDialog(configuratorServiceI,npcList, raceList, currentNPC, grid);
         return npcDialog;
     }
 

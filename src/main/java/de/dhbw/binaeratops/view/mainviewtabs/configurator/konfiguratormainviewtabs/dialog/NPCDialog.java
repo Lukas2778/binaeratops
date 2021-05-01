@@ -9,10 +9,17 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.ItemsConfigurator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
 public class NPCDialog extends Dialog {
+
+    ConfiguratorServiceI configuratorService;
+
     private TextField currentName;
     private ComboBox<Race> currentRace;
     private TextField currentDescription;
@@ -24,7 +31,8 @@ public class NPCDialog extends Dialog {
 
     public NPCDialog() {}
 
-    public NPCDialog(ArrayList<NPC> npcList, ArrayList<Race> raceList, NPC currentNPC, Grid<NPC> grid) {
+    public NPCDialog(ConfiguratorServiceI AConfiguratorServiceI,ArrayList<NPC> npcList, ArrayList<Race> raceList, NPC currentNPC, Grid<NPC> grid) {
+        configuratorService = AConfiguratorServiceI;
         this.npcList = npcList;
         this.raceList = raceList;
         this.currentNPC = currentNPC;
@@ -51,6 +59,7 @@ public class NPCDialog extends Dialog {
             currentNPC.setDescription(currentDescription.getValue());
             if (!npcList.contains(currentNPC)) {
                 npcList.add(currentNPC);
+                configuratorService.createNPC(currentName.getValue(),currentDescription.getValue(), currentRace.getValue());
             }
             refreshGrid();
             this.close();

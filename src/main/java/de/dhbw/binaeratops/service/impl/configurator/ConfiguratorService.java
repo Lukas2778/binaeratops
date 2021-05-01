@@ -2,23 +2,42 @@ package de.dhbw.binaeratops.service.impl.configurator;
 
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.ItemType;
+import de.dhbw.binaeratops.model.enums.Status;
+import de.dhbw.binaeratops.model.enums.Visibility;
+import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
+import de.dhbw.binaeratops.model.repository.NPCRepositoryI;
+import de.dhbw.binaeratops.model.repository.RaceRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ConfiguratorService implements ConfiguratorServiceI {
 
     private Dungeon dungeon;
     private User dungeonDesigner;
 
+    @Autowired
+    DungeonRepositoryI dungeonRepo;
 
-    public ConfiguratorService(User AUser){
-        dungeonDesigner = AUser;
-    }
+    @Autowired
+    NPCRepositoryI npcRepo;
 
-    public ConfiguratorService(User AUser, Dungeon ADungeon){
-        dungeonDesigner = AUser;
-        dungeon = ADungeon;
+    @Autowired
+    RaceRepositoryI raceRepositoryI;
+
+    public ConfiguratorService(){
+        dungeon = new Dungeon();
+        dungeon.setDungeonName(" ");
+        dungeon.setDungeonMasterId(0L);
+        dungeon.setStartRoomId(0L);
+        dungeon.setDefaultInventoryCapacity(0L);
+        dungeon.setCommandSymbol('f');
+        dungeon.setDungeonStatus(Status.INACTIVE);
+        dungeon.setDungeonVisibility(Visibility.IN_CONFIGURATION);
+        dungeon.setPlayerMaxSize(3L);
     }
 
     @Override
@@ -64,7 +83,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void createNPC(String AName, String ADescription, Race ARace) {
-
+        Race testRace = raceRepositoryI.findByRaceId(5L);
+        NPC newNPC = new NPC(AName, testRace, ADescription);
+        raceRepositoryI.save(testRace);
+        npcRepo.save(newNPC);
+        dungeon.getNpcs().add(newNPC);
+        dungeonRepo.save(dungeon);
     }
 
     @Override

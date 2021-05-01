@@ -20,9 +20,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Dungeon Schnittstelle.
  * <p>
- * @see DungeonI
  *
  * @author Nicolas Haug
+ * @see DungeonI
  */
 @Entity
 public class Dungeon implements DungeonI {
@@ -53,7 +53,7 @@ public class Dungeon implements DungeonI {
     @NotNull
     private Long startRoomId;
 
-    @NotNull
+
     private Long defaultInventoryCapacity;
 
     @NotNull
@@ -72,6 +72,12 @@ public class Dungeon implements DungeonI {
     private final List<Room> rooms = new ArrayList<>();
 
     @OneToMany
+    private final List<NPC> npcs = new ArrayList<>();
+
+    @OneToMany
+    private final List<Item> items = new ArrayList<>();
+
+    @OneToMany
     private final List<Role> roles = new ArrayList<>();
 
     @OneToMany
@@ -80,12 +86,12 @@ public class Dungeon implements DungeonI {
     /**
      * Konstruktor zum Erzeugen eines Dungeons mit allen Eigenschaften.
      *
-     * @param ADungeonName Name des Dungeons.
-     * @param ADungeonMaster ID des Dungeon-Masters.
-     * @param APlayerMaxSize Maximale Spieleranzahl.
-     * @param AStartRoomId ID des Startraumes.
+     * @param ADungeonName              Name des Dungeons.
+     * @param ADungeonMaster            ID des Dungeon-Masters.
+     * @param APlayerMaxSize            Maximale Spieleranzahl.
+     * @param AStartRoomId              ID des Startraumes.
      * @param ADefaultInventoryCapacity Standardinventarkapazität des Dungeons.
-     * @param ACommandSymbol Befehlszeichen des Dungeons.
+     * @param ACommandSymbol            Befehlszeichen des Dungeons.
      */
     public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize,
                    Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol) {
@@ -99,6 +105,7 @@ public class Dungeon implements DungeonI {
 
     /**
      * Konstruktor zum Erzeugen eines Dungeons mit dem Namen.
+     *
      * @param ADungeonName Name des Dungeons.
      */
     public Dungeon(String ADungeonName) {
@@ -107,7 +114,8 @@ public class Dungeon implements DungeonI {
 
     /**
      * Konstruktor zum Erzeugen eines Dungeons mit dem Namen und Dungeon-Master.
-     * @param ADungeonName Name des Dungeons.
+     *
+     * @param ADungeonName   Name des Dungeons.
      * @param ADungeonMaster ID des Dungeon-Masters.
      */
     public Dungeon(String ADungeonName, Long ADungeonMaster) {
@@ -217,6 +225,14 @@ public class Dungeon implements DungeonI {
 
     public List<Room> getRooms() {
         return rooms;
+    }
+
+    public List<NPC> getNpcs() {
+        return npcs;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 
     public List<Role> getRoles() {
