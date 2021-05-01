@@ -12,6 +12,7 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,16 +31,19 @@ public class ConfiguratorMainView extends Div {
     private VerticalLayout roomConfigurator;
 
 
-    public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI) {
+    public ConfiguratorMainView() {
         super();
 
-        dungeonsConfigurator = new DungeonConfiguration();
+
+
         roomConfigurator = new RoomConfigurator();
         characterConfigurator = new CharacterConfiguration();
         itemsConfigurator = new ItemsConfigurator();
-        npcConfigurator = new NPCConfigurator(configuratorServiceI);
+        dungeonsConfigurator = new DungeonConfiguration();
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
+
+
     }
 
     public void createMenuItems() {

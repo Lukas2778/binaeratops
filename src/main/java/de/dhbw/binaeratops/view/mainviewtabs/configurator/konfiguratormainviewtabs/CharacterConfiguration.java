@@ -41,6 +41,7 @@ public class CharacterConfiguration
     VerticalLayout raceListLayout = new VerticalLayout();
 
     ArrayList<Role> roles = new ArrayList<>();
+    ArrayList<Role> races = new ArrayList<>();
 
     public CharacterConfiguration()
     {
@@ -123,12 +124,12 @@ public class CharacterConfiguration
         testRole4.setDescription(" Wesesasdsadn");
 
         Role testRole5 = new Role();
-        testRole5.setRoleId(3L);
+        testRole5.setRoleId(4L);
         testRole5.setRoleName("Ptetey");
         testRole5.setDescription(" Wesesasdsadn");
 
         Role testRole6 = new Role();
-        testRole6.setRoleId(3L);
+        testRole6.setRoleId(5L);
         testRole6.setRoleName("Ptetey");
         testRole6.setDescription(" Wesesasdsadn");
 
@@ -194,16 +195,16 @@ public class CharacterConfiguration
         testRole4.setRoleId(3L);
         testRole4.setRoleName("Ptetey");
         testRole4.setDescription(" Wesesasdsadn");
-        roles.add(testRole);
-        roles.add(testRole2);
-        roles.add(testRole3);
-        roles.add(testRole4);
+        races.add(testRole);
+        races.add(testRole2);
+        races.add(testRole3);
+        races.add(testRole4);
 
         H2 titel = new H2("Rollenliste");
 
         Grid<Role> grid = new Grid<>();
 
-        grid.setItems(roles);
+        grid.setItems(races);
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader("Rollenbezeichnung");
         Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader("Beschreibung");
 
@@ -224,7 +225,7 @@ public class CharacterConfiguration
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addB, deleteB);
-        raceListLayout.setSizeFull();
+        //raceListLayout.setSizeFull();
         raceListLayout.add(titel, grid, buttonView);
 
     }

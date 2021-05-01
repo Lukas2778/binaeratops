@@ -23,50 +23,39 @@ import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.model.entitys.User;
 import java.util.ArrayList;
+import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.PERMISSION;
 
-@PageTitle("Charaktereigenschaft")
+@PageTitle("Dungeon-Konfiguration")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 
 public class DungeonConfiguration
         extends VerticalLayout
 {
     VerticalLayout initFeldLayout = new VerticalLayout();
-    VerticalLayout roleListLayout = new VerticalLayout();
-    VerticalLayout raceListLayout = new VerticalLayout();
+    VerticalLayout permissionLayout = new VerticalLayout();
 
-    ArrayList<Role> roles = new ArrayList<>();
+    ArrayList<User> users = new ArrayList<>();
 
     public DungeonConfiguration()
     {
 
         initFeld();
-        roleList();
-        raceList();
+        permissionList();
 
         SplitLayout layout = new SplitLayout();
-        SplitLayout innerLayout = new SplitLayout();
 
-        layout.setSecondaryStyle("minWidth", "1200px");
+        layout.setSecondaryStyle("minWidth", "400px");
         layout.setPrimaryStyle("minWidth", "450px");
         layout.setPrimaryStyle("minHeight", "800px");
 
-        innerLayout.setPrimaryStyle("minWidth", "400px");
-        innerLayout.setPrimaryStyle("minWidth", "500px");
-
-        innerLayout.setSecondaryStyle("minWidth", "400px");
-        innerLayout.setSecondaryStyle("minWidth", "500px");
-
-
-
-        innerLayout.addToPrimary(roleListLayout);
-        innerLayout.addToSecondary(raceListLayout);
-
         layout.addToPrimary(initFeldLayout);
-        layout.addToSecondary(innerLayout);
+        layout.addToSecondary(permissionLayout);
 
         layout.setSizeFull();
         add(layout);
@@ -74,83 +63,61 @@ public class DungeonConfiguration
 
     private void initFeld()
     {
-        H1 titel = new H1("Charaktereigenschaften");
+        H1 titel = new H1("Dungeon-Konfiguration");
 
-        Details hinweis = new Details("Hinweis",
-                                      new Text(
-                                              "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
-                                                      + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
-                                                      + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
+        Details hinweis = new Details("Allgemeines",
+                                      new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
+                                                       + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
+                                                       + "erste Eindruck!"));
         hinweis.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField inventorySize = new NumberField("Größe des Inventars");
-        inventorySize.setHasControls(true);
+        TextField titelField = new TextField("Titel");
+        titelField.setWidth("300px");
+        TextField playerCountField = new TextField("Maximale Spieleranzahl");
+        playerCountField.setWidth("300px");
 
-        RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
-        genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
-        genderRadioButton.setItems("Aktivieren", "Deaktivieren");
-        genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        genderRadioButton.setValue("Aktivieren");
+        RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
+        viewRadioButton.setLabel("Sichtbarkeit");
+        viewRadioButton.setItems("Öffentlich", "Privat", "In Konfiguration");
+        viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+        viewRadioButton.setValue("Öffentlich");
 
-        initFeldLayout.add(titel, hinweis, inventorySize, genderRadioButton);
+        TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
+        dungeonDescription.setWidth("300px");
+        initFeldLayout.add(titel, hinweis, titelField, playerCountField, viewRadioButton, dungeonDescription);
 
     }
 
-    private void roleList()
+    private void permissionList()
     {
 
         //Beispieldaten
-        Role testRole = new Role();
-        testRole.setRoleId(0L);
-        testRole.setRoleName("Ork");
-        testRole.setDescription("Hässliches Wesen");
+        User testUser = new User();
+        testUser.setUsername("DungeonDestroyer");
 
-        Role testRole2 = new Role();
-        testRole2.setRoleId(1L);
-        testRole2.setRoleName("Lars");
-        testRole2.setDescription(" Wesen");
+        User testUser2 = new User();
+        testUser2.setUsername("DungeonKiller");
 
-        Role testRole3 = new Role();
-        testRole3.setRoleId(2L);
-        testRole3.setRoleName("Payy");
-        testRole3.setDescription(" Wesessadn");
+        users.add(testUser);
+        users.add(testUser2);
 
-        Role testRole4 = new Role();
-        testRole4.setRoleId(3L);
-        testRole4.setRoleName("Ptetey");
-        testRole4.setDescription(" Wesesasdsadn");
+        H2 titel = new H2("Spielberechtigung");
+        Text permissionText = new Text("Hier kannst du schon im Voraus Spieler eine Berechtigung geben dein Dungeon zu spielen.");
 
-        Role testRole5 = new Role();
-        testRole5.setRoleId(3L);
-        testRole5.setRoleName("Ptetey");
-        testRole5.setDescription(" Wesesasdsadn");
+        Grid<User> grid = new Grid<>();
 
-        Role testRole6 = new Role();
-        testRole6.setRoleId(3L);
-        testRole6.setRoleName("Ptetey");
-        testRole6.setDescription(" Wesesasdsadn");
+        grid.setItems(users);
+        Column<User> nameColumn = grid.addColumn(User::getUsername)
+                .setHeader("Benutzername");
 
-        roles.add(testRole);
-        roles.add(testRole2);
-        roles.add(testRole3);
-        roles.add(testRole4);
-        roles.add(testRole5);
-        roles.add(testRole6);
-
-        H2 titel = new H2("Rollenliste");
-
-        Grid<Role> grid = new Grid<>();
-
-        grid.setItems(roles);
-
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader("Rollenbezeichnung");
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader("Beschreibung");
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
 
-        roleNameField.getElement().setAttribute("focus-target", "");
-        descriptionField.getElement().setAttribute("focus-target", "");
+        roleNameField.getElement()
+                .setAttribute("focus-target", "");
+        descriptionField.getElement()
+                .setAttribute("focus-target", "");
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
@@ -163,67 +130,8 @@ public class DungeonConfiguration
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addB, deleteB);
-
-      //  roleListLayout.setSizeFull();
-        roleListLayout.add(titel, grid, buttonView);
-
-
-    }
-    private void raceList()
-    {
-
-        //Beispieldaten
-        Role testRole = new Role();
-        testRole.setRoleId(0L);
-        testRole.setRoleName("Ork");
-        testRole.setDescription("Hässliches Wesen");
-
-        Role testRole2 = new Role();
-        testRole2.setRoleId(1L);
-        testRole2.setRoleName("Lars");
-        testRole2.setDescription(" Wesen");
-
-        Role testRole3 = new Role();
-        testRole3.setRoleId(2L);
-        testRole3.setRoleName("Payy");
-        testRole3.setDescription(" Wesessadn");
-
-        Role testRole4 = new Role();
-        testRole4.setRoleId(3L);
-        testRole4.setRoleName("Ptetey");
-        testRole4.setDescription(" Wesesasdsadn");
-        roles.add(testRole);
-        roles.add(testRole2);
-        roles.add(testRole3);
-        roles.add(testRole4);
-
-        H2 titel = new H2("Rollenliste");
-
-        Grid<Role> grid = new Grid<>();
-
-        grid.setItems(roles);
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader("Rollenbezeichnung");
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader("Beschreibung");
-
-        TextField roleNameField = new TextField();
-        TextField descriptionField = new TextField();
-
-        roleNameField.getElement().setAttribute("focus-target", "");
-        descriptionField.getElement().setAttribute("focus-target", "");
-
-        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
-
-        HorizontalLayout buttonView = new HorizontalLayout();
-        buttonView.setVerticalComponentAlignment(Alignment.END);
-
-        Button addB = new Button("hinzufügen");
-        Button deleteB = new Button("löschen");
-
-        addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        buttonView.addAndExpand(addB, deleteB);
-        raceListLayout.setSizeFull();
-        raceListLayout.add(titel, grid, buttonView);
+        permissionLayout.setSizeFull();
+        permissionLayout.add(titel, permissionText, grid, buttonView);
 
     }
 
