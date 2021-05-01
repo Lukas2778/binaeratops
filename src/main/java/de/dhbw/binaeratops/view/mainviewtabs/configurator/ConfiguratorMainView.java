@@ -21,7 +21,6 @@ import java.util.Map;
 @CssImport("./views/main/main-view.css")
 public class ConfiguratorMainView extends Div {
 
-
     private Tabs configuratorTabs = new Tabs();
 
     private VerticalLayout dungeonsConfigurator ;
@@ -33,7 +32,6 @@ public class ConfiguratorMainView extends Div {
 
     public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI) {
         super();
-
 
         dungeonsConfigurator = new DungeonConfiguration();
         roomConfigurator = new RoomConfigurator();
