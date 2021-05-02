@@ -3,13 +3,8 @@ package de.dhbw.binaeratops.service.impl.configurator;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
-import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
-import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
-import de.dhbw.binaeratops.model.repository.NPCRepositoryI;
-import de.dhbw.binaeratops.model.repository.RaceRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoleRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
+import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,9 +58,6 @@ public class ConfiguratorService
         return dungeon;
     }
 
-
-
-
     @Override
     public void setStartRoom(Room ARoom)
     {
@@ -113,8 +105,7 @@ public class ConfiguratorService
     {
         NPC newNPC = new NPC(AName, ARace, ADescription);
         npcRepo.save(newNPC);
-        dungeon.getNpcs()
-                .add(newNPC);
+        dungeon.addNpc(newNPC);
         dungeonRepo.save(dungeon);
     }
 
@@ -125,7 +116,7 @@ public class ConfiguratorService
 
     @Override
     public void deleteNPC(NPC ANPC) {
-        dungeon.getNpcs().remove(ANPC);
+        dungeon.removeNpc(ANPC);
         dungeonRepo.save(dungeon);
         npcRepo.delete(ANPC);
     }

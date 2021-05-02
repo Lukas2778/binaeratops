@@ -45,10 +45,16 @@ public class User implements UserI {
 
     private Boolean isVerified;
 
-    @ManyToMany
+    @ManyToOne
+    private Dungeon allowedDungeons;
+
+    @ManyToOne
+    private Dungeon blockedDungeons;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> myAvatars = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
     /**
@@ -131,12 +137,48 @@ public class User implements UserI {
         this.isVerified = AIsVerified;
     }
 
+    public Dungeon getAllowedDungeons() {
+        return allowedDungeons;
+    }
+
+    public void setAllowedDungeons(Dungeon allowedDungeons) {
+        this.allowedDungeons = allowedDungeons;
+    }
+
+    public Dungeon getBlockedDungeons() {
+        return blockedDungeons;
+    }
+
+    public void setBlockedDungeons(Dungeon blockedDungeons) {
+        this.blockedDungeons = blockedDungeons;
+    }
+
     public List<Avatar> getAvatars() {
         return myAvatars;
     }
 
+    public void addAvatar(Avatar AAvatar) {
+        AAvatar.setUser(this);
+        myAvatars.add(AAvatar);
+    }
+
+    public void removeAvatar(Avatar AAvatar) {
+        myAvatars.remove(AAvatar);
+        AAvatar.setUser(null);
+    }
+
     public List<Dungeon> getMyDungeons() {
         return myDungeons;
+    }
+
+    public void addDungeon(Dungeon ADungeon) {
+        ADungeon.setUser(this);
+        myDungeons.add(ADungeon);
+    }
+
+    public void removeDungeon(Dungeon ADungeon) {
+        myDungeons.remove(ADungeon);
+        ADungeon.setUser(null);
     }
 
     @Override

@@ -6,6 +6,7 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -31,6 +32,9 @@ public class Role implements RoleI {
     private String roleName;
 
     private String description;
+
+    @ManyToOne
+    private Dungeon dungeon;
 
     /**
      * Konstruktor zum Erzeugen einer Rolle mit allen Eigenschaften.
@@ -72,6 +76,14 @@ public class Role implements RoleI {
 
     public void setDescription(String ADescription) {
         this.description = ADescription;
+    }
+
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
     }
 
     @Override

@@ -35,11 +35,14 @@ public class NPC implements NPCI {
 
     private String description;
 
-    @ManyToMany
-    private final List<Item> luggage = new ArrayList<>();
+    @ManyToOne
+    private Dungeon dungeon;
 
-    @ManyToMany
-    private List<Action> actions = new ArrayList<>();
+    @ManyToOne
+    private Room room;
+
+    @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Item> luggage = new ArrayList<>();
 
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
@@ -93,16 +96,34 @@ public class NPC implements NPCI {
         this.description = ADecription;
     }
 
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     public List<Item> getLuggage() {
         return luggage;
     }
 
-    public List<Action> getActions() {
-        return actions;
+    public void addItem(Item AItem) {
+        AItem.setNpc(this);
+        luggage.add(AItem);
     }
 
-    public void setActions(ArrayList<Action> AActions) {
-        this.actions = AActions;
+    public void removeItem(Item AItem) {
+        luggage.remove(AItem);
+        AItem.setNpc(null);
     }
 
     @Override

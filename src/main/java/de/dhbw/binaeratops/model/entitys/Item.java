@@ -36,6 +36,21 @@ public class Item implements ItemI{
     @Enumerated(EnumType.STRING)
     private ItemType type;
 
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @ManyToOne
+    private Room room;
+
+    @ManyToOne
+    private Avatar inventoryAvatar;
+
+    @ManyToOne
+    private Avatar equipmentAvatar;
+
+    @ManyToOne
+    private NPC npc;
+
     /**
      * Konstruktor zum Erzeugen eines Gegenstandes mit allen Eigenschaften.
      *
@@ -94,6 +109,46 @@ public class Item implements ItemI{
 
     public void setType(ItemType AType) {
         this.type = AType;
+    }
+
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
+    public Avatar getInventoryAvatar() {
+        return inventoryAvatar;
+    }
+
+    public void setInventoryAvatar(Avatar inventoryAvatar) {
+        this.inventoryAvatar = inventoryAvatar;
+    }
+
+    public Avatar getEquipmentAvatar() {
+        return equipmentAvatar;
+    }
+
+    public void setEquipmentAvatar(Avatar equipmentAvatar) {
+        this.equipmentAvatar = equipmentAvatar;
+    }
+
+    public NPC getNpc() {
+        return npc;
+    }
+
+    public void setNpc(NPC npc) {
+        this.npc = npc;
     }
 
     @Override

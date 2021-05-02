@@ -36,10 +36,16 @@ public class Avatar implements AvatarI {
 
     private String name;
 
-    @ManyToMany
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @OneToMany(mappedBy = "inventoryAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> inventory = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> equipment = new ArrayList<>();
 
     @OneToOne
@@ -112,6 +118,22 @@ public class Avatar implements AvatarI {
         name = AName;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
     public Race getRace() {
         return race;
     }
@@ -132,8 +154,28 @@ public class Avatar implements AvatarI {
         return inventory;
     }
 
+    public void addInventoryItem(Item AItem) {
+        AItem.setInventoryAvatar(this);
+        inventory.add(AItem);
+    }
+
+    public void removeInventoryItem(Item AItem) {
+        inventory.remove(AItem);
+        AItem.setRoom(null);
+    }
+
     public List<Item> getEquipment() {
         return equipment;
+    }
+
+    public void addEquipmentItem(Item AItem) {
+        AItem.setEquipmentAvatar(this);
+        equipment.add(AItem);
+    }
+
+    public void removeEquipmentItem(Item AItem) {
+        equipment.remove(AItem);
+        AItem.setRoom(null);
     }
 
     @Override

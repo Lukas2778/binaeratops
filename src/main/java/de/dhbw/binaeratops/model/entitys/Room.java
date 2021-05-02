@@ -40,10 +40,13 @@ public class Room implements RoomI {
 
     private Long westRoomId;
 
-    @ManyToMany
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> items = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NPC> npcs = new ArrayList<>();
 
     private Integer xCoordinate;
@@ -141,12 +144,40 @@ public class Room implements RoomI {
         this.westRoomId = AWestRoomId;
     }
 
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
     public List<Item> getItems() {
         return items;
     }
 
+    public void addItem(Item AItem) {
+        AItem.setRoom(this);
+        items.add(AItem);
+    }
+
+    public void removeItem(Item AItem) {
+        items.remove(AItem);
+        AItem.setRoom(null);
+    }
+
     public List<NPC> getNpcs() {
         return npcs;
+    }
+
+    public void addNpc(NPC ANpc) {
+        ANpc.setRoom(this);
+        npcs.add(ANpc);
+    }
+
+    public void removeNPC(NPC ANpc) {
+        npcs.remove(ANpc);
+        ANpc.setRoom(null);
     }
 
     public Integer getxCoordinate() {

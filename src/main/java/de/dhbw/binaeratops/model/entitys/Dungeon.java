@@ -52,28 +52,31 @@ public class Dungeon implements DungeonI {
 
     private Character commandSymbol;
 
-    @ManyToMany
+    @ManyToOne
+    private User user; //Ersteller des Dungeons
+
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> avatars = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "allowedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> allowedUsers = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Room> rooms = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NPC> npcs = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> items = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Role> roles = new ArrayList<>();
 
-    @ManyToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Race> races = new ArrayList<>();
 
     /**
@@ -208,36 +211,124 @@ public class Dungeon implements DungeonI {
         this.commandSymbol = ACommandSymbol;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public List<Avatar> getAvatars() {
         return avatars;
+    }
+
+    public void addAvatar(Avatar AAvatar) {
+        AAvatar.setDungeon(this);
+        avatars.add(AAvatar);
+    }
+
+    public void removeAvatar(Avatar AAvatar) {
+        avatars.remove(AAvatar);
+        AAvatar.setDungeon(null);
     }
 
     public List<User> getAllowedUsers() {
         return allowedUsers;
     }
 
+    public void addAllowedUser(User AUser) {
+        AUser.setAllowedDungeons(this);
+        allowedUsers.add(AUser);
+    }
+
+    public void removeAllowedUser(User AUser) {
+        allowedUsers.remove(AUser);
+        AUser.setAllowedDungeons(null);
+    }
+
     public List<User> getBlockedUsers() {
         return blockedUsers;
+    }
+
+    public void addBlockedUser(User AUser) {
+        AUser.setBlockedDungeons(this);
+        blockedUsers.add(AUser);
+    }
+
+    public void removeBlockedUser(User AUser) {
+        blockedUsers.remove(AUser);
+        AUser.setBlockedDungeons(null);
     }
 
     public List<Room> getRooms() {
         return rooms;
     }
 
+    public void addRoom(Room ARoom) {
+        ARoom.setDungeon(this);
+        rooms.add(ARoom);
+    }
+
+    public void removeRoom(Room ARoom) {
+        rooms.remove(ARoom);
+        ARoom.setDungeon(null);
+    }
+
     public List<NPC> getNpcs() {
         return npcs;
+    }
+
+    public void addNpc(NPC ANpc) {
+        ANpc.setDungeon(this);
+        npcs.add(ANpc);
+    }
+
+    public void removeNpc(NPC ANpc) {
+        npcs.remove(ANpc);
+        ANpc.setDungeon(null);
     }
 
     public List<Item> getItems() {
         return items;
     }
 
+    public void addItem(Item AItem) {
+        AItem.setDungeon(this);
+        items.add(AItem);
+    }
+
+    public void removeItem(Item AItem) {
+        items.remove(AItem);
+        AItem.setDungeon(null);
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
 
+    public void addRole(Role ARole) {
+        ARole.setDungeon(this);
+        roles.add(ARole);
+    }
+
+    public void removeRole(Role ARole) {
+        roles.remove(ARole);
+        ARole.setDungeon(null);
+    }
+
     public List<Race> getRaces() {
         return races;
+    }
+
+    public void addRace(Race ARace) {
+        ARace.setDungeon(this);
+        races.add(ARace);
+    }
+
+    public void removeRace(Race ARace) {
+        races.remove(ARace);
+        ARace.setDungeon(null);
     }
 
     @Override
