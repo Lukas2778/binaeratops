@@ -95,7 +95,6 @@ public class Dungeon implements DungeonI {
         this.defaultInventoryCapacity = ADefaultInventoryCapacity;
         this.commandSymbol = ACommandSymbol;
     }
-
     /**
      * Konstruktor zum Erzeugen eines Dungeons mit dem Namen.
      *
@@ -116,7 +115,12 @@ public class Dungeon implements DungeonI {
         this.dungeonMasterId = ADungeonMaster;
     }
 
-
+    public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize, Visibility AVisibility) {
+        this.dungeonName = ADungeonName;
+        this.dungeonMasterId = ADungeonMaster;
+        this.playerMaxSize = APlayerMaxSize;
+        this.dungeonVisibility = AVisibility;
+    }
     /**
      * Standardkonstruktor zum Erzeugen eines Dungeons.
      */

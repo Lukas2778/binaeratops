@@ -49,6 +49,15 @@ public class ConfiguratorService
     }
 
     @Override
+    public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility)
+    {
+        dungeonDesigner = AUser;
+        dungeon = new Dungeon(AName, dungeonDesigner.getUserId(), APlayerSize, AVisibility);
+        dungeonRepo.save(dungeon);
+        return dungeon;
+    }
+
+    @Override
     public Dungeon createDungeon(String AName, User AUser)
     {
         dungeonDesigner = AUser;
@@ -56,6 +65,9 @@ public class ConfiguratorService
         dungeonRepo.save(dungeon);
         return dungeon;
     }
+
+
+
 
     @Override
     public void setStartRoom(Room ARoom)

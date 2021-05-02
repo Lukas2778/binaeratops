@@ -40,7 +40,7 @@ public class ConfiguratorMainView extends Div {
         roomConfigurator = new RoomConfigurator();
         characterConfigurator = new CharacterConfiguration(configuratorServiceI);
         itemsConfigurator = new ItemsConfigurator();
-        dungeonsConfigurator = new DungeonConfiguration();
+        dungeonsConfigurator = new DungeonConfiguration(configuratorServiceI);
         npcConfigurator = new NPCConfigurator(configuratorServiceI);
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
