@@ -3,13 +3,16 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -19,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Eigene Dungeons")
 public class MyDungeonsView extends VerticalLayout {
 
-    private ListBox dungeonList = new ListBox<String>();
+    private ListBox<Dungeon> dungeonList = new ListBox<Dungeon>();
     private Button newDungeonButton = new Button("Dungeon erstellen");
     private Button editDungeonButton = new Button( "Bearbeiten");
     private HorizontalLayout buttonsLayout = new HorizontalLayout();
@@ -29,14 +32,22 @@ public class MyDungeonsView extends VerticalLayout {
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
      */
-    public MyDungeonsView(@Autowired ConfiguratorServiceI configuratorServiceI) {
+    public MyDungeonsView(@Autowired DungeonServiceI configuratorService) {
         super ();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
 
+        dungeonList.setRenderer(new ComponentRenderer<>(dungeon ->{
+            Label label = new Label(dungeon.getDungeonName());
+            label.getStyle().set("propertyName", "value");
+            label.addClassName("itemLabel");
+            return label;
+        }));
+
         initButtonsLayout();
         initnewDungeonButton();
         dungeonList.setHeightFull();
+        dungeonList.setItems(configuratorService.getAllDungeonsFromUser(user));
         add(title, buttonsLayout, dungeonList);
         setSizeFull();
     }

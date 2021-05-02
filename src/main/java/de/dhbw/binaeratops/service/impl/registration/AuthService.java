@@ -12,6 +12,7 @@ import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
 import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.ConfiguratorMainView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -124,6 +125,7 @@ public class AuthService implements AuthServiceI {
         returnList.add(new AuthorizedRoute("lobby","Lobby", LobbyView.class));
         returnList.add(new AuthorizedRoute("myDungeons","Eigene Dungeons", MyDungeonsView.class));
         returnList.add(new AuthorizedRoute("notification","Mitteilungen", NotificationView.class));
+        returnList.add(new AuthorizedRoute("configurator","Konfigurator", ConfiguratorMainView.class));
         return returnList;
     }
 

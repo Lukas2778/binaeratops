@@ -14,7 +14,7 @@ public interface ConfiguratorServiceI {
      * @param AName Dungeonname.
      * @return Dungeon mit Standardwerten.
      */
-    Dungeon createDungeon(String AName);
+    Dungeon createDungeon(String AName, User AUser);
 
     /**
      * Startraum des Dungeons setzen.

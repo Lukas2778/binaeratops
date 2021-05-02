@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.mainviewtabs.configurator;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
@@ -10,6 +11,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.*;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NewDungeonDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -18,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PageTitle("Konfigurator")
-@Route("configurator")
 @CssImport("./views/main/main-view.css")
 public class ConfiguratorMainView extends Div {
 
@@ -34,7 +35,7 @@ public class ConfiguratorMainView extends Div {
     public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI) {
         super();
 
-
+        Dialog dungeonnameDialog = new NewDungeonDialog(configuratorServiceI);
 
         roomConfigurator = new RoomConfigurator();
         characterConfigurator = new CharacterConfiguration();
@@ -44,7 +45,7 @@ public class ConfiguratorMainView extends Div {
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
 
-
+        dungeonnameDialog.open();
     }
 
     public void createMenuItems() {

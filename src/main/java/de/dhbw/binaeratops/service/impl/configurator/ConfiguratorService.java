@@ -43,8 +43,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public Dungeon createDungeon(String AName) {
-        dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
+    public Dungeon createDungeon(String AName, User AUser) {
+        dungeonDesigner = AUser;
+        dungeon = new Dungeon(AName,dungeonDesigner.getUserId());
+        dungeonRepo.save(dungeon);
         return dungeon;
         }
 
