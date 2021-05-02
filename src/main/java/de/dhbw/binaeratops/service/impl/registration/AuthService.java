@@ -31,9 +31,9 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
+        try {
         User user=userRepository.findByUsername(AName);
-
-        if(user != null && user.checkPassword(APassword)){
+        if(user.checkPassword(APassword)){
             if(!user.isVerified()){
                 throw new NotVerifiedException();
             }
@@ -41,7 +41,8 @@ public class AuthService implements AuthServiceI {
                 VaadinSession.getCurrent().setAttribute(User.class, user);
                 createRoutes();
             }
-        }else {
+            }
+        } catch (NullPointerException e) {
             throw new AuthException();
         }
     }
