@@ -1,5 +1,9 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Dungeon;
+import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.enums.ItemType;
 
 /**
@@ -88,4 +92,64 @@ public interface ItemI {
      * @see ItemType
      */
     void setType(ItemType AType);
+
+    /**
+     * Gibt den Dungeon des Gegenstandes zurück.
+     * @return Dungeon des Gegenstandes.
+     */
+    Dungeon getDungeon();
+
+    /**
+     * Setzt den Dungeon des Gegenstandes.
+     * @param ADungeon Dungeon des Gegenstandes.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
+     * Gibt den Raum des Gegenstandes zurück.
+     * @return Raum des Gegenstandes.
+     */
+    Room getRoom();
+
+    /**
+     * Setzt den Raum des Gegenstandes.
+     * @param ARoom Raum des Gegenstandes.
+     */
+    void setRoom(Room ARoom);
+
+    /**
+     * Gibt die Zuordnung zum Inventar des Avatars zurück.
+     * @return Zuordnung zum Inventar des Avatars.
+     */
+    Avatar getInventoryAvatar();
+
+    /**
+     * Setzt die Zuordnung des Gegenstandes zu dem Inventar des Avatars.
+     * @param AInventoryAvatar Zuordnung des Gegenstandes zu einem Inventar des Avatars.
+     */
+    void setInventoryAvatar(Avatar AInventoryAvatar);
+
+    /**
+     * Gibt die Zuordnung zum Equipment des Avatars zurück.
+     * @return Zuordnung zum Equipment des Avatars.
+     */
+    Avatar getEquipmentAvatar();
+
+    /**
+     * Setzt die Zuordnung des Gegenstandes zu dem Equipment des Avatars.
+     * @param AEquipmentAvatar Zuordnung des Gegenstandes zu einem Inventar des Avatars.
+     */
+    void setEquipmentAvatar(Avatar AEquipmentAvatar);
+
+    /**
+     * Gibt die Zuordnung zum Gepäck des NPCs zurück.
+     * @return Zuordnung zum Gepäck des NPCs.
+     */
+    NPC getNpc();
+
+    /**
+     * Setzt die Zuordnung des Gegenstandes zu dem Gepäck des NPCs.
+     * @param ANpc Zuordnung des Gegenstandes zu dem Gepäck des NPCs.
+     */
+    void setNpc(NPC ANpc);
 }

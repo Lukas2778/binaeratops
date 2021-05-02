@@ -115,40 +115,40 @@ public class Item implements ItemI{
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public Room getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoom(Room ARoom) {
+        this.room = ARoom;
     }
 
     public Avatar getInventoryAvatar() {
         return inventoryAvatar;
     }
 
-    public void setInventoryAvatar(Avatar inventoryAvatar) {
-        this.inventoryAvatar = inventoryAvatar;
+    public void setInventoryAvatar(Avatar AInventoryAvatar) {
+        this.inventoryAvatar = AInventoryAvatar;
     }
 
     public Avatar getEquipmentAvatar() {
         return equipmentAvatar;
     }
 
-    public void setEquipmentAvatar(Avatar equipmentAvatar) {
-        this.equipmentAvatar = equipmentAvatar;
+    public void setEquipmentAvatar(Avatar AEquipmentAvatar) {
+        this.equipmentAvatar = AEquipmentAvatar;
     }
 
     public NPC getNpc() {
         return npc;
     }
 
-    public void setNpc(NPC npc) {
-        this.npc = npc;
+    public void setNpc(NPC ANpc) {
+        this.npc = ANpc;
     }
 
     @Override
