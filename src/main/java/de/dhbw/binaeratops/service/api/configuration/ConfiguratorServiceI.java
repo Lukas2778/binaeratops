@@ -12,10 +12,19 @@ public interface ConfiguratorServiceI {
     /**
      * Initialisierung des Dungeons.
      * @param AName Dungeonname.
+     * @param AUser Benutzer.
      * @return Dungeon mit Standardwerten.
      */
     Dungeon createDungeon(String AName, User AUser);
 
+    /**
+     * Initialisierung des Dungeons.
+     * @param AName Dungeonname.
+     * @param AUser Benutzer.
+     * @param APlayerSize Spieleranzahl.
+     * @param AVisibility Sichtbarkeit.
+     * @return Erstellter Dungeon.
+     */
     Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility);
     /**
      * Initialisierung des Dungeons.
@@ -148,7 +157,7 @@ public interface ConfiguratorServiceI {
 
     /**
      * Setzen der Inventarstandardgröße.
-     * @param ACapacity
+     * @param ACapacity Kapazität.
      */
     void setDefaultInventoryCapacity(int ACapacity);
 
@@ -161,7 +170,8 @@ public interface ConfiguratorServiceI {
     /**
      * Setz den Nachbarraum des Raumes. Die Himmelsrichtung gibt die Position an.
      * @param ADirection Himmelsrichtung.
-     * @param ARoomId Nachbarraum.
+     * @param ARoomId Raum.
+     * @param ANeigghborRoom Nachbarraum.
      */
     void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeigghborRoom);
 
@@ -173,12 +183,14 @@ public interface ConfiguratorServiceI {
 
     /**
      * Die Gegenstandsliste wird gesetzt und die vorherige gelöscht.
+     * @param ARoom Raum.
      * @param AItemList Gegenstandsliste.
      */
     void setItems(Room ARoom, List<Item> AItemList);
 
     /**
      * Die NPCliste wird gesetzt und die vorherige gelöscht.
+     * @param ARoom Raum.
      * @param ANPCList NPCliste.
      */
     void setNPCs(Room ARoom, List<NPC> ANPCList);

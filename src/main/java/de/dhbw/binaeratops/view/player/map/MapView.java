@@ -6,10 +6,8 @@ import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 import java.util.ArrayList;
 
@@ -29,11 +27,12 @@ public class MapView extends VerticalLayout {
 
     /**
      * Dies ist der Konstruktor zum Erzeugen der Karte.
+     * @param AMyMapService MapService.
      */
-    public MapView(@Autowired MapService myMapService) {
+    public MapView(@Autowired MapService AMyMapService) {
         addClassName("map-view");
 
-        myMapService.init(width);
+        AMyMapService.init(width);
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -70,11 +69,11 @@ public class MapView extends VerticalLayout {
 
                 //click listener für die kacheln
                 tiles[i][j].addClickListener(e -> {
-                    if (!myMapService.roomExists(finalI, finalJ)) {
+                    if (!AMyMapService.roomExists(finalI, finalJ)) {
                         //Feld anwählen
-                        if (myMapService.canPlaceRoom(finalI, finalJ)) {
+                        if (AMyMapService.canPlaceRoom(finalI, finalJ)) {
                             //wenn ein raum plaziert wird muss dieser erstellt werden und seine Konfiguration angezeigt werden
-                            ArrayList<Tile> changeTieles= myMapService.placeRoom(finalI, finalJ);
+                            ArrayList<Tile> changeTieles= AMyMapService.placeRoom(finalI, finalJ);
                             for (Tile t : changeTieles) {
                                 tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                             }
@@ -82,9 +81,9 @@ public class MapView extends VerticalLayout {
                     }
                     //Feld abwählen
                     else {
-                        if (myMapService.canDeleteRoom(finalI, finalJ)) {
+                        if (AMyMapService.canDeleteRoom(finalI, finalJ)) {
                             //iteriert über jede Kachel die von der änderung betroffen ist und setzt sie neu
-                            for (Tile t : myMapService.deleteRoom(finalI, finalJ)) {
+                            for (Tile t : AMyMapService.deleteRoom(finalI, finalJ)) {
                                 tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                             }
                         }else{
@@ -96,9 +95,9 @@ public class MapView extends VerticalLayout {
 
                 //click listener für die mauern
                 borderHorizonButt.addClickListener(e->{
-                    if(myMapService.canToggleWall(finalI,finalJ,true)){
+                    if(AMyMapService.canToggleWall(finalI,finalJ,true)){
                         for (Tile t:
-                                myMapService.toggleWall(finalI,finalJ,true)) {
+                                AMyMapService.toggleWall(finalI,finalJ,true)) {
                             tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                         }
                     }else{
@@ -107,9 +106,9 @@ public class MapView extends VerticalLayout {
 
                 });
                 borderVertButt.addClickListener(e->{
-                    if(myMapService.canToggleWall(finalI,finalJ,false)){
+                    if(AMyMapService.canToggleWall(finalI,finalJ,false)){
                         for (Tile t:
-                                myMapService.toggleWall(finalI,finalJ,false)) {
+                                AMyMapService.toggleWall(finalI,finalJ,false)) {
                             tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                         }
                     }else{
