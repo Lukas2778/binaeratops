@@ -45,7 +45,6 @@ public class RoomConfigurator extends VerticalLayout {
 
     VerticalLayout map=new VerticalLayout();
 
-
     MapService mapService;
 
     private final int width = 8;
@@ -63,18 +62,13 @@ public class RoomConfigurator extends VerticalLayout {
         layout.addToSecondary(myRoomArea);
         layout.setWidth("100%");
 
-        //eedlayout.setMaxHeight(700, Unit.PIXELS);
         add(layout);
-
-
     }
-
 
     private void initMap() {
         mapArea.setMinHeight(1000, Unit.PIXELS);
         mapArea.setMaxHeight(1000, Unit.PIXELS);
         mapArea.setMinWidth(500, Unit.PIXELS);
-
 
         //KARTE
         mapService.init(width);
@@ -176,15 +170,7 @@ public class RoomConfigurator extends VerticalLayout {
         lines.setAlignItems(Alignment.CENTER);
         map.add(lines);
 
-
-
-
-
-
-
         mapArea.add(map);
-
-
         mapArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
         mapArea.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
     }
