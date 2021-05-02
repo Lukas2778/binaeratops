@@ -238,13 +238,13 @@ public class Dungeon implements DungeonI {
     }
 
     public void addAllowedUser(User AUser) {
-        AUser.setAllowedDungeons(this);
+        AUser.setAllowedDungeon(this);
         allowedUsers.add(AUser);
     }
 
     public void removeAllowedUser(User AUser) {
         allowedUsers.remove(AUser);
-        AUser.setAllowedDungeons(null);
+        AUser.setAllowedDungeon(null);
     }
 
     public List<User> getBlockedUsers() {
@@ -252,13 +252,13 @@ public class Dungeon implements DungeonI {
     }
 
     public void addBlockedUser(User AUser) {
-        AUser.setBlockedDungeons(this);
+        AUser.setBlockedDungeon(this);
         blockedUsers.add(AUser);
     }
 
     public void removeBlockedUser(User AUser) {
         blockedUsers.remove(AUser);
-        AUser.setBlockedDungeons(null);
+        AUser.setBlockedDungeon(null);
     }
 
     public List<Room> getRooms() {

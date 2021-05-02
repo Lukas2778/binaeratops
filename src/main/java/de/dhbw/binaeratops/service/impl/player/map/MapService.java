@@ -6,9 +6,7 @@ import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.view.player.map.Tile;
 import de.dhbw.binaeratops.view.player.map.Tupel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 
@@ -228,28 +226,28 @@ public class MapService {
      * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
      */
     private void canReachAllRooms(Room ACurrentRoom) {
-        int x = ACurrentRoom.getxCoordinate();
-        int y = ACurrentRoom.getyCoordinate();
+        int x = ACurrentRoom.getXCoordinate();
+        int y = ACurrentRoom.getYCoordinate();
 
         Room north = getRoomById(ACurrentRoom.getNorthRoomId());
         Room east = getRoomById(ACurrentRoom.getEastRoomId());
         Room west = getRoomById(ACurrentRoom.getWestRoomId());
         Room south = getRoomById(ACurrentRoom.getSouthRoomId());
 
-        if (north != null && !searchedRooms.containsKey(new Tupel<>(north.getxCoordinate(), north.getyCoordinate()))) {
-            searchedRooms.put(new Tupel<>(north.getxCoordinate(), north.getyCoordinate()), north);
+        if (north != null && !searchedRooms.containsKey(new Tupel<>(north.getXCoordinate(), north.getYCoordinate()))) {
+            searchedRooms.put(new Tupel<>(north.getXCoordinate(), north.getYCoordinate()), north);
             canReachAllRooms(north);
         }
-        if (east != null && !searchedRooms.containsKey(new Tupel<>(east.getxCoordinate(), east.getyCoordinate()))) {
-            searchedRooms.put(new Tupel<>(east.getxCoordinate(), east.getyCoordinate()), east);
+        if (east != null && !searchedRooms.containsKey(new Tupel<>(east.getXCoordinate(), east.getYCoordinate()))) {
+            searchedRooms.put(new Tupel<>(east.getXCoordinate(), east.getYCoordinate()), east);
             canReachAllRooms(east);
         }
-        if (west != null && !searchedRooms.containsKey(new Tupel<>(west.getxCoordinate(), west.getyCoordinate()))) {
-            searchedRooms.put(new Tupel<>(west.getxCoordinate(), west.getyCoordinate()), west);
+        if (west != null && !searchedRooms.containsKey(new Tupel<>(west.getXCoordinate(), west.getYCoordinate()))) {
+            searchedRooms.put(new Tupel<>(west.getXCoordinate(), west.getYCoordinate()), west);
             canReachAllRooms(west);
         }
-        if (south != null && !searchedRooms.containsKey(new Tupel<>(south.getxCoordinate(), south.getyCoordinate()))) {
-            searchedRooms.put(new Tupel<>(south.getxCoordinate(), south.getyCoordinate()), south);
+        if (south != null && !searchedRooms.containsKey(new Tupel<>(south.getXCoordinate(), south.getYCoordinate()))) {
+            searchedRooms.put(new Tupel<>(south.getXCoordinate(), south.getYCoordinate()), south);
             canReachAllRooms(south);
         }
     }
