@@ -6,6 +6,8 @@ import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.view.player.map.Tile;
 import de.dhbw.binaeratops.view.player.map.Tupel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,7 +15,7 @@ import java.util.*;
 /**
  * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
  */
-@Service
+@Component
 public class MapService {
 
     @Autowired
