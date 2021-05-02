@@ -1,12 +1,14 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.NPCRepositoryI;
 import de.dhbw.binaeratops.model.repository.RaceRepositoryI;
+import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Autowired
     DungeonRepositoryI dungeonRepo;
-
     @Autowired
     NPCRepositoryI npcRepo;
-
     @Autowired
-    RaceRepositoryI raceRepositoryI;
+    RaceRepositoryI raceRepo;
+    @Autowired
+    RoomRepositoryI roomRepo;
 
     public ConfiguratorService(){
         dungeon = new Dungeon();
@@ -83,9 +85,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void createNPC(String AName, String ADescription, Race ARace) {
-        Race testRace = raceRepositoryI.findByRaceId(5L);
+        Race testRace = raceRepo.findByRaceId(5L);
         NPC newNPC = new NPC(AName, testRace, ADescription);
-        raceRepositoryI.save(testRace);
+        raceRepo.save(testRace);
         npcRepo.save(newNPC);
         dungeon.getNpcs().add(newNPC);
         dungeonRepo.save(dungeon);
@@ -137,12 +139,15 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void createRoom(String AName, String ADescription) {
-
+    public void createRoom(String AName) {
+        Room newRoom = new Room(AName);
+        roomRepo.save(new Room());
+        dungeon.getRooms().add(newRoom);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
-    public void setNeighborRoom(String ADirection, Long ARoomId) {
+    public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom) {
 
     }
 
@@ -152,38 +157,34 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setItems(List<Item> AItemList) {
-
+    public void setItems(Room ARoom, List<Item> AItemList) {
+        ARoom.getItems().clear();
+        ARoom.getItems().addAll(AItemList);
+        roomRepo.save(ARoom);
     }
 
     @Override
-    public void setNPCs(List<NPC> ANPCList) {
-
-    }
-
-    @Override
-    public List<Item> getAllRoomItems() {
-        return null;
+    public void setNPCs(Room ARoom, List<NPC> ANPCList) {
+        ARoom.getNpcs().clear();
+        ARoom.getNpcs().addAll(ANPCList);
+        roomRepo.save(ARoom);
     }
 
     @Override
     public List<Item> getAllItems() {
-        return null;
-    }
-
-    @Override
-    public List<NPC> getAllRoomNPCs() {
-        return null;
+        return dungeon.getItems();
     }
 
     @Override
     public List<NPC> getAllNPCs() {
-        return null;
+        return dungeon.getNpcs();
     }
 
     @Override
-    public void deleteRoom(Long ARoomID) {
-
+    public void deleteRoom(Room ARoom) {
+        dungeon.getRooms().remove(ARoom);
+        dungeonRepo.save(dungeon);
+        roomRepo.delete(ARoom);
     }
 
     @Override

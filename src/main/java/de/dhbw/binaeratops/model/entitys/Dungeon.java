@@ -35,28 +35,21 @@ public class Dungeon implements DungeonI {
     private String dungeonName;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Visibility dungeonVisibility;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Status dungeonStatus;
 
-    @NotNull
     private Long dungeonMasterId;
 
     private Long playerCount;
 
-    @NotNull
     private Long playerMaxSize;
 
-    @NotNull
     private Long startRoomId;
-
 
     private Long defaultInventoryCapacity;
 
-    @NotNull
     private Character commandSymbol;
 
     @OneToMany

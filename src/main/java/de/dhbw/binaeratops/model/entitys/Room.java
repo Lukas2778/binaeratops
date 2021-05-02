@@ -60,6 +60,10 @@ public class Room implements RoomI {
         this.description = ADescription;
     }
 
+    public Room(String ARoomName) {
+        this.roomName = ARoomName;
+    }
+
     /**
      * Standardkonstruktor zum Erzeugen eines Raumes.
      */

@@ -48,11 +48,16 @@ public class RoomConfigurator extends VerticalLayout {
         layout.addToPrimary(mapArea);
         layout.addToSecondary(myRoomArea);
         layout.setWidth("100%");
+
+        layout.setMaxHeight(700, Unit.PIXELS);
         add(layout);
+
+
     }
 
     private void initMap() {
         mapArea.setMinHeight(1000, Unit.PIXELS);
+        mapArea.setMaxHeight(1000, Unit.PIXELS);
         mapArea.setMinWidth(500, Unit.PIXELS);
 
         mapArea.add(new H1("MAP - Coming Soon ..."));
@@ -68,7 +73,7 @@ public class RoomConfigurator extends VerticalLayout {
         description.setLabel("Beschreibung");
         description.setValue("123455");
         description.setMinHeight(200, Unit.PIXELS);
-        description.setMinWidth(250, Unit.PIXELS);
+        description.setMinWidth(500, Unit.PIXELS);
 
         H2 neighborroomsTitle = new H2("Nachbarräume");
 
@@ -152,8 +157,10 @@ public class RoomConfigurator extends VerticalLayout {
         roomArea.setSizeFull();
 
         myRoomArea = new VerticalLayout(roomName, roomArea);
-        myRoomArea.setSizeFull();
+        myRoomArea.setMaxWidth(600, Unit.PIXELS);
         myRoomArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
         myRoomArea.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
+
+
     }
 }

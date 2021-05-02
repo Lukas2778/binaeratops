@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.api.configuration;
 
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
 
 import java.security.SecureRandom;
@@ -129,16 +130,15 @@ public interface ConfiguratorServiceI {
     /**
      * Erstellen eines neuen Raumes.
      * @param AName Raumname.
-     * @param ADescription Raumbeschreibung.
      */
-    void createRoom(String AName, String ADescription);
+    void createRoom(String AName);
 
     /**
      * Setz den Nachbarraum des Raumes. Die Himmelsrichtung gibt die Position an.
      * @param ADirection Himmelsrichtung.
      * @param ARoomId Nachbarraum.
      */
-    void setNeighborRoom(String ADirection, Long ARoomId);
+    void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeigghborRoom);
 
     /**
      * Entfernt den Nachbarraum an der angegebenen Richtung.
@@ -150,31 +150,19 @@ public interface ConfiguratorServiceI {
      * Die Gegenstandsliste wird gesetzt und die vorherige gelöscht.
      * @param AItemList Gegenstandsliste.
      */
-    void setItems(List<Item> AItemList);
+    void setItems(Room ARoom, List<Item> AItemList);
 
     /**
      * Die NPCliste wird gesetzt und die vorherige gelöscht.
      * @param ANPCList NPCliste.
      */
-    void setNPCs(List<NPC> ANPCList);
-
-    /**
-     * Gibt alle Gegenstände eines Raumes zurück.
-     * @return Liste mit Gegenständen.
-     */
-    List<Item> getAllRoomItems();
+    void setNPCs(Room ARoom, List<NPC> ANPCList);
 
     /**
      * Gibt alle Gegenstände eines Dungeons zurück.
      * @return Liste mit Gegenständen.
      */
     List<Item> getAllItems();
-
-    /**
-     * Gibt alle Gegenstände eines Raumes zurück.
-     * @return Liste mit Gegenständen.
-     */
-    List<NPC> getAllRoomNPCs();
 
     /**
      * Gibt alle Gegenstände eines Dungeons zurück.
@@ -184,9 +172,9 @@ public interface ConfiguratorServiceI {
 
     /**
      * Entfernt den Raum aus dem Dungeon und löscht ihn.
-     * @param ARoomID ID eines Raumes.
+     * @param ARoom ID eines Raumes.
      */
-    void deleteRoom(Long ARoomID);
+    void deleteRoom(Room ARoom);
 
     /**
      * Gibt das Objekt des angegebenen Raumes zurück.
