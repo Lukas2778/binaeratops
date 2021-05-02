@@ -35,39 +35,44 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void authenticate(String AName, String APassword) throws AuthException, NotVerifiedException {
+        User user;
         try {
-        User user=userRepository.findByUsername(AName);
-        if(user.checkPassword(APassword)){
-            if(!user.isVerified()){
-                throw new NotVerifiedException();
+            //Nutzer in der Datenbank finden
+            user = userRepository.findByName(AName);
+            if (user.checkPassword(APassword)) {
+                if (!user.isVerified()) {
+                    //Benutzer ist nicht verifiziert
+                    throw new NotVerifiedException();
+                } else {
+                    VaadinSession.getCurrent().setAttribute(User.class, user);
+                    createRoutes();
+                }
             }
             else {
-                VaadinSession.getCurrent().setAttribute(User.class, user);
-                createRoutes();
+                throw new AuthException();//Nur den Benutzernamen eingegeben
             }
-            }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             throw new AuthException();
         }
     }
 
     @Override
     public void register(String AName, String APassword, String AEMail) throws RegistrationException {
-        int code=new Random().nextInt(999999);
+        int code = new Random().nextInt(999999);
 
-        if(userRepository.findByUsername(AName)!=null){
+        if (userRepository.findByName(AName) != null) {
             throw new RegistrationException();
         }
 
-        User user= new User(AName,AEMail,APassword,code,false);
+        User user = new User(AName, AEMail, APassword, code, false);
         userRepository.save(user);
-        mailService.sendVerificationMail(user,code);
+        mailService.sendVerificationMail(user, code);
     }
 
     @Override
     public boolean confirm(String AUserName, int ACode) {
-        User user = userRepository.findByUsername(AUserName);
-        if(user.getCode()==ACode && !user.isVerified()){
+        User user = userRepository.findByName(AUserName);
+        if (user.getCode() == ACode && !user.isVerified()) {
             user.setVerified(true);
             userRepository.save(user);
             return true;
@@ -77,28 +82,28 @@ public class AuthService implements AuthServiceI {
 
     @Override
     public void sendConfirmationEmail(String AUserName) throws FalseUserException {
-        User user= userRepository.findByUsername(AUserName);
-        if(user!=null){
-            int code=new Random().nextInt(999999);
+        User user = userRepository.findByName(AUserName);
+        if (user != null) {
+            int code = new Random().nextInt(999999);
             mailService.sendPasswordMail(user, code);
             user.setCode(code);
             //user.setVerified(false);
             userRepository.save(user);
-        }else{
+        } else {
             throw new FalseUserException();
         }
     }
 
     @Override
     public void changePassword(String AUserName, String ANewPassword, int ACode) throws FalseUserException {
-        User user=userRepository.findByUsername(AUserName);
-        if(user!= null){
-            if(ACode==user.getCode()){
+        User user = userRepository.findByName(AUserName);
+        if (user != null) {
+            if (ACode == user.getCode()) {
                 user.setVerified(true);
                 user.setPassword(ANewPassword);
                 userRepository.save(user);
             }
-        }else{
+        } else {
             throw new FalseUserException();
         }
     }
@@ -111,17 +116,18 @@ public class AuthService implements AuthServiceI {
     /**
      * Seiten Verlinkung vornehmen ohne Menüe. @TODO
      */
-    private void createRoutes(){
+    private void createRoutes() {
         getRoutsForMenu().stream()
-                .forEach(r->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(),r.getView(), MainView.class));
+                .forEach(r ->
+                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView(), MainView.class));
         getRouts().stream()
-                .forEach(r->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(),r.getView()));
+                .forEach(r ->
+                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView()));
     }
 
     /**
      * Auflisten der Routen, die mit Menüband angezeigt werden. @TODO
+     *
      * @return Rückgabe Routen.
      */
     private List<AuthorizedRoute> getRoutsForMenu(){
@@ -135,11 +141,11 @@ public class AuthService implements AuthServiceI {
     }
 
     /**
-     * @TODO
      * @return @TODO
+     * @TODO
      */
-    private  List<AuthorizedRoute> getRouts(){
-        List<AuthorizedRoute> returnList= new ArrayList<>();
+    private List<AuthorizedRoute> getRouts() {
+        List<AuthorizedRoute> returnList = new ArrayList<>();
         return returnList;
     }
 }

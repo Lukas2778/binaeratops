@@ -54,6 +54,7 @@ public class Role implements RoleI {
 
     }
 
+
     public Long getRoleId() {
         return roleId;
     }

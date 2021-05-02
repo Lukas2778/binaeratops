@@ -39,8 +39,8 @@ public class RegisterView extends VerticalLayout {
         Button submit=new Button("Registrieren");
 
         HorizontalLayout validLoginLay=new HorizontalLayout();
-        RouterLink loginLink=new RouterLink("Anmeldung",LogInView.class);
-        RouterLink validLink=new RouterLink("Validierung",ValdidateRegistrationView.class);
+        RouterLink loginLink=new RouterLink("Anmelden",LogInView.class);
+        RouterLink validLink=new RouterLink("Zur Validierung",ValdidateRegistrationView.class);
         validLoginLay.add(loginLink,new Label(" - "),validLink);
 
         setJustifyContentMode(JustifyContentMode.CENTER);

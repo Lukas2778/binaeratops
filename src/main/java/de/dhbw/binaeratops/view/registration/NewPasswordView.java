@@ -43,7 +43,7 @@ public class NewPasswordView extends VerticalLayout {
             try {
                 if(newPassword.getValue().equals(newPassword2.getValue())) {
                     authServiceI.changePassword(name.getValue(), newPassword.getValue(), code.getValue());
-                    UI.getCurrent().navigate("login");
+                    UI.getCurrent().navigate("logout");
                 }
                 else
                     Notification.show("Die Passwörter stimmen nicht überein!");

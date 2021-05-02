@@ -3,13 +3,14 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
@@ -20,6 +21,8 @@ import de.dhbw.binaeratops.service.exceptions.AuthException;
 import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ResourceBundle;
+
 /**
  * Login Fenster auf der Webapplikation.
  * Dies ist das erste Fenster, das der Benutzer sieht.
@@ -28,21 +31,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @RouteAlias("")
 @Route("login")
-@PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
     /**
      * Dies ist der Konstruktor zum Erzeugen der Login Seite.
      * @param authServiceI Übergabe des Authentifizierungsservices.
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {
+        // Titel der Seite
+        UI current = UI.getCurrent();
+        current.getPage().setTitle(res.getString("view.login.pagetitle"));
 
-        TextField name = new TextField("Benutzername");
-        PasswordField password = new PasswordField("Passwort");
-        Button loginButton = new Button("Anmelden");
+
+        TextField name = new TextField(res.getString("view.login.field.username"));
+        PasswordField password = new PasswordField(res.getString("view.login.field.password"));
+        Button loginButton = new Button(res.getString("view.login.button.login"));
 
         HorizontalLayout changePasswRegisterLay=new HorizontalLayout();
-        RouterLink changePasswLink=new RouterLink("Passwort vergessen", ForgotPasswordView.class);
-        RouterLink registerLink = new RouterLink("Registrieren", RegisterView.class);
+        RouterLink changePasswLink=new RouterLink(res.getString("view.login.button.forgotpassword"), ForgotPasswordView.class);
+        RouterLink registerLink = new RouterLink(res.getString("view.login.button.register"), RegisterView.class);
         changePasswRegisterLay.add(registerLink,new Label(" - "),changePasswLink);
 
         setSizeFull();
@@ -54,22 +63,22 @@ public class LogInView extends VerticalLayout {
         {
             try {
                 if (VaadinSession.getCurrent().getAttribute(User.class) != null &&
-                        VaadinSession.getCurrent().getAttribute(User.class).getUsername().equals(name.getValue())) {
-                    Notification.show("Sie sind bereits angemeldet.");
+                        VaadinSession.getCurrent().getAttribute(User.class).getName().equals(name.getValue())) {
+                    Notification.show(res.getString("view.login.notification.already.logged.in"));
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());
-                    UI.getCurrent().navigate("aboutUs");
                 }
+                UI.getCurrent().navigate("aboutUs");
             } catch (AuthException authException) {
-                Notification.show("Fehler bei der Anmeldung. Prüfen Sie ihre Daten!");
+                Notification.show(res.getString("view.login.notification.invalid.password"));
             } catch (NotVerifiedException notVerifiedException) {
-                Notification.show("Dein Account ist noch nicht validiert! Bitte gib deinen Code, den du von uns per E-Mail erhalten hast ein.");
+                Notification.show(res.getString("view.login.notification.not.verified"));
                 UI.getCurrent().navigate("validateRegistration");
             }
         });
         add(
-                new H1("Binäratops - Anmeldung"),
-                new H4("Bitte registriere dich zuerst, sofern du noch keinen Account hast."),
+                new H1(res.getString("view.login.pagetitle")),
+                new H4(res.getString("view.login.header")),
                 name,
                 password,
                 loginButton,

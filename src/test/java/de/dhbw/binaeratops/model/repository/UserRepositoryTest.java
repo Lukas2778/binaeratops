@@ -99,12 +99,12 @@ public class UserRepositoryTest {
     }
 
     /**
-     * Testet die Funktionalität 'findByName()'.
+     * Testet die Funktionalität 'findByUsername()'.
      * Erwartet als Ergebnis den richtigen Benutzer zu holen.
      */
     @Test
     public void testFindByUsername() {
-        UserI avh = userRepo.findByUsername("avh");
+        UserI avh = userRepo.findByName("avh");
         Assert.assertEquals(user2.getEmail(), avh.getEmail());
     }
 
@@ -114,9 +114,9 @@ public class UserRepositoryTest {
      */
     @Test
     public void testUpdateUser() {
-        UserI avh = userRepo.findByUsername("avh");
+        UserI avh = userRepo.findByName("avh");
         avh.setCode(134234);
-        UserI avhModified = userRepo.findByUsername("avh");
+        UserI avhModified = userRepo.findByName("avh");
         Assert.assertEquals(avh.getCode(), avhModified.getCode());
     }
 
@@ -151,11 +151,12 @@ public class UserRepositoryTest {
         user.setEmail("g@g.g");
         user.setUsername("test");
         user.setPassword("435n3rtr3");
+
         user.getAvatars().add((Avatar) avatar1);
         user.getAvatars().add((Avatar) avatar2);
         userRepo.save((User) user);
 
-        UserI testUser = userRepo.findByUsername("test");
+        UserI testUser = userRepo.findByName("test");
         Assert.assertEquals(2,testUser.getAvatars().size());
         Assert.assertEquals("Test2", testUser.getAvatars().get(1).getName());
     }
@@ -166,7 +167,7 @@ public class UserRepositoryTest {
      */
     @Test
     public void testLoadAvatarList() {
-        UserI u = userRepo.findByUsername("avh");
+        UserI u = userRepo.findByName("avh");
         Assert.assertEquals(avatarI.getName(), u.getAvatars().get(1).getName());
     }
 }

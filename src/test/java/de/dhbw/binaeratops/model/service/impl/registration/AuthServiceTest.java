@@ -54,12 +54,12 @@ public class AuthServiceTest {
 
     @Test
     public void confirmCorrectTest(){
-        assertEquals(as.confirm(confUser.getUsername(), confUser.getCode()),true);
+        assertEquals(as.confirm(confUser.getName(), confUser.getCode()),true);
     }
 
     @Test
     public void confirmWrongTest(){
-        assertEquals(!as.confirm(confUser.getUsername(), 32234),true);
+        assertEquals(!as.confirm(confUser.getName(), 32234),true);
     }
 
 }
