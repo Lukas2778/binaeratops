@@ -4,7 +4,7 @@
  *
  */
 
-package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs;
+package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
@@ -28,16 +28,15 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RaceDialog;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RoleDialog;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
+
 import java.util.ArrayList;
 
 @PageTitle("Charaktereigenschaft")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 
-public class CharacterConfiguration
-        extends VerticalLayout
-{
+public class CharacterConfigurationTab extends VerticalLayout {
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout roleListLayout = new VerticalLayout();
     VerticalLayout raceListLayout = new VerticalLayout();
@@ -45,11 +44,11 @@ public class CharacterConfiguration
     ArrayList<Role> roleArrayList = new ArrayList<>();
     ArrayList<Race> raceArrayList = new ArrayList<>();
 
-    Button addB = new Button("hinzufügen");
-    Button deleteB = new Button("löschen");
+    Button addB = new Button("Hinzufügen");
+    Button deleteB = new Button("Löschen");
 
-    Button addRaceButton = new Button("hinzufügen");
-    Button deleteRaceButton = new Button("löschen");
+    Button addRaceButton = new Button("Hinzufügen");
+    Button deleteRaceButton = new Button("Löschen");
 
     Grid<Role> grid = new Grid<>();
     Grid<Race> raceGrid = new Grid<>();
@@ -62,9 +61,8 @@ public class CharacterConfiguration
 
     private ConfiguratorServiceI configuratorServiceI;
 
-    public CharacterConfiguration(ConfiguratorServiceI AConfiguratorServiceI)
-    {
-        this.configuratorServiceI= AConfiguratorServiceI;
+    public CharacterConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI) {
+        this.configuratorServiceI = AConfiguratorServiceI;
 
         initFeld();
         roleList();
@@ -93,16 +91,15 @@ public class CharacterConfiguration
         add(layout);
     }
 
-    private void initFeld()
-    {
-        H1 titel = new H1("Charaktereigenschaften");
+    private void initFeld() {
+        H1 title = new H1("Charaktereigenschaften");
 
-        Details hinweis = new Details("Hinweis",
-                                      new Text(
-                                              "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
-                                                      + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
-                                                      + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
-        hinweis.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
+        Details hint = new Details("Hinweis",
+                new Text(
+                        "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
+                                + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
+                                + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
+        hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
         NumberField inventorySize = new NumberField("Größe des Inventars");
         inventorySize.setHasControls(true);
@@ -113,15 +110,14 @@ public class CharacterConfiguration
         genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         genderRadioButton.setValue("Aktivieren");
 
-        initFeldLayout.add(titel, hinweis, inventorySize, genderRadioButton);
+        initFeldLayout.add(title, hint, inventorySize, genderRadioButton);
 
     }
 
-    private void roleList()
-    {
+    private void roleList() {
         addRoleClickListener();
         deleteRoleClickListener();
-        H2 titel = new H2("Rollenliste");
+        H2 title = new H2("Rollenliste");
         grid.setItems(roleArrayList);
 
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
@@ -147,16 +143,15 @@ public class CharacterConfiguration
         buttonView.addAndExpand(addB, deleteB);
 
         //  roleListLayout.setSizeFull();
-        roleListLayout.add(titel, grid, buttonView);
+        roleListLayout.add(title, grid, buttonView);
 
     }
 
-    private void raceList()
-    {
+    private void raceList() {
         addRaceClickListener();
         deleteRaceClickListener();
 
-        H2 titel = new H2("Rassenliste");
+        H2 title = new H2("Rassenliste");
 
         raceGrid.setItems(raceArrayList);
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
@@ -186,41 +181,36 @@ public class CharacterConfiguration
         deleteRaceButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addRaceButton, deleteRaceButton);
         //raceListLayout.setSizeFull();
-        raceListLayout.add(titel, raceGrid, buttonView);
+        raceListLayout.add(title, raceGrid, buttonView);
     }
 
-    private void refreshRoleGrid()
-    {
+    private void refreshRoleGrid() {
         grid.setItems(roleArrayList);
     }
 
-    private void refreshRaceGrid()
-    {
+    private void refreshRaceGrid() {
         raceGrid.setItems(raceArrayList);
     }
 
-    private RoleDialog createRoleDialog()
-    {
+    private RoleDialog createRoleDialog() {
         roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorServiceI);
         return roleDialog;
     }
 
-    private RaceDialog createRaceDialog()
-    {
+    private RaceDialog createRaceDialog() {
         raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorServiceI);
         return raceDialog;
     }
 
-    private void addRoleClickListener()
-    {
+    private void addRoleClickListener() {
         addB.addClickListener(e -> {
             currentRole = new Role();
             RoleDialog dialog = createRoleDialog();
             dialog.open();
         });
     }
-    private void addRaceClickListener()
-    {
+
+    private void addRaceClickListener() {
         addRaceButton.addClickListener(e -> {
             currentRace = new Race();
             RaceDialog dialog = createRaceDialog();
@@ -228,13 +218,11 @@ public class CharacterConfiguration
         });
     }
 
-    private void deleteRoleClickListener()
-    {
+    private void deleteRoleClickListener() {
         deleteB.addClickListener(e -> {
             Role[] selectedRole = grid.getSelectedItems()
                     .toArray(Role[]::new);
-            if ( selectedRole.length >= 1 )
-            {
+            if (selectedRole.length >= 1) {
                 currentRole = selectedRole[0];
                 roleArrayList.remove(currentRole);
                 refreshRoleGrid();
@@ -243,12 +231,10 @@ public class CharacterConfiguration
         });
     }
 
-    private void deleteRaceClickListener()
-    {
+    private void deleteRaceClickListener() {
         deleteRaceButton.addClickListener(e -> {
             Race[] selectedRace = raceGrid.getSelectedItems().toArray(Race[]::new);
-            if ( selectedRace.length >= 1 )
-            {
+            if (selectedRace.length >= 1) {
                 currentRace = selectedRace[0];
                 raceArrayList.remove(currentRace);
                 refreshRaceGrid();

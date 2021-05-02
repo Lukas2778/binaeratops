@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs;
+package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -13,11 +13,11 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ItemDialog;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemDialog;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class ItemsConfigurator extends VerticalLayout {
+public class ItemConfigurationTab extends VerticalLayout {
 
     ConfiguratorServiceI configuratorServiceI;
 
@@ -25,18 +25,18 @@ public class ItemsConfigurator extends VerticalLayout {
 
     Grid<Item> grid = new Grid<>(Item.class);
     Button addItemButton = new Button("Gegenstand hinzufügen");
-    Button editItemButton = new Button("Gegenstand anpassen");
+    Button editItemButton = new Button("Gegenstand bearbeiten");
     Button deleteItemButton = new Button("Gegenstand entfernen");
 
     ItemDialog itemDialog;
 
     private Item currentItem;
 
-    public ItemsConfigurator(ConfiguratorServiceI configuratorServiceI) {
+    public ItemConfigurationTab(ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1("Gegenstände"), items);
+        add(new H1("Liste der Gegenstände"), items);
     }
 
     private void initRoom() {
@@ -60,7 +60,7 @@ public class ItemsConfigurator extends VerticalLayout {
                 itemDialog.fillDialog(currentItem);
                 itemDialog.open();
             } else {
-                Notification.show("Bitte wählen sie einen Gegenstand aus!");
+                Notification.show("Bitte wähle einen Gegenstand aus!");
             }
         });
 

@@ -16,8 +16,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.service.impl.registration.AuthException;
-import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
+import de.dhbw.binaeratops.service.exceptions.AuthException;
+import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

@@ -6,13 +6,17 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
+import de.dhbw.binaeratops.service.exceptions.AuthException;
+import de.dhbw.binaeratops.service.exceptions.FalseUserException;
+import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
+import de.dhbw.binaeratops.service.exceptions.RegistrationException;
 import de.dhbw.binaeratops.view.*;
 
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
 import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.ConfiguratorMainView;
+import de.dhbw.binaeratops.view.configurator.ConfiguratorMainView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

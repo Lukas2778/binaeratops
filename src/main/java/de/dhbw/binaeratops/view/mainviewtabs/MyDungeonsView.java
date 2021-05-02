@@ -2,6 +2,8 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.crud.CrudGrid;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.listbox.ListBox;
@@ -17,42 +19,47 @@ import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Oberfläche des Tabs 'Eigene Dungeons'
  */
-//@Route(value = "myDungeons",layout = MainView.class)
 @PageTitle("Eigene Dungeons")
 public class MyDungeonsView extends VerticalLayout {
 
-    private ListBox<Dungeon> dungeonList = new ListBox<Dungeon>();
-    private Button newDungeonButton = new Button("Dungeon erstellen");
-    private Button editDungeonButton = new Button( "Bearbeiten");
-    private HorizontalLayout buttonsLayout = new HorizontalLayout();
-    private H1 title = new H1("Meine Dungeons");
+    private List<Dungeon> dungeonList;
+    private Button newDungeonButton;
+    private Button editDungeonButton;
+    private HorizontalLayout buttonsLayout;
+    private H1 title;
 
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
      */
     public MyDungeonsView(@Autowired DungeonServiceI configuratorService) {
-        super ();
+        dungeonList = new ArrayList<>();
+        newDungeonButton = new Button("Dungeon erstellen");
+        editDungeonButton = new Button( "Bearbeiten");
+        buttonsLayout = new HorizontalLayout();
+        title = new H1("Meine Dungeons");
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
-
-        dungeonList.setRenderer(new ComponentRenderer<>(dungeon ->{
-            Label label = new Label(dungeon.getDungeonName());
-            label.getStyle().set("propertyName", "value");
-            label.addClassName("itemLabel");
-            return label;
-        }));
+        dungeonList.addAll(configuratorService.getAllDungeonsFromUser(user));
 
         initButtonsLayout();
         initNewDungeonButton();
-        dungeonList.setHeightFull();
-        dungeonList.setItems(configuratorService.getAllDungeonsFromUser(user));
-        add(title, buttonsLayout, dungeonList);
+        Grid<Dungeon> dungeonGrid=new Grid<>();
+        dungeonGrid.setItems(dungeonList);
+        dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
+        dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
+        dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
+
+//        dungeonList.setHeightFull();
+
+        add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
     }
 
@@ -60,11 +67,11 @@ public class MyDungeonsView extends VerticalLayout {
         buttonsLayout.add(newDungeonButton, editDungeonButton);
     }
 
-    private void initEditDungeonButton(){
-        newDungeonButton.addClickListener(e->{
-            UI.getCurrent().navigate("configurator");
-        });
-    }
+//    private void initEditDungeonButton(){
+//        newDungeonButton.addClickListener(e->{
+//            UI.getCurrent().navigate("configurator");
+//        });
+//    }
     private void initNewDungeonButton(){
         newDungeonButton.addClickListener(e ->{
             UI.getCurrent().navigate("configurator");

@@ -15,10 +15,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
+import de.dhbw.binaeratops.service.exceptions.RegistrationException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.validation.ValidationException;
 
 /**
  * Registrierungs Fenster. Erscheint, wenn auf den Button 'Registrieren' geklickt wird.

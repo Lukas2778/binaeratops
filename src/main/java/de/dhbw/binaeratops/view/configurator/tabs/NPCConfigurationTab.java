@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs;
+package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
@@ -13,14 +13,12 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NPCDialog;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.NPCDialog;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class NPCConfigurator extends VerticalLayout {
-
+public class NPCConfigurationTab extends VerticalLayout {
     ConfiguratorServiceI configuratorServiceI;
-
     VerticalLayout items = new VerticalLayout();
 
     Grid<NPC> grid = new Grid<>(NPC.class);
@@ -29,10 +27,9 @@ public class NPCConfigurator extends VerticalLayout {
     Button deleteNPCButton = new Button("NPC entfernen");
 
     NPCDialog npcDialog;
-
     private NPC currentNPC;
 
-    public NPCConfigurator(ConfiguratorServiceI configuratorServiceI) {
+    public NPCConfigurationTab(ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();
@@ -60,7 +57,7 @@ public class NPCConfigurator extends VerticalLayout {
                 npcDialog.fillDialog(currentNPC);
                 npcDialog.open();
             } else {
-                Notification.show("Bitte wählen sie einen Gegenstand aus!");
+                Notification.show("Bitte wähle einen Gegenstand aus!");
             }
         });
 
@@ -71,7 +68,7 @@ public class NPCConfigurator extends VerticalLayout {
                 configuratorServiceI.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
-                Notification.show("Bitte wählen sie einen Gegenstand aus!");
+                Notification.show("Bitte wähle einen Gegenstand aus!");
             }
         });
     }

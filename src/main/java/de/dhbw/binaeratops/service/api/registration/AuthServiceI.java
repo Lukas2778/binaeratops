@@ -1,9 +1,9 @@
 package de.dhbw.binaeratops.service.api.registration;
 
-import de.dhbw.binaeratops.service.impl.registration.AuthException;
-import de.dhbw.binaeratops.service.impl.registration.FalseUserException;
-import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
-import de.dhbw.binaeratops.service.impl.registration.RegistrationException;
+import de.dhbw.binaeratops.service.exceptions.AuthException;
+import de.dhbw.binaeratops.service.exceptions.FalseUserException;
+import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
+import de.dhbw.binaeratops.service.exceptions.RegistrationException;
 
 /**
  * Stellt die Schnittstelle zwischen der User-Authentifizierung und der Benutzeroberfläche bereit.

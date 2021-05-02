@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs;
+package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
@@ -14,27 +14,20 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import de.dhbw.binaeratops.model.api.NPCI;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ItemSelectionDialog;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NpcSelectionDialog;
-import de.dhbw.binaeratops.view.player.map.MapView;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
 import de.dhbw.binaeratops.view.player.map.Tile;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class RoomConfigurator extends VerticalLayout {
+public class RoomConfigurationTab extends VerticalLayout {
 
     NpcSelectionDialog npcSelectionDialog;
     ItemSelectionDialog itemSelectionDialog;
@@ -51,9 +44,9 @@ public class RoomConfigurator extends VerticalLayout {
     private final int width = 8;
     Image[][] tiles =new Image[width][width];
 
-    private List<NPC> npcs = new ArrayList<>();
+    private List<NPC> npcArrayList = new ArrayList<>();
 
-    public RoomConfigurator(ConfiguratorServiceI configuratorService, MapService mapService){
+    public RoomConfigurationTab(ConfiguratorServiceI configuratorService, MapService mapService){
         this.mapService=mapService;
         itemSelectionDialog = new ItemSelectionDialog(configuratorService);
         npcSelectionDialog = new NpcSelectionDialog(configuratorService);
@@ -71,7 +64,7 @@ public class RoomConfigurator extends VerticalLayout {
     private void initMap() {
         mapArea.setMinHeight(1000, Unit.PIXELS);
         mapArea.setMaxHeight(1000, Unit.PIXELS);
-        mapArea.setMinWidth(500, Unit.PIXELS);
+        mapArea.setMinWidth(400, Unit.PIXELS);
 
         //KARTE
         mapService.init(width);

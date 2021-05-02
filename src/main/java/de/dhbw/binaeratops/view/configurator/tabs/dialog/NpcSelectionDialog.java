@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog;
+package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
