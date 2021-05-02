@@ -64,7 +64,6 @@ public class CharacterConfiguration
 
     public CharacterConfiguration(ConfiguratorServiceI AConfiguratorServiceI)
     {
-
         this.configuratorServiceI= AConfiguratorServiceI;
 
         initFeld();
@@ -121,13 +120,8 @@ public class CharacterConfiguration
     private void roleList()
     {
         addRoleClickListener();
-
         deleteRoleClickListener();
-
-
-
         H2 titel = new H2("Rollenliste");
-
         grid.setItems(roleArrayList);
 
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
@@ -159,13 +153,10 @@ public class CharacterConfiguration
 
     private void raceList()
     {
-
         addRaceClickListener();
-
         deleteRaceClickListener();
 
         H2 titel = new H2("Rassenliste");
-
 
         raceGrid.setItems(raceArrayList);
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
@@ -191,14 +182,11 @@ public class CharacterConfiguration
         HorizontalLayout buttonView = new HorizontalLayout();
         buttonView.setVerticalComponentAlignment(Alignment.END);
 
-
-
         addRaceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteRaceButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addRaceButton, deleteRaceButton);
         //raceListLayout.setSizeFull();
         raceListLayout.add(titel, raceGrid, buttonView);
-
     }
 
     private void refreshRoleGrid()
@@ -214,14 +202,12 @@ public class CharacterConfiguration
     private RoleDialog createRoleDialog()
     {
         roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorServiceI);
-
         return roleDialog;
     }
 
     private RaceDialog createRaceDialog()
     {
         raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorServiceI);
-
         return raceDialog;
     }
 

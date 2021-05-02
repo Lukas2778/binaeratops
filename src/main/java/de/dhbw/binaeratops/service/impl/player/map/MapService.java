@@ -6,6 +6,8 @@ import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.view.player.map.Tile;
 import de.dhbw.binaeratops.view.player.map.Tupel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -13,7 +15,7 @@ import java.util.*;
 /**
  * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
  */
-@Service
+@Component
 public class MapService {
 
     @Autowired
@@ -22,19 +24,14 @@ public class MapService {
     @Autowired
     private DungeonRepositoryI dungeonRepositoryI;
 
-
     private int MAP_SIZE;
     Boolean[][] roomsSet; //Array mit Räumen
-
-    HashMap<Tupel<Integer>, Room> rooms = new HashMap<>();
-
-
-    //räume, die von einem Algorthmus schon durchsucht wurden
-    HashMap<Tupel<Integer>, Room> searchedRooms = new HashMap<>();
+    HashMap<Tupel<Integer>, Room> rooms;
+    //Räume, die von einem Algorithmus schon durchsucht wurden werden hier gespeichert
+    HashMap<Tupel<Integer>, Room> searchedRooms;
 
     //TODO dungeonId setzen im konstruktor
     Long dungeonId;
-
 
     /**
      * Konstruktor des MapServices.
@@ -47,6 +44,9 @@ public class MapService {
 
         this.MAP_SIZE = AMapSize;
         roomsSet = new Boolean[MAP_SIZE][MAP_SIZE];
+        rooms = new HashMap<>();
+        searchedRooms = new HashMap<>();
+
         //Karte mit keinem Raum
         for (int i = 0; i < MAP_SIZE; ++i) {
             Arrays.fill(roomsSet[i], Boolean.FALSE);
@@ -191,9 +191,7 @@ public class MapService {
         }
 
         tiles.add(new Tile(ALocationX, ALocationY, tileName(myRoom)));
-
         roomsSet[ALocationX][ALocationY] = true;
-
         return tiles;
     }
 
@@ -207,8 +205,6 @@ public class MapService {
      * @return Rückgabe, ob der Raum gelöscht werden kann oder nicht.
      */
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
-
-
         //wenn es nur einen raum gibt, kann dieser entfernt werden
         if (rooms.size() <= 2) {
             return true;

@@ -10,6 +10,7 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.impl.player.map.MapService;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.*;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NewDungeonDialog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,12 @@ public class ConfiguratorMainView extends Div {
     private VerticalLayout roomConfigurator;
 
 
-    public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI) {
+    public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI,@Autowired MapService mapService) {
         super();
 
         Dialog dungeonnameDialog = new NewDungeonDialog(configuratorServiceI);
 
-        roomConfigurator = new RoomConfigurator();
+        roomConfigurator = new RoomConfigurator(mapService);
         characterConfigurator = new CharacterConfiguration(configuratorServiceI);
         itemsConfigurator = new ItemsConfigurator();
         dungeonsConfigurator = new DungeonConfiguration(configuratorServiceI);

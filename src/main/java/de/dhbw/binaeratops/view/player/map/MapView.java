@@ -18,16 +18,14 @@ import java.util.ArrayList;
  * Karten-Komponente für den Konfigurator, sowie die Spielansicht.
  */
 @CssImport("./views/player/map/map.css")
+@Route("Mapp")
 public class MapView extends VerticalLayout {
 
     @Autowired
     MapService myMapService;
-    //Image image =new Image("images/map/KarteNOSW.png","Room");
 
     private final int width = 8;
     Image[][] tiles =new Image[width][width];
-
-
 
     /**
      * Dies ist der Konstruktor zum Erzeugen der Karte.
