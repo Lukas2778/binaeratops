@@ -1,9 +1,7 @@
 package de.dhbw.binaeratops.model.api;
 
-import de.dhbw.binaeratops.model.entitys.Race;
-import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
-import de.dhbw.binaeratops.model.entitys.Item;
 
 import java.util.List;
 
@@ -81,6 +79,30 @@ public interface AvatarI {
     void setName(String AName);
 
     /**
+     * Gibt den Benutzer des Avatars zurück.
+     * @return Benutzer des Avatars.
+     */
+    User getUser();
+
+    /**
+     * Setzt den Benutzer des Avatars.
+     * @param AUser Benutzer des Avatars.
+     */
+    void setUser(User AUser);
+
+    /**
+     * Gibt den Dungeon des Avatars zurück.
+     * @return Dungeon des Avatars.
+     */
+    Dungeon getDungeon();
+
+    /**
+     * Setzt den Dungeon des Avatars.
+     * @return Dungeon des Avatars.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
      * Gibt die Rasse des Avatars zurück.
      *
      * @return Rasse des Avatars.
@@ -116,10 +138,34 @@ public interface AvatarI {
     List<Item> getInventory();
 
     /**
+     * Fügt dem Inventar des Avatars einen Gegenstand hinzu.
+     * @param AItem Gegenstand, der hinzugefügt werden soll.
+     */
+    void addInventoryItem(Item AItem);
+
+    /**
+     * Entfernt dem Inventar des Avatars einen Gegenstand.
+     * @param AItem Gegenstand, der entfernt werden soll.
+     */
+    void removeInventoryItem(Item AItem);
+
+    /**
      * Gibt das ausgerüstete Equipment eines Avatars als Liste von Gegenständen zurück.
      * <p>
      * WICHTIG: Diese Liste darf jeden Gegenstandstyp nur 1x beinhalten.
      * @return Liste von Gegenständen (Equipment)
      */
     List<Item> getEquipment();
+
+    /**
+     * Fügt der Ausrüstung des Avatars einen Gegenstand hinzu.
+     * @param AItem Gegenstand, der hinzugefügt werden soll.
+     */
+    void addEquipmentItem(Item AItem);
+
+    /**
+     * Entfernt der Ausrüstung des Avatars einen Gegenstand.
+     * @param AItem Gegenstand, der entfernt werden soll.
+     */
+    void removeEquipmentItem(Item AItem);
 }

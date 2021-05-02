@@ -122,16 +122,16 @@ public class Avatar implements AvatarI {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User AUser) {
+        this.user = AUser;
     }
 
     public Dungeon getDungeon() {
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public Race getRace() {
