@@ -149,8 +149,9 @@ public class UserRepositoryTest {
 
         UserI user = new User();
         user.setEmail("g@g.g");
-        user.setName("test");
-        user.setPasswordHash("435n3rtr3");
+        user.setUsername("test");
+        user.setPassword("435n3rtr3");
+
         user.getAvatars().add((Avatar) avatar1);
         user.getAvatars().add((Avatar) avatar2);
         userRepo.save((User) user);

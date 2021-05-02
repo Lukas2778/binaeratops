@@ -1,7 +1,9 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.Race;
+import de.dhbw.binaeratops.model.entitys.Room;
 
 import java.util.List;
 
@@ -75,6 +77,30 @@ public interface NPCI {
     void setDescription(String ADecription);
 
     /**
+     * Gibt den Dungeon des NPCs zurück.
+     * @return Dungeon des NPCs.
+     */
+    Dungeon getDungeon();
+
+    /**
+     * Setzt den Dungeon eines NPS.
+     * @param ADungeon Dungeon des NPCs.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
+     * Gibt den Raum des NPCs zurück.
+     * @return Raum des NPCs.
+     */
+    Room getRoom();
+
+    /**
+     * Setzt den Raum des NPCs.
+     * @param room Raum des NPCs.
+     */
+    void setRoom(Room room);
+
+    /**
      * Gibt das Gepäck des NPCs zurück.
      * <p>
      * Unter Gepäck versteht man in diesem Kontext, dass der NPC beliebige
@@ -83,4 +109,16 @@ public interface NPCI {
      * @return Gepäck des NPCs.
      */
     List<Item> getLuggage();
+
+    /**
+     * Fügt dem Gepäck des NPCs einen Gegenstand hinzu.
+     * @param AItem Gegenstand, der hinzugefügt werden soll.
+     */
+    void addItem(Item AItem);
+
+    /**
+     * Entfernt dem Gepäck des NPCs einen Gegenstand.
+     * @param AItem Gegenstand, der entfernt werden soll.
+     */
+    void removeItem(Item AItem);
 }

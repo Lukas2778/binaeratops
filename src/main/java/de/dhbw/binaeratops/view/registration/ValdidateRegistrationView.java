@@ -22,13 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 @PageTitle("Binäratops Code-Validierung")
 public class ValdidateRegistrationView extends VerticalLayout {
 
-    @Autowired
-    AuthServiceI authServiceI;
+
 
     /**
      * Dies ist der Konstruktor, zum Erzeugen der Validierungs-Registrierungs Seite.
      */
-    public ValdidateRegistrationView() {
+    public ValdidateRegistrationView(@Autowired AuthServiceI authServiceI) {
         TextField name=new TextField("Benutzername");
         IntegerField code=new IntegerField("Code");
         Button submit=new Button("Account validieren");

@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * @author Nicolas Haug
  */
 @Entity
-public class Item implements ItemI {
+public class Item implements ItemI{
 
     @Id
     @GeneratedValue
@@ -36,6 +36,21 @@ public class Item implements ItemI {
     @Enumerated(EnumType.STRING)
     private ItemType type;
 
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @ManyToOne
+    private Room room;
+
+    @ManyToOne
+    private Avatar inventoryAvatar;
+
+    @ManyToOne
+    private Avatar equipmentAvatar;
+
+    @ManyToOne
+    private NPC npc;
+
     /**
      * Konstruktor zum Erzeugen eines Gegenstandes mit allen Eigenschaften.
      *
@@ -44,7 +59,9 @@ public class Item implements ItemI {
      * @param ADescription Beschreibung des Gegenstandes.
      */
     public Item(String AName, Long ASize, String ADescription) {
-
+        this.itemName = AName;
+        this.size = ASize;
+        this.description = ADescription;
     }
 
     /**
@@ -92,6 +109,46 @@ public class Item implements ItemI {
 
     public void setType(ItemType AType) {
         this.type = AType;
+    }
+
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room ARoom) {
+        this.room = ARoom;
+    }
+
+    public Avatar getInventoryAvatar() {
+        return inventoryAvatar;
+    }
+
+    public void setInventoryAvatar(Avatar AInventoryAvatar) {
+        this.inventoryAvatar = AInventoryAvatar;
+    }
+
+    public Avatar getEquipmentAvatar() {
+        return equipmentAvatar;
+    }
+
+    public void setEquipmentAvatar(Avatar AEquipmentAvatar) {
+        this.equipmentAvatar = AEquipmentAvatar;
+    }
+
+    public NPC getNpc() {
+        return npc;
+    }
+
+    public void setNpc(NPC ANpc) {
+        this.npc = ANpc;
     }
 
     @Override

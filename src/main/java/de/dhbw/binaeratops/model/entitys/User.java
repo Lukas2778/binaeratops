@@ -45,10 +45,16 @@ public class User implements UserI {
 
     private Boolean isVerified;
 
-    @OneToMany
+    @ManyToOne
+    private Dungeon allowedDungeons;
+
+    @ManyToOne
+    private Dungeon blockedDungeons;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> myAvatars = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
     /**
@@ -107,10 +113,6 @@ public class User implements UserI {
         return passwordHash;
     }
 
-    public void setPasswordHash(String APasswordHash) {
-        this.passwordHash = APasswordHash;
-    }
-
     public void setPassword(String APassword) {
         this.passwordHash = DigestUtils.sha1Hex(APassword);
     }
@@ -131,19 +133,50 @@ public class User implements UserI {
         this.isVerified = AIsVerified;
     }
 
+    public Dungeon getAllowedDungeon() {
+        return allowedDungeons;
+    }
+
+    public void setAllowedDungeon(Dungeon AAllowedDungeons) {
+        this.allowedDungeons = AAllowedDungeons;
+    }
+
+    public Dungeon getBlockedDungeon() {
+        return blockedDungeons;
+    }
+
+    public void setBlockedDungeon(Dungeon ABlockedDungeons) {
+        this.blockedDungeons = ABlockedDungeons;
+    }
+
     public List<Avatar> getAvatars() {
         return myAvatars;
+    }
+
+    public void addAvatar(Avatar AAvatar) {
+        AAvatar.setUser(this);
+        myAvatars.add(AAvatar);
+    }
+
+    public void removeAvatar(Avatar AAvatar) {
+        myAvatars.remove(AAvatar);
+        AAvatar.setUser(null);
     }
 
     public List<Dungeon> getMyDungeons() {
         return myDungeons;
     }
 
-    /**
-     *
-     * @param AOther Das zu vergleichende Username-Objekt
-     * @return Boolean
-     */
+    public void addDungeon(Dungeon ADungeon) {
+        ADungeon.setUser(this);
+        myDungeons.add(ADungeon);
+    }
+
+    public void removeDungeon(Dungeon ADungeon) {
+        myDungeons.remove(ADungeon);
+        ADungeon.setUser(null);
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;

@@ -76,11 +76,11 @@ public interface UserI {
     String getPasswordHash();
 
     /**
-     * Setzt den Passwort-Hash des Benutzerpasswortes.
+     * Setzt das Benutzerpasswortes des Benutzers.
      *
-     * @param APasswordHash Zu setzender Passwort-Hash des Benutzerpasswortes.
+     * @param APassword Zu setzendes Passwirt des Benutzerpasswortes.
      */
-    void setPasswordHash(String APasswordHash);
+    void setPassword(String APassword);
 
     /**
      * Gibt den Verifizierungscode des Benutzers zurück.
@@ -110,6 +110,30 @@ public interface UserI {
      */
     void setVerified(Boolean AIsVerified);
 
+    /***
+     * Gibt den erlaubten Dungeons zurück.
+     * @return Erlaubten Dungeons.
+     */
+    Dungeon getAllowedDungeon();
+
+    /**
+     * Setzt den erlaubten Dungeon.
+     * @param AAllowedDungeons Zu setzender erlaubter Dungeon.
+     */
+    void setAllowedDungeon(Dungeon AAllowedDungeons);
+
+    /**
+     * Gibt den blockierten Dungeon zurück.
+     * @return Blockierter Dungeon.
+     */
+    Dungeon getBlockedDungeon();
+
+    /**
+     * Setzt den blockierten Dungeon.
+     * @param ABlockedDungeons Zu setzender blockierter Dungeon.
+     */
+    void setBlockedDungeon(Dungeon ABlockedDungeons);
+
     /**
      * Gibt die Liste der Spieleravatare zurück.
      * @return Avatarliste.
@@ -117,8 +141,32 @@ public interface UserI {
     List<Avatar> getAvatars();
 
     /**
+     * Fügt einen Avatar dem Benutzer hinzu.
+     * @param AAvatar Avatar, der hinzugefügt werden soll.
+     */
+    void addAvatar(Avatar AAvatar);
+
+    /**
+     * Entfernt einen Avatar des Benutzers.
+     * @param AAvatar Avatar, der entfernt werden soll.
+     */
+    void removeAvatar(Avatar AAvatar);
+
+    /**
      * Gibt die Liste der eigenen Dungeons zurück.
      * @return Dungeonliste.
      */
     List<Dungeon> getMyDungeons();
+
+    /**
+     * Fügt dem Benutzer einen Dungeon hinzu.
+     * @param ADungeon Dungeon, der hinzugefügt werden soll.
+     */
+    void addDungeon(Dungeon ADungeon);
+
+    /**
+     * Entfernt den Dungeon des Benutzers.
+     * @param ADungeon Dungeon des Benutzers.
+     */
+    void removeDungeon(Dungeon ADungeon);
 }

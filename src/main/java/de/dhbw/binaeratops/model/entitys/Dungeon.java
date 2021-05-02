@@ -20,9 +20,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Dungeon Schnittstelle.
  * <p>
- * @see DungeonI
  *
  * @author Nicolas Haug
+ * @see DungeonI
  */
 @Entity
 public class Dungeon implements DungeonI {
@@ -35,57 +35,61 @@ public class Dungeon implements DungeonI {
     private String dungeonName;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Visibility dungeonVisibility;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Status dungeonStatus;
 
-    @NotNull
     private Long dungeonMasterId;
 
     private Long playerCount;
 
-    @NotNull
     private Long playerMaxSize;
 
-    @NotNull
     private Long startRoomId;
 
-    @NotNull
     private Long defaultInventoryCapacity;
 
-    @NotNull
+    private String description;
+
     private Character commandSymbol;
 
-    @OneToMany
+    @ManyToOne
+    private User user; //Ersteller des Dungeons
+
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> avatars = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "allowedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> allowedUsers = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Room> rooms = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<NPC> npcs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Item> items = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Role> roles = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Race> races = new ArrayList<>();
 
     /**
      * Konstruktor zum Erzeugen eines Dungeons mit allen Eigenschaften.
      *
-     * @param ADungeonName Name des Dungeons.
-     * @param ADungeonMaster ID des Dungeon-Masters.
-     * @param APlayerMaxSize Maximale Spieleranzahl.
-     * @param AStartRoomId ID des Startraumes.
+     * @param ADungeonName              Name des Dungeons.
+     * @param ADungeonMaster            ID des Dungeon-Masters.
+     * @param APlayerMaxSize            Maximale Spieleranzahl.
+     * @param AStartRoomId              ID des Startraumes.
      * @param ADefaultInventoryCapacity Standardinventarkapazität des Dungeons.
-     * @param ACommandSymbol Befehlszeichen des Dungeons.
+     * @param ACommandSymbol            Befehlszeichen des Dungeons.
      */
     public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize,
                    Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol) {
@@ -96,7 +100,32 @@ public class Dungeon implements DungeonI {
         this.defaultInventoryCapacity = ADefaultInventoryCapacity;
         this.commandSymbol = ACommandSymbol;
     }
+    /**
+     * Konstruktor zum Erzeugen eines Dungeons mit dem Namen.
+     *
+     * @param ADungeonName Name des Dungeons.
+     */
+    public Dungeon(String ADungeonName) {
+        this.dungeonName = ADungeonName;
+    }
 
+    /**
+     * Konstruktor zum Erzeugen eines Dungeons mit dem Namen und Dungeon-Master.
+     *
+     * @param ADungeonName   Name des Dungeons.
+     * @param ADungeonMaster ID des Dungeon-Masters.
+     */
+    public Dungeon(String ADungeonName, Long ADungeonMaster) {
+        this.dungeonName = ADungeonName;
+        this.dungeonMasterId = ADungeonMaster;
+    }
+
+    public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize, Visibility AVisibility) {
+        this.dungeonName = ADungeonName;
+        this.dungeonMasterId = ADungeonMaster;
+        this.playerMaxSize = APlayerMaxSize;
+        this.dungeonVisibility = AVisibility;
+    }
     /**
      * Standardkonstruktor zum Erzeugen eines Dungeons.
      */
@@ -176,6 +205,14 @@ public class Dungeon implements DungeonI {
         this.defaultInventoryCapacity = ADefaultInventoryCapacity;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String ADescription) {
+        this.description = ADescription;
+    }
+
     public Character getCommandSymbol() {
         return commandSymbol;
     }
@@ -184,28 +221,124 @@ public class Dungeon implements DungeonI {
         this.commandSymbol = ACommandSymbol;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User AUser) {
+        this.user = AUser;
+    }
+
     public List<Avatar> getAvatars() {
         return avatars;
+    }
+
+    public void addAvatar(Avatar AAvatar) {
+        AAvatar.setDungeon(this);
+        avatars.add(AAvatar);
+    }
+
+    public void removeAvatar(Avatar AAvatar) {
+        avatars.remove(AAvatar);
+        AAvatar.setDungeon(null);
     }
 
     public List<User> getAllowedUsers() {
         return allowedUsers;
     }
 
+    public void addAllowedUser(User AUser) {
+        AUser.setAllowedDungeon(this);
+        allowedUsers.add(AUser);
+    }
+
+    public void removeAllowedUser(User AUser) {
+        allowedUsers.remove(AUser);
+        AUser.setAllowedDungeon(null);
+    }
+
     public List<User> getBlockedUsers() {
         return blockedUsers;
+    }
+
+    public void addBlockedUser(User AUser) {
+        AUser.setBlockedDungeon(this);
+        blockedUsers.add(AUser);
+    }
+
+    public void removeBlockedUser(User AUser) {
+        blockedUsers.remove(AUser);
+        AUser.setBlockedDungeon(null);
     }
 
     public List<Room> getRooms() {
         return rooms;
     }
 
+    public void addRoom(Room ARoom) {
+        ARoom.setDungeon(this);
+        rooms.add(ARoom);
+    }
+
+    public void removeRoom(Room ARoom) {
+        rooms.remove(ARoom);
+        ARoom.setDungeon(null);
+    }
+
+    public List<NPC> getNpcs() {
+        return npcs;
+    }
+
+    public void addNpc(NPC ANpc) {
+        ANpc.setDungeon(this);
+        npcs.add(ANpc);
+    }
+
+    public void removeNpc(NPC ANpc) {
+        npcs.remove(ANpc);
+        ANpc.setDungeon(null);
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void addItem(Item AItem) {
+        AItem.setDungeon(this);
+        items.add(AItem);
+    }
+
+    public void removeItem(Item AItem) {
+        items.remove(AItem);
+        AItem.setDungeon(null);
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
 
+    public void addRole(Role ARole) {
+        ARole.setDungeon(this);
+        roles.add(ARole);
+    }
+
+    public void removeRole(Role ARole) {
+        roles.remove(ARole);
+        ARole.setDungeon(null);
+    }
+
     public List<Race> getRaces() {
         return races;
+    }
+
+    public void addRace(Race ARace) {
+        ARace.setDungeon(this);
+        races.add(ARace);
+    }
+
+    public void removeRace(Race ARace) {
+        races.remove(ARace);
+        ARace.setDungeon(null);
     }
 
     @Override
