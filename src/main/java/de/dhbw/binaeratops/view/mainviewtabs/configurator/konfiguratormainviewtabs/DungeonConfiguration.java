@@ -17,6 +17,7 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -39,6 +40,7 @@ public class DungeonConfiguration
 {
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout permissionLayout = new VerticalLayout();
+    HorizontalLayout createDungeonLayout = new HorizontalLayout();
 
     ArrayList<User> users = new ArrayList<>();
 
@@ -58,7 +60,7 @@ public class DungeonConfiguration
         layout.addToSecondary(permissionLayout);
 
         layout.setSizeFull();
-        add(layout);
+        add(layout, createDungeonLayout);
     }
 
     private void initFeld()
@@ -86,6 +88,11 @@ public class DungeonConfiguration
         dungeonDescription.setWidth("300px");
         initFeldLayout.add(titel, hinweis, titelField, playerCountField, viewRadioButton, dungeonDescription);
 
+
+        // create Dungeon Button
+        Button createDungeonButton = new Button("Erstelle Button");
+        createDungeonButton.setWidth("500px");
+        createDungeonLayout.add(createDungeonButton);
     }
 
     private void permissionList()
@@ -134,6 +141,7 @@ public class DungeonConfiguration
         permissionLayout.add(titel, permissionText, grid, buttonView);
 
     }
+
 
 }
 

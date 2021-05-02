@@ -31,7 +31,7 @@ public class ConfiguratorMainView extends Div {
     private VerticalLayout roomConfigurator;
 
 
-    public ConfiguratorMainView() {
+    public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI) {
         super();
 
 
@@ -40,6 +40,7 @@ public class ConfiguratorMainView extends Div {
         characterConfigurator = new CharacterConfiguration();
         itemsConfigurator = new ItemsConfigurator();
         dungeonsConfigurator = new DungeonConfiguration();
+        npcConfigurator = new NPCConfigurator(configuratorServiceI);
         //configuratorTabs.add(createMenuItems());
         createMenuItems();
 
