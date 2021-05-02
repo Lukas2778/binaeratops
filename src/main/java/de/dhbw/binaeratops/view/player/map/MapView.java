@@ -18,7 +18,6 @@ import java.util.ArrayList;
  * Karten-Komponente für den Konfigurator, sowie die Spielansicht.
  */
 @CssImport("./views/player/map/map.css")
-@Route("")
 public class MapView extends VerticalLayout {
 
     @Autowired

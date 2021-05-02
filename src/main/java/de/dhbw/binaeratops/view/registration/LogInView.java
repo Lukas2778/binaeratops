@@ -26,8 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
-//@RouteAlias("")
-//@Route("login")
+@RouteAlias("")
+@Route("login")
 @PageTitle("Binäratops - Anmeldung")
 public class LogInView extends VerticalLayout {
     /**
