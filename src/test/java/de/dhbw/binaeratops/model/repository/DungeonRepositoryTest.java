@@ -2,7 +2,9 @@ package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
+import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import org.junit.Assert;
@@ -46,6 +48,10 @@ public class DungeonRepositoryTest {
     @Autowired
     DungeonRepositoryI dungeonRepo;
 
+    @Autowired
+    UserRepositoryI userRepo;
+
+    private UserI user;
     private DungeonI dungeon1;
     private DungeonI dungeon2;
 
@@ -86,6 +92,15 @@ public class DungeonRepositoryTest {
         dungeon2.setDefaultInventoryCapacity(100L);
         dungeon2.setCommandSymbol('#');
         dungeonRepo.save((Dungeon) dungeon2);
+
+        user = new User();
+        user.setEmail("g@g.g");
+        user.setPasswordHash("efge");
+        user.setUsername("test");
+        user.getMyDungeons().add((Dungeon) dungeon);
+        user.getMyDungeons().add((Dungeon) dungeon1);
+        user.getMyDungeons().add((Dungeon) dungeon2);
+        userRepo.save((User) user);
     }
 
     /**
@@ -126,8 +141,15 @@ public class DungeonRepositoryTest {
      */
     @Test
     public void testDeleteDungeon() {
+        user.getMyDungeons().remove(dungeon2);
         dungeonRepo.delete((Dungeon) dungeon2);
         List<Dungeon> dungeons = dungeonRepo.findAll();
         Assert.assertEquals(2, dungeons.size());
+    }
+
+    @Test
+    public void testFindByUserId() {
+        List<Dungeon> dungeons = dungeonRepo.findByUserId(user.getUserId());
+        Assert.assertEquals(3, dungeons.size());
     }
 }

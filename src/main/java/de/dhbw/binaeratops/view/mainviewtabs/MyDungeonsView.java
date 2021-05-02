@@ -4,20 +4,13 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.listbox.ListBox;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.service.impl.registration.AuthException;
-import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
 
 /**
  * Oberfläche des Tabs 'Eigene Dungeons'
@@ -46,7 +39,6 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonList.setHeightFull();
         add(title, buttonsLayout, dungeonList);
         setSizeFull();
-        configuratorServiceI.setItems(new ArrayList<>());
     }
 
     private void initButtonsLayout(){
