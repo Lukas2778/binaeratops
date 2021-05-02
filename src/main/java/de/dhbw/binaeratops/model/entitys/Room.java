@@ -180,20 +180,20 @@ public class Room implements RoomI {
         ANpc.setRoom(null);
     }
 
-    public Integer getxCoordinate() {
+    public Integer getXCoordinate() {
         return xCoordinate;
     }
 
-    public void setxCoordinate(Integer xCoordinate) {
-        this.xCoordinate = xCoordinate;
+    public void setXCoordinate(Integer AXCoordinate) {
+        this.xCoordinate = AXCoordinate;
     }
 
-    public Integer getyCoordinate() {
+    public Integer getYCoordinate() {
         return yCoordinate;
     }
 
-    public void setyCoordinate(Integer yCoordinate) {
-        this.yCoordinate = yCoordinate;
+    public void setYCoordinate(Integer AYCoordinate) {
+        this.yCoordinate = AYCoordinate;
     }
 
     @Override
