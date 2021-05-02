@@ -24,6 +24,12 @@ public interface ConfiguratorServiceI {
      */
 
     /**
+     * Initialisierung des Dungeons.
+     * @param ADungeon Dungeon.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
      * Startraum des Dungeons setzen.
      * @param ARoom Ein Raum.
      */

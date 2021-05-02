@@ -8,6 +8,8 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,30 +22,16 @@ public class ItemSelectionDialog extends Dialog {
     public Button comfirmButton = new Button("Übernehmen");
     public Button cancelButton = new Button("Abbrechen");
     Grid<Item> itemGrid = new Grid(Item.class);
+    List<Item> selectedItems = new ArrayList<>();
 
 
-    public ItemSelectionDialog(){
+    public ItemSelectionDialog(ConfiguratorServiceI AConfiguratorService){
         H1 title = new H1("Item Liste");
         H2 headline = new H2("Items für ...");
 
 
         itemGrid.setWidth(500, Unit.PIXELS);
 
-        List<Item> itemList = new ArrayList<>();
-
-        Item item1 = new Item("Karotte", 45L,  "sehr guter Arzt");
-        Item item2 = new Item("Kartoffel", 23L,  "sehr guter Arzt");
-        Item item3 = new Item("Zeugs",12L ,  "sehr guter Arzt");
-
-        item1.setItemId(2L);
-        item2.setItemId(34L);
-        item3.setItemId(77L);
-
-        itemList.add(item1);
-        itemList.add(item2);
-        itemList.add(item3);
-
-        itemGrid.setItems(itemList);
         itemGrid.removeAllColumns();
 
         itemGrid.setSelectionMode(Grid.SelectionMode.MULTI);
@@ -53,6 +41,18 @@ public class ItemSelectionDialog extends Dialog {
         itemGrid.addColumn(Item::getDescription).setHeader("Beschreibung");
 
         add(new VerticalLayout(title, headline, itemGrid, comfirmButton, cancelButton));
+
+        this.addOpenedChangeListener(e->{
+            if (isOpened()){
+                List<Item> tempList = AConfiguratorService.getAllItems();
+                itemGrid.setItems(tempList);
+                for (Item myItem: selectedItems){
+                    if(tempList.contains(myItem)){
+                        itemGrid.select(myItem);
+                    }
+                }
+            }
+        });
 
         cancelButton.addClickListener(e->{
             dialogResult = false;

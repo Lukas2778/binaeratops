@@ -38,14 +38,6 @@ public class ConfiguratorService
     public ConfiguratorService()
     {
         dungeon = new Dungeon();
-        dungeon.setDungeonName(" ");
-        dungeon.setDungeonMasterId(0L);
-        dungeon.setStartRoomId(0L);
-        dungeon.setDefaultInventoryCapacity(0L);
-        dungeon.setCommandSymbol('f');
-        dungeon.setDungeonStatus(Status.INACTIVE);
-        dungeon.setDungeonVisibility(Visibility.IN_CONFIGURATION);
-        dungeon.setPlayerMaxSize(3L);
     }
 
     @Override
@@ -55,6 +47,11 @@ public class ConfiguratorService
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId(), APlayerSize, AVisibility);
         dungeonRepo.save(dungeon);
         return dungeon;
+    }
+
+    @Override
+    public void setDungeon(Dungeon ADungeon){
+        dungeon = ADungeon;
     }
 
     @Override

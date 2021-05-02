@@ -19,6 +19,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import de.dhbw.binaeratops.model.api.NPCI;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NpcSelectionDialog;
@@ -35,8 +36,8 @@ import java.util.List;
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class RoomConfigurator extends VerticalLayout {
 
-    NpcSelectionDialog npcSelectionDialog = new NpcSelectionDialog();
-    ItemSelectionDialog itemSelectionDialog = new ItemSelectionDialog();
+    NpcSelectionDialog npcSelectionDialog;
+    ItemSelectionDialog itemSelectionDialog;
     VerticalLayout roomArea = new VerticalLayout();
     HorizontalLayout mapArea = new HorizontalLayout();
     VerticalLayout myRoomArea;
@@ -52,8 +53,10 @@ public class RoomConfigurator extends VerticalLayout {
 
     private List<NPC> npcs = new ArrayList<>();
 
-    public RoomConfigurator(MapService mapService){
+    public RoomConfigurator(ConfiguratorServiceI configuratorService, MapService mapService){
         this.mapService=mapService;
+        itemSelectionDialog = new ItemSelectionDialog(configuratorService);
+        npcSelectionDialog = new NpcSelectionDialog(configuratorService);
         initRoom();
         initMap();
 
@@ -203,6 +206,7 @@ public class RoomConfigurator extends VerticalLayout {
         H2 itemsHeadline = new H2("Gegenstände");
         Button editItemButton = new Button("hinzufügen");
 
+    ConfiguratorServiceI configuratorService;
 
         HorizontalLayout itemsHeader = new HorizontalLayout();
         itemsHeader.add(itemsHeadline, editItemButton);
