@@ -35,10 +35,10 @@ public class NPC implements NPCI {
 
     private String description;
 
-    @OneToMany
+    @ManyToMany
     private final List<Item> luggage = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private List<Action> actions = new ArrayList<>();
 
     /**

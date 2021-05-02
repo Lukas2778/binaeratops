@@ -3,10 +3,7 @@ package de.dhbw.binaeratops.model.entitys;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,10 +40,10 @@ public class Room implements RoomI {
 
     private Long westRoomId;
 
-    @OneToMany
+    @ManyToMany
     private final List<Item> items = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<NPC> npcs = new ArrayList<>();
 
     private Integer xCoordinate;

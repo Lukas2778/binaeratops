@@ -36,10 +36,10 @@ public class Avatar implements AvatarI {
 
     private String name;
 
-    @OneToMany
+    @ManyToMany
     private final List<Item> inventory = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Item> equipment = new ArrayList<>();
 
     @OneToOne

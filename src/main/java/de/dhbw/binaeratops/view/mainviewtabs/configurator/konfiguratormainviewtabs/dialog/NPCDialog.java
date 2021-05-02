@@ -10,11 +10,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
-import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.ItemsConfigurator;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
 
 public class NPCDialog extends Dialog {
 
@@ -25,16 +20,12 @@ public class NPCDialog extends Dialog {
     private TextField currentDescription;
 
     private NPC currentNPC;
-    private ArrayList<NPC> npcList;
-    private ArrayList<Race> raceList;
     Grid<NPC> grid;
 
     public NPCDialog() {}
 
-    public NPCDialog(ConfiguratorServiceI AConfiguratorServiceI,ArrayList<NPC> npcList, ArrayList<Race> raceList, NPC currentNPC, Grid<NPC> grid) {
+    public NPCDialog(ConfiguratorServiceI AConfiguratorServiceI, NPC currentNPC, Grid<NPC> grid) {
         configuratorService = AConfiguratorServiceI;
-        this.npcList = npcList;
-        this.raceList = raceList;
         this.currentNPC = currentNPC;
         this.grid = grid;
         init();
@@ -51,15 +42,16 @@ public class NPCDialog extends Dialog {
 
         this.add(new VerticalLayout(currentName, currentDescription, currentRace, new HorizontalLayout(saveDialog, closeDialog)));
 
-        currentRace.setItems(raceList);
+        currentRace.setItems(configuratorService.getAllRace());
 
         saveDialog.addClickListener(e -> {
             currentNPC.setNpcName(currentName.getValue());
             currentNPC.setRace(currentRace.getValue());
             currentNPC.setDescription(currentDescription.getValue());
-            if (!npcList.contains(currentNPC)) {
-                npcList.add(currentNPC);
+            if (!configuratorService.getAllNPCs().contains(currentNPC)) {
                 configuratorService.createNPC(currentName.getValue(),currentDescription.getValue(), currentRace.getValue());
+            } else {
+                configuratorService.updateNPC(currentNPC);
             }
             refreshGrid();
             this.close();
@@ -68,13 +60,14 @@ public class NPCDialog extends Dialog {
     }
 
     public void fillDialog(NPC npc) {
+        currentNPC = npc;
         currentName.setValue(npc.getNpcName());
         currentRace.setValue(npc.getRace());
         currentDescription.setValue(npc.getDescription());
     }
 
     private void refreshGrid() {
-        grid.setItems(npcList);
+        grid.setItems(configuratorService.getAllNPCs());
     }
 
     public TextField getCurrentName() {

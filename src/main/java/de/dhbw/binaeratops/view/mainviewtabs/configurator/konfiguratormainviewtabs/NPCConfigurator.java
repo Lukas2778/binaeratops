@@ -13,7 +13,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Action;
 import de.dhbw.binaeratops.model.entitys.NPC;
-import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ActionOverviewDialog;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NPCDialog;
@@ -28,13 +27,10 @@ public class NPCConfigurator extends VerticalLayout {
     ConfiguratorServiceI configuratorServiceI;
 
     VerticalLayout items = new VerticalLayout();
-    ArrayList<NPC> npcList = new ArrayList<>();
-    ArrayList<Race> raceList = new ArrayList<>();
 
     Grid<NPC> grid = new Grid<>(NPC.class);
     Button addNPCButton = new Button("NPC hinzufügen");
     Button editNPCButton = new Button("NPC anpassen");
-    Button editActionButton = new Button("Befehle anpassen");
     Button deleteNPCButton = new Button("NPC entfernen");
 
     NPCDialog npcDialog;
@@ -49,11 +45,9 @@ public class NPCConfigurator extends VerticalLayout {
     }
 
     private void initRoom() {
-        fillNPCList();
-        fillRaceList();
         createGrid();
 
-        items.add(new HorizontalLayout(addNPCButton, editNPCButton, editActionButton, deleteNPCButton));
+        items.add(new HorizontalLayout(addNPCButton, editNPCButton, deleteNPCButton));
     }
 
     private void addClickListener () {
@@ -75,22 +69,11 @@ public class NPCConfigurator extends VerticalLayout {
             }
         });
 
-        editActionButton.addClickListener(e -> {
-            NPC[] selectedItems = grid.getSelectedItems().toArray(NPC[]::new);
-            if (selectedItems.length >= 1) {
-                currentNPC = selectedItems[0];
-                ActionOverviewDialog actionOverviewDialog = createActionDialog();
-                actionOverviewDialog.open();
-            } else {
-                Notification.show("Bitte wählen sie einen Gegenstand aus!");
-            }
-        });
-
         deleteNPCButton.addClickListener(e -> {
             NPC[] selectedItems = grid.getSelectedItems().toArray(NPC[]::new);
             if (selectedItems.length >= 1) {
                 currentNPC = selectedItems[0];
-                npcList.remove(currentNPC);
+                configuratorServiceI.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
                 Notification.show("Bitte wählen sie einen Gegenstand aus!");
@@ -99,36 +82,27 @@ public class NPCConfigurator extends VerticalLayout {
     }
 
     private NPCDialog createNPCDialog() {
-        npcDialog = new NPCDialog(configuratorServiceI,npcList, raceList, currentNPC, grid);
+        npcDialog = new NPCDialog(configuratorServiceI, currentNPC, grid);
         return npcDialog;
     }
 
     private ActionOverviewDialog createActionDialog() {
-        return new ActionOverviewDialog((ArrayList<Action>) currentNPC.getActions(), npcList, currentNPC, grid);
+        return new ActionOverviewDialog(configuratorServiceI, (ArrayList<Action>) currentNPC.getActions(), currentNPC, grid);
     }
 
     private void createGrid() {
-        grid.setItems(npcList);
+        grid.setItems(configuratorServiceI.getAllNPCs());
 
         grid.removeAllColumns();
         Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName).setHeader("Name");
         Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName()).setHeader("Rasse");
         Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription).setHeader("Beschreibung");
-        Grid.Column<NPC> actionColumn = grid.addColumn(npc -> {
-            StringBuilder sb = new StringBuilder();
-            npc.getActions().forEach(action -> {
-                sb.append(action.getName());
-                sb.append("; ");
-            });
-            return sb.toString();
-        }).setHeader("Befehle");
 
         HeaderRow filterRow = grid.appendHeaderRow();
 
         TextField nameField = new TextField();
         TextField raceField = new TextField();
         TextField descriptionField = new TextField();
-        TextField actionField = new TextField();
 
         nameField.addValueChangeListener(e -> {
             //TODO: Service.findByName
@@ -139,14 +113,10 @@ public class NPCConfigurator extends VerticalLayout {
         descriptionField.addValueChangeListener(e -> {
             //TODO: Service.findByDescription
         });
-        actionField.addValueChangeListener(e -> {
-            //TODO
-        });
 
         filterRow.getCell(nameColumn).setComponent(nameField);
         filterRow.getCell(descriptionColumn).setComponent(raceField);
         filterRow.getCell(raceColumn).setComponent(descriptionField);
-        filterRow.getCell(actionColumn).setComponent(actionField);
 
         nameField.setSizeFull();
         nameField.setPlaceholder("Filter");
@@ -157,9 +127,6 @@ public class NPCConfigurator extends VerticalLayout {
         descriptionField.setSizeFull();
         descriptionField.setPlaceholder("Filter");
         descriptionField.getElement().setAttribute("focus-target", "");
-        actionField.setSizeFull();
-        actionField.setPlaceholder("Filter");
-        actionField.getElement().setAttribute("focus-target", "");
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
@@ -170,22 +137,6 @@ public class NPCConfigurator extends VerticalLayout {
     }
 
     private void refreshGrid() {
-        grid.setItems(npcList);
-    }
-
-    private void fillNPCList() {
-        for (int i = 0; i < 20; i++) {
-            NPC npc = new NPC(String.valueOf(i), new Race(String.valueOf(i), String.valueOf(i)), String.valueOf(i));
-            npc.setNpcId((long) i);
-            npcList.add(npc);
-        }
-    }
-
-    private void fillRaceList () {
-        for (int i = 0; i < 20; i++) {
-            Race race = new Race(String.valueOf(i), String.valueOf(i));
-            race.setRaceId((long) i);
-            raceList.add(race);
-        }
+        grid.setItems(configuratorServiceI.getAllNPCs());
     }
 }

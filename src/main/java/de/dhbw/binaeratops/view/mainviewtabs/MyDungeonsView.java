@@ -45,7 +45,7 @@ public class MyDungeonsView extends VerticalLayout {
         }));
 
         initButtonsLayout();
-        initnewDungeonButton();
+        initNewDungeonButton();
         dungeonList.setHeightFull();
         dungeonList.setItems(configuratorService.getAllDungeonsFromUser(user));
         add(title, buttonsLayout, dungeonList);
@@ -59,7 +59,7 @@ public class MyDungeonsView extends VerticalLayout {
     private void initEditDungeonButton(){
         //newDungeonButton.addClickListener();
     }
-    private void initnewDungeonButton(){
+    private void initNewDungeonButton(){
         newDungeonButton.addClickListener(e ->{
             UI.getCurrent().navigate("configurator");
         });

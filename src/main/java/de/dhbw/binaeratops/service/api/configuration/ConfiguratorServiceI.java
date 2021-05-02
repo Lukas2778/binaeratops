@@ -4,7 +4,6 @@ import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
 
-import java.security.SecureRandom;
 import java.util.List;
 
 public interface ConfiguratorServiceI {
@@ -70,6 +69,11 @@ public interface ConfiguratorServiceI {
      */
     void createNPC(String AName, String ADescription, Race ARace);
 
+    /**
+     * NPC wird in der DB geupdated
+     * @param ANPC Der zu verbessernde NPC
+     */
+    void updateNPC(NPC ANPC);
     /**
      * NPC wird aus den Dungeon entfernt und gelöscht.
      * @param ANPC Der zu löschende NPC.

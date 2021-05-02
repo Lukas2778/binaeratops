@@ -87,17 +87,23 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void createNPC(String AName, String ADescription, Race ARace) {
-        Race testRace = raceRepo.findByRaceId(5L);
-        NPC newNPC = new NPC(AName, testRace, ADescription);
-        raceRepo.save(testRace);
+        NPC newNPC = new NPC(AName, ARace, ADescription);
+        raceRepo.save(ARace);
         npcRepo.save(newNPC);
         dungeon.getNpcs().add(newNPC);
         dungeonRepo.save(dungeon);
     }
 
     @Override
-    public void deleteNPC(NPC ANPC) {
+    public void updateNPC(NPC ANPC) {
+        npcRepo.save(ANPC);
+    }
 
+    @Override
+    public void deleteNPC(NPC ANPC) {
+        dungeon.getNpcs().remove(ANPC);
+        dungeonRepo.save(dungeon);
+        npcRepo.delete(ANPC);
     }
 
     @Override
@@ -132,7 +138,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<Race> getAllRace() {
-        return null;
+        dungeon.getRaces().clear();
+        dungeon.getRaces().addAll(raceRepo.findAll());
+        return dungeon.getRaces();
     }
 
     @Override

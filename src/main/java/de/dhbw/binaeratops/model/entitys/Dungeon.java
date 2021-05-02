@@ -52,28 +52,28 @@ public class Dungeon implements DungeonI {
 
     private Character commandSymbol;
 
-    @OneToMany
+    @ManyToMany
     private final List<Avatar> avatars = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<User> allowedUsers = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Room> rooms = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<NPC> npcs = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Item> items = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Role> roles = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Race> races = new ArrayList<>();
 
     /**

@@ -45,10 +45,10 @@ public class User implements UserI {
 
     private Boolean isVerified;
 
-    @OneToMany
+    @ManyToMany
     private final List<Avatar> myAvatars = new ArrayList<>();
 
-    @OneToMany
+    @ManyToMany
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
     /**
