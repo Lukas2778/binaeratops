@@ -149,7 +149,7 @@ public class UserRepositoryTest {
 
         UserI user = new User();
         user.setEmail("g@g.g");
-        user.setUsername("test");
+        user.setName("test");
         user.setPassword("435n3rtr3");
 
         user.getAvatars().add((Avatar) avatar1);

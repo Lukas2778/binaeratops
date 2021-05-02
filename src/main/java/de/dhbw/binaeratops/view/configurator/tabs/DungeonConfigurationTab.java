@@ -106,10 +106,10 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
         //Beispieldaten
         User testUser = new User();
-        testUser.setUsername("DungeonDestroyer");
+        testUser.setName("DungeonDestroyer");
 
         User testUser2 = new User();
-        testUser2.setUsername("DungeonKiller");
+        testUser2.setName("DungeonKiller");
 
         users.add(testUser);
         users.add(testUser2);
