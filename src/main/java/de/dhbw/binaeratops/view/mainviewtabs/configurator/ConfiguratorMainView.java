@@ -38,7 +38,7 @@ public class ConfiguratorMainView extends Div {
         Dialog dungeonnameDialog = new NewDungeonDialog(configuratorServiceI);
 
         roomConfigurator = new RoomConfigurator();
-        characterConfigurator = new CharacterConfiguration();
+        characterConfigurator = new CharacterConfiguration(configuratorServiceI);
         itemsConfigurator = new ItemsConfigurator();
         dungeonsConfigurator = new DungeonConfiguration();
         npcConfigurator = new NPCConfigurator(configuratorServiceI);

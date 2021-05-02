@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ConfiguratorService implements ConfiguratorServiceI {
+public class ConfiguratorService
+        implements ConfiguratorServiceI
+{
 
     private Dungeon dungeon;
     private User dungeonDesigner;
@@ -26,11 +28,14 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     NPCRepositoryI npcRepo;
     @Autowired
+    RoleRepositoryI roleRepo;
+    @Autowired
     RaceRepositoryI raceRepo;
     @Autowired
     RoomRepositoryI roomRepo;
 
-    public ConfiguratorService(){
+    public ConfiguratorService()
+    {
         dungeon = new Dungeon();
         dungeon.setDungeonName(" ");
         dungeon.setDungeonMasterId(0L);
@@ -43,54 +48,63 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public Dungeon createDungeon(String AName, User AUser) {
+    public Dungeon createDungeon(String AName, User AUser)
+    {
         dungeonDesigner = AUser;
-        dungeon = new Dungeon(AName,dungeonDesigner.getUserId());
+        dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
         dungeonRepo.save(dungeon);
         return dungeon;
-        }
+    }
 
     @Override
-    public void setStartRoom(Room ARoom) {
+    public void setStartRoom(Room ARoom)
+    {
 
     }
 
     @Override
-    public void setCommandSymbol(String ACommandSymbol) {
+    public void setCommandSymbol(String ACommandSymbol)
+    {
 
     }
 
     @Override
-    public void setMaxPlayercount(int ACount) {
+    public void setMaxPlayercount(int ACount)
+    {
 
     }
 
     @Override
-    public List<Room> getAllDungeonRooms() {
+    public List<Room> getAllDungeonRooms()
+    {
         return null;
     }
 
     @Override
-    public void createItem(String AName, ItemType AType, String ADescription, int ASize) {
+    public void createItem(String AName, ItemType AType, String ADescription, int ASize)
+    {
 
     }
 
     @Override
-    public void deleteItem(Item AItem) {
+    public void deleteItem(Item AItem)
+    {
 
     }
 
     @Override
-    public Item getItem(Long AItemId) {
+    public Item getItem(Long AItemId)
+    {
         return null;
     }
 
     @Override
-    public void createNPC(String AName, String ADescription, Race ARace) {
+    public void createNPC(String AName, String ADescription, Race ARace)
+    {
         NPC newNPC = new NPC(AName, ARace, ADescription);
-        raceRepo.save(ARace);
         npcRepo.save(newNPC);
-        dungeon.getNpcs().add(newNPC);
+        dungeon.getNpcs()
+                .add(newNPC);
         dungeonRepo.save(dungeon);
     }
 
@@ -107,32 +121,46 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public Item getNPC(Long ANPCId) {
+    public Item getNPC(Long ANPCId)
+    {
         return null;
     }
 
     @Override
-    public void createRole(String AName, String ADescription) {
-
+    public void createRole(String AName, String ADescription)
+    {
+        Role newRole = new Role(AName, ADescription);
+        roleRepo.save(newRole);
+        dungeon.getRoles().add(newRole);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
-    public void removeRole(Role ARole) {
-
+    public void removeRole(Role ARole)
+    {
+        dungeon.getRoles().remove(ARole);
+        roleRepo.delete(ARole);
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public List<Role> getAllRoles()
+    {
         return null;
     }
 
     @Override
-    public void createRace(String AName, String ADescription) {
-
+    public void createRace(String AName, String ADescription)
+    {
+        Race newRace = new Race(AName, ADescription);
+        raceRepo.save(newRace);
+        dungeon.getRaces().add(newRace);
     }
 
     @Override
-    public void removeRace(Race ARace) {
+    public void removeRace(Race ARace)
+    {
+        dungeon.getRaces().remove(ARace);
+        raceRepo.delete(ARace);
 
     }
 
@@ -144,61 +172,77 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setDefaultInventoryCapacity(int ACapacity) {
+    public void setDefaultInventoryCapacity(int ACapacity)
+    {
 
     }
 
     @Override
-    public void createRoom(String AName) {
+    public void createRoom(String AName)
+    {
         Room newRoom = new Room(AName);
         roomRepo.save(new Room());
-        dungeon.getRooms().add(newRoom);
+        dungeon.getRooms()
+                .add(newRoom);
         dungeonRepo.save(dungeon);
     }
 
     @Override
-    public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom) {
+    public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom)
+    {
 
     }
 
     @Override
-    public void removeNeighborRoom(String ADirection) {
+    public void removeNeighborRoom(String ADirection)
+    {
 
     }
 
     @Override
-    public void setItems(Room ARoom, List<Item> AItemList) {
-        ARoom.getItems().clear();
-        ARoom.getItems().addAll(AItemList);
+    public void setItems(Room ARoom, List<Item> AItemList)
+    {
+        ARoom.getItems()
+                .clear();
+        ARoom.getItems()
+                .addAll(AItemList);
         roomRepo.save(ARoom);
     }
 
     @Override
-    public void setNPCs(Room ARoom, List<NPC> ANPCList) {
-        ARoom.getNpcs().clear();
-        ARoom.getNpcs().addAll(ANPCList);
+    public void setNPCs(Room ARoom, List<NPC> ANPCList)
+    {
+        ARoom.getNpcs()
+                .clear();
+        ARoom.getNpcs()
+                .addAll(ANPCList);
         roomRepo.save(ARoom);
     }
 
     @Override
-    public List<Item> getAllItems() {
+    public List<Item> getAllItems()
+    {
         return dungeon.getItems();
     }
 
     @Override
-    public List<NPC> getAllNPCs() {
+    public List<NPC> getAllNPCs()
+    {
         return dungeon.getNpcs();
     }
 
     @Override
-    public void deleteRoom(Room ARoom) {
-        dungeon.getRooms().remove(ARoom);
+    public void deleteRoom(Room ARoom)
+    {
+        dungeon.getRooms()
+                .remove(ARoom);
         dungeonRepo.save(dungeon);
         roomRepo.delete(ARoom);
     }
 
     @Override
-    public Room getRoom(Long ARoomID) {
+    public Room getRoom(Long ARoomID)
+    {
         return null;
     }
 }

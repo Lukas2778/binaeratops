@@ -8,7 +8,6 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.dhbw.binaeratops.model.entitys.Item;
-import de.dhbw.binaeratops.model.entitys.NPC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
