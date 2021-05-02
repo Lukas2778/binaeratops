@@ -168,6 +168,18 @@ public interface DungeonI {
     void setCommandSymbol(Character ACommandSymbol);
 
     /**
+     * Gibt die Beschreibung des Dungeons zurück.
+     * @return Beschreibung des Dungeons.
+     */
+    String getDescription();
+
+    /**
+     * Setzt die Beschreibung des Dungeons.
+     * @return Beschreibung des Dungeons.
+     */
+    void setDescription(String ADescription);
+
+    /**
      * Gibt den Ersteller des Dungeons zurück.
      * @return Ersteller des Dungeons.
      */

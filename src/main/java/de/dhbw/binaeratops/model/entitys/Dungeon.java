@@ -50,6 +50,8 @@ public class Dungeon implements DungeonI {
 
     private Long defaultInventoryCapacity;
 
+    private String description;
+
     private Character commandSymbol;
 
     @ManyToOne
@@ -201,6 +203,14 @@ public class Dungeon implements DungeonI {
 
     public void setDefaultInventoryCapacity(Long ADefaultInventoryCapacity) {
         this.defaultInventoryCapacity = ADefaultInventoryCapacity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String ADescription) {
+        this.description = ADescription;
     }
 
     public Character getCommandSymbol() {
