@@ -100,7 +100,7 @@ public class NPCConfigurator extends VerticalLayout {
             //TODO: Service.findByName
         });
         raceField.addValueChangeListener(e -> {
-            //TODO: Service.findBySize
+            //TODO: Service.findByRace
         });
         descriptionField.addValueChangeListener(e -> {
             //TODO: Service.findByDescription
