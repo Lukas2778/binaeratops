@@ -113,10 +113,6 @@ public class User implements UserI {
         return passwordHash;
     }
 
-    public void setPasswordHash(String APasswordHash) {
-        this.passwordHash = APasswordHash;
-    }
-
     public void setPassword(String APassword) {
         this.passwordHash = DigestUtils.sha1Hex(APassword);
     }
@@ -137,20 +133,20 @@ public class User implements UserI {
         this.isVerified = AIsVerified;
     }
 
-    public Dungeon getAllowedDungeons() {
+    public Dungeon getAllowedDungeon() {
         return allowedDungeons;
     }
 
-    public void setAllowedDungeons(Dungeon allowedDungeons) {
-        this.allowedDungeons = allowedDungeons;
+    public void setAllowedDungeon(Dungeon AAllowedDungeons) {
+        this.allowedDungeons = AAllowedDungeons;
     }
 
-    public Dungeon getBlockedDungeons() {
+    public Dungeon getBlockedDungeon() {
         return blockedDungeons;
     }
 
-    public void setBlockedDungeons(Dungeon blockedDungeons) {
-        this.blockedDungeons = blockedDungeons;
+    public void setBlockedDungeon(Dungeon ABlockedDungeons) {
+        this.blockedDungeons = ABlockedDungeons;
     }
 
     public List<Avatar> getAvatars() {

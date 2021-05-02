@@ -95,7 +95,7 @@ public class DungeonRepositoryTest {
 
         user = new User();
         user.setEmail("g@g.g");
-        user.setPasswordHash("efge");
+        user.setPassword("efge");
         user.setUsername("test");
         user.getMyDungeons().add((Dungeon) dungeon);
         user.getMyDungeons().add((Dungeon) dungeon1);
