@@ -8,6 +8,7 @@ import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.NPCRepositoryI;
 import de.dhbw.binaeratops.model.repository.RaceRepositoryI;
+import de.dhbw.binaeratops.model.repository.RoleRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,6 +141,7 @@ public class ConfiguratorService
     {
         dungeon.getRoles().remove(ARole);
         roleRepo.delete(ARole);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -154,6 +156,7 @@ public class ConfiguratorService
         Race newRace = new Race(AName, ADescription);
         raceRepo.save(newRace);
         dungeon.getRaces().add(newRace);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -161,6 +164,7 @@ public class ConfiguratorService
     {
         dungeon.getRaces().remove(ARace);
         raceRepo.delete(ARace);
+        dungeonRepo.save(dungeon);
 
     }
 

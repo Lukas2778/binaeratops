@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
 
 public class RaceDialog
@@ -24,13 +25,15 @@ public class RaceDialog
     private Race currentRace;
     private ArrayList<Race> raceList;
     Grid<Race> grid;
+    ConfiguratorServiceI configuratorServiceI;
 
     public RaceDialog() {}
 
-    public RaceDialog(ArrayList<Race> raceList, Race currentRace, Grid<Race> grid ) {
+    public RaceDialog(ArrayList<Race> raceList, Race currentRace, Grid<Race> grid, ConfiguratorServiceI AConfiguratorServiceI) {
         this.raceList = raceList;
         this.currentRace = currentRace;
         this.grid = grid;
+        this.configuratorServiceI = AConfiguratorServiceI;
         init();
     }
     private void init() {
@@ -51,6 +54,7 @@ public class RaceDialog
 
             if (!raceList.contains(currentRace)) {
                 raceList.add(currentRace);
+                configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
             }
             refreshGrid();
 

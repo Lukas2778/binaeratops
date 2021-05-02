@@ -220,7 +220,7 @@ public class CharacterConfiguration
 
     private RaceDialog createRaceDialog()
     {
-        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid);
+        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorServiceI);
 
         return raceDialog;
     }
@@ -252,6 +252,7 @@ public class CharacterConfiguration
                 currentRole = selectedRole[0];
                 roleArrayList.remove(currentRole);
                 refreshRoleGrid();
+                configuratorServiceI.removeRole(currentRole);
             }
         });
     }
@@ -265,6 +266,7 @@ public class CharacterConfiguration
                 currentRace = selectedRace[0];
                 raceArrayList.remove(currentRace);
                 refreshRaceGrid();
+                configuratorServiceI.removeRace(currentRace);
             }
         });
     }
