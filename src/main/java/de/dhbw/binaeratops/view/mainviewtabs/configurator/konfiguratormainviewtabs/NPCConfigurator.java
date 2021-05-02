@@ -86,9 +86,18 @@ public class NPCConfigurator extends VerticalLayout {
         grid.setItems(configuratorServiceI.getAllNPCs());
 
         grid.removeAllColumns();
-        Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName).setHeader("Name");
-        Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName()).setHeader("Rasse");
-        Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription).setHeader("Beschreibung");
+        Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName)
+                .setComparator((npc1, npc2) -> npc1.getNpcName()
+                        .compareToIgnoreCase(npc2.getNpcName()))
+                .setHeader("Name");
+        Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName())
+                .setComparator((npc1, npc2) -> npc1.getRace().getRaceName()
+                        .compareToIgnoreCase(npc2.getRace().getRaceName()))
+                .setHeader("Rasse");
+        Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription)
+                .setComparator((npc1, npc2) -> npc1.getDescription()
+                        .compareToIgnoreCase(npc2.getDescription()))
+                .setHeader("Beschreibung");
 
         HeaderRow filterRow = grid.appendHeaderRow();
 

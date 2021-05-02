@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -45,18 +46,29 @@ public class NPCDialog extends Dialog {
         currentRace.setItems(configuratorService.getAllRace());
 
         saveDialog.addClickListener(e -> {
-            currentNPC.setNpcName(currentName.getValue());
-            currentNPC.setRace(currentRace.getValue());
-            currentNPC.setDescription(currentDescription.getValue());
-            if (!configuratorService.getAllNPCs().contains(currentNPC)) {
-                configuratorService.createNPC(currentName.getValue(),currentDescription.getValue(), currentRace.getValue());
+            if (validate()) {
+                currentNPC.setNpcName(currentName.getValue());
+                currentNPC.setRace(currentRace.getValue());
+                currentNPC.setDescription(currentDescription.getValue());
+                if (!configuratorService.getAllNPCs().contains(currentNPC)) {
+                    configuratorService.createNPC(currentName.getValue(), currentDescription.getValue(), currentRace.getValue());
+                } else {
+                    configuratorService.updateNPC(currentNPC);
+                }
+                refreshGrid();
+                this.close();
             } else {
-                configuratorService.updateNPC(currentNPC);
+                Notification.show("Bitte kontrolliere deine Eingabe!");
             }
-            refreshGrid();
-            this.close();
         });
         closeDialog.addClickListener(e -> this.close());
+    }
+
+    private boolean validate() {
+        if (currentName.isEmpty() || currentRace.isEmpty() || currentDescription.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     public void fillDialog(NPC npc) {
