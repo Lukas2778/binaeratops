@@ -2,8 +2,6 @@ package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +33,4 @@ public interface DungeonRepositoryI extends JpaRepository<Dungeon, Long> {
      * @return Gesuchter Dungeon.
      */
     Dungeon findByDungeonId(Long ADungeonId);
-
-    @Query(value = "SELECT dungeon.* FROM dungeon RIGHT JOIN user_my_dungeons ON dungeon.dungeon_id = user_my_dungeons.my_dungeons_dungeon_id WHERE user_my_dungeons.user_user_id = :userId", nativeQuery = true)
-    List<Dungeon> findByUserId(@Param("userId")Long AUserId);
 }

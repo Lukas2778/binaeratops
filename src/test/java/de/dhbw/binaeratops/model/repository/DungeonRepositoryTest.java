@@ -146,10 +146,4 @@ public class DungeonRepositoryTest {
         List<Dungeon> dungeons = dungeonRepo.findAll();
         Assert.assertEquals(2, dungeons.size());
     }
-
-    @Test
-    public void testFindByUserId() {
-        List<Dungeon> dungeons = dungeonRepo.findByUserId(user.getUserId());
-        Assert.assertEquals(3, dungeons.size());
-    }
 }

@@ -132,10 +132,4 @@ public class RoomRepositoryTest {
         List<Room> rooms = roomRepo.findAll();
         Assert.assertEquals(2, rooms.size());
     }
-
-    @Test
-    public void testFindByDungeonId() {
-        List<Room> rooms = roomRepo.findByDungeon(dungeon1.getDungeonId());
-        Assert.assertEquals(3,rooms.size());
-    }
 }
