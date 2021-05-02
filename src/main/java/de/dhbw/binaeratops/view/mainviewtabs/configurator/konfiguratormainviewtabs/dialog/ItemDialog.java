@@ -4,6 +4,7 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -46,19 +47,30 @@ public class ItemDialog extends Dialog {
         currentType.setItems(ItemType.values());
 
         saveDialog.addClickListener(e -> {
-            currentItem.setItemName(currentName.getValue());
-            currentItem.setSize(currentSize.getValue().longValue());
-            currentItem.setDescription(currentDescription.getValue());
-            currentItem.setType(currentType.getValue());
-            if (!configuratorServiceI.getAllItems().contains(currentItem)) {
-                configuratorServiceI.createItem(currentItem.getItemName(), currentItem.getType(), currentItem.getDescription(), currentItem.getSize());
+            if (validate()) {
+                currentItem.setItemName(currentName.getValue());
+                currentItem.setSize(currentSize.getValue().longValue());
+                currentItem.setDescription(currentDescription.getValue());
+                currentItem.setType(currentType.getValue());
+                if (!configuratorServiceI.getAllItems().contains(currentItem)) {
+                    configuratorServiceI.createItem(currentItem.getItemName(), currentItem.getType(), currentItem.getDescription(), currentItem.getSize());
+                } else {
+                    configuratorServiceI.updateItem(currentItem);
+                }
+                refreshGrid();
+                this.close();
             } else {
-                configuratorServiceI.updateItem(currentItem);
+                Notification.show("Bitte kontrolliere deine Eingabe!");
             }
-            refreshGrid();
-            this.close();
         });
         closeDialog.addClickListener(e -> this.close());
+    }
+
+    private boolean validate() {
+        if (currentName.isEmpty() || currentSize.isEmpty() || currentDescription.isEmpty() || currentType.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     public void fillDialog(Item item) {
