@@ -26,8 +26,9 @@ public class ValdidateRegistrationView extends VerticalLayout {
 
     /**
      * Dies ist der Konstruktor, zum Erzeugen der Validierungs-Registrierungs Seite.
+     * @param AAuthServiceI AuthServiceI.
      */
-    public ValdidateRegistrationView(@Autowired AuthServiceI authServiceI) {
+    public ValdidateRegistrationView(@Autowired AuthServiceI AAuthServiceI) {
         TextField name=new TextField("Benutzername");
         IntegerField code=new IntegerField("Code");
         Button submit=new Button("Account validieren");
@@ -37,7 +38,7 @@ public class ValdidateRegistrationView extends VerticalLayout {
 
         submit.addClickShortcut(Key.ENTER);
         submit.addClickListener(e->{
-            if(authServiceI.confirm(name.getValue(),code.getValue())){
+            if(AAuthServiceI.confirm(name.getValue(),code.getValue())){
                 UI.getCurrent().getPage().setLocation("login");
             }
             else{

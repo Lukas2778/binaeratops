@@ -98,7 +98,7 @@ public interface AvatarI {
 
     /**
      * Setzt den Dungeon des Avatars.
-     * @return Dungeon des Avatars.
+     * @param ADungeon Dungeon des Avatars.
      */
     void setDungeon(Dungeon ADungeon);
 

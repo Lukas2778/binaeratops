@@ -175,7 +175,7 @@ public interface DungeonI {
 
     /**
      * Setzt die Beschreibung des Dungeons.
-     * @return Beschreibung des Dungeons.
+     * @param ADescription Beschreibung des Dungeons.
      */
     void setDescription(String ADescription);
 

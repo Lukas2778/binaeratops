@@ -2,17 +2,11 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.crud.CrudGrid;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.QueryParameters;
-import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -20,7 +14,6 @@ import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,8 +31,9 @@ public class MyDungeonsView extends VerticalLayout {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
+     * @param AConfiguratorService KonfiguratorService.
      */
-    public MyDungeonsView(@Autowired DungeonServiceI configuratorService) {
+    public MyDungeonsView(@Autowired DungeonServiceI AConfiguratorService) {
         dungeonList = new ArrayList<>();
         newDungeonButton = new Button("Dungeon erstellen");
         editDungeonButton = new Button( "Bearbeiten");
@@ -47,7 +41,7 @@ public class MyDungeonsView extends VerticalLayout {
         title = new H1("Meine Dungeons");
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
-        dungeonList.addAll(configuratorService.getAllDungeonsFromUser(user));
+        dungeonList.addAll(AConfiguratorService.getAllDungeonsFromUser(user));
 
         initButtonsLayout();
         initNewDungeonButton();

@@ -294,6 +294,7 @@ public class MapService {
      *
      * @param ALocationX X Koordinate.
      * @param ALocationY Y Koordinate.
+     * @return ArrayList.
      */
     public ArrayList<Tile> deleteRoom(int ALocationX, int ALocationY) {
         roomsSet[ALocationX][ALocationY] = false;
@@ -430,6 +431,7 @@ public class MapService {
      * @param ALocationX X Koordinate.
      * @param ALocationY Y Koordinate.
      * @param AHorizontal Eingabe, ob es sich um eine horizontale Wand handelt.
+     * @return ArrayList.
      */
     public ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
         ArrayList<Tile> tiles = new ArrayList<>();
