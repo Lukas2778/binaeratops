@@ -18,6 +18,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.model.enums.ItemType;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
 
 public class RoleDialog
@@ -28,13 +29,15 @@ public class RoleDialog
     private Role currentRole;
     private ArrayList<Role> roleList;
     Grid<Role> grid;
+    private ConfiguratorServiceI configuratorServiceI;
 
     public RoleDialog() {}
 
-    public RoleDialog(ArrayList<Role> roleList, Role currentRole, Grid<Role> grid ) {
+    public RoleDialog(ArrayList<Role> roleList, Role currentRole, Grid<Role> grid, ConfiguratorServiceI AConfiguratorServiceI ) {
         this.roleList = roleList;
         this.currentRole = currentRole;
         this.grid = grid;
+        this.configuratorServiceI = AConfiguratorServiceI;
         init();
     }
     private void init() {
@@ -55,6 +58,7 @@ public class RoleDialog
 
             if (!roleList.contains(currentRole)) {
                 roleList.add(currentRole);
+                configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
             }
             refreshGrid();
 

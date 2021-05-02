@@ -27,6 +27,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RoleDialog;
 import java.util.ArrayList;
@@ -59,8 +60,12 @@ public class CharacterConfiguration
     private Role currentRole;
     private Race currentRace;
 
-    public CharacterConfiguration()
+    private ConfiguratorServiceI configuratorServiceI;
+
+    public CharacterConfiguration(ConfiguratorServiceI AConfiguratorServiceI)
     {
+
+        this.configuratorServiceI= AConfiguratorServiceI;
 
         initFeld();
         roleList();
@@ -208,7 +213,7 @@ public class CharacterConfiguration
 
     private RoleDialog createRoleDialog()
     {
-        roleDialog = new RoleDialog(roleArrayList, currentRole, grid);
+        roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorServiceI);
 
         return roleDialog;
     }
