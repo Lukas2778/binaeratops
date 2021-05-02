@@ -2,7 +2,10 @@ package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.RoomI;
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.enums.Status;
+import de.dhbw.binaeratops.model.enums.Visibility;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +47,10 @@ public class RoomRepositoryTest {
     @Autowired
     RoomRepositoryI roomRepo;
 
+    @Autowired
+    DungeonRepositoryI dungeonRepo;
+
+    private Dungeon dungeon1;
     private RoomI room1;
     private RoomI room2;
 
@@ -66,6 +73,20 @@ public class RoomRepositoryTest {
         room2.setRoomName("Marktplatz");
         room2.setDescription("Handel");
         roomRepo.save((Room) room2);
+
+        dungeon1 = new Dungeon();
+        dungeon1.setDungeonName("test");
+        dungeon1.setDungeonVisibility(Visibility.PUBLIC);
+        dungeon1.setDefaultInventoryCapacity(4l);
+        dungeon1.setDungeonStatus(Status.ACTIVE);
+        dungeon1.setDungeonMasterId(4l);
+        dungeon1.setPlayerMaxSize(4l);
+        dungeon1.setStartRoomId(4l);
+        dungeon1.setCommandSymbol('/');
+        dungeon1.getRooms().add((Room) room);
+        dungeon1.getRooms().add((Room) room1);
+        dungeon1.getRooms().add((Room) room2);
+        dungeonRepo.save(dungeon1);
     }
 
     /**
@@ -106,6 +127,7 @@ public class RoomRepositoryTest {
      */
     @Test
     public void testDeleteRoom() {
+        dungeon1.getRooms().remove(room2);
         roomRepo.delete((Room) room2);
         List<Room> rooms = roomRepo.findAll();
         Assert.assertEquals(2, rooms.size());

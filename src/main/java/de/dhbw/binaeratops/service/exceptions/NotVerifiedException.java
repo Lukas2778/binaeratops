@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.service.impl.registration;
+package de.dhbw.binaeratops.service.exceptions;
 
 public class NotVerifiedException extends Exception {
 }

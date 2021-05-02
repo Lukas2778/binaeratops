@@ -11,9 +11,8 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.service.impl.registration.FalseUserException;
+import de.dhbw.binaeratops.service.exceptions.FalseUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

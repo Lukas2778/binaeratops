@@ -6,6 +6,7 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -31,6 +32,9 @@ public class Race implements RaceI {
     private String raceName;
 
     private String description;
+
+    @ManyToOne
+    private Dungeon dungeon;
 
     /**
      * Konstruktor zum Erzeugen einer Rasse mit allen Eigenschaften.
@@ -74,11 +78,14 @@ public class Race implements RaceI {
         this.description = ADescription;
     }
 
-    /**
-     *
-     * @param AOther Das zu vergleichende Race-Objekt
-     * @return
-     */
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;

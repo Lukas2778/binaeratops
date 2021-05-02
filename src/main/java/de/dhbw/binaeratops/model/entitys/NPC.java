@@ -35,7 +35,13 @@ public class NPC implements NPCI {
 
     private String description;
 
-    @OneToMany
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @ManyToOne
+    private Room room;
+
+    @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> luggage = new ArrayList<>();
 
     /**
@@ -90,8 +96,34 @@ public class NPC implements NPCI {
         this.description = ADecription;
     }
 
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     public List<Item> getLuggage() {
         return luggage;
+    }
+
+    public void addItem(Item AItem) {
+        AItem.setNpc(this);
+        luggage.add(AItem);
+    }
+
+    public void removeItem(Item AItem) {
+        luggage.remove(AItem);
+        AItem.setNpc(null);
     }
 
     @Override

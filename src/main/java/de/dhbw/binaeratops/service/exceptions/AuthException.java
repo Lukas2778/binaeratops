@@ -1,4 +1,4 @@
 package de.dhbw.binaeratops.service.exceptions;
 
-public class DummyException {
+public class AuthException extends Exception{
 }

@@ -3,10 +3,7 @@ package de.dhbw.binaeratops.model.entitys;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +40,18 @@ public class Room implements RoomI {
 
     private Long westRoomId;
 
-    @OneToMany
+    @ManyToOne
+    private Dungeon dungeon;
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> items = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NPC> npcs = new ArrayList<>();
+
+    private Integer xCoordinate;
+
+    private Integer yCoordinate;
 
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
@@ -58,6 +62,23 @@ public class Room implements RoomI {
     public Room(String ARoomName, String ADescription) {
         this.roomName = ARoomName;
         this.description = ADescription;
+    }
+
+    public Room(String ARoomName) {
+        this.roomName = ARoomName;
+    }
+
+    /**
+     * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
+     *
+
+     * @param AXCoordinate Positon des Raums.
+     * @param AYCoordinate Positon des Raums.
+     */
+    public Room( int AXCoordinate, int AYCoordinate) {
+
+        this.xCoordinate=AXCoordinate;
+        this.yCoordinate=AYCoordinate;
     }
 
     /**
@@ -123,12 +144,56 @@ public class Room implements RoomI {
         this.westRoomId = AWestRoomId;
     }
 
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
     public List<Item> getItems() {
         return items;
     }
 
+    public void addItem(Item AItem) {
+        AItem.setRoom(this);
+        items.add(AItem);
+    }
+
+    public void removeItem(Item AItem) {
+        items.remove(AItem);
+        AItem.setRoom(null);
+    }
+
     public List<NPC> getNpcs() {
         return npcs;
+    }
+
+    public void addNpc(NPC ANpc) {
+        ANpc.setRoom(this);
+        npcs.add(ANpc);
+    }
+
+    public void removeNPC(NPC ANpc) {
+        npcs.remove(ANpc);
+        ANpc.setRoom(null);
+    }
+
+    public Integer getXCoordinate() {
+        return xCoordinate;
+    }
+
+    public void setXCoordinate(Integer AXCoordinate) {
+        this.xCoordinate = AXCoordinate;
+    }
+
+    public Integer getYCoordinate() {
+        return yCoordinate;
+    }
+
+    public void setYCoordinate(Integer AYCoordinate) {
+        this.yCoordinate = AYCoordinate;
     }
 
     @Override
@@ -150,6 +215,7 @@ public class Room implements RoomI {
         return Objects.hash(roomId);
     }
 
+    //TODO position hinzufügen
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();

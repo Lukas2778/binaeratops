@@ -17,8 +17,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
-import de.dhbw.binaeratops.service.impl.registration.AuthException;
-import de.dhbw.binaeratops.service.impl.registration.NotVerifiedException;
+import de.dhbw.binaeratops.service.exceptions.AuthException;
+import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ResourceBundle;
@@ -36,7 +36,7 @@ public class LogInView extends VerticalLayout {
     private final ResourceBundle res = ResourceBundle.getBundle("language");
 
     /**
-     * Dies ist der Konstruktor, zum Erzeugen der Login Seite.
+     * Dies ist der Konstruktor zum Erzeugen der Login Seite.
      * @param authServiceI Übergabe des Authentifizierungsservices.
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {

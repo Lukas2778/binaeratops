@@ -6,6 +6,7 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -32,6 +33,9 @@ public class Role implements RoleI {
 
     private String description;
 
+    @ManyToOne
+    private Dungeon dungeon;
+
     /**
      * Konstruktor zum Erzeugen einer Rolle mit allen Eigenschaften.
      *
@@ -39,7 +43,8 @@ public class Role implements RoleI {
      * @param ADescription Beschreibung der Rolle.
      */
     public Role(String ARoleName, String ADescription) {
-
+        this.roleName = ARoleName;
+        this.description = ADescription;
     }
 
     /**
@@ -74,12 +79,14 @@ public class Role implements RoleI {
         this.description = ADescription;
     }
 
-    /**
-     *Vergleicht die zwei Role-Objekte, ob die Gleich sind
-     *
-     * @param AOther Das zu vergleichende Role-Objekt
-     * @return Boolean
-     */
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    public void setDungeon(Dungeon dungeon) {
+        this.dungeon = dungeon;
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
