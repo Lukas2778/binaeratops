@@ -19,7 +19,6 @@ import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewta
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurator extends VerticalLayout {
 
-
     ConfiguratorServiceI configuratorServiceI;
 
     VerticalLayout items = new VerticalLayout();

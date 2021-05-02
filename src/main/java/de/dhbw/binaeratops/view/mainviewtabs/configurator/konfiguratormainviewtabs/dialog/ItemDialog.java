@@ -10,23 +10,24 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.enums.ItemType;
-
-import java.util.ArrayList;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 public class ItemDialog extends Dialog {
+
+    ConfiguratorServiceI configuratorServiceI;
+
     private TextField currentName;
     private NumberField currentSize;
     private TextField currentDescription;
     private ComboBox<ItemType> currentType;
 
     private Item currentItem;
-    private ArrayList<Item> itemList;
     Grid<Item> grid;
 
     public ItemDialog() {}
 
-    public ItemDialog(ArrayList<Item> itemList, Item currentItem, Grid<Item> grid) {
-        this.itemList = itemList;
+    public ItemDialog(ConfiguratorServiceI configuratorServiceI, Item currentItem, Grid<Item> grid) {
+        this.configuratorServiceI = configuratorServiceI;
         this.currentItem = currentItem;
         this.grid = grid;
         init();
@@ -49,8 +50,10 @@ public class ItemDialog extends Dialog {
             currentItem.setSize(currentSize.getValue().longValue());
             currentItem.setDescription(currentDescription.getValue());
             currentItem.setType(currentType.getValue());
-            if (!itemList.contains(currentItem)) {
-                itemList.add(currentItem);
+            if (!configuratorServiceI.getAllItems().contains(currentItem)) {
+                configuratorServiceI.createItem(currentItem.getItemName(), currentItem.getType(), currentItem.getDescription(), currentItem.getSize());
+            } else {
+                configuratorServiceI.updateItem(currentItem);
             }
             refreshGrid();
             this.close();
@@ -66,7 +69,7 @@ public class ItemDialog extends Dialog {
     }
 
     private void refreshGrid() {
-        grid.setItems(itemList);
+        grid.setItems(configuratorServiceI.getAllItems());
     }
 
     public TextField getCurrentName() {

@@ -8,15 +8,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.impl.player.map.MapService;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.*;
 import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.NewDungeonDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +37,7 @@ public class ConfiguratorMainView extends Div {
 
         roomConfigurator = new RoomConfigurator(configuratorServiceI, mapService);
         characterConfigurator = new CharacterConfiguration(configuratorServiceI);
-        itemsConfigurator = new ItemsConfigurator();
+        itemsConfigurator = new ItemsConfigurator(configuratorServiceI);
         dungeonsConfigurator = new DungeonConfiguration(configuratorServiceI);
         npcConfigurator = new NPCConfigurator(configuratorServiceI);
         //configuratorTabs.add(createMenuItems());

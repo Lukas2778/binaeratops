@@ -60,7 +60,13 @@ public interface ConfiguratorServiceI {
      * @param ADescription Gegenstandsberschreibung.
      * @param ASize Größe eines Gegenstandes.
      */
-    void createItem(String AName, ItemType AType, String ADescription, int ASize);
+    void createItem(String AName, ItemType AType, String ADescription, Long ASize);
+
+    /**
+     * Item wird in der DB geupdated
+     * @param AItem Das zu verbessernde Item
+     */
+    void updateItem(Item AItem);
 
     /**
      * Gegenstand wird aus den Dungeon entfernt und gelöscht.
@@ -88,6 +94,7 @@ public interface ConfiguratorServiceI {
      * @param ANPC Der zu verbessernde NPC
      */
     void updateNPC(NPC ANPC);
+
     /**
      * NPC wird aus den Dungeon entfernt und gelöscht.
      * @param ANPC Der zu löschende NPC.

@@ -29,6 +29,8 @@ public class ConfiguratorService
     RaceRepositoryI raceRepo;
     @Autowired
     RoomRepositoryI roomRepo;
+    @Autowired
+    ItemRepositoryI itemRepo;
 
     public ConfiguratorService()
     {
@@ -83,15 +85,27 @@ public class ConfiguratorService
     }
 
     @Override
-    public void createItem(String AName, ItemType AType, String ADescription, int ASize)
+    public void createItem(String AName, ItemType AType, String ADescription, Long ASize)
     {
+        Item item = new Item(AName, ASize, ADescription);
+        item.setType(AType);
+        itemRepo.save(item);
+        dungeon.addItem(item);
+        dungeonRepo.save(dungeon);
+    }
 
+    @Override
+    public void updateItem(Item AItem)
+    {
+        itemRepo.save(AItem);
     }
 
     @Override
     public void deleteItem(Item AItem)
     {
-
+        dungeon.removeItem(AItem);
+        dungeonRepo.save(dungeon);
+        itemRepo.delete(AItem);
     }
 
     @Override
