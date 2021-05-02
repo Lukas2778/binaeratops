@@ -25,9 +25,10 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RaceDialog;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RoleDialog;
 import java.util.ArrayList;
 
 @PageTitle("Charaktereigenschaft")
@@ -40,8 +41,23 @@ public class CharacterConfiguration
     VerticalLayout roleListLayout = new VerticalLayout();
     VerticalLayout raceListLayout = new VerticalLayout();
 
-    ArrayList<Role> roles = new ArrayList<>();
-    ArrayList<Role> races = new ArrayList<>();
+    ArrayList<Role> roleArrayList = new ArrayList<>();
+    ArrayList<Race> raceArrayList = new ArrayList<>();
+
+    Button addB = new Button("hinzufügen");
+    Button deleteB = new Button("löschen");
+
+    Button addRaceButton = new Button("hinzufügen");
+    Button deleteRaceButton = new Button("löschen");
+
+    Grid<Role> grid = new Grid<>();
+    Grid<Race> raceGrid = new Grid<>();
+
+    RoleDialog roleDialog;
+    RaceDialog raceDialog;
+
+    private Role currentRole;
+    private Race currentRace;
 
     public CharacterConfiguration()
     {
@@ -62,8 +78,6 @@ public class CharacterConfiguration
 
         innerLayout.setSecondaryStyle("minWidth", "400px");
         innerLayout.setSecondaryStyle("minWidth", "500px");
-
-
 
         innerLayout.addToPrimary(roleListLayout);
         innerLayout.addToSecondary(raceListLayout);
@@ -101,134 +115,155 @@ public class CharacterConfiguration
 
     private void roleList()
     {
+        addRoleClickListener();
 
-        //Beispieldaten
-        Role testRole = new Role();
-        testRole.setRoleId(0L);
-        testRole.setRoleName("Ork");
-        testRole.setDescription("Hässliches Wesen");
+        deleteRoleClickListener();
 
-        Role testRole2 = new Role();
-        testRole2.setRoleId(1L);
-        testRole2.setRoleName("Lars");
-        testRole2.setDescription(" Wesen");
 
-        Role testRole3 = new Role();
-        testRole3.setRoleId(2L);
-        testRole3.setRoleName("Payy");
-        testRole3.setDescription(" Wesessadn");
-
-        Role testRole4 = new Role();
-        testRole4.setRoleId(3L);
-        testRole4.setRoleName("Ptetey");
-        testRole4.setDescription(" Wesesasdsadn");
-
-        Role testRole5 = new Role();
-        testRole5.setRoleId(4L);
-        testRole5.setRoleName("Ptetey");
-        testRole5.setDescription(" Wesesasdsadn");
-
-        Role testRole6 = new Role();
-        testRole6.setRoleId(5L);
-        testRole6.setRoleName("Ptetey");
-        testRole6.setDescription(" Wesesasdsadn");
-
-        roles.add(testRole);
-        roles.add(testRole2);
-        roles.add(testRole3);
-        roles.add(testRole4);
-        roles.add(testRole5);
-        roles.add(testRole6);
 
         H2 titel = new H2("Rollenliste");
 
-        Grid<Role> grid = new Grid<>();
+        grid.setItems(roleArrayList);
 
-        grid.setItems(roles);
-
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader("Rollenbezeichnung");
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader("Beschreibung");
+        Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
+                .setHeader("Rollenbezeichnung");
+        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription)
+                .setHeader("Beschreibung");
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
 
-        roleNameField.getElement().setAttribute("focus-target", "");
-        descriptionField.getElement().setAttribute("focus-target", "");
+        roleNameField.getElement()
+                .setAttribute("focus-target", "");
+        descriptionField.getElement()
+                .setAttribute("focus-target", "");
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
         HorizontalLayout buttonView = new HorizontalLayout();
         buttonView.setVerticalComponentAlignment(Alignment.END);
 
-        Button addB = new Button("hinzufügen");
-        Button deleteB = new Button("löschen");
-
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addB, deleteB);
 
-      //  roleListLayout.setSizeFull();
+        //  roleListLayout.setSizeFull();
         roleListLayout.add(titel, grid, buttonView);
 
-
     }
+
     private void raceList()
     {
 
-        //Beispieldaten
-        Role testRole = new Role();
-        testRole.setRoleId(0L);
-        testRole.setRoleName("Ork");
-        testRole.setDescription("Hässliches Wesen");
+        addRaceClickListener();
 
-        Role testRole2 = new Role();
-        testRole2.setRoleId(1L);
-        testRole2.setRoleName("Lars");
-        testRole2.setDescription(" Wesen");
+        deleteRaceClickListener();
 
-        Role testRole3 = new Role();
-        testRole3.setRoleId(2L);
-        testRole3.setRoleName("Payy");
-        testRole3.setDescription(" Wesessadn");
+        H2 titel = new H2("Rassenliste");
 
-        Role testRole4 = new Role();
-        testRole4.setRoleId(3L);
-        testRole4.setRoleName("Ptetey");
-        testRole4.setDescription(" Wesesasdsadn");
-        races.add(testRole);
-        races.add(testRole2);
-        races.add(testRole3);
-        races.add(testRole4);
 
-        H2 titel = new H2("Rollenliste");
+        raceGrid.setItems(raceArrayList);
+        Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
+                .setHeader("Rassenbezeichnung");
+        Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription)
+                .setHeader("Beschreibung");
 
-        Grid<Role> grid = new Grid<>();
-
-        grid.setItems(races);
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader("Rollenbezeichnung");
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader("Beschreibung");
-
-        TextField roleNameField = new TextField();
+        TextField raceNameField = new TextField();
         TextField descriptionField = new TextField();
 
-        roleNameField.getElement().setAttribute("focus-target", "");
-        descriptionField.getElement().setAttribute("focus-target", "");
+        raceNameField.getElement()
+                .setAttribute("focus-target", "");
+        descriptionField.getElement()
+                .setAttribute("focus-target", "");
 
-        grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
+        raceGrid.addItemDoubleClickListener(event -> {
+            raceGrid.getEditor().editItem(event.getItem());
+            raceNameField.focus();
+        });
+
+        raceGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
         HorizontalLayout buttonView = new HorizontalLayout();
         buttonView.setVerticalComponentAlignment(Alignment.END);
 
-        Button addB = new Button("hinzufügen");
-        Button deleteB = new Button("löschen");
 
-        addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        buttonView.addAndExpand(addB, deleteB);
+
+        addRaceButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        deleteRaceButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+        buttonView.addAndExpand(addRaceButton, deleteRaceButton);
         //raceListLayout.setSizeFull();
-        raceListLayout.add(titel, grid, buttonView);
+        raceListLayout.add(titel, raceGrid, buttonView);
 
     }
+
+    private void refreshRoleGrid()
+    {
+        grid.setItems(roleArrayList);
+    }
+
+    private void refreshRaceGrid()
+    {
+        raceGrid.setItems(raceArrayList);
+    }
+
+    private RoleDialog createRoleDialog()
+    {
+        roleDialog = new RoleDialog(roleArrayList, currentRole, grid);
+
+        return roleDialog;
+    }
+
+    private RaceDialog createRaceDialog()
+    {
+        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid);
+
+        return raceDialog;
+    }
+
+    private void addRoleClickListener()
+    {
+        addB.addClickListener(e -> {
+            currentRole = new Role();
+            RoleDialog dialog = createRoleDialog();
+            dialog.open();
+        });
+    }
+    private void addRaceClickListener()
+    {
+        addRaceButton.addClickListener(e -> {
+            currentRace = new Race();
+            RaceDialog dialog = createRaceDialog();
+            dialog.open();
+        });
+    }
+
+    private void deleteRoleClickListener()
+    {
+        deleteB.addClickListener(e -> {
+            Role[] selectedRole = grid.getSelectedItems()
+                    .toArray(Role[]::new);
+            if ( selectedRole.length >= 1 )
+            {
+                currentRole = selectedRole[0];
+                roleArrayList.remove(currentRole);
+                refreshRoleGrid();
+            }
+        });
+    }
+
+    private void deleteRaceClickListener()
+    {
+        deleteRaceButton.addClickListener(e -> {
+            Race[] selectedRace = raceGrid.getSelectedItems().toArray(Race[]::new);
+            if ( selectedRace.length >= 1 )
+            {
+                currentRace = selectedRace[0];
+                raceArrayList.remove(currentRace);
+                refreshRaceGrid();
+            }
+        });
+    }
+
 
 }
 

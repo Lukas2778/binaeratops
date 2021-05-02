@@ -27,8 +27,11 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.ItemDialog;
+import de.dhbw.binaeratops.view.mainviewtabs.configurator.konfiguratormainviewtabs.dialog.RoleDialog;
 import java.util.ArrayList;
 import org.apache.commons.compress.archivers.dump.DumpArchiveEntry.PERMISSION;
 
@@ -40,9 +43,10 @@ public class DungeonConfiguration
 {
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout permissionLayout = new VerticalLayout();
-    HorizontalLayout createDungeonLayout = new HorizontalLayout();
 
     ArrayList<User> users = new ArrayList<>();
+
+
 
     public DungeonConfiguration()
     {
@@ -60,7 +64,7 @@ public class DungeonConfiguration
         layout.addToSecondary(permissionLayout);
 
         layout.setSizeFull();
-        add(layout, createDungeonLayout);
+        add(layout);
     }
 
     private void initFeld()
@@ -86,13 +90,15 @@ public class DungeonConfiguration
 
         TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
         dungeonDescription.setWidth("300px");
-        initFeldLayout.add(titel, hinweis, titelField, playerCountField, viewRadioButton, dungeonDescription);
+
 
 
         // create Dungeon Button
         Button createDungeonButton = new Button("Erstelle Button");
-        createDungeonButton.setWidth("500px");
-        createDungeonLayout.add(createDungeonButton);
+        createDungeonButton.setWidth("300px");
+        createDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        initFeldLayout.add(titel, hinweis, titelField, playerCountField, viewRadioButton, dungeonDescription, createDungeonButton);
     }
 
     private void permissionList()

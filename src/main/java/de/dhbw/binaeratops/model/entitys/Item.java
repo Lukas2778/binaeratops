@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * @author Nicolas Haug
  */
 @Entity
-public class Item implements ItemI {
+public class Item implements ItemI{
 
     @Id
     @GeneratedValue
