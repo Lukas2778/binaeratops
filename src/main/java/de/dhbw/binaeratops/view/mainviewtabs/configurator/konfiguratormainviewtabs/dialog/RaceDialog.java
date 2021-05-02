@@ -52,8 +52,7 @@ public class RaceDialog
             currentRace.setDescription(currentDescriptionField.getValue());
 
 
-            if (!raceList.contains(currentRace)) {
-                raceList.add(currentRace);
+            if (!configuratorServiceI.getAllRace().contains(currentRace))  {
                 configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
             }
             refreshGrid();
@@ -65,7 +64,7 @@ public class RaceDialog
 
 
     private void refreshGrid() {
-        grid.setItems(raceList);
+        grid.setItems(configuratorServiceI.getAllRace());
    }
 //
 //    public TextField getCurrentName() {

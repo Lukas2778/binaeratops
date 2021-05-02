@@ -85,7 +85,7 @@ public class NPCConfigurator extends VerticalLayout {
         npcDialog = new NPCDialog(configuratorServiceI, currentNPC, grid);
         return npcDialog;
     }
-
+    
 
     private void createGrid() {
         grid.setItems(configuratorServiceI.getAllNPCs());

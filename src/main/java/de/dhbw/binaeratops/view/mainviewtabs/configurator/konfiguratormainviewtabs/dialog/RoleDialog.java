@@ -56,8 +56,7 @@ public class RoleDialog
             currentRole.setDescription(currentDescriptionField.getValue());
 
 
-            if (!roleList.contains(currentRole)) {
-                roleList.add(currentRole);
+            if (!configuratorServiceI.getAllRace().contains(currentRole)) {
                 configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
             }
             refreshGrid();
@@ -69,7 +68,8 @@ public class RoleDialog
 
 
     private void refreshGrid() {
-        grid.setItems(roleList);
+
+        grid.setItems(configuratorServiceI.getAllRoles());
    }
 //
 //    public TextField getCurrentName() {

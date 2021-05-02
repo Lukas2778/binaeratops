@@ -147,7 +147,7 @@ public class ConfiguratorService
     @Override
     public List<Role> getAllRoles()
     {
-        return null;
+        return dungeon.getRoles();
     }
 
     @Override
@@ -170,8 +170,7 @@ public class ConfiguratorService
 
     @Override
     public List<Race> getAllRace() {
-        dungeon.getRaces().clear();
-        dungeon.getRaces().addAll(raceRepo.findAll());
+
         return dungeon.getRaces();
     }
 
