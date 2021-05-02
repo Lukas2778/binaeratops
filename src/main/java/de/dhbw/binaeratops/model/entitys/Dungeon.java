@@ -215,8 +215,8 @@ public class Dungeon implements DungeonI {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User AUser) {
+        this.user = AUser;
     }
 
     public List<Avatar> getAvatars() {
