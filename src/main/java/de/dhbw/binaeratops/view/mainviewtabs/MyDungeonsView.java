@@ -7,6 +7,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
@@ -64,11 +65,24 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
+        dungeonGrid.addComponentColumn(item -> createRemoveButton(dungeonGrid, item)).setHeader("Aktionen");
 
 //        dungeonList.setHeightFull();
 
         add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
+    }
+
+    private Button createRemoveButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
+        @SuppressWarnings("unchecked")
+        Button button = new Button("Löschen", clickEvent -> {
+            ListDataProvider<Dungeon> dataProvider = (ListDataProvider<Dungeon>) AGrid
+                    .getDataProvider();
+            dataProvider.getItems().remove(ADungeon);
+            //configuratorServiceI.deleteDungeon(ADungeon);
+            dataProvider.refreshAll();
+        });
+        return button;
     }
 
     private void initButtonsLayout(){

@@ -62,7 +62,7 @@ public class MapService implements MapServiceI {
     }
 
     @Override
-    public int getMAP_SIZE() {
+    public int getMapSize() {
         return MAP_SIZE;
     }
 
@@ -202,7 +202,11 @@ public class MapService implements MapServiceI {
         }
     }
 
-
+    /**
+     * Sucht rekursiv nach verbundenen Räumen und speichert die Ergebnisse in der Variable 'searchedRooms'.
+     *
+     * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
+     */
     private void canReachAllRooms(Room ACurrentRoom) {
         int x = ACurrentRoom.getXCoordinate();
         int y = ACurrentRoom.getYCoordinate();
@@ -230,7 +234,11 @@ public class MapService implements MapServiceI {
         }
     }
 
-
+    /**
+     * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
+     * @param AId RaumID.
+     * @return Gibt den gesuchten Raum als Raum-Objekt zurück.
+     */
     private Room getRoomById(Long AId) {
         if (AId == null)
             return null;
@@ -242,7 +250,11 @@ public class MapService implements MapServiceI {
         return null;
     }
 
-
+    /**
+     * Gibt den ersten gefundenen Nachbarn des eingegebenen Raums zurück.
+     * @param ARoom Raum dessen Nachbarn durchsucht werden sollen.
+     * @return Gibt den ersten gefundenen Nachbarn zurück.
+     */
     private Room findANeighbor(Room ARoom) {
         if (ARoom.getNorthRoomId() != null) {
             return getRoomById(ARoom.getNorthRoomId());
@@ -418,7 +430,10 @@ public class MapService implements MapServiceI {
     }
 
 
-
+    /**
+     * @param ARoom Raum für den der name der Kachel erzeugt werden soll.
+     * @return Kachelname für den gesuchten Raum.
+     */
     private String tileName(Room ARoom) {
         String returnS = "Karte";
         if (ARoom.getNorthRoomId() != null)

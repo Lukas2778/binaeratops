@@ -21,7 +21,7 @@ public interface MapServiceI {
      *
      * @return Rückgabe der Größe der Karte in Form von Anzahl der Räume am Rand des Quadrats.
      */
-    int getMAP_SIZE();
+    int getMapSize();
 
     /**
      * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.
@@ -61,27 +61,6 @@ public interface MapServiceI {
     boolean canDeleteRoom(int ALocationX, int ALocationY);
 
     /**
-     * Sucht rekursiv nach verbundenen Räumen und speichert die Ergebnisse in der Variable 'searchedRooms'.
-     *
-     * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
-     */
-    //void canReachAllRooms(Room ACurrentRoom);
-
-    /**
-     * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
-     * @param AId RaumID.
-     * @return Gibt den gesuchten Raum als Raum-Objekt zurück.
-     */
-    //Room getRoomById(Long AId);
-
-    /**
-     * Gibt den ersten gefundenen Nachbarn des eingegebenen Raums zurück.
-     * @param ARoom Raum dessen Nachbarn durchsucht werden sollen.
-     * @return Gibt den ersten gefundenen Nachbarn zurück.
-     */
-    //Room findANeighbor(Room ARoom);
-
-    /**
      * Raum an den übergebenen Koordinaten löschen.
      *
      * @param ALocationX X Koordinate.
@@ -109,10 +88,4 @@ public interface MapServiceI {
      * @return ArrayList.
      */
     ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal);
-
-    /**
-     * @param ARoom Raum für den der name der Kachel erzeugt werden soll.
-     * @return Kachelname für den gesuchten Raum.
-     */
-    //String tileName(Room ARoom);
 }
