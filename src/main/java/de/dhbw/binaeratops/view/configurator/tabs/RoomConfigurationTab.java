@@ -41,6 +41,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     VerticalLayout map = new VerticalLayout();
 
     MapServiceI mapService;
+    ConfiguratorServiceI configuratorServiceI;
 
     private final int width = 8;
     Image[][] tiles = new Image[width][width];
@@ -49,6 +50,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
     public RoomConfigurationTab( ConfiguratorServiceI AConfiguratorServiceI,  MapServiceI AMapServiceI) {
         mapService = AMapServiceI;
+        configuratorServiceI=AConfiguratorServiceI;
         itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
         npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
         initRoom();
@@ -68,7 +70,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         mapArea.setMinWidth(400, Unit.PIXELS);
 
         //KARTE
-        mapService.init(width, );
+        mapService.init(width,configuratorServiceI.getDungeon().getDungeonId() );
         //map.setSizeFull();
         map.setJustifyContentMode(JustifyContentMode.CENTER);
         map.setAlignItems(Alignment.CENTER);
