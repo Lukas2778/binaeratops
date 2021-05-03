@@ -101,7 +101,7 @@ public class MapView extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                         }
                     }else{
-                        Notification.show("Fehler!");
+                        Notification.show("Diese Aktion ist nicht möglich!");
                     }
 
                 });
@@ -112,7 +112,7 @@ public class MapView extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
                         }
                     }else{
-                        Notification.show("Fehler!");
+                        Notification.show("Diese Aktion ist nicht möglich!");
                     }
                 });
 
