@@ -50,7 +50,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
         users = new ArrayList<>();
-        titleField = new TextField("Titel");
+        titleField = new TextField("Name des Dungeons");
         playerCountField = new TextField("Maximale Spieleranzahl");
 
         initFeld();
@@ -74,11 +74,13 @@ public class DungeonConfigurationTab extends VerticalLayout {
                 new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
                         + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
                         + "erste Eindruck!"));
-        hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
+        //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
+        titleField.setValue("Neuer Dungeon");
         titleField.setWidth("300px");
-        titleField.setValue(titleField.getValue());
+        //titleField.setValue(titleField.getValue());
 
+        playerCountField.setValue("30");
         playerCountField.setWidth("300px");
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
@@ -92,14 +94,16 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
 
         // create Dungeon Button
-        Button createDungeonButton = new Button("Erstelle Button");
-        createDungeonButton.setWidth("300px");
-        createDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//        Button createDungeonButton = new Button("Erstelle Button");
+//        createDungeonButton.setWidth("300px");
+//        createDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+//
+//        createDungeonButton.addClickListener(e -> {
+//            configuratorService.createDungeon("test", VaadinSession.getCurrent().getAttribute(User.class), Long.parseLong(playerCountField.getValue()), getVisibility(viewRadioButton.getValue()));
+//        });
+        //initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription, createDungeonButton);
+        initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription);
 
-        createDungeonButton.addClickListener(e -> {
-            configuratorService.createDungeon(titleField.getValue(), VaadinSession.getCurrent().getAttribute(User.class), Long.parseLong(playerCountField.getValue()), getVisibility(viewRadioButton.getValue()));
-        });
-        initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription, createDungeonButton);
     }
 
     private void permissionList() {

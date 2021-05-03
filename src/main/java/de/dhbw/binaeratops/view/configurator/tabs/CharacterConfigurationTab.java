@@ -99,7 +99,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
                         "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
                                 + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
                                 + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
-        hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
+        //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
         NumberField inventorySize = new NumberField("Größe des Inventars");
         inventorySize.setHasControls(true);
