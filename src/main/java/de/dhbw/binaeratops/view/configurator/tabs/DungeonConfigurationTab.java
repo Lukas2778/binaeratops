@@ -49,14 +49,14 @@ public class DungeonConfigurationTab extends VerticalLayout {
         permissionLayout = new VerticalLayout();
         users = new ArrayList<>();
         titleField = new TextField("Name des Dungeons");
-        playerCountField = new TextField("Maximale Spieleranzahl");
+        playerCountField = new TextField("Maximale Anzahl Spieler");
 
         initField();
         permissionList();
+
         SplitLayout splitLayout = new SplitLayout();
-//        splitLayout.setSecondaryStyle("minWidth", "400px");
-//        splitLayout.setPrimaryStyle("minWidth", "450px");
-//        splitLayout.setPrimaryStyle("minHeight", "800px");
+        splitLayout.setPrimaryStyle("minWidth", "550px");
+        splitLayout.setSecondaryStyle("minWidth", "400px");
 
         splitLayout.addToPrimary(initFieldLayout);
         splitLayout.addToSecondary(permissionLayout);
@@ -68,7 +68,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
     private void initField() {
         H1 title = new H1("Dungeon-Konfiguration");
 
-        Details hint = new Details("Allgemeines",
+        Details hint = new Details("Info",
                 new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
                         + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
                         + "erste Eindruck!"));
@@ -79,11 +79,11 @@ public class DungeonConfigurationTab extends VerticalLayout {
         else
             titleField.setValue(configuratorService.getDungeon().getDungeonName());
 
-        titleField.setWidth("300px");
+        titleField.setWidth("400px");
         //titleField.setValue(titleField.getValue());
 
         playerCountField.setValue("30");
-        playerCountField.setWidth("300px");
+        playerCountField.setWidth("170px");
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
         viewRadioButton.setLabel("Sichtbarkeit");
@@ -92,7 +92,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
         viewRadioButton.setValue("Öffentlich");
 
         TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
-        dungeonDescription.setWidth("300px");
+        dungeonDescription.setWidth("500px");
 
 
         // create Dungeon Button
@@ -104,7 +104,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
 //            configuratorService.createDungeon("test", VaadinSession.getCurrent().getAttribute(User.class), Long.parseLong(playerCountField.getValue()), getVisibility(viewRadioButton.getValue()));
 //        });
         //initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription, createDungeonButton);
-        initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription);
+        initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, hint, dungeonDescription);
 
     }
 

@@ -12,9 +12,9 @@ public interface MapServiceI {
      * Konstruktor des MapServices.
      *
      * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
-     * @param ADungeonId
      */
-    ArrayList<Tile> init(int AMapSize, Long ADungeonId);
+    void init(int AMapSize);
+    //ArrayList<Tile> init(int AMapSize, Long ADungeonId);
 
     /**
      * Abfrage der Größe der Karte.

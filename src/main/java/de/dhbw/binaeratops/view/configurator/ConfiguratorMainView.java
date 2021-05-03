@@ -46,8 +46,6 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         mapServiceI=AMapServiceI;
     }
 
-
-
     public void createMenuItems() {
         //wir setzen dem Service den dungeon mit der übergebenen ID aus der URL
 
@@ -60,30 +58,28 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
 
         //Dialog dungeonnameDialog = new NewDungeonDialog(AConfiguratorServiceI);
         dungeonsConfigurator = new DungeonConfigurationTab(configuratorServiceI);
-        roomConfigurator = new RoomConfigurationTab(configuratorServiceI, mapServiceI);
         characterConfigurator = new CharacterConfigurationTab(configuratorServiceI);
         itemsConfigurator = new ItemConfigurationTab(configuratorServiceI);
         npcConfigurator = new NPCConfigurationTab(configuratorServiceI);
-
-
+        roomConfigurator = new RoomConfigurationTab(configuratorServiceI, mapServiceI);
 
         //dungeonnameDialog.open();
 
         Tab dungeonTab = new Tab("Allgemein");
         Tab characterTab = new Tab("Charaktereigenschaften festlegen");
-        Tab npcTab = new Tab("NPCs erstellen");
         Tab itemsTab = new Tab("Gegenstände erstellen");
+        Tab npcTab = new Tab("NPCs erstellen");
         Tab roomTab = new Tab("Räume konfigurieren");
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(dungeonTab, dungeonsConfigurator);
         tabsToPages.put(characterTab, characterConfigurator);
-        tabsToPages.put(npcTab, npcConfigurator);
         tabsToPages.put(itemsTab, itemsConfigurator);
+        tabsToPages.put(npcTab, npcConfigurator);
         tabsToPages.put(roomTab, roomConfigurator);
 
-        configuratorTabs = new Tabs(dungeonTab, characterTab, npcTab, itemsTab, roomTab);
-        Div pages = new Div( dungeonsConfigurator, characterConfigurator, npcConfigurator, itemsConfigurator, roomConfigurator);
+        configuratorTabs = new Tabs(dungeonTab, characterTab, itemsTab, npcTab, roomTab);
+        Div pages = new Div( dungeonsConfigurator, characterConfigurator, itemsConfigurator, npcConfigurator, roomConfigurator);
 
         add(configuratorTabs, pages);
 
