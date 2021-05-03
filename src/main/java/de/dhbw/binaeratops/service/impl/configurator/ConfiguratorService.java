@@ -7,10 +7,12 @@ import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Scope(value = "session")
 @Service
 public class ConfiguratorService
         implements ConfiguratorServiceI
