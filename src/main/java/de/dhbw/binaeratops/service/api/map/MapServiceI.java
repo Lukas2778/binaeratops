@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.service.api.map;
 
-import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.view.map.Tile;
 
 import java.util.ArrayList;
@@ -13,8 +12,9 @@ public interface MapServiceI {
      * Konstruktor des MapServices.
      *
      * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
+     * @param ADungeonId
      */
-    void init(int AMapSize);
+    ArrayList<Tile> init(int AMapSize, Long ADungeonId);
 
     /**
      * Abfrage der Größe der Karte.
@@ -65,21 +65,21 @@ public interface MapServiceI {
      *
      * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
      */
-    void canReachAllRooms(Room ACurrentRoom);
+    //void canReachAllRooms(Room ACurrentRoom);
 
     /**
      * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
      * @param AId RaumID.
      * @return Gibt den gesuchten Raum als Raum-Objekt zurück.
      */
-    Room getRoomById(Long AId);
+    //Room getRoomById(Long AId);
 
     /**
      * Gibt den ersten gefundenen Nachbarn des eingegebenen Raums zurück.
      * @param ARoom Raum dessen Nachbarn durchsucht werden sollen.
      * @return Gibt den ersten gefundenen Nachbarn zurück.
      */
-    Room findANeighbor(Room ARoom);
+    //Room findANeighbor(Room ARoom);
 
     /**
      * Raum an den übergebenen Koordinaten löschen.
@@ -114,5 +114,5 @@ public interface MapServiceI {
      * @param ARoom Raum für den der name der Kachel erzeugt werden soll.
      * @return Kachelname für den gesuchten Raum.
      */
-    String tileName(Room ARoom);
+    //String tileName(Room ARoom);
 }

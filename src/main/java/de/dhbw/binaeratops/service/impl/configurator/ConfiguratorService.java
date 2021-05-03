@@ -32,9 +32,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemRepositoryI itemRepo;
 
-    public ConfiguratorService() {
-        dungeon = new Dungeon();
-    }
+
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -45,14 +43,20 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setDungeon(Dungeon ADungeon) {
-        dungeon = ADungeon;
+    public Dungeon getDungeon() {
+        return dungeon;
+    }
+
+    @Override
+    public void setDungeon(Long ADungeonId) {
+        dungeon = dungeonRepo.findById(ADungeonId).get();
     }
 
     @Override
     public Dungeon createDungeon(String AName, User AUser) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
+        AUser.addDungeon(dungeon);
         dungeonRepo.save(dungeon);
         return dungeon;
     }

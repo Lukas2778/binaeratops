@@ -7,7 +7,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
-import de.dhbw.binaeratops.service.impl.map.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class MapView extends VerticalLayout {
         myMapService = AMyMapService;
         addClassName("map-view");
 
-        myMapService.init(width);
+        myMapService.init(width, );
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);

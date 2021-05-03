@@ -35,6 +35,8 @@ public class MyDungeonsView extends VerticalLayout {
     ConfiguratorServiceI configuratorServiceI;
     UserRepositoryI userRepositoryI;
 
+    Grid<Dungeon> dungeonGrid;
+
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
@@ -55,8 +57,9 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonList.addAll(dungeonServiceI.getAllDungeonsFromUser(user));
 
         initButtonsLayout();
+        initEditDungeonButton();
         initNewDungeonButton();
-        Grid<Dungeon> dungeonGrid=new Grid<>();
+        dungeonGrid=new Grid<>();
         dungeonGrid.setItems(dungeonList);
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
@@ -72,16 +75,18 @@ public class MyDungeonsView extends VerticalLayout {
         buttonsLayout.add(newDungeonButton, editDungeonButton);
     }
 
-//    private void initEditDungeonButton(){
-//        newDungeonButton.addClickListener(e->{
-//            UI.getCurrent().navigate("configurator");
-//        });
-//    }
+    private void initEditDungeonButton(){
+        editDungeonButton.addClickListener(e->{
+            //das ist das hässlichste stück code ever ever
+            UI.getCurrent().navigate("configurator/"+((Dungeon)dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
+        });
+    }
     private void initNewDungeonButton(){
         newDungeonButton.addClickListener(e ->{
-            configuratorServiceI.createDungeon("Neuer Dungeon", VaadinSession.getCurrent().getAttribute(User.class));
+            Dungeon dungeon=configuratorServiceI.createDungeon("Neuer Dungeon", VaadinSession.getCurrent().getAttribute(User.class));
             Notification.show("Neuer Dungeon erstellt");
-            UI.getCurrent().navigate("configurator");
+            //TODO param ID hinzufügen
+            UI.getCurrent().navigate("configurator/"+dungeon.getDungeonId());
         });
     }
 }

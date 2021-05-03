@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.map;
 
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
@@ -32,20 +33,32 @@ public class MapService implements MapServiceI {
     //TODO dungeonId setzen im konstruktor
     Long dungeonId;
 
+    //TODO vor dem speichern immer die räume nochmal aus der datenbank holen
+
     @Override
-    public void init(int AMapSize) {
+    public ArrayList<Tile> init(int AMapSize,Long ADungeonID) {
         //beim wiederaufnehmen einer konfiguration muss der alte stand aus der datenbank geladen werden
         //dungeonRepositoryI.findByDungeonId(1L).getRooms();
+        ArrayList<Tile> tiles=new ArrayList<>();
 
         this.MAP_SIZE = AMapSize;
+
         roomsSet = new Boolean[MAP_SIZE][MAP_SIZE];
         rooms = new HashMap<>();
         searchedRooms = new HashMap<>();
-
+        Dungeon dungeon= dungeonRepositoryI.findById(ADungeonID).get();
         //Karte mit keinem Raum
         for (int i = 0; i < MAP_SIZE; ++i) {
             Arrays.fill(roomsSet[i], Boolean.FALSE);
         }
+        //hinzufügen der in dungeon gepeicherten räume(falls vorhanden)
+        for (Room r :
+                dungeon.getRooms()) {
+            rooms.put(new Tupel<>(r.getXCoordinate(),r.getYCoordinate()),r);
+            roomsSet[r.getXCoordinate()][r.getYCoordinate()]=true;
+            tiles.add(new Tile(r.getXCoordinate(),r.getYCoordinate(),tileName(r)));
+        }
+        return tiles;
     }
 
     @Override
@@ -117,6 +130,8 @@ public class MapService implements MapServiceI {
         if (ALocationX > 0 && roomsSet[ALocationX - 1][ALocationY]) {
             //Nördlichen raum finden und durchgang verknüpfen und speichern
             Room north = rooms.get(new Tupel<>(ALocationX - 1, ALocationY));
+            //damit eventuell geänderte daten des raumes nicht übersrieben werden
+            north=roomRepositoryI.findByRoomId(north.getRoomId());
             north.setSouthRoomId(myRoom.getRoomId());
             roomRepositoryI.save(north);
             //der rückgabe list den nördlichen raum mitgeben
@@ -187,8 +202,8 @@ public class MapService implements MapServiceI {
         }
     }
 
-    @Override
-    public void canReachAllRooms(Room ACurrentRoom) {
+
+    private void canReachAllRooms(Room ACurrentRoom) {
         int x = ACurrentRoom.getXCoordinate();
         int y = ACurrentRoom.getYCoordinate();
 
@@ -215,8 +230,8 @@ public class MapService implements MapServiceI {
         }
     }
 
-    @Override
-    public Room getRoomById(Long AId) {
+
+    private Room getRoomById(Long AId) {
         if (AId == null)
             return null;
         for (Map.Entry<Tupel<Integer>, Room> e : rooms.entrySet()) {
@@ -227,8 +242,8 @@ public class MapService implements MapServiceI {
         return null;
     }
 
-    @Override
-    public Room findANeighbor(Room ARoom) {
+
+    private Room findANeighbor(Room ARoom) {
         if (ARoom.getNorthRoomId() != null) {
             return getRoomById(ARoom.getNorthRoomId());
         }
@@ -403,8 +418,8 @@ public class MapService implements MapServiceI {
     }
 
 
-    @Override
-    public String tileName(Room ARoom) {
+
+    private String tileName(Room ARoom) {
         String returnS = "Karte";
         if (ARoom.getNorthRoomId() != null)
             returnS += "N";

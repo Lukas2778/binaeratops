@@ -18,11 +18,9 @@ import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
-import de.dhbw.binaeratops.service.impl.map.MapService;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
 import de.dhbw.binaeratops.view.map.Tile;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +47,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
     private List<NPC> npcArrayList = new ArrayList<>();
 
-    public RoomConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
+    public RoomConfigurationTab( ConfiguratorServiceI AConfiguratorServiceI,  MapServiceI AMapServiceI) {
         mapService = AMapServiceI;
         itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
         npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
@@ -70,7 +68,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         mapArea.setMinWidth(400, Unit.PIXELS);
 
         //KARTE
-        mapService.init(width);
+        mapService.init(width, );
         //map.setSizeFull();
         map.setJustifyContentMode(JustifyContentMode.CENTER);
         map.setAlignItems(Alignment.CENTER);
@@ -164,6 +162,8 @@ public class RoomConfigurationTab extends VerticalLayout {
             lines.add(line);
             lines.add(lineRoomBorder);
         }
+
+        //TODO korekt kachel einsetzen
 
         lines.setJustifyContentMode(JustifyContentMode.CENTER);
         lines.setAlignItems(Alignment.CENTER);
