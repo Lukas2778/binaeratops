@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.model.service.impl.player.map;
 
-import de.dhbw.binaeratops.service.impl.player.map.MapService;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.impl.map.MapService;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
@@ -12,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("test")
 public class MapServiceTest {
     @Autowired
-    MapService myMapService;
+    MapServiceI myMapService;
 
     @Test
     public void canPlaceRoomTest(){

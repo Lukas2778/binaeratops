@@ -14,11 +14,12 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NPCDialog;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurationTab extends VerticalLayout {
-    ConfiguratorServiceI configuratorServiceI;
+    ConfiguratorServiceI configuratorService;
     VerticalLayout items = new VerticalLayout();
 
     Grid<NPC> grid = new Grid<>(NPC.class);
@@ -29,8 +30,8 @@ public class NPCConfigurationTab extends VerticalLayout {
     NPCDialog npcDialog;
     private NPC currentNPC;
 
-    public NPCConfigurationTab(ConfiguratorServiceI configuratorServiceI) {
-        this.configuratorServiceI = configuratorServiceI;
+    public NPCConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
+        configuratorService = configuratorServiceI;
         initRoom();
         addClickListener();
         add(new H1("NPCs"), items);
@@ -65,7 +66,7 @@ public class NPCConfigurationTab extends VerticalLayout {
             NPC[] selectedItems = grid.getSelectedItems().toArray(NPC[]::new);
             if (selectedItems.length >= 1) {
                 currentNPC = selectedItems[0];
-                configuratorServiceI.deleteNPC(currentNPC);
+                configuratorService.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
                 Notification.show("Bitte wähle einen Gegenstand aus!");
@@ -74,13 +75,13 @@ public class NPCConfigurationTab extends VerticalLayout {
     }
 
     private NPCDialog createNPCDialog() {
-        npcDialog = new NPCDialog(configuratorServiceI, currentNPC, grid);
+        npcDialog = new NPCDialog(configuratorService, currentNPC, grid);
         return npcDialog;
     }
     
 
     private void createGrid() {
-        grid.setItems(configuratorServiceI.getAllNPCs());
+        grid.setItems(configuratorService.getAllNPCs());
 
         grid.removeAllColumns();
         Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName)
@@ -135,6 +136,6 @@ public class NPCConfigurationTab extends VerticalLayout {
     }
 
     private void refreshGrid() {
-        grid.setItems(configuratorServiceI.getAllNPCs());
+        grid.setItems(configuratorService.getAllNPCs());
     }
 }

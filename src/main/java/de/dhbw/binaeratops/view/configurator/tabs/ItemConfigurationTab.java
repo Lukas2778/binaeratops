@@ -14,6 +14,7 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemDialog;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
@@ -32,7 +33,7 @@ public class ItemConfigurationTab extends VerticalLayout {
 
     private Item currentItem;
 
-    public ItemConfigurationTab(ConfiguratorServiceI configuratorServiceI) {
+    public ItemConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();

@@ -15,7 +15,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -24,10 +23,10 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -44,8 +43,8 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
     private ConfiguratorServiceI configuratorService;
 
-    public DungeonConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI) {
-        this.configuratorService = AConfiguratorServiceI;
+    public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
+        configuratorService = AConfiguratorServiceI;
 
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
@@ -53,7 +52,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
         titleField = new TextField("Name des Dungeons");
         playerCountField = new TextField("Maximale Spieleranzahl");
 
-        initFeld();
+        initField();
         permissionList();
         SplitLayout splitLayout = new SplitLayout();
 //        splitLayout.setSecondaryStyle("minWidth", "400px");
@@ -67,7 +66,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
         add(splitLayout);
     }
 
-    private void initFeld() {
+    private void initField() {
         H1 title = new H1("Dungeon-Konfiguration");
 
         Details hint = new Details("Allgemeines",

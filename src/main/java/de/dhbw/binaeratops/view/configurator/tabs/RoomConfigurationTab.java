@@ -17,10 +17,13 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.impl.player.map.MapService;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.impl.map.MapService;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
-import de.dhbw.binaeratops.view.player.map.Tile;
+import de.dhbw.binaeratops.view.map.Tile;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +40,19 @@ public class RoomConfigurationTab extends VerticalLayout {
     ListBox<NPC> npcList = new ListBox<>();
     ListBox<Item> itemList = new ListBox<>();
 
-    VerticalLayout map=new VerticalLayout();
+    VerticalLayout map = new VerticalLayout();
 
-    MapService mapService;
+    MapServiceI mapService;
 
     private final int width = 8;
-    Image[][] tiles =new Image[width][width];
+    Image[][] tiles = new Image[width][width];
 
     private List<NPC> npcArrayList = new ArrayList<>();
 
-    public RoomConfigurationTab(ConfiguratorServiceI configuratorService, MapService mapService){
-        this.mapService=mapService;
-        itemSelectionDialog = new ItemSelectionDialog(configuratorService);
-        npcSelectionDialog = new NpcSelectionDialog(configuratorService);
+    public RoomConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
+        mapService = AMapServiceI;
+        itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
+        npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
         initRoom();
         initMap();
 
@@ -107,9 +110,9 @@ public class RoomConfigurationTab extends VerticalLayout {
                         //Feld anwählen
                         if (mapService.canPlaceRoom(finalI, finalJ)) {
                             //wenn ein raum plaziert wird muss dieser erstellt werden und seine Konfiguration angezeigt werden
-                            ArrayList<Tile> changeTieles= mapService.placeRoom(finalI, finalJ);
+                            ArrayList<Tile> changeTieles = mapService.placeRoom(finalI, finalJ);
                             for (Tile t : changeTieles) {
-                                tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                                tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                             }
                         }
                     }
@@ -118,9 +121,9 @@ public class RoomConfigurationTab extends VerticalLayout {
                         if (mapService.canDeleteRoom(finalI, finalJ)) {
                             //iteriert über jede Kachel die von der änderung betroffen ist und setzt sie neu
                             for (Tile t : mapService.deleteRoom(finalI, finalJ)) {
-                                tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                                tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                             }
-                        }else{
+                        } else {
                             Notification.show("Du kannst einen Raum nicht löschen," +
                                     " wenn der Dungeon dadurch geteilt wird!");
                         }
@@ -128,24 +131,24 @@ public class RoomConfigurationTab extends VerticalLayout {
                 });
 
                 //click listener für die mauern
-                borderHorizonButt.addClickListener(e->{
-                    if(mapService.canToggleWall(finalI,finalJ,true)){
-                        for (Tile t:
-                                mapService.toggleWall(finalI,finalJ,true)) {
-                            tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                borderHorizonButt.addClickListener(e -> {
+                    if (mapService.canToggleWall(finalI, finalJ, true)) {
+                        for (Tile t :
+                                mapService.toggleWall(finalI, finalJ, true)) {
+                            tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
-                    }else{
+                    } else {
                         Notification.show("Fehler!");
                     }
 
                 });
-                borderVertButt.addClickListener(e->{
-                    if(mapService.canToggleWall(finalI,finalJ,false)){
-                        for (Tile t:
-                                mapService.toggleWall(finalI,finalJ,false)) {
-                            tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                borderVertButt.addClickListener(e -> {
+                    if (mapService.canToggleWall(finalI, finalJ, false)) {
+                        for (Tile t :
+                                mapService.toggleWall(finalI, finalJ, false)) {
+                            tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
-                    }else{
+                    } else {
                         Notification.show("Fehler!");
                     }
                 });
@@ -194,12 +197,12 @@ public class RoomConfigurationTab extends VerticalLayout {
         west.setEnabled(false);
 
         VerticalLayout neigborRoomsArea = new VerticalLayout();
-        neigborRoomsArea.add(neighborroomsTitle, new HorizontalLayout(north, east),new HorizontalLayout(south, west));
+        neigborRoomsArea.add(neighborroomsTitle, new HorizontalLayout(north, east), new HorizontalLayout(south, west));
 
         H2 itemsHeadline = new H2("Gegenstände");
         Button editItemButton = new Button("hinzufügen");
 
-    ConfiguratorServiceI configuratorService;
+        ConfiguratorServiceI configuratorService;
 
         HorizontalLayout itemsHeader = new HorizontalLayout();
         itemsHeader.add(itemsHeadline, editItemButton);
@@ -209,7 +212,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         itemList.setEnabled(false);
 
-        itemList.setRenderer(new ComponentRenderer<>(item ->{
+        itemList.setRenderer(new ComponentRenderer<>(item -> {
             Label label = new Label(item.getItemName());
             label.getStyle().set("propertyName", "value");
             label.addClassName("itemLabel");
@@ -221,7 +224,7 @@ public class RoomConfigurationTab extends VerticalLayout {
             itemSelectionDialog.open();
         });
 
-        itemSelectionDialog.addOpenedChangeListener(e->{
+        itemSelectionDialog.addOpenedChangeListener(e -> {
             if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
                 itemList.clear();
                 itemList.setItems(itemSelectionDialog.getItemSelection());
@@ -240,7 +243,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         npcList.setEnabled(false);
 
-        npcList.setRenderer(new ComponentRenderer<>(item ->{
+        npcList.setRenderer(new ComponentRenderer<>(item -> {
             Label label = new Label(item.getNpcName());
             label.getStyle().set("propertyName", "value");
             label.addClassName("itemLabel");
@@ -251,7 +254,7 @@ public class RoomConfigurationTab extends VerticalLayout {
             npcSelectionDialog.open();
         });
 
-        npcSelectionDialog.addOpenedChangeListener(e->{
+        npcSelectionDialog.addOpenedChangeListener(e -> {
             if (npcSelectionDialog.dialogResult) {
                 npcList.clear();
                 npcList.setItems(npcSelectionDialog.getNPCSelection());
