@@ -8,7 +8,8 @@ import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.impl.player.map.MapService;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.impl.map.MapService;
 import de.dhbw.binaeratops.view.configurator.tabs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,14 +29,14 @@ public class ConfiguratorMainView extends Div {
     private VerticalLayout roomConfigurator;
 
 
-    public ConfiguratorMainView(@Autowired ConfiguratorServiceI configuratorServiceI, @Autowired MapService mapService) {
+    public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
 
-        //Dialog dungeonnameDialog = new NewDungeonDialog(configuratorServiceI);
-        roomConfigurator = new RoomConfigurationTab(configuratorServiceI, mapService);
-        characterConfigurator = new CharacterConfigurationTab(configuratorServiceI);
-        itemsConfigurator = new ItemConfigurationTab(configuratorServiceI);
-        dungeonsConfigurator = new DungeonConfigurationTab(configuratorServiceI);
-        npcConfigurator = new NPCConfigurationTab(configuratorServiceI);
+        //Dialog dungeonnameDialog = new NewDungeonDialog(AConfiguratorServiceI);
+        roomConfigurator = new RoomConfigurationTab(AConfiguratorServiceI, AMapServiceI);
+        characterConfigurator = new CharacterConfigurationTab(AConfiguratorServiceI);
+        itemsConfigurator = new ItemConfigurationTab(AConfiguratorServiceI);
+        dungeonsConfigurator = new DungeonConfigurationTab(AConfiguratorServiceI);
+        npcConfigurator = new NPCConfigurationTab(AConfiguratorServiceI);
         createMenuItems();
 
         //dungeonnameDialog.open();

@@ -18,7 +18,7 @@ public class DungeonService implements DungeonServiceI {
 
     public List<Dungeon> getAllDungeonsFromUser(User AUser){
 
-        List<Dungeon> userDungeons = new ArrayList<Dungeon>();
+        List<Dungeon> userDungeons = new ArrayList<>();
 
         for(Dungeon myDungeon: dungeonRepo.findAll()){
             if (myDungeon.getDungeonMasterId() == AUser.getUserId()){

@@ -1,20 +1,21 @@
-package de.dhbw.binaeratops.service.impl.player.map;
+package de.dhbw.binaeratops.service.impl.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.view.player.map.Tile;
-import de.dhbw.binaeratops.view.player.map.Tupel;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.view.map.Tile;
+import de.dhbw.binaeratops.view.map.Tupel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-/**
- * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
- */
+
+@Scope(value = "session")
 @Service
-public class MapService {
+public class MapService implements MapServiceI {
 
     @Autowired
     private RoomRepositoryI roomRepositoryI;
@@ -31,11 +32,7 @@ public class MapService {
     //TODO dungeonId setzen im konstruktor
     Long dungeonId;
 
-    /**
-     * Konstruktor des MapServices.
-     *
-     * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
-     */
+    @Override
     public void init(int AMapSize) {
         //beim wiederaufnehmen einer konfiguration muss der alte stand aus der datenbank geladen werden
         //dungeonRepositoryI.findByDungeonId(1L).getRooms();
@@ -51,35 +48,18 @@ public class MapService {
         }
     }
 
-    /**
-     * Abfrage der Größe der Karte.
-     *
-     * @return Rückgabe der Größe der Karte in Form von Anzahl der Räume am Rand des Quadrats.
-     */
+    @Override
     public int getMAP_SIZE() {
         return MAP_SIZE;
     }
 
-    /**
-     * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @return Rückgabe, ob der Raum schon gesetzt wurde oder nicht.
-     */
+    @Override
     public boolean roomExists(int ALocationX, int ALocationY) {
         return roomsSet[ALocationX][ALocationY];
         //wenn Raum schon existiert, muss in der View mittels der entsprechenden ID die Raumeinstellungen angeigt werden
     }
 
-    /**
-     * Überprüft, ob der Raum an den übergebenen Koordinaten gesetzt werden kann.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @return Rückgabe, ob der Raum gesetzt werden kann oder nicht.
-     * TODO refactor manche abfragen könnten verständlicher sein
-     */
+    @Override
     public boolean canPlaceRoom(int ALocationX, int ALocationY) {
         //Überprüfen, ob an der Position schon ein Raum existiert
         if (roomsSet[ALocationX][ALocationY]) {
@@ -118,13 +98,7 @@ public class MapService {
         return false;
     }
 
-    /**
-     * Setzen des Raums an den übergebenen Koordinaten.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @return Liste mit den Kacheln, die geändert werden;
-     */
+    @Override
     public ArrayList<Tile> placeRoom(int ALocationX, int ALocationY) {
         //true in roomSet an bestimmte Stelle speichern
         //Raum erzeugen und in Datenbank speichern -> Raum_ID
@@ -194,14 +168,7 @@ public class MapService {
     }
 
 
-    /**
-     * Überprüfen, ob der Raum an den übergebenen Koordinaten gelöscht werden kann.
-     * Dies passiert indem geprüft wird ob von einem beliebigen raum alle andern Räume erreichber sind.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @return Rückgabe, ob der Raum gelöscht werden kann oder nicht.
-     */
+    @Override
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
         //wenn es nur einen raum gibt, kann dieser entfernt werden
         if (rooms.size() <= 2) {
@@ -220,12 +187,8 @@ public class MapService {
         }
     }
 
-    /**
-     * Sucht rekursiv nach verbundenen Räumen und speichert die Ergebnisse in der Variable 'searchedRooms'.
-     *
-     * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
-     */
-    private void canReachAllRooms(Room ACurrentRoom) {
+    @Override
+    public void canReachAllRooms(Room ACurrentRoom) {
         int x = ACurrentRoom.getXCoordinate();
         int y = ACurrentRoom.getYCoordinate();
 
@@ -252,12 +215,8 @@ public class MapService {
         }
     }
 
-    /**
-     * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
-     * @param AId RaumID.
-     * @return Gibt den gesuchten Raum als Raum-Objekt zurück.
-     */
-    private Room getRoomById(Long AId) {
+    @Override
+    public Room getRoomById(Long AId) {
         if (AId == null)
             return null;
         for (Map.Entry<Tupel<Integer>, Room> e : rooms.entrySet()) {
@@ -268,12 +227,8 @@ public class MapService {
         return null;
     }
 
-    /**
-     * Gibt den ersten gefundenen Nachbarn des eingegebenen Raums zurück.
-     * @param ARoom Raum dessen Nachbarn durchsucht werden sollen.
-     * @return Gibt den ersten gefundenen Nachbarn zurück.
-     */
-    private Room findANeighbor(Room ARoom) {
+    @Override
+    public Room findANeighbor(Room ARoom) {
         if (ARoom.getNorthRoomId() != null) {
             return getRoomById(ARoom.getNorthRoomId());
         }
@@ -289,13 +244,7 @@ public class MapService {
         return null;
     }
 
-    /**
-     * Raum an den übergebenen Koordinaten löschen.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @return ArrayList.
-     */
+    @Override
     public ArrayList<Tile> deleteRoom(int ALocationX, int ALocationY) {
         roomsSet[ALocationX][ALocationY] = false;
 
@@ -339,14 +288,7 @@ public class MapService {
         return tiles;
     }
 
-    /**
-     * Überprüfen, ob die Wand an den übergebenen Koordinaten geändet werden kann.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @param AHorizontal Eingabe, ob es sich um eine horizontale Wand handelt.
-     * @return Rückgabe, ob die Wand gesetzt werden kann oder nicht.
-     */
+    @Override
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
         //hier werden die mauern, die räume westlich oder östlich von sich haben verarbeitet
         if (!AHorizontal && roomsSet[ALocationX][ALocationY] && roomsSet[ALocationX][ALocationY + 1]) {
@@ -425,14 +367,7 @@ public class MapService {
     }
 
 
-    /**
-     * Wand an den übergebenen Koordinaten setzen.
-     *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
-     * @param AHorizontal Eingabe, ob es sich um eine horizontale Wand handelt.
-     * @return ArrayList.
-     */
+    @Override
     public ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
         ArrayList<Tile> tiles = new ArrayList<>();
         Room room = rooms.get(new Tupel<>(ALocationX, ALocationY));
@@ -468,11 +403,8 @@ public class MapService {
     }
 
 
-    /**
-     * @param ARoom Raum für den der name der Kachel erzeugt werden soll.
-     * @return Kachelname für den gesuchten Raum.
-     */
-    private String tileName(Room ARoom) {
+    @Override
+    public String tileName(Room ARoom) {
         String returnS = "Karte";
         if (ARoom.getNorthRoomId() != null)
             returnS += "N";

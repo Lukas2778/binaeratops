@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.player.map;
+package de.dhbw.binaeratops.view.map;
 
 public class Tile {
     int x;
@@ -11,7 +11,7 @@ public class Tile {
         this.path = path;
     }
 
-    public Tile(){};
+    public Tile(){}
 
     public int getX() {
         return x;

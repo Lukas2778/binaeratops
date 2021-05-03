@@ -7,14 +7,14 @@ import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Scope(value = "session")
 @Service
-public class ConfiguratorService
-        implements ConfiguratorServiceI
-{
+public class ConfiguratorService implements ConfiguratorServiceI {
 
     private Dungeon dungeon;
     private User dungeonDesigner;
@@ -32,14 +32,12 @@ public class ConfiguratorService
     @Autowired
     ItemRepositoryI itemRepo;
 
-    public ConfiguratorService()
-    {
+    public ConfiguratorService() {
         dungeon = new Dungeon();
     }
 
     @Override
-    public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility)
-    {
+    public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId(), APlayerSize, AVisibility);
         dungeonRepo.save(dungeon);
@@ -47,13 +45,12 @@ public class ConfiguratorService
     }
 
     @Override
-    public void setDungeon(Dungeon ADungeon){
+    public void setDungeon(Dungeon ADungeon) {
         dungeon = ADungeon;
     }
 
     @Override
-    public Dungeon createDungeon(String AName, User AUser)
-    {
+    public Dungeon createDungeon(String AName, User AUser) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
         dungeonRepo.save(dungeon);
@@ -61,32 +58,27 @@ public class ConfiguratorService
     }
 
     @Override
-    public void setStartRoom(Room ARoom)
-    {
+    public void setStartRoom(Room ARoom) {
 
     }
 
     @Override
-    public void setCommandSymbol(String ACommandSymbol)
-    {
+    public void setCommandSymbol(String ACommandSymbol) {
 
     }
 
     @Override
-    public void setMaxPlayercount(int ACount)
-    {
+    public void setMaxPlayercount(int ACount) {
 
     }
 
     @Override
-    public List<Room> getAllDungeonRooms()
-    {
+    public List<Room> getAllDungeonRooms() {
         return null;
     }
 
     @Override
-    public void createItem(String AName, ItemType AType, String ADescription, Long ASize)
-    {
+    public void createItem(String AName, ItemType AType, String ADescription, Long ASize) {
         Item item = new Item(AName, ASize, ADescription);
         item.setType(AType);
         itemRepo.save(item);
@@ -95,28 +87,24 @@ public class ConfiguratorService
     }
 
     @Override
-    public void updateItem(Item AItem)
-    {
+    public void updateItem(Item AItem) {
         itemRepo.save(AItem);
     }
 
     @Override
-    public void deleteItem(Item AItem)
-    {
+    public void deleteItem(Item AItem) {
         dungeon.removeItem(AItem);
         dungeonRepo.save(dungeon);
         itemRepo.delete(AItem);
     }
 
     @Override
-    public Item getItem(Long AItemId)
-    {
+    public Item getItem(Long AItemId) {
         return null;
     }
 
     @Override
-    public void createNPC(String AName, String ADescription, Race ARace)
-    {
+    public void createNPC(String AName, String ADescription, Race ARace) {
         NPC newNPC = new NPC(AName, ARace, ADescription);
         npcRepo.save(newNPC);
         dungeon.addNpc(newNPC);
@@ -136,14 +124,12 @@ public class ConfiguratorService
     }
 
     @Override
-    public Item getNPC(Long ANPCId)
-    {
+    public Item getNPC(Long ANPCId) {
         return null;
     }
 
     @Override
-    public void createRole(String AName, String ADescription)
-    {
+    public void createRole(String AName, String ADescription) {
         Role newRole = new Role(AName, ADescription);
         roleRepo.save(newRole);
         dungeon.getRoles().add(newRole);
@@ -151,22 +137,19 @@ public class ConfiguratorService
     }
 
     @Override
-    public void removeRole(Role ARole)
-    {
+    public void removeRole(Role ARole) {
         dungeon.getRoles().remove(ARole);
         roleRepo.delete(ARole);
         dungeonRepo.save(dungeon);
     }
 
     @Override
-    public List<Role> getAllRoles()
-    {
+    public List<Role> getAllRoles() {
         return dungeon.getRoles();
     }
 
     @Override
-    public void createRace(String AName, String ADescription)
-    {
+    public void createRace(String AName, String ADescription) {
         Race newRace = new Race(AName, ADescription);
         raceRepo.save(newRace);
         dungeon.getRaces().add(newRace);
@@ -174,8 +157,7 @@ public class ConfiguratorService
     }
 
     @Override
-    public void removeRace(Race ARace)
-    {
+    public void removeRace(Race ARace) {
         dungeon.getRaces().remove(ARace);
         raceRepo.delete(ARace);
         dungeonRepo.save(dungeon);
@@ -189,14 +171,12 @@ public class ConfiguratorService
     }
 
     @Override
-    public void setDefaultInventoryCapacity(int ACapacity)
-    {
+    public void setDefaultInventoryCapacity(int ACapacity) {
 
     }
 
     @Override
-    public void createRoom(String AName)
-    {
+    public void createRoom(String AName) {
         Room newRoom = new Room(AName);
         roomRepo.save(new Room());
         dungeon.getRooms()
@@ -205,20 +185,17 @@ public class ConfiguratorService
     }
 
     @Override
-    public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom)
-    {
+    public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom) {
 
     }
 
     @Override
-    public void removeNeighborRoom(String ADirection)
-    {
+    public void removeNeighborRoom(String ADirection) {
 
     }
 
     @Override
-    public void setItems(Room ARoom, List<Item> AItemList)
-    {
+    public void setItems(Room ARoom, List<Item> AItemList) {
         ARoom.getItems()
                 .clear();
         ARoom.getItems()
@@ -227,8 +204,7 @@ public class ConfiguratorService
     }
 
     @Override
-    public void setNPCs(Room ARoom, List<NPC> ANPCList)
-    {
+    public void setNPCs(Room ARoom, List<NPC> ANPCList) {
         ARoom.getNpcs()
                 .clear();
         ARoom.getNpcs()
@@ -237,20 +213,17 @@ public class ConfiguratorService
     }
 
     @Override
-    public List<Item> getAllItems()
-    {
+    public List<Item> getAllItems() {
         return dungeon.getItems();
     }
 
     @Override
-    public List<NPC> getAllNPCs()
-    {
+    public List<NPC> getAllNPCs() {
         return dungeon.getNpcs();
     }
 
     @Override
-    public void deleteRoom(Room ARoom)
-    {
+    public void deleteRoom(Room ARoom) {
         dungeon.getRooms()
                 .remove(ARoom);
         dungeonRepo.save(dungeon);
@@ -258,8 +231,7 @@ public class ConfiguratorService
     }
 
     @Override
-    public Room getRoom(Long ARoomID)
-    {
+    public Room getRoom(Long ARoomID) {
         return null;
     }
 }

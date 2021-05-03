@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.player.map;
+package de.dhbw.binaeratops.view.map;
 
 import java.util.Objects;
 

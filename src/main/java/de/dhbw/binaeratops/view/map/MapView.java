@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.player.map;
+package de.dhbw.binaeratops.view.map;
 
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Image;
@@ -6,7 +6,8 @@ import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import de.dhbw.binaeratops.service.impl.player.map.MapService;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.impl.map.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -19,20 +20,21 @@ import java.util.ArrayList;
 //@Route("Mapp")
 public class MapView extends VerticalLayout {
 
-    @Autowired
-    MapService myMapService;
+    MapServiceI myMapService;
 
     private final int width = 8;
-    Image[][] tiles =new Image[width][width];
+    Image[][] tiles = new Image[width][width];
 
     /**
      * Dies ist der Konstruktor zum Erzeugen der Karte.
+     *
      * @param AMyMapService MapService.
      */
-    public MapView(@Autowired MapService AMyMapService) {
+    public MapView(@Autowired MapServiceI AMyMapService) {
+        myMapService = AMyMapService;
         addClassName("map-view");
 
-        AMyMapService.init(width);
+        myMapService.init(width);
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -69,24 +71,24 @@ public class MapView extends VerticalLayout {
 
                 //click listener für die kacheln
                 tiles[i][j].addClickListener(e -> {
-                    if (!AMyMapService.roomExists(finalI, finalJ)) {
+                    if (!myMapService.roomExists(finalI, finalJ)) {
                         //Feld anwählen
-                        if (AMyMapService.canPlaceRoom(finalI, finalJ)) {
+                        if (myMapService.canPlaceRoom(finalI, finalJ)) {
                             //wenn ein raum plaziert wird muss dieser erstellt werden und seine Konfiguration angezeigt werden
-                            ArrayList<Tile> changeTieles= AMyMapService.placeRoom(finalI, finalJ);
+                            ArrayList<Tile> changeTieles = myMapService.placeRoom(finalI, finalJ);
                             for (Tile t : changeTieles) {
-                                tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                                tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                             }
                         }
                     }
                     //Feld abwählen
                     else {
-                        if (AMyMapService.canDeleteRoom(finalI, finalJ)) {
+                        if (myMapService.canDeleteRoom(finalI, finalJ)) {
                             //iteriert über jede Kachel die von der änderung betroffen ist und setzt sie neu
-                            for (Tile t : AMyMapService.deleteRoom(finalI, finalJ)) {
-                                tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                            for (Tile t : myMapService.deleteRoom(finalI, finalJ)) {
+                                tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                             }
-                        }else{
+                        } else {
                             Notification.show("Du kannst einen Raum nicht löschen," +
                                     " wenn der Dungeon dadurch geteilt wird!");
                         }
@@ -94,24 +96,24 @@ public class MapView extends VerticalLayout {
                 });
 
                 //click listener für die mauern
-                borderHorizonButt.addClickListener(e->{
-                    if(AMyMapService.canToggleWall(finalI,finalJ,true)){
-                        for (Tile t:
-                                AMyMapService.toggleWall(finalI,finalJ,true)) {
-                            tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                borderHorizonButt.addClickListener(e -> {
+                    if (myMapService.canToggleWall(finalI, finalJ, true)) {
+                        for (Tile t :
+                                myMapService.toggleWall(finalI, finalJ, true)) {
+                            tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
-                    }else{
+                    } else {
                         Notification.show("Diese Aktion ist nicht möglich!");
                     }
 
                 });
-                borderVertButt.addClickListener(e->{
-                    if(AMyMapService.canToggleWall(finalI,finalJ,false)){
-                        for (Tile t:
-                                AMyMapService.toggleWall(finalI,finalJ,false)) {
-                            tiles[t.getX()][t.getY()].setSrc("map/"+t.getPath()+".png");
+                borderVertButt.addClickListener(e -> {
+                    if (myMapService.canToggleWall(finalI, finalJ, false)) {
+                        for (Tile t :
+                                myMapService.toggleWall(finalI, finalJ, false)) {
+                            tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
-                    }else{
+                    } else {
                         Notification.show("Diese Aktion ist nicht möglich!");
                     }
                 });

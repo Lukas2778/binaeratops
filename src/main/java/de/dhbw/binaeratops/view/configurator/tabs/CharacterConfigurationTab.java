@@ -30,6 +30,7 @@ import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
@@ -59,10 +60,10 @@ public class CharacterConfigurationTab extends VerticalLayout {
     private Role currentRole;
     private Race currentRace;
 
-    private ConfiguratorServiceI configuratorServiceI;
+    private ConfiguratorServiceI configuratorService;
 
-    public CharacterConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI) {
-        this.configuratorServiceI = AConfiguratorServiceI;
+    public CharacterConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
+        configuratorService = AConfiguratorServiceI;
 
         initFeld();
         roleList();
@@ -193,12 +194,12 @@ public class CharacterConfigurationTab extends VerticalLayout {
     }
 
     private RoleDialog createRoleDialog() {
-        roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorServiceI);
+        roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorService);
         return roleDialog;
     }
 
     private RaceDialog createRaceDialog() {
-        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorServiceI);
+        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorService);
         return raceDialog;
     }
 
@@ -226,7 +227,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
                 currentRole = selectedRole[0];
                 roleArrayList.remove(currentRole);
                 refreshRoleGrid();
-                configuratorServiceI.removeRole(currentRole);
+                configuratorService.removeRole(currentRole);
             }
         });
     }
@@ -238,7 +239,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
                 currentRace = selectedRace[0];
                 raceArrayList.remove(currentRace);
                 refreshRaceGrid();
-                configuratorServiceI.removeRace(currentRace);
+                configuratorService.removeRace(currentRace);
             }
         });
     }
