@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
+import com.vaadin.flow.component.notification.Notification;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Scope(value = "session")
@@ -228,7 +230,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteRoom(Room ARoom) {
         dungeon.getRooms().remove(ARoom);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
+        //dungeonRepo.delete(dungeon);
         roomRepo.delete(ARoom);
     }
 
@@ -244,7 +247,13 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         //Raum dem aktuellen Dungeon hinzufügen
         dungeon.addRoom(ARoom);
         //geupdateten Dungeon in die Datenbank speichern
-        dungeonRepo.saveAndFlush(dungeon);
+        try {
+            dungeonRepo.save(dungeon);
+            dungeonRepo.saveAndFlush(dungeon);
+        } catch (Exception e) {
+            roomRepo.save(ARoom);
+            Notification.show("Hier findet er den Entity nicht!");
+        }
     }
 
     @Override
