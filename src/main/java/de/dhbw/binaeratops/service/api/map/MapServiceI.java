@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.api.map;
 
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.map.Tile;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public interface MapServiceI {
      *
      * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
      */
-    void init(int AMapSize);
+    ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorService);
     //ArrayList<Tile> init(int AMapSize, Long ADungeonId);
 
     /**

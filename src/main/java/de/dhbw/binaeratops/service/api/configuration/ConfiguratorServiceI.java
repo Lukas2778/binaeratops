@@ -222,4 +222,7 @@ public interface ConfiguratorServiceI {
      */
     Room getRoom(Long ARoomID);
 
+    void addRoom(Room ARoom);
+
+    void saveRoom(Room ARoom);
 }

@@ -33,7 +33,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemRepositoryI itemRepo;
 
 
-
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
         dungeonDesigner = AUser;
@@ -228,8 +227,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void deleteRoom(Room ARoom) {
-        dungeon.getRooms()
-                .remove(ARoom);
+        dungeon.getRooms().remove(ARoom);
         dungeonRepo.save(dungeon);
         roomRepo.delete(ARoom);
     }
@@ -237,5 +235,21 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public Room getRoom(Long ARoomID) {
         return null;
+    }
+
+    @Override
+    public void addRoom(Room ARoom) {
+        //wenn der Raum existiert, wird er überschrieben, wenn nicht, wird ein neuer Raum in die Datenbank gespeichert
+        roomRepo.save(ARoom);
+        //Raum dem aktuellen Dungeon hinzufügen
+        dungeon.addRoom(ARoom);
+        //geupdateten Dungeon in die Datenbank speichern
+        dungeonRepo.saveAndFlush(dungeon);
+    }
+
+    @Override
+    public void saveRoom(Room ARoom) {
+        roomRepo.save(ARoom);
+        //TODO test: dungeonRepo.save(dungeon);
     }
 }

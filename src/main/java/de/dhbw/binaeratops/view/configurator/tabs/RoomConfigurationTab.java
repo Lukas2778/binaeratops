@@ -69,7 +69,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
-        mapService.init(width);
+        ArrayList<Tile> initTiles=mapService.init(width,configuratorServiceI);
         //map.setSizeFull();
         mapArea.setJustifyContentMode(JustifyContentMode.CENTER);
         mapArea.setAlignItems(Alignment.CENTER);
@@ -165,7 +165,10 @@ public class RoomConfigurationTab extends VerticalLayout {
             lines.add(lineRoomBorder);
         }
 
-        //TODO korekt kachel einsetzen
+        //Oberfläche bekommt die Bilder aus der Datenbank gesetzt
+        for (Tile t : initTiles) {
+            tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
+        }
 
         lines.setJustifyContentMode(JustifyContentMode.CENTER);
         lines.setAlignItems(Alignment.CENTER);
