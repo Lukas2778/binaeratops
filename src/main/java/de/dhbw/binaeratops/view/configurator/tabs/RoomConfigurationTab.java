@@ -58,7 +58,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         splitLayout.addToPrimary(mapArea);
         splitLayout.addToSecondary(roomArea);
         splitLayout.setWidth("100%");
-        splitLayout.setPrimaryStyle("minWidth", "850px");
+        splitLayout.setPrimaryStyle("minWidth", "870px");
         splitLayout.setSecondaryStyle("minWidth", "550px");
 
         add(splitLayout);
@@ -178,8 +178,14 @@ public class RoomConfigurationTab extends VerticalLayout {
     private void initRoom() {
         //TODO Raumname wird übergeben
         String chosenRoom="New world order";
+        HorizontalLayout titleAndDelLayout=new HorizontalLayout();
 
-        H2 configureRooms = new H2("Räume bearbeiten");
+        H2 configureRoomsTitle = new H2("Räume bearbeiten");
+        Button deleteRoomButt=new Button("Raum löschen");
+        deleteRoomButt.getStyle().set("color", "red");
+        deleteRoomButt.getStyle().set("margin-top", "auto");
+        titleAndDelLayout.add(configureRoomsTitle, deleteRoomButt);
+
         TextField startRoom=new TextField("Startraum");
         H4 actualRoomHeadline=new H4("Aktueller Raum:");
         TextField roomName =new TextField("Name des Raums");
@@ -194,7 +200,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         H4 npcHeadline = new H4("NPCs");
         Button editNPCButton = new Button("Hinzufügen");
 
-        roomArea.add(configureRooms, startRoom, actualRoomHeadline, roomName,roomDescription,itemsAndNPCs,itemsHeadline,itemList, editItemButton,npcHeadline, npcList, editNPCButton);
+        roomArea.add(titleAndDelLayout, startRoom, actualRoomHeadline, roomName,roomDescription,itemsAndNPCs,itemsHeadline,itemList, editItemButton,npcHeadline, npcList, editNPCButton);
 
         itemList.setEnabled(false);
         itemList.setRenderer(new ComponentRenderer<>(item -> {

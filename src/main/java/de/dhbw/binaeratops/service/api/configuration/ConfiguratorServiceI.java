@@ -41,6 +41,11 @@ public interface ConfiguratorServiceI {
     void setDungeon(Long ADungeonId);
 
     /**
+     * Änderungen am Dungeon in die Datenbank abspeichern.
+     */
+    void saveDungeon();
+
+    /**
      * Startraum des Dungeons setzen.
      * @param ARoom Ein Raum.
      */

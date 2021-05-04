@@ -54,6 +54,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
+    public void saveDungeon(){
+        dungeonRepo.save(dungeon);
+    }
+
+    @Override
     public Dungeon createDungeon(String AName, User AUser) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
@@ -188,6 +193,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
                 .add(newRoom);
         dungeonRepo.save(dungeon);
     }
+
 
     @Override
     public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom) {

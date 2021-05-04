@@ -97,8 +97,8 @@ public class MyDungeonsView extends VerticalLayout {
     }
     private void initNewDungeonButton(){
         newDungeonButton.addClickListener(e ->{
-            Dungeon dungeon=configuratorServiceI.createDungeon("Neuer Dungeon", VaadinSession.getCurrent().getAttribute(User.class));
-            Notification.show("Neuer Dungeon erstellt");
+            Dungeon dungeon=configuratorServiceI.createDungeon("Mein Dungeon", VaadinSession.getCurrent().getAttribute(User.class));
+            Notification.show("Neuen Dungeon erstellt");
             //TODO param ID hinzufügen
             UI.getCurrent().navigate("configurator/"+dungeon.getDungeonId());
         });
