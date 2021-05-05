@@ -12,6 +12,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
@@ -223,11 +224,22 @@ public class RoomConfigurationTab extends VerticalLayout {
         TextField startRoom=new TextField("Startraum");
         H4 actualRoomHeadline=new H4("Aktueller Raum:");
         TextField roomName =new TextField("Name des Raums");
+
         roomName.setValue(Objects.requireNonNullElse(chosenRoom, "Beispiel Name"));
+        roomName.setValueChangeMode(ValueChangeMode.ON_CHANGE);
+        roomName.addValueChangeListener(e->{
+            currentRoom.setRoomName(roomName.getValue());
+            configuratorServiceI.saveRoom(currentRoom);
+        });
 
         TextArea roomDescription = new TextArea("Beschreibung");
         roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),"Beispiel beschreibung"));
         roomDescription.setMinWidth(500, Unit.PIXELS);
+        roomDescription.setValueChangeMode(ValueChangeMode.ON_BLUR);
+        roomDescription.addValueChangeListener(e->{
+            currentRoom.setDescription(roomDescription.getValue());
+            configuratorServiceI.saveRoom(currentRoom);
+        });
 
         H3 itemsAndNPCs=new H3("Was soll in diesem Raum vorhanden sein?");
 
