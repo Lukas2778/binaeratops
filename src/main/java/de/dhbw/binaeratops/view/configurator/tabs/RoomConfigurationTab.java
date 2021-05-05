@@ -127,7 +127,6 @@ public class RoomConfigurationTab extends VerticalLayout {
                             }
                             currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                         }
-                        initRoom();
                     }
                     //wenn der Raum existiert, kann er bearbeitet werden
                     else {
@@ -135,7 +134,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
                         //Notification.show(currentRoom.getRoomId().toString());
                     }
-
+                    initRoom();
                 });
 
                 //click listener für die mauern
