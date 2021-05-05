@@ -112,7 +112,7 @@ public class MapServiceTest extends Logger {
 
     @Test
     public void canPlaceRoomTest(){
-        Assert.assertTrue(myMapService.canPlaceRoom(1,3));
+        Assert.assertTrue(myMapService.canPlaceRoom(2,1));
         Assert.assertFalse(myMapService.canPlaceRoom(3,2));
     }
     @Test
@@ -130,10 +130,10 @@ public class MapServiceTest extends Logger {
         Assert.assertFalse(myMapService.canToggleWall(0,2,false));
         Assert.assertFalse(myMapService.canToggleWall(0,1,false));
     }
-//
+
 //    @Test
 //    public void placeRoomTest(){
-//        //@TODO
+//        Assert.assertEquals(myMapService.placeRoom(2,1), );
 //    }
 //
 //    @Test

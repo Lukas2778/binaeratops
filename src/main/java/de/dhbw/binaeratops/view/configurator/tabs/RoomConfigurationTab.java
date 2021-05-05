@@ -195,6 +195,9 @@ public class RoomConfigurationTab extends VerticalLayout {
             }
         }catch (Exception e){}
 
+        //button-container:hover vom CSS-File wieder einschalten
+
+
         //aktuellen Raum anwählen
         try {
             tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");

@@ -10,8 +10,8 @@ cursor: pointer;
 }
 
 .button-container:hover {
-background: highlight;
-opacity: .5;
+background: highlight !important;
+opacity: .5 !important;
 }
 
 .buttRoom{
