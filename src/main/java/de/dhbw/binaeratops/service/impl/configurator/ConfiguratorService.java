@@ -59,6 +59,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
+    public void deleteDungeon(Long ADungeonId) {
+        setDungeon(ADungeonId);
+        dungeonRepo.delete(dungeon);
+    }
+
+    @Override
     public Dungeon createDungeon(String AName, User AUser) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());

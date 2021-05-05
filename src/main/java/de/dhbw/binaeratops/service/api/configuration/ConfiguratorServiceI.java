@@ -46,6 +46,11 @@ public interface ConfiguratorServiceI {
     void saveDungeon();
 
     /**
+     * Dungeon löschen.
+     */
+    void deleteDungeon(Long ADungeonId);
+
+    /**
      * Startraum des Dungeons setzen.
      * @param ARoom Ein Raum.
      */

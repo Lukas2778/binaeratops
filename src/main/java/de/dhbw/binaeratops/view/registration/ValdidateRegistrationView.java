@@ -55,5 +55,6 @@ public class ValdidateRegistrationView extends VerticalLayout {
                 submit,
                 new RouterLink("Anmelden",LogInView.class)
         );
+        name.focus();
     }
 }

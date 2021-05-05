@@ -60,5 +60,6 @@ public class NewPasswordView extends VerticalLayout {
                 code,
                 submit
         );
+        name.focus();
     }
 }
