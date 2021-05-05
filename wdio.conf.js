@@ -122,6 +122,9 @@ exports.config = {
     // Make sure you have the wdio adapter package for the specific framework installed
     // before running any tests.
     framework: 'mocha',
+    mochaOpts: {
+        timeout: 20000
+    },
     //
     // The number of times to retry the entire specfile when it fails as a whole
     // specFileRetries: 1,
