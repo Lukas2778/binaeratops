@@ -7,14 +7,19 @@ import org.junit.runner.Description;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Logger {
-    private static StringBuilder builder = new StringBuilder();
+    private static final StringBuilder builder = new StringBuilder();
     @AfterClass
     public static void afterClass() throws IOException {
-        PrintWriter logFile = new PrintWriter("target/JUnit/ " + java.time.LocalDate.now() + "-log.txt", "UTF-8");
-        logFile.write(builder.toString());
-        logFile.close();
+        if (Files.exists(Path.of("target"))) {
+            PrintWriter logFile = new PrintWriter("target/JUnit/ " + java.time.LocalDate.now() + "-log.txt", StandardCharsets.UTF_8);
+            logFile.write(builder.toString());
+            logFile.close();
+        }
     }
 
     @Rule
