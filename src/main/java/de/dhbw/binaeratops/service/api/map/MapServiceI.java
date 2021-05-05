@@ -2,7 +2,7 @@ package de.dhbw.binaeratops.service.api.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.view.map.Tile;
+import de.dhbw.binaeratops.model.map.Tile;
 
 import java.util.ArrayList;
 

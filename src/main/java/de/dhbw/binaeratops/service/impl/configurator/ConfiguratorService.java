@@ -255,7 +255,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         //geupdateten Dungeon in die Datenbank speichern
         try {
             dungeonRepo.save(dungeon);
-            dungeonRepo.saveAndFlush(dungeon);
         } catch (Exception e) {
             roomRepo.save(ARoom);
             //Notification.show("Hier findet er den Entity nicht!");
