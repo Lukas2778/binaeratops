@@ -47,6 +47,7 @@ public interface ConfiguratorServiceI {
 
     /**
      * Dungeon löschen.
+     * @param ADungeonId ID des Dungeons der gelöscht werden soll.
      */
     void deleteDungeon(Long ADungeonId);
 

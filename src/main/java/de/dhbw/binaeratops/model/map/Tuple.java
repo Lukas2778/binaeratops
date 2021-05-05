@@ -4,7 +4,7 @@ import java.util.Objects;
 
 /**
  *
- * @param <object>
+ * @param <object> Art des Tupels.
  */
 public class Tuple<object>{
 
