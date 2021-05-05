@@ -1,5 +1,14 @@
 function createRoom(a, b) {
-    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').click()
+    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').click();
+    expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']')).toBeExisting();
+}
+
+function deleteRoom(a, b) {
+    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').click();
+    expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']')).toBeExisting();
+    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-button').click();
+    browser.pause(100)
+    expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').getAttribute('src')).toEqual('https://localhost:8443/map/KarteBack.png');
 }
 
 describe('Dungeon - Configure Room', () => {
@@ -81,10 +90,6 @@ describe('Dungeon - Configure Room', () => {
         createRoom(2, 3);
     });
 
-    it('Name a Room', () => {
-        createRoom(1, 1);
-    });
-
     it('create all Rooms', () => {
         for (i = 1; i <= 8; i++) {
             for (j = 1; j <= 8; j++) {
@@ -92,5 +97,61 @@ describe('Dungeon - Configure Room', () => {
                 browser.pause(250);
             }
         }
-    })
+    });
+
+    it('set Name for a Room', () => {
+        createRoom(2,2);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-field[2]').click();
+        browser.keys('Test');
+    });
+
+    it('set Description for a Room', () => {
+        createRoom(2,2);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-area').click();
+        browser.keys('Test');
+    });
+
+    it('set Description for a Room', () => {
+        createRoom(2,2);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-area').click();
+        browser.keys('Test');
+    });
+
+    it('set Item for a Room', () => {
+        createRoom(2,2);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[1]/vaadin-button').click();
+        $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-grid/vaadin-grid-cell-content[1]').click();
+        $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-button[1]').click();
+        //expect('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[1]/vaadin-list-box//div').toBeExisting();
+    });
+
+    it('set NPC for a Room', () => {
+        createRoom(2,2);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[2]/vaadin-button').click();
+        $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-grid/vaadin-grid-cell-content[1]').click();
+        $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-button[1]').click();
+        //expect('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[2]/vaadin-list-box//div').toBeExisting();
+    });
+
+    it('delete a Room', () => {
+        createRoom(1,1);
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-button').click();
+        browser.pause(100);
+        expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[1]/img[1]').getAttribute('src')).toEqual('https://localhost:8443/map/KarteBack.png');
+    });
+
+    it('delete all Rooms', () => {
+        for (i = 1; i <= 8; i++) {
+            for (j = 1; j <= 8; j++) {
+                createRoom(i, j);
+                browser.pause(250);
+            }
+        }
+        for (i = 1; i <= 8; i++) {
+            for (j = 1; j <= 8; j++) {
+                deleteRoom(i, j);
+                browser.pause(250);
+            }
+        }
+    });
 })
