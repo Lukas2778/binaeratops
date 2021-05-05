@@ -14,6 +14,7 @@ public interface MapServiceI {
      * Konstruktor des MapServices.
      *
      * @param AConfiguratorService Service zur varwaltung der Konfiguration.
+     * @return Kacheln der Map.
      */
     ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorService);
     //ArrayList<Tile> init(int AMapSize, Long ADungeonId);

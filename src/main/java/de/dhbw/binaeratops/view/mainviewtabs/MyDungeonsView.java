@@ -11,13 +11,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +37,6 @@ public class MyDungeonsView extends VerticalLayout {
 
     DungeonServiceI dungeonServiceI;
     ConfiguratorServiceI configuratorServiceI;
-    UserRepositoryI userRepositoryI;
 
     Grid<Dungeon> dungeonGrid;
 
@@ -47,12 +44,12 @@ public class MyDungeonsView extends VerticalLayout {
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
      *
-     * @param ADungeonService KonfiguratorService.
+     * @param ADungeonService DungeonService.
+     * @param AConfiguratorService KonfiguratorService.
      */
-    public MyDungeonsView(@Autowired DungeonServiceI ADungeonService, @Autowired ConfiguratorServiceI AConfiguratorService, @Autowired UserRepositoryI AUserRepository) {
+    public MyDungeonsView(@Autowired DungeonServiceI ADungeonService, @Autowired ConfiguratorServiceI AConfiguratorService) {
         dungeonServiceI = ADungeonService;
         configuratorServiceI = AConfiguratorService;
-        userRepositoryI = AUserRepository;
 
         dungeonList = new ArrayList<>();
         newDungeonButton = new Button("Dungeon erstellen");
