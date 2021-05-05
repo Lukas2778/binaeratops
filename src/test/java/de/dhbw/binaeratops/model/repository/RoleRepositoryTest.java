@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.RoleI;
 import de.dhbw.binaeratops.model.entitys.Role;
@@ -39,7 +40,7 @@ import java.util.List;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class RoleRepositoryTest {
+public class RoleRepositoryTest extends Logger {
 
     @Autowired
     RoleRepositoryI roleRepo;

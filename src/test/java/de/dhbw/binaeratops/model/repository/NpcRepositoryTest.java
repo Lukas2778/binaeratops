@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.NPCI;
 import de.dhbw.binaeratops.model.entitys.NPC;
@@ -38,7 +39,7 @@ import java.util.List;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class NpcRepositoryTest {
+public class NpcRepositoryTest extends Logger {
 
     @Autowired
     NPCRepositoryI npcRepo;
