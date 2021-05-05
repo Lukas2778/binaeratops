@@ -6,6 +6,8 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -80,8 +82,8 @@ public class MyDungeonsView extends VerticalLayout {
     }
 
     private Button createRemoveButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
-        @SuppressWarnings("unchecked")
-        Button button = new Button("X", clickEvent -> {
+
+        Button button = new Button("", clickEvent -> {
             ListDataProvider<Dungeon> dataProvider = (ListDataProvider<Dungeon>) AGrid
                     .getDataProvider();
             Dialog deleteDungeonDialog = new Dialog();
@@ -89,7 +91,10 @@ public class MyDungeonsView extends VerticalLayout {
             Button deleteDungeonButt = new Button("Dungeon löschen");
             deleteDungeonButt.getStyle().set("color", "red");
             Button cancelButt = new Button("Abbrechen");
-            deleteDungeonDialog.add(deleteCheckTitle, new HorizontalLayout(deleteDungeonButt, cancelButt));
+
+            HorizontalLayout buttonLayout = new HorizontalLayout(deleteDungeonButt, cancelButt);
+            buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
+            deleteDungeonDialog.add(deleteCheckTitle, buttonLayout);
             cancelButt.focus();
             deleteDungeonDialog.open();
 
@@ -108,6 +113,10 @@ public class MyDungeonsView extends VerticalLayout {
                 deleteDungeonDialog.close();
             });
         });
+
+        Icon iconDeleteDungeon = new Icon(VaadinIcon.CLOSE_BIG);
+        button.setIcon(iconDeleteDungeon);
+
         button.getStyle().set("color", "red");
         return button;
     }

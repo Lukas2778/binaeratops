@@ -26,6 +26,8 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import java.sql.SQLOutput;
+import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -34,12 +36,18 @@ import java.util.ArrayList;
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 
 public class DungeonConfigurationTab extends VerticalLayout {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
+    //res.getString("view.login.pagetitle") -> Später für die Language verwenden statt Strings
+
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
     ArrayList<User> users;
     TextField titleField;
     TextField playerCountField;
     Visibility visibility;
+    String visibilityValue;
 
     private ConfiguratorServiceI configuratorServiceI;
 
@@ -68,35 +76,69 @@ public class DungeonConfigurationTab extends VerticalLayout {
     private void initField() {
         H1 title = new H1("Dungeon-Konfiguration");
 
-        Details hint = new Details("Info",
-                new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
-                        + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
-                        + "erste Eindruck!"));
-
         if(configuratorServiceI.getDungeon().getDungeonName() == null)
             titleField.setValue("Neuer Dungeon");
         else
             titleField.setValue(configuratorServiceI.getDungeon().getDungeonName());
 
+//        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
+//        roomName.addValueChangeListener(e -> {
+//            currentRoom.setRoomName(roomName.getValue());
+//            configuratorServiceI.saveRoom(currentRoom);
+//        });
+
         titleField.addValueChangeListener(e->{
             configuratorServiceI.getDungeon().setDungeonName(titleField.getValue());
             configuratorServiceI.saveDungeon();
         });
+
         titleField.setWidth("400px");
         //titleField.setValue(titleField.getValue());
 
-        playerCountField.setValue("30");
+        playerCountField.addValueChangeListener(e-> {
+            configuratorServiceI.getDungeon().setPlayerMaxSize(Long.parseLong(playerCountField.getValue()));
+            configuratorServiceI.saveDungeon();
+        });
+
         playerCountField.setWidth("170px");
+
+        if(configuratorServiceI.getDungeon().getPlayerMaxSize() == null)
+            playerCountField.setValue("30");
+        else
+
+            playerCountField.setValue(String.valueOf(configuratorServiceI.getDungeon().getPlayerMaxSize()));
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
         viewRadioButton.setLabel("Sichtbarkeit");
         viewRadioButton.setItems("Öffentlich", "Privat", "In Konfiguration");
         viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        viewRadioButton.setValue("Öffentlich");
+
+
+        viewRadioButton.addValueChangeListener(e-> {
+            configuratorServiceI.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+            configuratorServiceI.saveDungeon();
+        });
+        if(configuratorServiceI.getDungeon().getDungeonVisibility() == null)
+            viewRadioButton.setValue("Öffentlich");
+        else
+            viewRadioButton.setValue(getVisibility(configuratorServiceI.getDungeon().getDungeonVisibility()) );
+
+        Details hint = new Details("Info",
+                                   new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
+                                                    + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
+                                                    + "erste Eindruck!"));
 
         TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
         dungeonDescription.setWidth("500px");
 
+        if(configuratorServiceI.getDungeon().getDescription() != null)
+        dungeonDescription.setValue(configuratorServiceI.getDungeon().getDescription());
+
+        dungeonDescription.addValueChangeListener(e-> {
+            configuratorServiceI.getDungeon().setDescription(dungeonDescription.getValue());
+            configuratorServiceI.saveDungeon();
+
+        });
 
         // create Dungeon Button
 //        Button createDungeonButton = new Button("Erstelle Button");
@@ -167,6 +209,18 @@ public class DungeonConfigurationTab extends VerticalLayout {
         }
 
         return visibility;
+    }
+
+    private String getVisibility(Visibility vis) {
+        if (vis == Visibility.PUBLIC) {
+            visibilityValue = "Öffentlich";
+        } else if (vis == Visibility.PRIVATE) {
+            visibilityValue = "Privat";
+        } else {
+            visibilityValue = "In Konfiguration";
+        }
+
+        return visibilityValue;
     }
 
 

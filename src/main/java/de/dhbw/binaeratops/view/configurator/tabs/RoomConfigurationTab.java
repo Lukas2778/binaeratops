@@ -228,7 +228,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         TextField roomName =new TextField("Name des Raums");
 
         roomName.setValue(Objects.requireNonNullElse(chosenRoom, "Beispiel Name"));
-        roomName.setValueChangeMode(ValueChangeMode.ON_CHANGE);
+        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomName.addValueChangeListener(e -> {
             currentRoom.setRoomName(roomName.getValue());
             configuratorServiceI.saveRoom(currentRoom);

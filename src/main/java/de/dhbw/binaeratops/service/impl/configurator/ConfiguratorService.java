@@ -148,13 +148,13 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void createRole(String AName, String ADescription) {
         Role newRole = new Role(AName, ADescription);
         roleRepo.save(newRole);
-        dungeon.getRoles().add(newRole);
+        dungeon.addRole(newRole);
         dungeonRepo.save(dungeon);
     }
 
     @Override
     public void removeRole(Role ARole) {
-        dungeon.getRoles().remove(ARole);
+        dungeon.removeRole(ARole);
         roleRepo.delete(ARole);
         dungeonRepo.save(dungeon);
     }
@@ -168,13 +168,13 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void createRace(String AName, String ADescription) {
         Race newRace = new Race(AName, ADescription);
         raceRepo.save(newRace);
-        dungeon.getRaces().add(newRace);
+        dungeon.addRace(newRace);
         dungeonRepo.save(dungeon);
     }
 
     @Override
     public void removeRace(Race ARace) {
-        dungeon.getRaces().remove(ARace);
+        dungeon.removeRace(ARace);
         raceRepo.delete(ARace);
         dungeonRepo.save(dungeon);
 

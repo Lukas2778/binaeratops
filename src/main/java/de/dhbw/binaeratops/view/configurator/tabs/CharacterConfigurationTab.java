@@ -103,7 +103,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
         //inventorySize.setMax(100);
-        inventorySize.setValue(10.0);
+        inventorySize.setValue(50.0);
 
         RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
         genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
