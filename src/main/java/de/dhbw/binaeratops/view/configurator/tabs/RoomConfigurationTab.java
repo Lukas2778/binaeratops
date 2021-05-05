@@ -15,14 +15,17 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
 import de.dhbw.binaeratops.view.map.Tile;
 
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @PageTitle("Raum")
@@ -40,6 +43,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
     MapServiceI mapService;
     ConfiguratorServiceI configuratorServiceI;
+    private Room currentRoom;
 
     private final int width = 8;
     Image[][] tiles = new Image[width][width];
@@ -51,7 +55,14 @@ public class RoomConfigurationTab extends VerticalLayout {
         configuratorServiceI=AConfiguratorServiceI;
         itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
         npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
-        initRoom();
+
+        //TODO sartraum suchen und setzen
+        try {
+            this.currentRoom=configuratorServiceI.getDungeon().getRooms().get(0);
+            initRoom();
+        }catch (IndexOutOfBoundsException ignored){}
+
+        //initRoom();
         initMap();
 
         SplitLayout splitLayout = new SplitLayout();
@@ -115,9 +126,16 @@ public class RoomConfigurationTab extends VerticalLayout {
                                 tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                             }
                         }
+                        currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
+                        initRoom();
                     }
-                    //Feld abwählen
+                    //TODO Raum in den rechten dialog laden
                     else {
+                        if(mapService.getRoomByCoordinate(finalI,finalJ) != null)
+                            currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
+                        Notification.show(currentRoom.getRoomId().toString());
+                        initRoom();
+                        /*
                         if (mapService.canDeleteRoom(finalI, finalJ)) {
                             //iteriert über jede Kachel die von der änderung betroffen ist und setzt sie neu
                             for (Tile t : mapService.deleteRoom(finalI, finalJ)) {
@@ -127,6 +145,8 @@ public class RoomConfigurationTab extends VerticalLayout {
                             Notification.show("Du kannst einen Raum nicht löschen," +
                                     " wenn der Dungeon dadurch geteilt wird!");
                         }
+                        */
+
                     }
                 });
 
@@ -177,11 +197,25 @@ public class RoomConfigurationTab extends VerticalLayout {
 
     private void initRoom() {
         //TODO Raumname wird übergeben
-        String chosenRoom="New world order";
+        roomArea.removeAll();
+        String chosenRoom=currentRoom.getRoomName();
         HorizontalLayout titleAndDelLayout=new HorizontalLayout();
 
         H2 configureRoomsTitle = new H2("Räume bearbeiten");
-        Button deleteRoomButt=new Button("Raum löschen");
+        Button deleteRoomButt=new Button("Raum löschen",e->{
+            if(currentRoom != null) {
+                if (mapService.canDeleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
+                    for (Tile t : mapService.deleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
+                        tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
+                    }
+                    //TODO zum startraum navigieren
+                } else {
+                    Notification.show("Du kannst einen Raum nicht löschen," +
+                            " wenn der Dungeon dadurch geteilt wird!");
+                }
+            }
+        });
+
         deleteRoomButt.getStyle().set("color", "red");
         deleteRoomButt.getStyle().set("margin-top", "auto");
         titleAndDelLayout.add(configureRoomsTitle, deleteRoomButt);
@@ -189,8 +223,10 @@ public class RoomConfigurationTab extends VerticalLayout {
         TextField startRoom=new TextField("Startraum");
         H4 actualRoomHeadline=new H4("Aktueller Raum:");
         TextField roomName =new TextField("Name des Raums");
-        roomName.setValue(chosenRoom);
+        roomName.setValue(Objects.requireNonNullElse(chosenRoom, "Beispiel Name"));
+
         TextArea roomDescription = new TextArea("Beschreibung");
+        roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),"Beispiel beschreibung"));
         roomDescription.setMinWidth(500, Unit.PIXELS);
 
         H3 itemsAndNPCs=new H3("Was soll in diesem Raum vorhanden sein?");
@@ -240,4 +276,6 @@ public class RoomConfigurationTab extends VerticalLayout {
 //        myRoomArea.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER); // Put content in the middle horizontally.
 //        myRoomArea.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER); // Put content in the middle vertically.
     }
+
+
 }

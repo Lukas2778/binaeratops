@@ -233,6 +233,7 @@ public class MapService implements MapServiceI {
         }
     }
 
+
     /**
      * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
      * @param AId RaumID.
@@ -422,6 +423,11 @@ public class MapService implements MapServiceI {
         }
         configuratorServiceI.saveRoom(room);
         return tiles;
+    }
+
+    @Override
+    public Room getRoomByCoordinate(int ALocationX, int ALocationY) {
+        return rooms.get(new Tupel<>(ALocationX,ALocationY));
     }
 
 

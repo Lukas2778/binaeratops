@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.api.map;
 
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.map.Tile;
 
@@ -89,4 +90,6 @@ public interface MapServiceI {
      * @return ArrayList.
      */
     ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal);
+
+    Room getRoomByCoordinate(int ALocationX, int ALocationY );
 }

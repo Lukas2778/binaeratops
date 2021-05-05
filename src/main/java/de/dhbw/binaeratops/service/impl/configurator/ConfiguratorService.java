@@ -258,7 +258,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
             dungeonRepo.saveAndFlush(dungeon);
         } catch (Exception e) {
             roomRepo.save(ARoom);
-            Notification.show("Hier findet er den Entity nicht!");
+            //Notification.show("Hier findet er den Entity nicht!");
         }
     }
 
