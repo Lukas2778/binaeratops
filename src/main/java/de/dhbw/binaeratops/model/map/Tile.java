@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.view.map;
+package de.dhbw.binaeratops.model.map;
 
 public class Tile {
     int x;

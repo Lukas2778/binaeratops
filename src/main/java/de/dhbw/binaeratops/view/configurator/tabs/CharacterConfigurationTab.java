@@ -69,27 +69,24 @@ public class CharacterConfigurationTab extends VerticalLayout {
         roleList();
         raceList();
 
-        SplitLayout layout = new SplitLayout();
+        SplitLayout splitLayout = new SplitLayout();
         SplitLayout innerLayout = new SplitLayout();
 
-        layout.setSecondaryStyle("minWidth", "1200px");
-        layout.setPrimaryStyle("minWidth", "450px");
-        layout.setPrimaryStyle("minHeight", "800px");
+        splitLayout.setPrimaryStyle("minWidth", "450px");
+        splitLayout.setSecondaryStyle("minWidth", "1000px");
 
         innerLayout.setPrimaryStyle("minWidth", "400px");
         innerLayout.setPrimaryStyle("minWidth", "500px");
-
         innerLayout.setSecondaryStyle("minWidth", "400px");
         innerLayout.setSecondaryStyle("minWidth", "500px");
-
         innerLayout.addToPrimary(roleListLayout);
         innerLayout.addToSecondary(raceListLayout);
 
-        layout.addToPrimary(initFeldLayout);
-        layout.addToSecondary(innerLayout);
+        splitLayout.addToPrimary(initFeldLayout);
+        splitLayout.addToSecondary(innerLayout);
 
-        layout.setSizeFull();
-        add(layout);
+        splitLayout.setSizeFull();
+        add(splitLayout);
     }
 
     private void initFeld() {
@@ -104,6 +101,9 @@ public class CharacterConfigurationTab extends VerticalLayout {
 
         NumberField inventorySize = new NumberField("Größe des Inventars");
         inventorySize.setHasControls(true);
+        inventorySize.setMin(2);
+        //inventorySize.setMax(100);
+        inventorySize.setValue(50.0);
 
         RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
         genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
@@ -142,8 +142,6 @@ public class CharacterConfigurationTab extends VerticalLayout {
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
         buttonView.addAndExpand(addB, deleteB);
-
-        //  roleListLayout.setSizeFull();
         roleListLayout.add(title, grid, buttonView);
 
     }

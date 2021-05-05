@@ -183,8 +183,8 @@ public class User implements UserI {
 
         if (!equals && AOther instanceof User) {
             User other = (User) AOther;
-            equals = (userId == other.userId
-                    && (name == other.name || (name != null &&
+            equals = (userId.equals(other.userId)
+                    && (name.equals(other.name) || (name != null &&
                     name.equalsIgnoreCase(other.name))));
         }
 

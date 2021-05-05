@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.model.service.impl.registration;
 
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.exceptions.AuthException;
@@ -21,7 +22,7 @@ import static org.junit.Assert.*;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class AuthServiceTest {
+public class AuthServiceTest extends Logger {
     @Autowired
     UserRepositoryI userRepo;
     private AuthService as = new AuthService();

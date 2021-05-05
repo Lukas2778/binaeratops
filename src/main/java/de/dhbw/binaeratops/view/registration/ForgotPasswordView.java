@@ -50,5 +50,6 @@ public class ForgotPasswordView extends VerticalLayout {
                 name,
                 submit
         );
+        name.focus();
     }
 }

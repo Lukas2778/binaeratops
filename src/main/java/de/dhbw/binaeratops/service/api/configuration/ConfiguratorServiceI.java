@@ -26,17 +26,29 @@ public interface ConfiguratorServiceI {
      * @return Erstellter Dungeon.
      */
     Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility);
+
     /**
-     * Initialisierung des Dungeons.
-     *@param AName AUser APlayerSize ADefaultInventoryCapacity AVisibility.
-     * @return Dungeon mit Standardwerten.
+     * Getter.
+     * @return Gibt den Dungeon zurück.
      */
+    Dungeon getDungeon();
+
 
     /**
      * Initialisierung des Dungeons.
-     * @param ADungeon Dungeon.
+     * @param ADungeonId Dungeon.
      */
-    void setDungeon(Dungeon ADungeon);
+    void setDungeon(Long ADungeonId);
+
+    /**
+     * Änderungen am Dungeon in die Datenbank abspeichern.
+     */
+    void saveDungeon();
+
+    /**
+     * Dungeon löschen.
+     */
+    void deleteDungeon(Long ADungeonId);
 
     /**
      * Startraum des Dungeons setzen.
@@ -220,4 +232,7 @@ public interface ConfiguratorServiceI {
      */
     Room getRoom(Long ARoomID);
 
+    void addRoom(Room ARoom);
+
+    void saveRoom(Room ARoom);
 }

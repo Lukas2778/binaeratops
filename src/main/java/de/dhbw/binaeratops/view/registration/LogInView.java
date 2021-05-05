@@ -84,5 +84,6 @@ public class LogInView extends VerticalLayout {
                 loginButton,
                 changePasswRegisterLay
         );
+        name.focus();
     }
 }
