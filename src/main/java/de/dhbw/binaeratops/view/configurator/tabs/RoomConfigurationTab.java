@@ -128,7 +128,6 @@ public class RoomConfigurationTab extends VerticalLayout {
                         }
                         currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                     }
-                    //TODO Raum in den rechten dialog laden
                     //wenn der Raum existiert, kann er bearbeitet werden
                     else {
                         if(mapService.getRoomByCoordinate(finalI,finalJ) != null)
