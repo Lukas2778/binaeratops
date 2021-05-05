@@ -1,6 +1,8 @@
 package de.dhbw.binaeratops.service.api.map;
 
-import de.dhbw.binaeratops.view.map.Tile;
+import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.model.map.Tile;
 
 import java.util.ArrayList;
 
@@ -13,7 +15,7 @@ public interface MapServiceI {
      *
      * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
      */
-    void init(int AMapSize);
+    ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorService);
     //ArrayList<Tile> init(int AMapSize, Long ADungeonId);
 
     /**
@@ -88,4 +90,6 @@ public interface MapServiceI {
      * @return ArrayList.
      */
     ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal);
+
+    Room getRoomByCoordinate(int ALocationX, int ALocationY );
 }

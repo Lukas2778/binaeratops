@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
+import com.vaadin.flow.component.notification.Notification;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Scope(value = "session")
@@ -33,7 +35,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemRepositoryI itemRepo;
 
 
-
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
         dungeonDesigner = AUser;
@@ -50,6 +51,17 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void setDungeon(Long ADungeonId) {
         dungeon = dungeonRepo.findById(ADungeonId).get();
+    }
+
+    @Override
+    public void saveDungeon(){
+        dungeonRepo.save(dungeon);
+    }
+
+    @Override
+    public void deleteDungeon(Long ADungeonId) {
+        setDungeon(ADungeonId);
+        dungeonRepo.delete(dungeon);
     }
 
     @Override
@@ -188,6 +200,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         dungeonRepo.save(dungeon);
     }
 
+
     @Override
     public void setNeighborRoom(Direction ADirection, Long ARoomId, Long ANeighborRoom) {
 
@@ -228,14 +241,35 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void deleteRoom(Room ARoom) {
-        dungeon.getRooms()
-                .remove(ARoom);
-        dungeonRepo.save(dungeon);
+        dungeon.getRooms().remove(ARoom);
+        //dungeonRepo.save(dungeon);
+        //dungeonRepo.delete(dungeon);
         roomRepo.delete(ARoom);
     }
 
     @Override
     public Room getRoom(Long ARoomID) {
         return null;
+    }
+
+    @Override
+    public void addRoom(Room ARoom) {
+        //wenn der Raum existiert, wird er überschrieben, wenn nicht, wird ein neuer Raum in die Datenbank gespeichert
+        roomRepo.save(ARoom);
+        //Raum dem aktuellen Dungeon hinzufügen
+        dungeon.addRoom(ARoom);
+        //geupdateten Dungeon in die Datenbank speichern
+        try {
+            dungeonRepo.save(dungeon);
+        } catch (Exception e) {
+            roomRepo.save(ARoom);
+            //Notification.show("Hier findet er den Entity nicht!");
+        }
+    }
+
+    @Override
+    public void saveRoom(Room ARoom) {
+        roomRepo.save(ARoom);
+        //TODO test: dungeonRepo.save(dungeon);
     }
 }

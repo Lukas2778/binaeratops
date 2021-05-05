@@ -63,7 +63,7 @@ public class RegisterView extends VerticalLayout {
                 submit,
                 validLoginLay
         );
-
+        name.focus();
     }
 
     /**

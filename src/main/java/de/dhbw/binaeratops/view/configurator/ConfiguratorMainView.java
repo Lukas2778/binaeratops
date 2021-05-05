@@ -21,6 +21,7 @@ import de.dhbw.binaeratops.view.configurator.tabs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,6 +103,8 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         this.dungeonId=ALong;
         createMenuItems();
     }
+
+
 }
 
 

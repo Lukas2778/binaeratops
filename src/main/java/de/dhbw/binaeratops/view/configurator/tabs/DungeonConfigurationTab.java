@@ -41,10 +41,10 @@ public class DungeonConfigurationTab extends VerticalLayout {
     TextField playerCountField;
     Visibility visibility;
 
-    private ConfiguratorServiceI configuratorService;
+    private ConfiguratorServiceI configuratorServiceI;
 
     public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
-        this.configuratorService = AConfiguratorServiceI;
+        this.configuratorServiceI = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
         users = new ArrayList<>();
@@ -72,13 +72,16 @@ public class DungeonConfigurationTab extends VerticalLayout {
                 new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
                         + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
                         + "erste Eindruck!"));
-        //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        if(configuratorService.getDungeon().getDungeonName() == null)
+        if(configuratorServiceI.getDungeon().getDungeonName() == null)
             titleField.setValue("Neuer Dungeon");
         else
-            titleField.setValue(configuratorService.getDungeon().getDungeonName());
+            titleField.setValue(configuratorServiceI.getDungeon().getDungeonName());
 
+        titleField.addValueChangeListener(e->{
+            configuratorServiceI.getDungeon().setDungeonName(titleField.getValue());
+            configuratorServiceI.saveDungeon();
+        });
         titleField.setWidth("400px");
         //titleField.setValue(titleField.getValue());
 
