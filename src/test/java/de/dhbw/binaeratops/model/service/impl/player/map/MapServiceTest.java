@@ -101,7 +101,7 @@ public class MapServiceTest extends Logger {
 
         Mockito.when(configuratorServiceI.getDungeon()).thenReturn(testDungeon);
         Mockito.when(testDungeon.getRooms()).thenReturn(myTestList);
-        myMapService.init(8,configuratorServiceI);
+        myMapService.init(configuratorServiceI);
     }
 
     @Test

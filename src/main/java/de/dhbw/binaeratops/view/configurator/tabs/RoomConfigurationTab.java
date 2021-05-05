@@ -79,7 +79,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
-        ArrayList<Tile> initTiles = mapService.init(width, configuratorServiceI);
+        ArrayList<Tile> initTiles = mapService.init(configuratorServiceI);
         //map.setSizeFull();
         mapArea.setJustifyContentMode(JustifyContentMode.CENTER);
         mapArea.setAlignItems(Alignment.CENTER);
