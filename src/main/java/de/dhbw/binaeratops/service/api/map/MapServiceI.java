@@ -13,17 +13,11 @@ public interface MapServiceI {
     /**
      * Konstruktor des MapServices.
      *
-     * @param AMapSize Größe der zu erstellenden Karte in Form von AMapSize x AMapSize Räume.
+     * @param AConfiguratorService Service zur varwaltung der Konfiguration.
      */
-    ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorService);
+    ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorService);
     //ArrayList<Tile> init(int AMapSize, Long ADungeonId);
 
-    /**
-     * Abfrage der Größe der Karte.
-     *
-     * @return Rückgabe der Größe der Karte in Form von Anzahl der Räume am Rand des Quadrats.
-     */
-    int getMapSize();
 
     /**
      * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.

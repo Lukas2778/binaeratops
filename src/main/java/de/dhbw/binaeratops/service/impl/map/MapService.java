@@ -16,19 +16,17 @@ import java.util.*;
 public class MapService implements MapServiceI {
 
     private ConfiguratorServiceI configuratorServiceI;
-
-    private int MAP_SIZE;
+    //Alle Räume im Dungeon.
     HashMap<Tuple<Integer>, Room> rooms;
     //Räume, die von einem Algorithmus schon durchsucht wurden werden hier gespeichert
     HashMap<Tuple<Integer>, Room> searchedRooms;
 
 
     @Override
-    public ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorServiceI) {
+    public ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorServiceI) {
 
         configuratorServiceI = AConfiguratorServiceI;
         ArrayList<Tile> tiles = new ArrayList<>();
-        this.MAP_SIZE = AMapSize;
         rooms = new HashMap<>();
         searchedRooms = new HashMap<>();
 
@@ -40,10 +38,6 @@ public class MapService implements MapServiceI {
         return tiles;
     }
 
-    @Override
-    public int getMapSize() {
-        return MAP_SIZE;
-    }
 
     @Override
     public boolean roomExists(int ALocationX, int ALocationY) {
@@ -294,7 +288,7 @@ public class MapService implements MapServiceI {
                 }
             }
         }
-        //hier werden die mauern, die nordlich und sülich räume haben verarbeitet
+        //hier werden die Mauern, die nördlich und südlich räume haben verarbeitet
         else if (AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
                 && rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));

@@ -100,7 +100,7 @@ public class MapServiceTest {
 
         Mockito.when(configuratorServiceI.getDungeon()).thenReturn(testDungeon);
         Mockito.when(testDungeon.getRooms()).thenReturn(myTestList);
-        myMapService.init(8,configuratorServiceI);
+        myMapService.init(configuratorServiceI);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class MapServiceTest {
 
     @Test
     public void canPlaceRoomTest(){
-        Assert.assertTrue(myMapService.canPlaceRoom(3,1));
+        Assert.assertTrue(myMapService.canPlaceRoom(1,3));
         Assert.assertFalse(myMapService.canPlaceRoom(3,2));
     }
     @Test
