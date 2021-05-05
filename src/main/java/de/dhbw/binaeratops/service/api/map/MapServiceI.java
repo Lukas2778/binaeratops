@@ -91,5 +91,5 @@ public interface MapServiceI {
      */
     ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal);
 
-    Room getRoomByCoordinate(int ALocationX, int ALocationY );
+    Room getRoomByCoordinate(int ALocationX, int ALocationY);
 }
