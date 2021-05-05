@@ -1,12 +1,10 @@
 package de.dhbw.binaeratops.service.impl.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
-import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.map.Tuple;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -19,38 +17,25 @@ public class MapService implements MapServiceI {
 
     private ConfiguratorServiceI configuratorServiceI;
 
-    @Autowired
-    private DungeonRepositoryI dungeonRepositoryI;
-
     private int MAP_SIZE;
     HashMap<Tuple<Integer>, Room> rooms;
     //Räume, die von einem Algorithmus schon durchsucht wurden werden hier gespeichert
     HashMap<Tuple<Integer>, Room> searchedRooms;
 
-    //TODO dungeonId setzen im konstruktor
-    Long dungeonId;
-
-    //TODO vor dem speichern immer die räume nochmal aus der datenbank holen
 
     @Override
     public ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorServiceI) {
-        configuratorServiceI=AConfiguratorServiceI;
-        //TODO folgendes prüfen
-        //public ArrayList<Tile> init(int AMapSize, Long ADungeonID) {
-        //beim wiederaufnehmen einer konfiguration muss der alte stand aus der datenbank geladen werden
-        //dungeonRepositoryI.findByDungeonId(1L).getRooms();
 
-        ArrayList<Tile> tiles=new ArrayList<>();
+        configuratorServiceI = AConfiguratorServiceI;
+        ArrayList<Tile> tiles = new ArrayList<>();
         this.MAP_SIZE = AMapSize;
         rooms = new HashMap<>();
         searchedRooms = new HashMap<>();
-        //TODO folgende Zeile prüfen
-        //Dungeon dungeon= dungeonRepositoryI.findById(ADungeonID).get();
-        //TODO hinzufügen der in dungeon gepeicherten räume(falls vorhanden) -> folgende Zeilen prüfen
+
         for (Room r :
                 configuratorServiceI.getDungeon().getRooms()) {
-            rooms.put(new Tuple<>(r.getXCoordinate(),r.getYCoordinate()),r);
-            tiles.add(new Tile(r.getXCoordinate(),r.getYCoordinate(),tileName(r)));
+            rooms.put(new Tuple<>(r.getXCoordinate(), r.getYCoordinate()), r);
+            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
         }
         return tiles;
     }
@@ -62,8 +47,7 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean roomExists(int ALocationX, int ALocationY) {
-        return rooms.containsKey(new Tuple<>(ALocationX,ALocationY));
-        //wenn Raum schon existiert, muss in der View mittels der entsprechenden ID die Raumeinstellungen angeigt werden
+        return rooms.containsKey(new Tuple<>(ALocationX, ALocationY));
     }
 
     @Override
@@ -87,16 +71,11 @@ public class MapService implements MapServiceI {
 
     @Override
     public ArrayList<Tile> placeRoom(int ALocationX, int ALocationY) {
-        //true in roomSet an bestimmte Stelle speichern
-        //Raum erzeugen und in Datenbank speichern -> Raum_ID
-        //Raum_ID wird an Dungeon
-        ArrayList<Tile> tiles = new ArrayList<>();
 
+        ArrayList<Tile> tiles = new ArrayList<>();
         Room myRoom = new Room(ALocationX, ALocationY);
         //Raum wird in die Datenbank gespeichert
-        //roomRepositoryI.save(myRoom);
         configuratorServiceI.addRoom(myRoom);
-        //configuratorServiceI.saveRoom(myRoom);
 
         //Raum wird in die Map hinzugefügt
         rooms.put(new Tuple<>(ALocationX, ALocationY), myRoom);
@@ -104,7 +83,7 @@ public class MapService implements MapServiceI {
         //Überprüfen, ob es umliegende Räume gibt, die verändert werden müssen
 
         //Norden
-        if (rooms.containsKey(new Tuple<>(ALocationX-1,ALocationY))) {
+        if (rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))) {
             //Nördlichen raum finden und durchgang verknüpfen und speichern
             Room north = rooms.get(new Tuple<>(ALocationX - 1, ALocationY));
             north.setSouthRoomId(myRoom.getRoomId());
@@ -116,39 +95,27 @@ public class MapService implements MapServiceI {
             myRoom.setNorthRoomId(north.getRoomId());
         }
         //Osten
-        if (rooms.containsKey(new Tuple<>(ALocationX,ALocationY+1))) {
-            //Östlichen raum finden und durchgang verknüpfen und speichern
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
             Room east = rooms.get(new Tuple<>(ALocationX, ALocationY + 1));
             east.setWestRoomId(myRoom.getRoomId());
-            //Raum in der Datenbank überschreiben
             configuratorServiceI.saveRoom(east);
-            //der rückgabe list den östlichen raum mitgeben
             tiles.add(new Tile(ALocationX, ALocationY + 1, tileName(east)));
-            // den östlichen raum des aktuellen speichern
             myRoom.setEastRoomId(east.getRoomId());
         }
         //Süden
         if (rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
-            //südlichen raum finden und durchgang verknüpfen und speichern
             Room south = rooms.get(new Tuple<>(ALocationX + 1, ALocationY));
             south.setNorthRoomId(myRoom.getRoomId());
-            //Raum in der Datenbank überschreiben
             configuratorServiceI.saveRoom(south);
-            //der rückgabe list den Südlichen raum mitgeben
             tiles.add(new Tile(ALocationX + 1, ALocationY, tileName(south)));
-            // den nördlichen raum des aktuellen speichern
             myRoom.setSouthRoomId(south.getRoomId());
         }
         //Westen
-        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY-1))) {
-            //Westlichen raum finden und durchgang verknüpfen und speichern
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY - 1))) {
             Room west = rooms.get(new Tuple<>(ALocationX, ALocationY - 1));
             west.setEastRoomId(myRoom.getRoomId());
-            //Raum in der Datenbank überschreiben
             configuratorServiceI.saveRoom(west);
-            //der rückgabe list den westlichen raum mitgeben
             tiles.add(new Tile(ALocationX, ALocationY - 1, tileName(west)));
-            // den östlichen raum des aktuellen speichern
             myRoom.setWestRoomId(west.getRoomId());
         }
 
@@ -163,13 +130,13 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
-        //wenn es nur einen raum gibt, kann dieser entfernt werden
+        //wenn es nur zwei räume gibt, kann dieser entfernt werden
         if (rooms.size() <= 2) {
             return true;
         } else {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
             searchedRooms.put(new Tuple<>(ALocationX, ALocationY), room);
-            canReachAllRooms(findANeighbor(room));
+            canReachAllRooms(Objects.requireNonNull(findANeighbor(room)));
             if (searchedRooms.size() == rooms.size()) {
                 searchedRooms.clear();
                 return true;
@@ -186,9 +153,6 @@ public class MapService implements MapServiceI {
      * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
      */
     private void canReachAllRooms(Room ACurrentRoom) {
-        int x = ACurrentRoom.getXCoordinate();
-        int y = ACurrentRoom.getYCoordinate();
-
         Room north = getRoomById(ACurrentRoom.getNorthRoomId());
         Room east = getRoomById(ACurrentRoom.getEastRoomId());
         Room west = getRoomById(ACurrentRoom.getWestRoomId());
@@ -215,6 +179,7 @@ public class MapService implements MapServiceI {
 
     /**
      * Holt den Raum über die eingegebene RaumID aus der Raum-HashMap.
+     *
      * @param AId RaumID.
      * @return Gibt den gesuchten Raum als Raum-Objekt zurück.
      */
@@ -231,6 +196,7 @@ public class MapService implements MapServiceI {
 
     /**
      * Gibt den ersten gefundenen Nachbarn des eingegebenen Raums zurück.
+     *
      * @param ARoom Raum dessen Nachbarn durchsucht werden sollen.
      * @return Gibt den ersten gefundenen Nachbarn zurück.
      */
@@ -256,14 +222,14 @@ public class MapService implements MapServiceI {
         ArrayList<Tile> tiles = new ArrayList<>();
 
         //Norden
-        if (rooms.containsKey(new Tuple<>(ALocationX-1,ALocationY))) {
+        if (rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))) {
             Room north = rooms.get(new Tuple<>(ALocationX - 1, ALocationY));
             north.setSouthRoomId(null);
             configuratorServiceI.saveRoom(north);
             tiles.add(new Tile(ALocationX - 1, ALocationY, tileName(north)));
         }
         //Osten
-        if (rooms.containsKey(new Tuple<>(ALocationX,ALocationY+1))) {
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
             Room east = rooms.get(new Tuple<>(ALocationX, ALocationY + 1));
             east.setWestRoomId(null);
             configuratorServiceI.saveRoom(east);
@@ -277,7 +243,7 @@ public class MapService implements MapServiceI {
             tiles.add(new Tile(ALocationX + 1, ALocationY, tileName(south)));
         }
         //Westen
-        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY-1))) {
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY - 1))) {
             Room west = rooms.get(new Tuple<>(ALocationX, ALocationY - 1));
             west.setEastRoomId(null);
             configuratorServiceI.saveRoom(west);
@@ -294,7 +260,7 @@ public class MapService implements MapServiceI {
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
         //hier werden die mauern, die räume westlich oder östlich von sich haben verarbeitet
         if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX, ALocationY+1))) {
+                && rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
             if (room.getEastRoomId() == null) {
                 return true;
@@ -313,7 +279,6 @@ public class MapService implements MapServiceI {
                     roomEast.setWestRoomId(room.getRoomId());
                     return false;
                 }
-
                 canReachAllRooms(startRoom);
 
                 // wir setzen die mauern wieder zurück
@@ -331,7 +296,7 @@ public class MapService implements MapServiceI {
         }
         //hier werden die mauern, die nordlich und sülich räume haben verarbeitet
         else if (AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX+1, ALocationY))) {
+                && rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
             if (room.getSouthRoomId() == null) {
                 return true;
@@ -388,7 +353,7 @@ public class MapService implements MapServiceI {
             configuratorServiceI.saveRoom(eastRoom);
             tiles.add(new Tile(ALocationX, ALocationY, tileName(room)));
             tiles.add(new Tile(ALocationX, ALocationY + 1, tileName(eastRoom)));
-        } else if (AHorizontal) {
+        } else {
             Room southRoom = rooms.get(new Tuple<>(ALocationX + 1, ALocationY));
             if (room.getSouthRoomId() == null) {
                 room.setSouthRoomId(southRoom.getRoomId());
