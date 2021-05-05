@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.RaceI;
 import de.dhbw.binaeratops.model.entitys.Race;
@@ -39,7 +40,7 @@ import java.util.List;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class RaceRepositoryTest {
+public class RaceRepositoryTest extends Logger {
 
     @Autowired
     RaceRepositoryI raceRepo;

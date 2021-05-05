@@ -15,8 +15,6 @@ describe('Login & Register', () => {
 
         $('/html/body/vaadin-vertical-layout/vaadin-button').click();
 
-        browser.pause(500)
-
         expect(browser.getTitle()).toEqual('Über Uns');
     });
 });

@@ -1,16 +1,15 @@
 package de.dhbw.binaeratops.model.entitys;
 
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.UserGroup;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.*;
 
 @Category({UserGroup.class})
-public class UserTest {
+public class UserTest extends Logger {
     String password = "12345";
     String falsePassword = "54321";
 

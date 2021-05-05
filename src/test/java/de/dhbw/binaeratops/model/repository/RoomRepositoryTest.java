@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.RepositoryGroup;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
@@ -42,7 +43,7 @@ import java.util.List;
 @ActiveProfiles("test")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
-public class RoomRepositoryTest {
+public class RoomRepositoryTest extends Logger {
 
     @Autowired
     RoomRepositoryI roomRepo;

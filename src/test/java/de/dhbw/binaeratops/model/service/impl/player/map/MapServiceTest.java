@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.service.impl.player.map;
 
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -26,7 +27,7 @@ import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles("test")
-public class MapServiceTest {
+public class MapServiceTest extends Logger {
     @Mock
     ConfiguratorServiceI configuratorServiceI;
 
@@ -100,7 +101,7 @@ public class MapServiceTest {
 
         Mockito.when(configuratorServiceI.getDungeon()).thenReturn(testDungeon);
         Mockito.when(testDungeon.getRooms()).thenReturn(myTestList);
-        myMapService.init(8,configuratorServiceI);
+        myMapService.init(configuratorServiceI);
     }
 
     @Test
@@ -111,7 +112,7 @@ public class MapServiceTest {
 
     @Test
     public void canPlaceRoomTest(){
-        Assert.assertTrue(myMapService.canPlaceRoom(3,1));
+        Assert.assertTrue(myMapService.canPlaceRoom(2,1));
         Assert.assertFalse(myMapService.canPlaceRoom(3,2));
     }
     @Test
@@ -129,10 +130,10 @@ public class MapServiceTest {
         Assert.assertFalse(myMapService.canToggleWall(0,2,false));
         Assert.assertFalse(myMapService.canToggleWall(0,1,false));
     }
-//
+
 //    @Test
 //    public void placeRoomTest(){
-//        //@TODO
+//        Assert.assertEquals(myMapService.placeRoom(2,1), );
 //    }
 //
 //    @Test

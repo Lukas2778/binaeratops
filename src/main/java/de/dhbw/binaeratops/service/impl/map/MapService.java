@@ -16,19 +16,16 @@ import java.util.*;
 public class MapService implements MapServiceI {
 
     private ConfiguratorServiceI configuratorServiceI;
-
-    private int MAP_SIZE;
+    //Alle Räume im Dungeon werden einer Hash Map gespeichert
     HashMap<Tuple<Integer>, Room> rooms;
-    //Räume, die von einem Algorithmus schon durchsucht wurden werden hier gespeichert
+    //Räume, die von einem Algorithmus schon durchsucht wurden, werden hier gespeichert
     HashMap<Tuple<Integer>, Room> searchedRooms;
 
 
     @Override
-    public ArrayList<Tile> init(int AMapSize, ConfiguratorServiceI AConfiguratorServiceI) {
-
+    public ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorServiceI) {
         configuratorServiceI = AConfiguratorServiceI;
         ArrayList<Tile> tiles = new ArrayList<>();
-        this.MAP_SIZE = AMapSize;
         rooms = new HashMap<>();
         searchedRooms = new HashMap<>();
 
@@ -40,10 +37,6 @@ public class MapService implements MapServiceI {
         return tiles;
     }
 
-    @Override
-    public int getMapSize() {
-        return MAP_SIZE;
-    }
 
     @Override
     public boolean roomExists(int ALocationX, int ALocationY) {
@@ -52,16 +45,16 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canPlaceRoom(int ALocationX, int ALocationY) {
-        //Überprüfen, ob an der Position schon ein Raum existiert
+        //überprüfen, ob an der Position schon ein Raum existiert
         if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY))) {
             return false;
         }
 
-        //Überprüfen, ob schon ein Feld gesetzt wurde
+        //überprüfen, ob schon ein Feld gesetzt wurde
         if (rooms.size() == 0) {
             return true;
         } else {
-            //überprüfen, ob geklicktes Feld der Nachbar ist eines vorhandenen felds ist
+            //überprüfen, ob ein geklicktes Feld der Nachbar eines vorhandenen Felds ist
             return rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))
                     || rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))
                     || rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))
@@ -74,13 +67,14 @@ public class MapService implements MapServiceI {
 
         ArrayList<Tile> tiles = new ArrayList<>();
         Room myRoom = new Room(ALocationX, ALocationY);
+
         //Raum wird in die Datenbank gespeichert
         configuratorServiceI.addRoom(myRoom);
 
-        //Raum wird in die Map hinzugefügt
+        //Raum wird der Map hinzugefügt
         rooms.put(new Tuple<>(ALocationX, ALocationY), myRoom);
 
-        //Überprüfen, ob es umliegende Räume gibt, die verändert werden müssen
+        //überprüfen, ob es umliegende Räume gibt, die verändert werden müssen
 
         //Norden
         if (rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))) {
@@ -122,7 +116,7 @@ public class MapService implements MapServiceI {
         //neu erstellter Raum wird in der Datenbank aktualisiert
         configuratorServiceI.saveRoom(myRoom);
 
-        //neu erstellten Raum der Tiles Liste hinzufügen
+        //neu erstellter Raum der Tiles-Liste hinzufügen
         tiles.add(new Tile(ALocationX, ALocationY, tileName(myRoom)));
         return tiles;
     }
@@ -130,7 +124,7 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
-        //wenn es nur zwei räume gibt, kann dieser entfernt werden
+        //wenn es nur zwei Räume gibt, kann dieser entfernt werden
         if (rooms.size() <= 2) {
             return true;
         } else {
@@ -258,7 +252,7 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
-        //hier werden die mauern, die räume westlich oder östlich von sich haben verarbeitet
+        //hier werden die Mauern verarbeitet, die Räume westlich oder östlich von sich haben
         if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
                 && rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
@@ -269,7 +263,7 @@ public class MapService implements MapServiceI {
                     return false;
 
                 Room roomEast = rooms.get(new Tuple<>(ALocationX, ALocationY + 1));
-                // wir setzen testweise eine Mauer um zu prüfen ob der dungeon abgesnitten wird
+                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgeschnitten wird
                 room.setEastRoomId(null);
                 roomEast.setWestRoomId(null);
 
@@ -281,7 +275,7 @@ public class MapService implements MapServiceI {
                 }
                 canReachAllRooms(startRoom);
 
-                // wir setzen die mauern wieder zurück
+                //wir setzen die Mauern wieder zurück
                 room.setEastRoomId(roomEast.getRoomId());
                 roomEast.setWestRoomId(room.getRoomId());
 
@@ -294,7 +288,7 @@ public class MapService implements MapServiceI {
                 }
             }
         }
-        //hier werden die mauern, die nordlich und sülich räume haben verarbeitet
+        //hier werden die Mauern verarbeitet, die nördlich und südlich Räume haben
         else if (AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
                 && rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
@@ -305,7 +299,7 @@ public class MapService implements MapServiceI {
                     return false;
 
                 Room roomSouth = rooms.get(new Tuple<>(ALocationX + 1, ALocationY));
-                // wir setzen testweise eine Mauer um zu prüfen ob der dungeon abgesnitten wird
+                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgesnitten wird
                 room.setSouthRoomId(null);
                 roomSouth.setNorthRoomId(null);
 
@@ -318,7 +312,7 @@ public class MapService implements MapServiceI {
 
                 canReachAllRooms(startRoom);
 
-                // wir setzen die mauern wieder zurück
+                //wir setzen die Mauern wieder zurück
                 room.setSouthRoomId(roomSouth.getRoomId());
                 roomSouth.setNorthRoomId(room.getRoomId());
 
