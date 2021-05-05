@@ -69,7 +69,7 @@ public class MapService implements MapServiceI {
     @Override
     public boolean canPlaceRoom(int ALocationX, int ALocationY) {
         //Überprüfen, ob an der Position schon ein Raum existiert
-        if (rooms.containsKey(new Tuple<>(ALocationX,ALocationY))) {
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY))) {
             return false;
         }
 
@@ -77,32 +77,12 @@ public class MapService implements MapServiceI {
         if (rooms.size() == 0) {
             return true;
         } else {
-            //überprüfen, ob geklicktes Feld der Nachbar ist
-            //Nachbar Norden
-            if (!(ALocationX - 1 < 0)) {
-                if (rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))) {
-                    return true;
-                }
-            }
-            //Nachbar Osten
-            if (!(ALocationY + 1 > MAP_SIZE - 1)) {
-                if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY+1))) {
-                    return true;
-                }
-            }
-            //Nachbar Süden
-            if (!(ALocationX + 1 > MAP_SIZE - 1)) {
-                if (rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
-                    return true;
-                }
-            }
-            //Nachbar Westen
-            if (!(ALocationY - 1 < 0)) {
-                if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY-1)))
-                    return true;
-            }
+            //überprüfen, ob geklicktes Feld der Nachbar ist eines vorhandenen felds ist
+            return rooms.containsKey(new Tuple<>(ALocationX - 1, ALocationY))
+                    || rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))
+                    || rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))
+                    || rooms.containsKey(new Tuple<>(ALocationX, ALocationY - 1));
         }
-        return false;
     }
 
     @Override
@@ -313,7 +293,8 @@ public class MapService implements MapServiceI {
     @Override
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
         //hier werden die mauern, die räume westlich oder östlich von sich haben verarbeitet
-        if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY)) && rooms.containsKey(new Tuple<>(ALocationX, ALocationY+1))) {
+        if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
+                && rooms.containsKey(new Tuple<>(ALocationX, ALocationY+1))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
             if (room.getEastRoomId() == null) {
                 return true;
@@ -426,7 +407,7 @@ public class MapService implements MapServiceI {
 
     @Override
     public Room getRoomByCoordinate(int ALocationX, int ALocationY) {
-        return rooms.get(new Tuple<>(ALocationX,ALocationY));
+        return rooms.getOrDefault(new Tuple<>(ALocationX, ALocationY), null);
     }
 
 
