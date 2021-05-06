@@ -53,8 +53,6 @@ public class RoomConfigurationTab extends VerticalLayout {
     public RoomConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI, MapServiceI AMapServiceI) {
         mapService = AMapServiceI;
         configuratorServiceI = AConfiguratorServiceI;
-        itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
-        npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
 
         //TODO sartraum suchen und setzen
         try {
@@ -128,17 +126,15 @@ public class RoomConfigurationTab extends VerticalLayout {
                             ArrayList<Tile> changeTieles = mapService.placeRoom(finalI, finalJ);
                             for (Tile t : changeTieles) {
                                 tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
-                                tiles[t.getX()][t.getY()].setText(mapService.getRoomByCoordinate(t.getX(),t.getY()).getRoomName());
                             }
                             currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                         }
                     }
                     //wenn der Raum existiert, kann er bearbeitet werden
                     else {
-                        if(mapService.getRoomByCoordinate(finalI,finalJ) != null)
-                            currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
+                        if (mapService.getRoomByCoordinate(finalI, finalJ) != null)
+                            currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                         //Notification.show(currentRoom.getRoomId().toString());
-                        tiles[finalI][finalJ].setText(mapService.getRoomByCoordinate(finalI,finalJ).getRoomName());
                     }
                     initRoom();
                 });
@@ -199,7 +195,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                     t.getStyle().set("opacity", "1");
                 }
             }
-        }catch (Exception ignore){}
+        }catch (Exception ignored){}
 
         //button-container:hover vom CSS-File wieder einschalten
 
@@ -209,16 +205,16 @@ public class RoomConfigurationTab extends VerticalLayout {
             tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
         }catch (Exception ignored){}
 
-        String chosenRoom=currentRoom.getRoomName();
-        HorizontalLayout roomThings=new HorizontalLayout();
-        VerticalLayout itemLayout=new VerticalLayout();
-        VerticalLayout npcLayout=new VerticalLayout();
+        String chosenRoom = currentRoom.getRoomName();
+        HorizontalLayout roomThings = new HorizontalLayout();
+        VerticalLayout itemLayout = new VerticalLayout();
+        VerticalLayout npcLayout = new VerticalLayout();
 
         H2 configureRoomsTitle = new H2(res.getString("view.configurator.room.configureRoomsTitle"));
 
-        TextField startRoom=new TextField(res.getString("view.configurator.room.startroom"));
-        H3 actualRoomHeadline=new H3(res.getString("view.configurator.room.actualroomheadline"));
-        Button deleteRoomButt=new Button(res.getString("view.configurator.room.delete"),e->{
+        TextField startRoom = new TextField(res.getString("view.configurator.room.startroom"));
+        H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
+        Button deleteRoomButt = new Button(res.getString("view.configurator.room.delete"),e->{
             if(currentRoom != null) {
                 if (mapService.canDeleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
                     for (Tile t : mapService.deleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
@@ -233,7 +229,7 @@ public class RoomConfigurationTab extends VerticalLayout {
             }
         });
         deleteRoomButt.getStyle().set("color", "red");
-        TextField roomName =new TextField(res.getString("view.configurator.room.roomname"));
+        TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
 
         roomName.setValue(Objects.requireNonNullElse(chosenRoom,
                 res.getString("view.configurator.room.defaultroomname")));
@@ -253,7 +249,7 @@ public class RoomConfigurationTab extends VerticalLayout {
             configuratorServiceI.saveRoom(currentRoom);
         });
 
-        H4 itemsNPCsHeadline=new H4(res.getString("view.configurator.room.itemnpcheadline"));
+        H4 itemsNPCsHeadline = new H4(res.getString("view.configurator.room.itemnpcheadline"));
         itemsNPCsHeadline.getStyle().set("color", "grey");
 
         H4 itemsHeadline = new H4(res.getString("view.configurator.room.itemheadline"));
@@ -269,6 +265,12 @@ public class RoomConfigurationTab extends VerticalLayout {
         roomArea.add(configureRoomsTitle, startRoom, actualRoomHeadline, roomName, roomDescription,
                 deleteRoomButt, itemsNPCsHeadline, roomThings);
 
+        itemList.clear();
+        if (currentRoom != null) {
+            List<Item> roomItems = configuratorServiceI.getAllItems(currentRoom);
+            itemList.setItems(roomItems);
+        }
+
         itemList.setEnabled(false);
         itemList.setRenderer(new ComponentRenderer<>(item -> {
             Label label = new Label(item.getItemName());
@@ -276,16 +278,20 @@ public class RoomConfigurationTab extends VerticalLayout {
             label.addClassName("itemLabel");
             return label;
         }));
+
         editItemButton.addClickListener(t -> {
+            itemSelectionDialog = new ItemSelectionDialog(configuratorServiceI, currentRoom);
+            initItemButtonListeners();
             itemSelectionDialog.dialogResult = false;
             itemSelectionDialog.open();
         });
-        itemSelectionDialog.addOpenedChangeListener(e -> {
-            if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
-                itemList.clear();
-                itemList.setItems(itemSelectionDialog.getItemSelection());
-            }
-        });
+
+
+        npcList.clear();
+        if (currentRoom != null) {
+            List<NPC> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
+            npcList.setItems(roomItems);
+        }
 
         npcList.setEnabled(false);
         npcList.setRenderer(new ComponentRenderer<>(item -> {
@@ -294,11 +300,34 @@ public class RoomConfigurationTab extends VerticalLayout {
             label.addClassName("itemLabel");
             return label;
         }));
-        editNPCButton.addClickListener(t -> npcSelectionDialog.open());
+
+        editNPCButton.addClickListener(t -> {
+            npcSelectionDialog = new NpcSelectionDialog(configuratorServiceI, currentRoom);
+            initNPCButtonListener();
+            npcSelectionDialog.dialogResult = false;
+            npcSelectionDialog.open();
+        });
+
+    }
+
+    private void initItemButtonListeners(){
+        itemSelectionDialog.addOpenedChangeListener(e -> {
+            if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
+                itemList.clear();
+                List<Item> selectedItemList = itemSelectionDialog.getItemSelection();
+                itemList.setItems(selectedItemList);
+                configuratorServiceI.setItems(currentRoom, selectedItemList);
+            }
+        });
+    }
+
+    private void initNPCButtonListener(){
         npcSelectionDialog.addOpenedChangeListener(e -> {
-            if (npcSelectionDialog.dialogResult) {
-                npcList.clear();
-                npcList.setItems(npcSelectionDialog.getNPCSelection());
+            if (npcSelectionDialog.dialogResult && !npcSelectionDialog.isOpened()) {
+                itemList.clear();
+                List<NPC> selectedNPCList = npcSelectionDialog.getNPCSelection();
+                npcList.setItems(selectedNPCList);
+                configuratorServiceI.setNPCs(currentRoom, selectedNPCList);
             }
         });
     }

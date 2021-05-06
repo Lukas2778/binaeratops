@@ -7,7 +7,9 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
@@ -24,7 +26,7 @@ public class NpcSelectionDialog extends Dialog {
     Grid<NPC> npcGrid = new Grid(NPC.class);
 
 
-    public NpcSelectionDialog(ConfiguratorServiceI configuratorService){
+    public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom){
         H1 title = new H1("NPC Liste");
         H2 headline = new H2("NPCs für ...");
 
@@ -46,7 +48,8 @@ public class NpcSelectionDialog extends Dialog {
 
         this.addOpenedChangeListener(e->{
             if (isOpened()){
-                List<NPC> tempList = configuratorService.getAllNPCs();
+                List<NPC> tempList = AConfiguratorService.getAllNPCs();
+                selectedNpcs = AConfiguratorService.getAllNPCs(ARoom);
                 npcGrid.setItems(tempList);
                 for (NPC myNPC: selectedNpcs){
                     if(tempList.contains(myNPC)){
