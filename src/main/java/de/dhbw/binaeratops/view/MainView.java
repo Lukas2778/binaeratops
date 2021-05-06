@@ -19,12 +19,14 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
 import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -36,12 +38,55 @@ public class MainView extends AppLayout {
 
     private final Tabs menu;
     private H1 viewTitle;
+    //private Select<Locale> languageSelect;
+    private HorizontalLayout menuLayout;
+    private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+    private TranslationProvider transProv = new TranslationProvider();
 
     public MainView() {
         setPrimarySection(Section.DRAWER);
+        createTopRightMenu();
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+    }
+
+    private void createTopRightMenu() {
+        menuLayout = new HorizontalLayout();
+        Avatar avatar = new Avatar();
+
+        // --- SPRACHE HINZUFÜGEN IN MENÜ --- NICHT ENTFERNEN!!! ---
+
+//        languageSelect = new Select<>();
+//        languageSelect.setPlaceholder(res.getString("view.main.select"));
+//        List<Locale> locales = transProv.getProvidedLocales();
+//
+//        languageSelect.setItemLabelGenerator(Locale::getDisplayLanguage);
+//        languageSelect.setItems(locales);
+//        languageSelect.setValue(VaadinSession.getCurrent().getLocale());
+//
+//        languageSelect.addValueChangeListener(e -> {
+//            if (VaadinSession.getCurrent().getLocale() == Locale.US) {
+//                VaadinSession.getCurrent().setLocale(Locale.GERMANY);
+//            } else if (VaadinSession.getCurrent().getLocale() == Locale.GERMANY) {
+//                VaadinSession.getCurrent().setLocale(Locale.US);
+//            }
+//            res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+//            UI.getCurrent().getPage().reload();
+//        });
+        menuLayout.addClassName("menuRight");
+        menuLayout.add(/*languageSelect,*/ avatar);
+
+        /* OLD - Menubar Example */
+//        menuBar = new MenuBar();
+//        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+//        menuBar.setOpenOnHover(true);
+//        menuBar.setClassName("menuRight");
+//        MenuItem menuItem = menuBar.addItem(avatar);
+//        SubMenu subMenu = menuItem.getSubMenu();
+//        subMenu.addItem("Profile");
+//        subMenu.addItem(languageSelect);
+//        subMenu.addItem("Sign out");
     }
 
     private Component createHeaderContent() {
@@ -55,7 +100,8 @@ public class MainView extends AppLayout {
         layout.add(new DrawerToggle());
         viewTitle = new H1();
         layout.add(viewTitle);
-        layout.add(new Avatar());
+        layout.add(menuLayout);
+        //layout.add(avatar);
         layout.add(new Anchor("/logout","Log out"));
         return layout;
     }

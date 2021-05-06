@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops;
 
-import com.vaadin.flow.server.PWA;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
@@ -19,7 +18,7 @@ public class Application extends SpringBootServletInitializer {
      * @param args Argumente zum Starten der Anwendung.
      */
     public static void main(String[] args) {
-        Locale.setDefault(new Locale("de", "DE"));
+        Locale.setDefault(Locale.GERMANY);
         SpringApplication.run(Application.class, args);
     }
 
