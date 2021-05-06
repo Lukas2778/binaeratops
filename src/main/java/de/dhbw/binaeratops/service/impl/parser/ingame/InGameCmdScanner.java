@@ -26,7 +26,9 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     private static final String CMD_WHISPER = "WHISPER";
     private static final String CMD_WHISPER_MASTER = "MASTER";
     private static final String CMD_SPEAK = "SPEAK";
-    private static final String CMD_SPEAK_ALL = "ALL";
+    private static final String CMD_NOTIFY = "NOTIFY";
+    private static final String CMD_NOTIFY_ALL = "ALL";
+    private static final String CMD_NOTIFY_ROOM = "ROOM";
     private static final String CMD_REPORT = "REPORT";
     private static final String CMD_WITHDRAW = "WITHDRAW";
     private static final String CMD_WITHDRAW_ROLE = "ROLE";
@@ -57,12 +59,18 @@ public class InGameCmdScanner extends AbstractCmdScanner {
 
         String token = findNextToken();
         if (token == null) {
-            onMissingToken("Befehl");
+            onMissingToken("<Befehl>");
             return  null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_HELP:
                     return scanHelp1();
+                case CMD_WHISPER:
+                    return scanWhisper1();
+                case CMD_SPEAK:
+                    return scanSpeak();
+                case CMD_NOTIFY:
+                    return scanNotify();
                 default :
                     onUnexpectedToken();
                     return null;
@@ -89,6 +97,101 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    private UserMessage scanWhisper1() throws CmdScannerException {
+        String avatarname = findNextToken();
+        if (avatarname == null) {
+            onMissingToken("<Avatarname>");
+            return null;
+        } else {
+            switch (avatarname.toUpperCase()) {
+                case CMD_WHISPER_MASTER:
+                    return scanWhisperMaster();
+                default:
+                    return scanWhisperAvatarName(avatarname);
+            }
+        }
+    }
+
+    private UserMessage scanWhisperAvatarName(String AAvatarname) throws CmdScannerException {
+        String message = findRestOfInput();
+        if (message == null) {
+            onMissingToken("<Nachricht>");
+        } else {
+            //TODO hooks.onCmdWhisper(AAvatarname, message);
+        }
+        return null;
+    }
+
+    private UserMessage scanWhisperMaster() throws CmdScannerException {
+        String message = findRestOfInput();
+        if (message == null) {
+            onMissingToken("<Nachricht>");
+        } else {
+            // TODO hooks.onCmdWhisperMaster()
+        }
+        return null;
+    }
+
+    private UserMessage scanSpeak() throws CmdScannerException {
+        String message = findRestOfInput();
+        if (message == null) {
+            onMissingToken("<Nachricht>");
+        } else {
+            // TODO hooks.onCmdSpeak(ARoomId, message); --> Woher kriegen wir die RaumID?
+        }
+        return null;
+    }
+
+    private UserMessage scanNotify() throws CmdScannerException {
+        String token = findNextToken();
+        if (token == null) {
+            onMissingToken("<ALL|ROOM>");
+            return null;
+        } else {
+            switch (token.toUpperCase()) {
+                case CMD_NOTIFY_ROOM:
+                    return scanNotifyRoom();
+                case CMD_NOTIFY_ALL:
+                    return scanNotifyAll();
+                default:
+                    onUnexpectedToken();
+                    return null;
+            }
+        }
+    }
+
+    private UserMessage scanNotifyRoom() throws CmdScannerException {
+        String roomName = findNextToken();
+        if (roomName == null) {
+            onMissingToken("<Raumname>");
+            return null;
+        } else {
+            return scanNotifyRoomMessage(roomName);
+        }
+    }
+
+    private UserMessage scanNotifyRoomMessage(String ARoomName) throws CmdScannerException {
+        String message = findRestOfInput();
+        if (message == null) {
+            onMissingToken("<Nachricht>");
+            return null;
+        } else {
+            // TODO return hooks.onCmdNotifyRoom(ARoomName, message);
+        }
+        return null;
+    }
+
+    private UserMessage scanNotifyAll() throws CmdScannerException {
+        String message = findRestOfInput();
+        if(message == null) {
+            onMissingToken("<Nachricht>");
+            return null;
+        } else {
+            // TODO return hooks.onCmdNotifyAll(message);
+        }
+        return null;
+    }
+
     /**
      * Scanner Zustand "Join" Level 1.
      */
@@ -110,6 +213,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
             }
         }
     }
+
     private void _scanJoinChat1() throws CmdScannerException {
         hooks.onCmdJoinChat();
     }
