@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
-import com.vaadin.flow.component.notification.Notification;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
@@ -11,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Scope(value = "session")
@@ -34,7 +33,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemRepositoryI itemRepo;
 
-    public void init (DungeonRepositoryI ADungeonRepo){
+    public void init(DungeonRepositoryI ADungeonRepo) {
         dungeonRepo = ADungeonRepo;
     }
 
@@ -58,7 +57,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void saveDungeon(){
+    public void saveDungeon() {
         dungeonRepo.save(dungeon);
     }
 
@@ -217,30 +216,62 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void setItems(Room ARoom, List<Item> AItemList) {
+        for (Item myItem: AItemList) {
+            myItem.setRoom(ARoom);
+            itemRepo.save(myItem);
+        }
         ARoom.getItems()
                 .clear();
         ARoom.getItems()
                 .addAll(AItemList);
-        roomRepo.save(ARoom);
     }
 
     @Override
     public void setNPCs(Room ARoom, List<NPC> ANPCList) {
+        for (NPC myNpc : ANPCList) {
+            myNpc.setRoom(ARoom);
+            npcRepo.save(myNpc);
+        }
         ARoom.getNpcs()
                 .clear();
         ARoom.getNpcs()
                 .addAll(ANPCList);
-        roomRepo.save(ARoom);
     }
 
     @Override
     public List<Item> getAllItems() {
+
         return dungeon.getItems();
+    }
+    @Override
+    public List<Item> getAllItems(Room ARoom){
+        List<Item> items = new ArrayList<>();
+        for (Item myItem: dungeon.getItems()) {
+            if(myItem.getRoom() != null){
+                if (myItem.getRoom().getRoomId() == ARoom.getRoomId()){
+                    items.add(myItem);
+                }
+            }
+        }
+        return items;
     }
 
     @Override
     public List<NPC> getAllNPCs() {
         return dungeon.getNpcs();
+    }
+
+    @Override
+    public List<NPC> getAllNPCs(Room ARoom){
+        List<NPC> npcs = new ArrayList<>();
+        for (NPC myNpc: dungeon.getNpcs()) {
+            if(myNpc.getRoom() != null){
+                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()){
+                    npcs.add(myNpc);
+                }
+            }
+        }
+        return npcs;
     }
 
     @Override

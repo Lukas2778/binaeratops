@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ItemSelectionDialog extends Dialog {
     List<Item> selectedItems = new ArrayList<>();
 
 
-    public ItemSelectionDialog(ConfiguratorServiceI AConfiguratorService){
+    public ItemSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom){
         H1 title = new H1("Item Liste");
         H2 headline = new H2("Items für ...");
 
@@ -44,6 +45,7 @@ public class ItemSelectionDialog extends Dialog {
         this.addOpenedChangeListener(e->{
             if (isOpened()){
                 List<Item> tempList = AConfiguratorService.getAllItems();
+                selectedItems = AConfiguratorService.getAllItems(ARoom);
                 itemGrid.setItems(tempList);
                 for (Item myItem: selectedItems){
                     if(tempList.contains(myItem)){
