@@ -1,11 +1,9 @@
-package de.dhbw.binaeratops.model.service.impl.configuration;
+package de.dhbw.binaeratops.service.impl.configuration;
 
 
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ConfigurationServiceTest extends Logger {
