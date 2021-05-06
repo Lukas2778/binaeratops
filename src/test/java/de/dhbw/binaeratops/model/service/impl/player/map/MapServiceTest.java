@@ -122,12 +122,23 @@ public class MapServiceTest extends Logger {
         Assert.assertFalse(myMapService.canDeleteRoom(0,2));
     }
     @Test
-    public void canToggleWall(){
+    public void canToggleWall1(){
         Assert.assertTrue(myMapService.canToggleWall(0,0,true));
+    }
+    @Test
+    public void canToggleWall2(){
         Assert.assertTrue(myMapService.canToggleWall(0,0,false));
+    }
+    @Test
+    public void canToggleWall3(){
         Assert.assertTrue(myMapService.canToggleWall(1,1,false));
-
+    }
+    @Test
+    public void canToggleWall4(){
         Assert.assertFalse(myMapService.canToggleWall(0,2,false));
+    }
+    @Test
+    public void canToggleWall5(){
         Assert.assertFalse(myMapService.canToggleWall(0,1,false));
     }
 

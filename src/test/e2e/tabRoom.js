@@ -7,7 +7,7 @@ function deleteRoom(a, b) {
     $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').click();
     expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']')).toBeExisting();
     $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-button').click();
-    browser.pause(100)
+    browser.pause(250);
     expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').getAttribute('src')).toEqual('https://localhost:8443/map/KarteBack.png');
 }
 
@@ -143,8 +143,9 @@ describe('Dungeon - Configure Room', () => {
     it('delete all Rooms', () => {
         for (i = 1; i <= 8; i++) {
             for (j = 1; j <= 8; j++) {
+                browser.pause(100)
                 createRoom(i, j);
-                browser.pause(250);
+                browser.pause(150);
             }
         }
         for (i = 1; i <= 8; i++) {
