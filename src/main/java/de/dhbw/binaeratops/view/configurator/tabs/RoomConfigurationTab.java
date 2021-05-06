@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -25,11 +26,14 @@ import de.dhbw.binaeratops.model.map.Tile;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 @CssImport("./views/mainviewtabs/configurator/map.css")
 public class RoomConfigurationTab extends VerticalLayout {
+
+    private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     NpcSelectionDialog npcSelectionDialog;
     ItemSelectionDialog itemSelectionDialog;
 
@@ -124,6 +128,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             ArrayList<Tile> changeTieles = mapService.placeRoom(finalI, finalJ);
                             for (Tile t : changeTieles) {
                                 tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
+                                tiles[t.getX()][t.getY()].setText(mapService.getRoomByCoordinate(t.getX(),t.getY()).getRoomName());
                             }
                             currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                         }
@@ -133,6 +138,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                         if(mapService.getRoomByCoordinate(finalI,finalJ) != null)
                             currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
                         //Notification.show(currentRoom.getRoomId().toString());
+                        tiles[finalI][finalJ].setText(mapService.getRoomByCoordinate(finalI,finalJ).getRoomName());
                     }
                     initRoom();
                 });
@@ -145,7 +151,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show("Fehler!");
+                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
                     }
 
                 });
@@ -156,7 +162,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show("Fehler!");
+                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
                     }
                 });
 
@@ -193,7 +199,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                     t.getStyle().set("opacity", "1");
                 }
             }
-        }catch (Exception e){}
+        }catch (Exception ignore){}
 
         //button-container:hover vom CSS-File wieder einschalten
 
@@ -201,18 +207,18 @@ public class RoomConfigurationTab extends VerticalLayout {
         //aktuellen Raum anwählen
         try {
             tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
-        }catch (Exception e){}
+        }catch (Exception ignored){}
 
         String chosenRoom=currentRoom.getRoomName();
         HorizontalLayout roomThings=new HorizontalLayout();
         VerticalLayout itemLayout=new VerticalLayout();
         VerticalLayout npcLayout=new VerticalLayout();
 
-        H2 configureRoomsTitle = new H2("Räume bearbeiten");
+        H2 configureRoomsTitle = new H2(res.getString("view.configurator.room.configureRoomsTitle"));
 
-        TextField startRoom=new TextField("Startraum");
-        H3 actualRoomHeadline=new H3("Aktueller Raum:");
-        Button deleteRoomButt=new Button("Raum löschen",e->{
+        TextField startRoom=new TextField(res.getString("view.configurator.room.startroom"));
+        H3 actualRoomHeadline=new H3(res.getString("view.configurator.room.actualroomheadline"));
+        Button deleteRoomButt=new Button(res.getString("view.configurator.room.delete"),e->{
             if(currentRoom != null) {
                 if (mapService.canDeleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
                     for (Tile t : mapService.deleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
@@ -222,23 +228,24 @@ public class RoomConfigurationTab extends VerticalLayout {
                     tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "1");
                     //TODO zum startraum navigieren
                 } else {
-                    Notification.show("Du kannst einen Raum nicht löschen," +
-                            " wenn der Dungeon dadurch geteilt wird!");
+                    Notification.show(res.getString("view.configurator.room.notification.deleteroomerror"));
                 }
             }
         });
         deleteRoomButt.getStyle().set("color", "red");
-        TextField roomName =new TextField("Name des Raums");
+        TextField roomName =new TextField(res.getString("view.configurator.room.roomname"));
 
-        roomName.setValue(Objects.requireNonNullElse(chosenRoom, "Beispiel Name"));
+        roomName.setValue(Objects.requireNonNullElse(chosenRoom,
+                res.getString("view.configurator.room.defaultroomname")));
         roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomName.addValueChangeListener(e -> {
             currentRoom.setRoomName(roomName.getValue());
             configuratorServiceI.saveRoom(currentRoom);
         });
 
-        TextArea roomDescription = new TextArea("Beschreibung");
-        roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),"Beispiel Beschreibung"));
+        TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
+        roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),
+                res.getString("view.configurator.room.defaultroomdescription")));
         roomDescription.setMinWidth(400, Unit.PIXELS);
         roomDescription.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomDescription.addValueChangeListener(e -> {
@@ -246,20 +253,21 @@ public class RoomConfigurationTab extends VerticalLayout {
             configuratorServiceI.saveRoom(currentRoom);
         });
 
-        H4 itemsNPCsHeadline=new H4("Was soll in diesem Raum vorhanden sein?");
+        H4 itemsNPCsHeadline=new H4(res.getString("view.configurator.room.itemnpcheadline"));
         itemsNPCsHeadline.getStyle().set("color", "grey");
 
-        H4 itemsHeadline = new H4("Gegenstände");
-        Button editItemButton = new Button("Hinzufügen");
-        H4 npcHeadline = new H4("NPCs");
-        Button editNPCButton = new Button("Hinzufügen");
+        H4 itemsHeadline = new H4(res.getString("view.configurator.room.itemheadline"));
+        Button editItemButton = new Button(res.getString("view.configurator.room.edititemnpc"));
+        H4 npcHeadline = new H4(res.getString("view.configurator.room.npcheadline"));
+        Button editNPCButton = new Button(res.getString("view.configurator.room.edititemnpc"));
 
         itemLayout.add(itemsHeadline, itemList, editItemButton);
         npcLayout.add(npcHeadline, npcList, editNPCButton);
 
         roomThings.add(itemLayout, npcLayout);
 
-        roomArea.add(configureRoomsTitle, startRoom, actualRoomHeadline, roomName, roomDescription, deleteRoomButt, itemsNPCsHeadline, roomThings);
+        roomArea.add(configureRoomsTitle, startRoom, actualRoomHeadline, roomName, roomDescription,
+                deleteRoomButt, itemsNPCsHeadline, roomThings);
 
         itemList.setEnabled(false);
         itemList.setRenderer(new ComponentRenderer<>(item -> {
