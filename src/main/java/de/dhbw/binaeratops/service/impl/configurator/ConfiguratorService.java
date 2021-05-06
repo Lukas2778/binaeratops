@@ -34,6 +34,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemRepositoryI itemRepo;
 
+    public void init (DungeonRepositoryI ADungeonRepo){
+        dungeonRepo = ADungeonRepo;
+    }
+
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
