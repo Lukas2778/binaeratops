@@ -250,78 +250,59 @@ public class MapService implements MapServiceI {
         return tiles;
     }
 
+    private boolean canReachRoom(Room r1, Room r2, ArrayList<Room> checkedRooms) {
+        //Man sucht mit r1 r2. Entweder r1 ist r2 und es war erfolgreich oder man sucht noch weiter. Mit checked Rooms werden schon besuchte Räume gespeichert.
+        if (r1 == null || checkedRooms.contains(r1))
+            return false;
+        if (r1 == r2)
+            return true;
+        checkedRooms.add(r1);
+        return canReachRoom(getRoomById(r1.getNorthRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getEastRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getSouthRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getWestRoomId()), r2, checkedRooms);
+    }
+
     @Override
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
-        //hier werden die Mauern verarbeitet, die Räume westlich oder östlich von sich haben
-        if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
+        //Die Koordinate muss existieren
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            if (room.getEastRoomId() == null) {
-                return true;
-            } else {
-                if (rooms.size() <= 3)
-                    return false;
-
-                Room roomEast = rooms.get(new Tuple<>(ALocationX, ALocationY + 1));
-                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgeschnitten wird
+            //Bei der Wand geht es um das Trennen von room und dem östlich liegenden Raum
+            if (!AHorizontal) {
+                Room roomEast = getRoomById(room.getEastRoomId());
+                //Wenn roomEast nicht existiert
+                if (roomEast == null)
+                    return true;
                 room.setEastRoomId(null);
                 roomEast.setWestRoomId(null);
-
-                Room startRoom = findANeighbor(room);
-                if (startRoom == null) {
+                //Kann ich auf irgendeinen anderen Weg von room zu roomEast kommen. Setze aber auf jeden Fall die Wände wieder
+                if (!canReachRoom(room, roomEast, new ArrayList<>())) {
                     room.setEastRoomId(roomEast.getRoomId());
                     roomEast.setWestRoomId(room.getRoomId());
                     return false;
-                }
-                canReachAllRooms(startRoom);
-
-                //wir setzen die Mauern wieder zurück
-                room.setEastRoomId(roomEast.getRoomId());
-                roomEast.setWestRoomId(room.getRoomId());
-
-                if (rooms.size() == searchedRooms.size()) {
-                    searchedRooms.clear();
-                    return true;
                 } else {
-                    searchedRooms.clear();
-                    return false;
+                    room.setEastRoomId(roomEast.getRoomId());
+                    roomEast.setWestRoomId(room.getRoomId());
+                    return true;
                 }
-            }
-        }
-        //hier werden die Mauern verarbeitet, die nördlich und südlich Räume haben
-        else if (AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
-            Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            if (room.getSouthRoomId() == null) {
-                return true;
             } else {
-                if (rooms.size() <= 3)
-                    return false;
-
-                Room roomSouth = rooms.get(new Tuple<>(ALocationX + 1, ALocationY));
-                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgesnitten wird
+                //In diesem else geht es um das Trennen von room und dem südlich liegenden Raum
+                Room roomSouth = getRoomById(room.getSouthRoomId());
+                //Wenn roomSouth nicht existiert
+                if (roomSouth == null)
+                    return true;
                 room.setSouthRoomId(null);
                 roomSouth.setNorthRoomId(null);
-
-                Room startRoom = findANeighbor(room);
-                if (startRoom == null) {
+                //Kann ich auf irgendeinen anderen Weg von room zu roomSouth kommen. Setze aber auf jeden Fall die Wände wieder
+                if (!canReachRoom(room, roomSouth, new ArrayList<>())) {
                     room.setSouthRoomId(roomSouth.getRoomId());
                     roomSouth.setNorthRoomId(room.getRoomId());
                     return false;
-                }
-
-                canReachAllRooms(startRoom);
-
-                //wir setzen die Mauern wieder zurück
-                room.setSouthRoomId(roomSouth.getRoomId());
-                roomSouth.setNorthRoomId(room.getRoomId());
-
-                if (rooms.size() == searchedRooms.size()) {
-                    searchedRooms.clear();
-                    return true;
                 } else {
-                    searchedRooms.clear();
-                    return false;
+                    room.setSouthRoomId(roomSouth.getRoomId());
+                    roomSouth.setNorthRoomId(room.getRoomId());
+                    return true;
                 }
             }
         } else {
