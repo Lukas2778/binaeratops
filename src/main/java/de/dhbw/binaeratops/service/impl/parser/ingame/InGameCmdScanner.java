@@ -79,7 +79,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     }
 
     private UserMessage scanHelp1() throws CmdScannerException {
-        String token = findNextToken();
+        String token = findRestOfInput();
         if (token == null) {
             return new UserMessage("view.game.cmd.help");
         } else {
