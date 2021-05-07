@@ -17,8 +17,10 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,22 +42,21 @@ public class LobbyView extends VerticalLayout {
 
     DungeonServiceI dungeonServiceI;
 
-
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService){
+    public LobbyView(DungeonServiceI ADungeonService){
         dungeonServiceI=ADungeonService;
 
         titleText=new H1("Dungeon spielen");
-        explanationText=new String("<div>Du kannst hier aus einer Lister der für dich spielbaren Dungeons auswählen.<br>" +
-                "Es werden dir hier alle öffentlich zugänglichen Dungeons angezeigt, sowie alle Dungeons für die du " +
-                "die Berechtigung hast, sie zu spielen (privat).<br>Viel Spaß ;)</div>");
+        explanationText=new String("<div>Du kannst hier aus einer Liste der für dich spielbaren Dungeons" +
+                " auswählen.<br>Es werden dir hier alle aktiven Dungeons angezeigt, die entweder öffentlich zugänglich sind, " +
+                "oder zu denen du eine Berechtigung besitzt.<br>Viel Spaß ;)</div>");
         html=new Html(explanationText);
         dungeonList = new ArrayList<>();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
-        dungeonList.addAll(dungeonServiceI.getAllDungeonsFromUser(user));
+        dungeonList.addAll(dungeonServiceI.getDungeonsLobby(user));
 
         dungeonGrid=new Grid<>();
         dungeonGrid.setItems(dungeonList);
@@ -70,8 +71,6 @@ public class LobbyView extends VerticalLayout {
         add(titleText, html, dungeonGrid);
 
         setSizeFull ();
-        //setJustifyContentMode ( FlexComponent.JustifyContentMode.CENTER ); // Put content in the middle horizontally.
-        //setDefaultVerticalComponentAlignment ( FlexComponent.Alignment.CENTER ); // Put content in the middle vertically.
     }
 
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
