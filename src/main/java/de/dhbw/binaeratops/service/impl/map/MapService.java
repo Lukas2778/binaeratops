@@ -27,7 +27,6 @@ public class MapService implements MapServiceI {
         configuratorServiceI = AConfiguratorServiceI;
         ArrayList<Tile> tiles = new ArrayList<>();
         rooms = new HashMap<>();
-        searchedRooms = new HashMap<>();
 
         for (Room r :
                 configuratorServiceI.getDungeon().getRooms()) {
@@ -124,50 +123,18 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
-        //wenn es nur zwei Räume gibt, kann dieser entfernt werden
-        if (rooms.size() <= 2) {
+        if (rooms.size() == 1)
             return true;
-        } else {
-            Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            searchedRooms.put(new Tuple<>(ALocationX, ALocationY), room);
-            canReachAllRooms(Objects.requireNonNull(findANeighbor(room)));
-            if (searchedRooms.size() == rooms.size()) {
-                searchedRooms.clear();
-                return true;
-            } else {
-                searchedRooms.clear();
+        Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
+        LinkedList<Room> allNeighbours = getAllNeighbours(room);
+        Room startRoom = allNeighbours.pop();
+        for (Room r : allNeighbours) {
+            ArrayList<Room> searchedRooms = new ArrayList<>();
+            searchedRooms.add(room);
+            if (!canReachRoom(startRoom, r, searchedRooms))
                 return false;
-            }
         }
-    }
-
-    /**
-     * Sucht rekursiv nach verbundenen Räumen und speichert die Ergebnisse in der Variable 'searchedRooms'.
-     *
-     * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
-     */
-    private void canReachAllRooms(Room ACurrentRoom) {
-        Room north = getRoomById(ACurrentRoom.getNorthRoomId());
-        Room east = getRoomById(ACurrentRoom.getEastRoomId());
-        Room west = getRoomById(ACurrentRoom.getWestRoomId());
-        Room south = getRoomById(ACurrentRoom.getSouthRoomId());
-
-        if (north != null && !searchedRooms.containsKey(new Tuple<>(north.getXCoordinate(), north.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(north.getXCoordinate(), north.getYCoordinate()), north);
-            canReachAllRooms(north);
-        }
-        if (east != null && !searchedRooms.containsKey(new Tuple<>(east.getXCoordinate(), east.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(east.getXCoordinate(), east.getYCoordinate()), east);
-            canReachAllRooms(east);
-        }
-        if (west != null && !searchedRooms.containsKey(new Tuple<>(west.getXCoordinate(), west.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(west.getXCoordinate(), west.getYCoordinate()), west);
-            canReachAllRooms(west);
-        }
-        if (south != null && !searchedRooms.containsKey(new Tuple<>(south.getXCoordinate(), south.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(south.getXCoordinate(), south.getYCoordinate()), south);
-            canReachAllRooms(south);
-        }
+        return true;
     }
 
 
@@ -366,6 +333,19 @@ public class MapService implements MapServiceI {
         if (ARoom.getWestRoomId() != null)
             returnS += "W";
         return returnS;
+    }
+
+    private LinkedList<Room> getAllNeighbours(Room ARoom) {
+        LinkedList<Room> returnR = new LinkedList<>();
+        if (ARoom.getNorthRoomId() != null)
+            returnR.push(getRoomById(ARoom.getNorthRoomId()));
+        if (ARoom.getEastRoomId() != null)
+            returnR.push(getRoomById(ARoom.getEastRoomId()));
+        if (ARoom.getSouthRoomId() != null)
+            returnR.push(getRoomById(ARoom.getSouthRoomId()));
+        if (ARoom.getWestRoomId() != null)
+            returnR.push(getRoomById(ARoom.getWestRoomId()));
+        return returnR;
     }
 
 }
