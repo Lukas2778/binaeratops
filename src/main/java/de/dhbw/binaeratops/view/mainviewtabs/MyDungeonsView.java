@@ -65,6 +65,7 @@ public class MyDungeonsView extends VerticalLayout {
         initNewDungeonButton();
         dungeonGrid = new Grid<>();
         dungeonGrid.setItems(dungeonList);
+        dungeonGrid.setVerticalScrollingEnabled(true);
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
         dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader("Dungeon ID");
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
