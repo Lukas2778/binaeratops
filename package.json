@@ -4,7 +4,7 @@
   "scripts": {
     "test": "mvn test",
     "e2e": "npx wdio run ./wdio.conf.js",
-    "allure": "allure generate ./target/webdriver/allure-results && allure open"
+    "allure": "allure generate -c ./target/webdriver/allure-results && allure open"
   },
   "dependencies": {
     "@polymer/iron-icon": "3.0.1",
