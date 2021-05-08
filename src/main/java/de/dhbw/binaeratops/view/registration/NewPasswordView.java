@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
@@ -22,7 +23,7 @@ import java.util.ResourceBundle;
  * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
  */
 @Route("setNewPassword")
-public class NewPasswordView extends VerticalLayout {
+public class NewPasswordView extends VerticalLayout implements HasDynamicTitle {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
@@ -33,10 +34,6 @@ public class NewPasswordView extends VerticalLayout {
      * Dies ist der Konstruktor, zum Erzeugen der Neues-Passwort-wird-gesetzt Seite.
      */
     public NewPasswordView() {
-        // Titel der Seite
-        UI current = UI.getCurrent();
-        current.getPage().setTitle(res.getString("view.new.password.pagetitle"));
-
         TextField name=new TextField(res.getString("view.new.password.field.username"));
         PasswordField newPassword=new PasswordField(res.getString("view.new.password.field.new.password"));
         PasswordField newPassword2=new PasswordField(res.getString("view.new.password.field.new.password.repeat"));
@@ -70,5 +67,10 @@ public class NewPasswordView extends VerticalLayout {
                 submit
         );
         name.focus();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.new.password.pagetitle");
     }
 }

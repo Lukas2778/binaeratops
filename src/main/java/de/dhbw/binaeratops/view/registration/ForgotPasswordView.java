@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H4;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
@@ -20,7 +21,7 @@ import java.util.ResourceBundle;
  * Diese Seite wird aufgerufen, wenn der Benutzer auf den 'Passwort vergessen'-Link klickt.
  */
 @Route("forgotPassword")
-public class ForgotPasswordView extends VerticalLayout {
+public class ForgotPasswordView extends VerticalLayout implements HasDynamicTitle {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
@@ -31,10 +32,6 @@ public class ForgotPasswordView extends VerticalLayout {
      * Dies ist der Konstruktor, zum Erzeugen der Passwort-Vergessen Seite.
      */
     public ForgotPasswordView() {
-        // Titel der Seite
-        UI current = UI.getCurrent();
-        current.getPage().setTitle(res.getString("view.forgot.password.pagetitle"));
-
         TextField name = new TextField(res.getString("view.forgot.password.field.username"));
         Button submit = new Button(res.getString("view.forgot.password.button.send.email"));
 
@@ -60,5 +57,10 @@ public class ForgotPasswordView extends VerticalLayout {
                 submit
         );
         name.focus();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.forgot.password.pagetitle");
     }
 }

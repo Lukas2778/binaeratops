@@ -11,6 +11,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
@@ -25,7 +26,7 @@ import java.util.ResourceBundle;
  * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
  */
 @Route("register")
-public class RegisterView extends VerticalLayout {
+public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
@@ -36,10 +37,6 @@ public class RegisterView extends VerticalLayout {
      * Dies ist der Konstruktor, zum Erzeugen der Registrierungsseite.
      */
     public RegisterView() {
-        // Titel der Seite
-        UI current = UI.getCurrent();
-        current.getPage().setTitle(res.getString("view.register.pagetitle"));
-
         TextField name=new TextField(res.getString("view.register.field.username"));
         TextField eMail = new TextField(res.getString("view.register.field.email"));
         PasswordField password=new PasswordField(res.getString("view.register.field.password"));
@@ -102,4 +99,8 @@ public class RegisterView extends VerticalLayout {
         }
     }
 
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.register.pagetitle");
+    }
 }

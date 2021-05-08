@@ -9,6 +9,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
@@ -21,7 +22,7 @@ import java.util.ResourceBundle;
  * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
  */
 @Route("validateRegistration")
-public class ValdidateRegistrationView extends VerticalLayout {
+public class ValdidateRegistrationView extends VerticalLayout implements HasDynamicTitle {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
@@ -31,10 +32,6 @@ public class ValdidateRegistrationView extends VerticalLayout {
      * @param AAuthServiceI AuthServiceI.
      */
     public ValdidateRegistrationView(@Autowired AuthServiceI AAuthServiceI) {
-        // Titel der Seite
-        UI current = UI.getCurrent();
-        current.getPage().setTitle(res.getString("view.validate.registration.pagetitle"));
-
         TextField name=new TextField(res.getString("view.validate.registration.field.username"));
         IntegerField code=new IntegerField(res.getString("view.validate.registration.field.code"));
         Button submit=new Button(res.getString("view.validate.registration.button.submit"));
@@ -62,5 +59,10 @@ public class ValdidateRegistrationView extends VerticalLayout {
                 new RouterLink(res.getString("view.validate.registration.link.login"),LogInView.class)
         );
         name.focus();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.validate.registration.pagetitle");
     }
 }
