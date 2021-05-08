@@ -1,0 +1,16 @@
+.room:hover {
+background: highlight !important;
+opacity: .5 !important;
+}
+
+.room{
+z-index: 1;
+width: 100px;
+height: 100px;
+margin-bottom: 0px;
+background: none;
+border-radius: 0px;
+border: none;
+cursor: pointer;
+}
+

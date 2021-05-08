@@ -6,5 +6,18 @@ import de.dhbw.binaeratops.model.entitys.User;
 import java.util.List;
 
 public interface DungeonServiceI {
-    public List<Dungeon> getAllDungeonsFromUser(User AUser);
+    List<Dungeon> getAllDungeonsFromUser(User AUser);
+
+    /**
+     * setzt einen Dungeon auf aktiv.
+     * @param ADungeonId Id des Dungeon.
+     */
+    void activateDungeon(long ADungeonId);
+
+    /**
+     * setzt einen Dungeon auf inaktiv.
+     * @param ADungeonId Id des Dungeon.
+     */
+    void deactivateDungeon(long ADungeonId);
 }
+

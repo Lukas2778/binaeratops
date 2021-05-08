@@ -4,6 +4,7 @@ import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
 
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import java.util.List;
 
@@ -13,9 +14,10 @@ public interface ConfiguratorServiceI {
      * Initialisierung des Dungeons.
      * @param AName Dungeonname.
      * @param AUser Benutzer.
+     * @param AStatus Status.
      * @return Dungeon mit Standardwerten.
      */
-    Dungeon createDungeon(String AName, User AUser);
+    Dungeon createDungeon(String AName, User AUser, Status AStatus);
 
     /**
      * Initialisierung des Dungeons.

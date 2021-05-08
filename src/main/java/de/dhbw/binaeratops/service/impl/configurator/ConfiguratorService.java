@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.impl.configurator;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -68,9 +69,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public Dungeon createDungeon(String AName, User AUser) {
+    public Dungeon createDungeon(String AName, User AUser, Status AStatus) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
+        dungeon.setDungeonStatus(AStatus);
         AUser.addDungeon(dungeon);
         dungeonRepo.save(dungeon);
         return dungeon;

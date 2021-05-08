@@ -16,8 +16,14 @@ public interface MapServiceI {
      * @param AConfiguratorService Service zur varwaltung der Konfiguration.
      * @return Kacheln der Map.
      */
-    ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorService);
-    //ArrayList<Tile> init(int AMapSize, Long ADungeonId);
+    ArrayList<Tile> initConfigure(ConfiguratorServiceI AConfiguratorService);
+
+    /**
+     *
+     * @param ADungeonId id vom Dungeon.
+     * @return Kacheln der Map.
+     */
+    Tile[][] getMapGame(long ADungeonId);
 
 
     /**

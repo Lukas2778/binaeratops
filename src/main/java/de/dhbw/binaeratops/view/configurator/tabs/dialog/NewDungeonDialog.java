@@ -5,6 +5,7 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 public class NewDungeonDialog extends Dialog {
@@ -16,7 +17,7 @@ public class NewDungeonDialog extends Dialog {
         Button okButton = new Button("Ok");
 
         okButton.addClickListener(e->{
-            configuratorService.createDungeon(dungeonName.getValue(), VaadinSession.getCurrent().getAttribute(User.class));
+            configuratorService.createDungeon(dungeonName.getValue(), VaadinSession.getCurrent().getAttribute(User.class), Status.INACTIVE );
             this.close();
         });
 

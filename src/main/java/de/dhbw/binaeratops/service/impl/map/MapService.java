@@ -1,10 +1,12 @@
 package de.dhbw.binaeratops.service.impl.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.map.Tuple;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +23,11 @@ public class MapService implements MapServiceI {
     //Räume, die von einem Algorithmus schon durchsucht wurden, werden hier gespeichert
     HashMap<Tuple<Integer>, Room> searchedRooms;
 
+    @Autowired
+    DungeonRepositoryI dungeonRepositoryI;
 
     @Override
-    public ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorServiceI) {
+    public ArrayList<Tile> initConfigure(ConfiguratorServiceI AConfiguratorServiceI) {
         configuratorServiceI = AConfiguratorServiceI;
         ArrayList<Tile> tiles = new ArrayList<>();
         rooms = new HashMap<>();
@@ -34,6 +38,46 @@ public class MapService implements MapServiceI {
             tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
         }
         return tiles;
+    }
+
+    @Override
+    public Tile[][] getMapGame(long ADungeonID) {
+        ArrayList<Tile> tiles = new ArrayList<>();
+        int minX = 8;
+        int minY = 8;
+        int maxX = 0;
+        int maxY = 0;
+        for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
+            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
+            if (r.getXCoordinate() < minX)
+                minX = r.getXCoordinate();
+            if (r.getYCoordinate() < minY)
+                minY = r.getYCoordinate();
+            if (r.getXCoordinate() > maxX)
+                maxX = r.getXCoordinate();
+            if (r.getYCoordinate() > maxY)
+                maxY = r.getYCoordinate();
+        }
+        if (tiles.size() == 0){
+            Tile[][] a= new Tile[1][1];
+            a[0][0]=new Tile(0,0,"KarteBack");
+            return a;
+        }
+
+        int sizeX = maxX - minX + 1;
+        int sizeY = maxY - minY + 1;
+        Tile[][] output = new Tile[sizeX][sizeY];
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                output[i][j] = new Tile(i, j, "KarteBack");
+            }
+        }
+        for (Tile t : tiles) {
+            t.setX(t.getX() - minX);
+            t.setY(t.getY() - minY);
+            output[t.getX()][t.getY()] = t;
+        }
+        return output;
     }
 
 

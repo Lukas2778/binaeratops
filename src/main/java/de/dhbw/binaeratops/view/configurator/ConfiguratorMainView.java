@@ -94,7 +94,6 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
             selected.setVisible(true);
         });
 
-        System.out.println(dungeonId);
 
     }
 

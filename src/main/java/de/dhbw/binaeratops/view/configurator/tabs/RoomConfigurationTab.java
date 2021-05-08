@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.view.configurator.tabs;
 
-import com.vaadin.flow.component.ItemLabelGenerator;
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -17,8 +16,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.api.RoomI;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -84,7 +81,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
-        ArrayList<Tile> initTiles = mapService.init(configuratorServiceI);
+        ArrayList<Tile> initTiles = mapService.initConfigure(configuratorServiceI);
         mapArea.setJustifyContentMode(JustifyContentMode.CENTER);
         mapArea.setAlignItems(Alignment.CENTER);
         VerticalLayout lines = new VerticalLayout();
