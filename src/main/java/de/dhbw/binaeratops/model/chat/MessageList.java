@@ -8,6 +8,7 @@ package de.dhbw.binaeratops.model.chat;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
+import java.util.List;
 
 public class MessageList
         extends Div
