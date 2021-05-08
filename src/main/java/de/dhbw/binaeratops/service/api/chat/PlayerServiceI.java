@@ -1,17 +1,26 @@
 package de.dhbw.binaeratops.service.api.chat;
 
 import de.dhbw.binaeratops.model.chat.ChatMessage;
+import de.dhbw.binaeratops.model.entitys.User;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 public interface PlayerServiceI
 {
+    /**
+     * Aktualisert den chat des Spielers, falls er die Nachricht erhalten soll.
+     * @param AMessage Nachricht.
+     * @param AUserList Liste von Spieler, die die Nachricht erhalten sollen.
+     */
+    public void updateMessageList(String AMessage, List<User> AUserList);
 
     /**
-     * MessageList aktualisieren.
-     * @param messages Subscriber der die Nachricht des Publisher liest und weiterschickt
+     * Abschicken der Eingabe des Spielers.
+     * @param AMessage Nachricht.
+     * @param AUser Absender der Eingabe.
      */
-    public void updateMessageList(Flux<ChatMessage> messages);
-
+    public void sendInput(String AMessage, User AUser);
 
 
 }
