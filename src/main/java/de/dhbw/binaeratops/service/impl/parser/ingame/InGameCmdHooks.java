@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.service.impl.parser.ingame;
 
 import de.dhbw.binaeratops.service.api.parser.InGameCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
+import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -9,22 +10,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class InGameCmdHooks implements InGameCmdHooksI {
     @Override
-    public void onCmdJoinChat() throws CmdScannerException {
-
+    public UserMessage onCmdWhisper(String AUserName, String AMessage) throws CmdScannerException {
+        return null;
     }
 
     @Override
-    public void onCmdJoinLobby() throws CmdScannerException {
-
+    public UserMessage onCmdWhisperMaster(String AMessage) throws CmdScannerException {
+        return null;
     }
 
     @Override
-    public void onCmdLogout() throws CmdScannerException {
-
+    public UserMessage onCmdSpeak(String ARoomId, String AMessage) throws CmdScannerException {
+        return null;
     }
 
     @Override
-    public void onCmdWhisper(String AUserName, String AMessage) throws CmdScannerException {
+    public UserMessage onCmdNotifyRoom(String ARoomName, String AMessage) throws CmdScannerException {
+        return null;
+    }
 
+    @Override
+    public UserMessage onCmdNotifyAll(String AMessage) throws CmdScannerException {
+        return null;
+    }
+
+    @Override
+    public UserMessage onCmdWithdrawRole(String AUsername) throws CmdScannerException {
+        return null;
+    }
+
+    @Override
+    public UserMessage onCmdStop() throws CmdScannerException {
+        return null;
+    }
+
+    @Override
+    public UserMessage onCmdExit() throws CmdScannerException {
+        return null;
     }
 }

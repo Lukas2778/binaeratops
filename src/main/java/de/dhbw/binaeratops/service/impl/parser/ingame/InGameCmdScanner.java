@@ -38,7 +38,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     private static final String CMD_NPC_TELEPORT = "TELEPORT";
     private static final String CMD_NPC_DROP = "DROP";
     private static final String CMD_EXIT = "EXIT";
-    private static final String CMD_EXIT_GAME = "GAME";
+    private static final String CMD_EXIT_STOP_GAME = "GAME";
     private static final String CMD_STOP = "STOP";
     private static final String CMD_STOP_GAME = "GAME";
 
@@ -71,7 +71,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
                     return scanSpeak();
                 case CMD_NOTIFY:
                     return scanNotify();
-                default :
+                case CMD_WITHDRAW:
+                    return scanWithdraw();
+                case CMD_EXIT:
+                    return scanGame(false);
+                case CMD_STOP:
+                    return scanGame(true);
+                default:
                     onUnexpectedToken();
                     return null;
             }
@@ -127,7 +133,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         if (message == null) {
             onMissingToken("<Nachricht>");
         } else {
-            // TODO hooks.onCmdWhisperMaster()
+            // TODO hooks.onCmdWhisperMaster(message);
         }
         return null;
     }
@@ -192,6 +198,52 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         return null;
     }
 
+    private UserMessage scanWithdraw() throws CmdScannerException {
+        String token = findNextToken();
+        if (token == null) {
+            onMissingToken("<ROLE>");
+            return null;
+        } else {
+            switch (token.toUpperCase()) {
+                case CMD_WITHDRAW_ROLE:
+                    return scanWithdrawRole();
+                default:
+                    onUnexpectedToken();
+                    return null;
+            }
+        }
+    }
+
+    private UserMessage scanWithdrawRole() throws CmdScannerException {
+        String username = findRestOfInput();
+        if (username == null) {
+            onMissingToken("<Benutzername>");
+        } else {
+            // TODO return hooks.onCmdWithdrawRole(username);
+        }
+        return null;
+    }
+
+    private UserMessage scanGame(Boolean AStop) throws CmdScannerException {
+        String game = findRestOfInput();
+        if (game == null) {
+            onMissingToken("<GAME>");
+        } else {
+            switch (game.toUpperCase()) {
+                case CMD_EXIT_STOP_GAME:
+                    if (AStop) {
+                        // TODO return hooks.onCmdStop();
+                    } else {
+                        // TODO return hooks.onCmdExit();
+                    }
+                default:
+                    onUnexpectedToken();
+                    return null;
+            }
+        }
+        return null;
+    }
+
     /**
      * Scanner Zustand "Join" Level 1.
      */
@@ -215,17 +267,17 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     }
 
     private void _scanJoinChat1() throws CmdScannerException {
-        hooks.onCmdJoinChat();
+//        hooks.onCmdJoinChat();
     }
     private void _scanJoinLobby1() throws CmdScannerException {
-        hooks.onCmdJoinLobby();
+//        hooks.onCmdJoinLobby();
     }
 
     /**
      * Scanner Zustand "Leave" Level 1.
      */
     private void _scanLogout1() throws CmdScannerException {
-        hooks.onCmdLogout();
+//        hooks.onCmdLogout();
     }
 
     /**
