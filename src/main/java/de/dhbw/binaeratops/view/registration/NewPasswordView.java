@@ -11,15 +11,20 @@ import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import de.dhbw.binaeratops.service.exceptions.FalseUserException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ResourceBundle;
 
 /**
  * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
  */
 @Route("setNewPassword")
 public class NewPasswordView extends VerticalLayout {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     @Autowired
     private AuthServiceI authServiceI;
@@ -28,11 +33,15 @@ public class NewPasswordView extends VerticalLayout {
      * Dies ist der Konstruktor, zum Erzeugen der Neues-Passwort-wird-gesetzt Seite.
      */
     public NewPasswordView() {
-        TextField name=new TextField("Benutername");
-        PasswordField newPassword=new PasswordField("Neues Passwort");
-        PasswordField newPassword2=new PasswordField("Neues Passwort bestätigen");
-        IntegerField code=new IntegerField("Code eingeben");
-        Button submit=new Button("Passwort ändern");
+        // Titel der Seite
+        UI current = UI.getCurrent();
+        current.getPage().setTitle(res.getString("view.new.password.pagetitle"));
+
+        TextField name=new TextField(res.getString("view.new.password.field.username"));
+        PasswordField newPassword=new PasswordField(res.getString("view.new.password.field.new.password"));
+        PasswordField newPassword2=new PasswordField(res.getString("view.new.password.field.new.password.repeat"));
+        IntegerField code=new IntegerField(res.getString("view.new.password.field.code"));
+        Button submit=new Button(res.getString("view.new.password.button.submit"));
 
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -46,14 +55,14 @@ public class NewPasswordView extends VerticalLayout {
                     UI.getCurrent().navigate("logout");
                 }
                 else
-                    Notification.show("Die Passwörter stimmen nicht überein!");
+                    Notification.show(res.getString("view.new.password.notification.password.not.equal"));
             } catch (FalseUserException falseUserException) {
-                Notification.show("Dieser Benutzername wurde nicht gefunden!");
+                Notification.show(res.getString("view.new.password.notification.username.not.found"));
             }
         });
         add(
-                new H1("Passwort ändern"),
-                new H4("Gib hier deinen Benutzernamen, ein neues Passwort und den Code ein, den du von uns per E-Mail erhalten hast."),
+                new H1(res.getString("view.new.password.header")),
+                new H4(res.getString("view.new.password.subheader")),
                 name,
                 newPassword,
                 newPassword2,

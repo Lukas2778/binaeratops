@@ -9,19 +9,21 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ResourceBundle;
 
 /**
  * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
  */
 @Route("validateRegistration")
-@PageTitle("Binäratops Code-Validierung")
 public class ValdidateRegistrationView extends VerticalLayout {
 
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
 
     /**
@@ -29,9 +31,13 @@ public class ValdidateRegistrationView extends VerticalLayout {
      * @param AAuthServiceI AuthServiceI.
      */
     public ValdidateRegistrationView(@Autowired AuthServiceI AAuthServiceI) {
-        TextField name=new TextField("Benutzername");
-        IntegerField code=new IntegerField("Code");
-        Button submit=new Button("Account validieren");
+        // Titel der Seite
+        UI current = UI.getCurrent();
+        current.getPage().setTitle(res.getString("view.validate.registration.pagetitle"));
+
+        TextField name=new TextField(res.getString("view.validate.registration.field.username"));
+        IntegerField code=new IntegerField(res.getString("view.validate.registration.field.code"));
+        Button submit=new Button(res.getString("view.validate.registration.button.submit"));
 
         setJustifyContentMode(JustifyContentMode.CENTER);
         setAlignItems(Alignment.CENTER);
@@ -42,18 +48,18 @@ public class ValdidateRegistrationView extends VerticalLayout {
                 UI.getCurrent().getPage().setLocation("login");
             }
             else{
-                Notification.show("Bitte überprüfe den eingegebenen Code!");
+                Notification.show(res.getString("view.validate.registration.notification.check.code"));
             }
         });
 
         add(
-                new H1("E-Mail Adresse bestätigen"),
-                new H4("Wir haben dir soeben eine E-Mail mit deinem persönlichen Zugangscode an die von dir eingegebene E-Mail Adresse gesendet."),
-                new H4("Bitte gib diesen Code zur Verifikation deiner Identität hier ein."),
+                new H1(res.getString("view.validate.registration.header")),
+                new H4(res.getString("view.validate.registration.subheader1")),
+                new H4(res.getString("view.validate.registration.subheader2")),
                 name,
                 code,
                 submit,
-                new RouterLink("Anmelden",LogInView.class)
+                new RouterLink(res.getString("view.validate.registration.link.login"),LogInView.class)
         );
         name.focus();
     }
