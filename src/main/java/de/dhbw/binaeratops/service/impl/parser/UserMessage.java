@@ -6,15 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserMessage implements UserMessageI {
-    private final List<Object> params = new ArrayList<>();
+    private final List<String> params = new ArrayList<>();
     private final String key;
 
-    public UserMessage(String AKey, Object... AObject) {
+    public UserMessage(String AKey, String... AObject) {
         key= AKey;
-        params.add(AObject);
+        for (String s : AObject) {
+            params.add(s);
+        }
     }
 
-    public List<Object> getParams() {
+    public List<String> getParams() {
         return params;
     }
 

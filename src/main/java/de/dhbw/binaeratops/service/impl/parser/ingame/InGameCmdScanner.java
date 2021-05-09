@@ -8,6 +8,7 @@ import de.dhbw.binaeratops.service.api.parser.InGameCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.AbstractCmdScanner;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class InGameCmdScanner extends AbstractCmdScanner {
 
-    private final InGameCmdHooksI hooks;
+    @Autowired
+    private InGameCmdHooksI hooks;
 
     // Schlüsselwörter.
     private static final String CMD_HELP = "HELP";
@@ -49,10 +51,8 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     /**
      * Konstruktor.
      *
-     * @param AHooks Callbacks für die gefundenen Befehle.
      */
-    public InGameCmdScanner(InGameCmdHooksI AHooks) {
-        hooks = AHooks;
+    public InGameCmdScanner() {
     }
 
     /**

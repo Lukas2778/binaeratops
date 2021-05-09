@@ -3,15 +3,11 @@ package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
-import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.enums.Direction;
-import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.AbstractCmdScanner;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GameCtrlCmdScanner extends AbstractCmdScanner {
 
-    private final GameCtrlCmdHooksI hooks;
+    @Autowired
+    private GameCtrlCmdHooksI hooks;
 
     // Schlüsselwörter
     private static final String CMD_INFO = "INFO";
@@ -63,10 +60,9 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     /**
      * Konstruktor.
      *
-     * @param AHooks Callbacks für die gefundenen Befehle.
      */
-    public GameCtrlCmdScanner(GameCtrlCmdHooksI AHooks) {
-        hooks = AHooks;
+    public GameCtrlCmdScanner() {
+
     }
 
     /**

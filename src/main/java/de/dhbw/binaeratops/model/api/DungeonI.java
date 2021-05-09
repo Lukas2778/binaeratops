@@ -242,6 +242,12 @@ public interface DungeonI {
      */
     void addBlockedUser(User AUser);
 
+    List<User> getCurrentUsers();
+
+    void addCurrentUser(User AUser);
+
+    void removeCurrentUser(User AUser);
+
     /**
      * Entfernt den übergebenen Benutzer der Blacklist.
      * @param AUser Benutzer, welcher der Blacklist entfernt werden soll.
