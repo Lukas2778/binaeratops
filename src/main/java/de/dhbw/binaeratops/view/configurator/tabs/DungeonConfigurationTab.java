@@ -117,7 +117,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
         TextField commandSymbolField = new TextField("Befehlszeichen");
         commandSymbolField.setMinLength(1);
         commandSymbolField.setMaxLength(1);
-        commandSymbolField.setWidth("50px");
+        commandSymbolField.setWidth("100px");
 
         commandSymbolField.addValueChangeListener(e -> {
             if (!commandSymbolField.isInvalid()) {
@@ -147,7 +147,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
             configuratorServiceI.saveDungeon();
 
         });
-        initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, commandSymbolField, hint, dungeonDescription);
+        initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, commandSymbolDefinition, commandSymbolField, hint, dungeonDescription);
 
     }
 
