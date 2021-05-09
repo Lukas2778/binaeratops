@@ -27,10 +27,15 @@ public class AboutUsView extends VerticalLayout {
      */
     public AboutUsView() {
         binTitle=new H1("Willkommen bei Binäratops");
-
-
+        aboutText= "<div>Du hast dich bei unserem Binäratops Multi-User-Dungeon (MUD) registriert. Das Ziel" +
+                " dieses Projekts ist es, eine Plattform zum Erstellen und Spielen personalisierter" +
+                " MUDs zu schaffen. Du kannst deinen eigenen" +
+                " Dungeon erstellen und mit anderen teilen.<br>Während des Spiels kannst du dich im Chat mit anderen" +
+                " Dungeon-Enthusiasten unterhalten, die dir über den Weg laufen.<br>" +
+                "Wir wünschen dir viel Spaß!</div>";
+        html=new Html(aboutText);
 
         setSizeFull();
-        add(binTitle);
+        add(binTitle,html);
     }
 }
