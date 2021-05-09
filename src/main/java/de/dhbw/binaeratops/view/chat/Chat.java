@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
  */
 public class Chat extends VerticalLayout {
     private final Flux<ChatMessage> messages;
-    MessageList messageList;
+    public MessageList messageList;
 
     /**
      * Konstruktor des Chats.

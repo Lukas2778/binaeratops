@@ -9,12 +9,15 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
+import de.dhbw.binaeratops.service.api.chat.ChatServiceI;
 import de.dhbw.binaeratops.service.api.parser.InGameCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
+import de.dhbw.binaeratops.service.impl.chat.ChatService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.UnicastProcessor;
 
 @Scope(value = "session")
 @Service
@@ -28,6 +31,9 @@ public class InGameCmdHooks implements InGameCmdHooksI {
 
     @Autowired
     DungeonRepositoryI dungeonRepo;
+
+    @Autowired
+    ChatServiceI myChatService;
 
     @Override
     public UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException {
@@ -52,7 +58,8 @@ public class InGameCmdHooks implements InGameCmdHooksI {
 
     @Override
     public UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException {
-        return null;
+        myChatService.sendMessage(AMessage,ADungeon.getAllowedUsers());
+        return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
     }
 
     @Override
