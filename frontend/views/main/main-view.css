@@ -3,7 +3,9 @@
   box-shadow: var(--lumo-box-shadow-s);
 }
 #header vaadin-avatar {
-  margin-left: auto;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-top: 2px;
   margin-right: var(--lumo-space-m);
 }
 vaadin-app-layout[dir='rtl'] #header vaadin-avatar {
@@ -42,4 +44,9 @@ vaadin-tab:hover {
 vaadin-tab[selected] {
   background-color: var(--lumo-primary-color-10pct);
   color: var(--lumo-primary-text-color);
+}
+
+.menuRight {
+  margin-left: auto;
+  margin-right: var(--lumo-space-m);
 }
