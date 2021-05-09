@@ -1,26 +1,18 @@
-package de.dhbw.binaeratops.model.service.impl.player.map;
+package de.dhbw.binaeratops.service.impl.player.map;
 
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
-import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.impl.map.MapService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;

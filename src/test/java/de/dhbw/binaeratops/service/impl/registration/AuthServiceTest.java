@@ -1,11 +1,10 @@
-package de.dhbw.binaeratops.model.service.impl.registration;
+package de.dhbw.binaeratops.service.impl.registration;
 
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.exceptions.AuthException;
-import de.dhbw.binaeratops.service.impl.registration.AuthService;
 import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,18 +39,6 @@ public class AuthServiceTest extends Logger {
     }
 
     //@TODO tests mocken für datenbank
-
-    @Test
-    public void authenticateTest(){
-        try {
-            as.authenticate("Hans","pass");
-        } catch (AuthException e) {
-            e.printStackTrace();
-        } catch (NotVerifiedException e){
-            e.printStackTrace();
-        }
-        assertEquals(VaadinSession.getCurrent().getAttribute(User.class),user);
-    }
 
     @Test
     public void confirmCorrectTest(){
