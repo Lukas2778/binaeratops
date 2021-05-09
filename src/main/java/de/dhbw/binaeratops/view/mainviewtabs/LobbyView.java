@@ -1,29 +1,19 @@
 package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +67,10 @@ public class LobbyView extends VerticalLayout {
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
+            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
+                dungeonServiceI.saveDungeon(ADungeon);
+            }
             UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
         });
 

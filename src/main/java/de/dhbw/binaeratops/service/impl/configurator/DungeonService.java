@@ -5,8 +5,8 @@ import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
+import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
-import org.apache.http.auth.AUTH;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +17,9 @@ import java.util.List;
 public class DungeonService implements DungeonServiceI {
     @Autowired
     DungeonRepositoryI dungeonRepo;
+
+    @Autowired
+    UserRepositoryI userRepo;
 
     @Override
     public List<Dungeon> getAllDungeonsFromUser(User AUser){
@@ -51,5 +54,13 @@ public class DungeonService implements DungeonServiceI {
             }
         }
         return userDungeons;
+    }
+
+    public void saveDungeon(Dungeon ADungeon) {
+        dungeonRepo.save(ADungeon);
+    }
+
+    public void saveUser(User AUser) {
+        userRepo.save(AUser);
     }
 }

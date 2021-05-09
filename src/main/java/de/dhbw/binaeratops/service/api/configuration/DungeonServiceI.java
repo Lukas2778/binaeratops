@@ -19,4 +19,8 @@ public interface DungeonServiceI {
      * @return Liste der Dungeons, die dem übergebenen Benutzer angezeigt werden sollen.
      */
     List<Dungeon> getDungeonsLobby(User AUser);
+
+    public void saveDungeon(Dungeon ADungeon);
+
+    void saveUser(User AUser);
 }
