@@ -13,7 +13,7 @@ public interface PlayerServiceI
      * @param AMessage Nachricht.
      * @param AUserList Liste von Spieler, die die Nachricht erhalten sollen.
      */
-    public void updateMessageList(String AMessage, List<User> AUserList);
+    //public void updateMessageList(String  AMessage, List<Long> AUserList, User AUser);
 
     /**
      * Abschicken der Eingabe des Spielers.

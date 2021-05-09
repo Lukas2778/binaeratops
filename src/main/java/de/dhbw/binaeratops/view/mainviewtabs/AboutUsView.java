@@ -1,6 +1,8 @@
 package de.dhbw.binaeratops.view.mainviewtabs;
 
-import com.awesomecontrols.subwindow.SubWindow;
+//import com.awesomecontrols.subwindow.SubWindow;
+
+import com.sun.xml.bind.v2.TODO;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.button.Button;
@@ -9,18 +11,23 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.chat.MessageList;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.service.api.chat.ChatServiceI;
 import de.dhbw.binaeratops.service.api.chat.PlayerServiceI;
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
+
+import de.dhbw.binaeratops.service.events.ChatEvent;
+import de.dhbw.binaeratops.service.impl.chat.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
@@ -32,9 +39,6 @@ import reactor.core.publisher.UnicastProcessor;
 //@PreserveOnRefresh
 
 @PageTitle("Über Uns")
-
-
-
 public class AboutUsView extends VerticalLayout {
     H1 binTitle;
     String aboutText;
@@ -42,61 +46,53 @@ public class AboutUsView extends VerticalLayout {
 
     MessageList messageList;
     PlayerServiceI playerService;
+    ChatServiceI chatService;
 
     private final Flux<ChatMessage> messages;
-    private final PlayerServiceI APlayerService;
+    //private final PlayerServiceI APlayerService;
     private final UnicastProcessor publisher;
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      */
-    public AboutUsView(@Autowired PlayerServiceI APlayerService, UnicastProcessor<ChatMessage> publisher, Flux<ChatMessage> messages) {
+    public AboutUsView(@Autowired PlayerServiceI APlayerService, @Autowired ChatServiceI AChatService, UnicastProcessor<ChatMessage> publisher, Flux<ChatMessage> messages) {
 
-        this.APlayerService = APlayerService;
+        this.playerService = APlayerService;
         this.publisher = publisher;
         this.messages = messages;
+        this.chatService = AChatService;
 
-        binTitle=new H1("Willkommen bei Binäratops");
+        binTitle = new H1("Willkommen bei Binäratops");
         add(binTitle);
-
         showChat();
-
-
-
         setSizeFull();
-
     }
 
 
-    private void showChat()
-    {
+    private void showChat() {
         createInputLayout();
         messageList = new MessageList();
 
-       SubWindow sw = new SubWindow("sw1");
+       /*SubWindow sw = new SubWindow("sw1");
 
        sw.setHeight("150px");
-      sw.setWidth("300px");
+      sw.setWidth("300px");*/
 
-        add(sw, messageList,  createInputLayout() );
+        add(messageList, createInputLayout());
 
         expand(messageList);
 
-
+        //Subscriber: Beim erhalten einer Nachricht wird geprüft ob der Spieler die Nachricht erhalten darf.
         messages.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
-            if(message.getUserIdList().contains(VaadinSession.getCurrent().getAttribute(User.class).getUserId()) )
-            {
-                messageList.add(new Paragraph(message.getFrom() + ": " + message.getMessage()));
+            if (message.getUserIdList().contains(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                messageList.add(new Paragraph(/*message.getFrom() + */": " + message.getMessage()));
             }
-        })
-
-        ));
+        })));
     }
 
     TextField messageField;
 
-    private Component createInputLayout()
-    {
+    private Component createInputLayout() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setWidth("100%");
         messageField = new TextField();
@@ -111,24 +107,21 @@ public class AboutUsView extends VerticalLayout {
 
 
         sendButton.addClickListener(click -> {
-            List<Long> userIdList = new ArrayList<>();
-            userIdList.add(23L);
-            //Parser erkennt das es ne nachricht ist
-
-            publisher.onNext(new ChatMessage(VaadinSession.getCurrent().getAttribute(User.class).getName(), messageField.getValue(), userIdList ));
-//            playerService.sendInput(messageField.getValue(), VaadinSession.getCurrent().getAttribute(User.class));
-            //Das war Quatsch
-          messageField.clear();
-           messageField.focus();
+            playerService.sendInput(messageField.getValue(), VaadinSession.getCurrent().getAttribute(User.class));
+            List<Long> myList = new ArrayList<>();
+            myList.add(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
+            messageField.clear();
+            messageField.focus();
         });
 
-
         flüsternButton.addClickListener(click -> {
-            messageList.add(new Paragraph(messageField.getValue()) );
+            //TODO: Funktioniert nicht
+            messageList.add(new Paragraph(messageField.getValue()));
             messageField.clear();
             messageField.focus();
 
         });
+
         messageField.focus();
 
         return layout;
@@ -137,17 +130,15 @@ public class AboutUsView extends VerticalLayout {
     /**
      * Wenn der Chat des Spielers eine neue Nachricht erhält wird dieses Event ausgelöst.
      * Der Chat wird mit der Nachricht ergänzt.
+     *
      * @param AEvent Die Nachricht.
      */
 
-//    @EventListener(UpdateChatEvent.class)
-//    public void handleNewMessage(UpdateChatEvent AEvent){
-//
-//        getUI().ifPresent(ui -> ui.access(() -> {
-//            messageList.add(new Paragraph(AEvent.getMessage()));
-//        }));
-//
-//    }
+    @EventListener()
+    public void handleNewMessage(ChatEvent AEvent) {
+        messageList.add(new Paragraph(AEvent.getMessage()));
+
+    }
 
 
 }
