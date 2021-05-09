@@ -73,7 +73,7 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader("Sichtbarkeit");
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
         dungeonGrid.addComponentColumn(dungeon -> {
-            Button button = new Button("starten");
+            Button button = new Button("Starten");
             button.addClickListener(e -> UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString()));
             dungeon.setDungeonStatus(Status.ACTIVE);
             return button;

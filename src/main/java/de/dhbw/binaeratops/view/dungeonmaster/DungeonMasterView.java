@@ -111,6 +111,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
         dungeon = dungeonRepositoryI.findByDungeonId(ALong);
+        dungeonId=ALong;
         createLayoutBasic(ALong);
     }
 
@@ -135,9 +136,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     private void game(){
-
-
-
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
@@ -184,6 +182,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Button authorisationButton = new Button("Spielberechtigungen");
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
+        leaveButton.addClickListener(e->{
+            dungeonServiceI.deactivateDungeon(dungeonId);
+            UI.getCurrent().navigate("myDungeons");
+
+        });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         vl.add(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         hl.add(grid, vl);
