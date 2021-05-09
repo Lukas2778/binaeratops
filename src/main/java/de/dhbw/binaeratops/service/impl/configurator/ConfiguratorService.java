@@ -1,9 +1,9 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
-import com.vaadin.flow.component.notification.Notification;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Scope(value = "session")
@@ -33,6 +33,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     RoomRepositoryI roomRepo;
     @Autowired
     ItemRepositoryI itemRepo;
+    @Autowired
+    ItemInstanceRepositoryI itemInstanceRepo;
+
+    public void init(DungeonRepositoryI ADungeonRepo) {
+        dungeonRepo = ADungeonRepo;
+    }
 
 
     @Override
@@ -54,7 +60,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void saveDungeon(){
+    public void saveDungeon() {
         dungeonRepo.save(dungeon);
     }
 
@@ -65,9 +71,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public Dungeon createDungeon(String AName, User AUser) {
+    public Dungeon createDungeon(String AName, User AUser, Status AStatus) {
         dungeonDesigner = AUser;
         dungeon = new Dungeon(AName, dungeonDesigner.getUserId());
+        dungeon.setDungeonStatus(AStatus);
         AUser.addDungeon(dungeon);
         dungeonRepo.save(dungeon);
         return dungeon;
@@ -79,8 +86,17 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setCommandSymbol(String ACommandSymbol) {
+    public char getCommandSymbol() {
+        if (dungeon.getCommandSymbol() == null) {
+            dungeon.setCommandSymbol('/');
+        }
+        return dungeon.getCommandSymbol();
+    }
 
+    @Override
+    public void setCommandSymbol(char ACommandSymbol) {
+        dungeon.setCommandSymbol(ACommandSymbol);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -97,9 +113,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void createItem(String AName, ItemType AType, String ADescription, Long ASize) {
         Item item = new Item(AName, ASize, ADescription);
         item.setType(AType);
-        itemRepo.save(item);
         dungeon.addItem(item);
-        dungeonRepo.save(dungeon);
+        itemRepo.save(item);
+        //dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -110,7 +126,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteItem(Item AItem) {
         dungeon.removeItem(AItem);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
         itemRepo.delete(AItem);
     }
 
@@ -122,9 +138,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void createNPC(String AName, String ADescription, Race ARace) {
         NPC newNPC = new NPC(AName, ARace, ADescription);
-        npcRepo.save(newNPC);
         dungeon.addNpc(newNPC);
-        dungeonRepo.save(dungeon);
+        npcRepo.save(newNPC);
+        //dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -135,7 +151,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteNPC(NPC ANPC) {
         dungeon.removeNpc(ANPC);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
         npcRepo.delete(ANPC);
     }
 
@@ -147,16 +163,16 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void createRole(String AName, String ADescription) {
         Role newRole = new Role(AName, ADescription);
-        roleRepo.save(newRole);
         dungeon.addRole(newRole);
-        dungeonRepo.save(dungeon);
+        roleRepo.save(newRole);
+        //dungeonRepo.save(dungeon);
     }
 
     @Override
     public void removeRole(Role ARole) {
         dungeon.removeRole(ARole);
         roleRepo.delete(ARole);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -167,16 +183,16 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void createRace(String AName, String ADescription) {
         Race newRace = new Race(AName, ADescription);
-        raceRepo.save(newRace);
         dungeon.addRace(newRace);
-        dungeonRepo.save(dungeon);
+        raceRepo.save(newRace);
+        //dungeonRepo.save(dungeon);
     }
 
     @Override
     public void removeRace(Race ARace) {
         dungeon.removeRace(ARace);
         raceRepo.delete(ARace);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
 
     }
 
@@ -197,7 +213,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         roomRepo.save(new Room());
         dungeon.getRooms()
                 .add(newRoom);
-        dungeonRepo.save(dungeon);
+        //dungeonRepo.save(dungeon);
     }
 
 
@@ -212,31 +228,80 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setItems(Room ARoom, List<Item> AItemList) {
+    public int getNumberOfItem (Room ARoom, Item AItem) {
+        int counter = 0;
+        for (ItemInstance itemInstance: getAllItems(ARoom)) {
+            if (itemInstance.getItem().getItemId().equals(AItem.getItemId())) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    @Override
+    public void setItemInstances(Room ARoom, List<ItemInstance> AItemList) {
         ARoom.getItems()
                 .clear();
+        for (ItemInstance myItem: itemInstanceRepo.findByRoom(ARoom)) {
+            itemInstanceRepo.delete(myItem);
+        }
+        for (ItemInstance myItem: AItemList) {
+            myItem.setRoom(ARoom);
+            itemInstanceRepo.save(myItem);
+        }
         ARoom.getItems()
                 .addAll(AItemList);
-        roomRepo.save(ARoom);
+        try {
+            roomRepo.save(ARoom);
+        } catch (Exception e) {
+
+            for (ItemInstance myItem: AItemList) {
+                myItem.setRoom(ARoom);
+                itemInstanceRepo.save(myItem);
+            }
+            System.out.println("FALSCH");
+            //Notification.show("Hier findet er den Entity nicht!");
+        }
     }
 
     @Override
     public void setNPCs(Room ARoom, List<NPC> ANPCList) {
+        for (NPC myNpc : ANPCList) {
+            myNpc.setRoom(ARoom);
+            npcRepo.save(myNpc);
+        }
         ARoom.getNpcs()
                 .clear();
         ARoom.getNpcs()
                 .addAll(ANPCList);
-        roomRepo.save(ARoom);
     }
 
     @Override
     public List<Item> getAllItems() {
+
         return dungeon.getItems();
+    }
+    @Override
+    public List<ItemInstance> getAllItems(Room ARoom){
+        return itemInstanceRepo.findByRoom(ARoom);
     }
 
     @Override
     public List<NPC> getAllNPCs() {
         return dungeon.getNpcs();
+    }
+
+    @Override
+    public List<NPC> getAllNPCs(Room ARoom){
+        List<NPC> npcs = new ArrayList<>();
+        for (NPC myNpc: dungeon.getNpcs()) {
+            if(myNpc.getRoom() != null){
+                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()){
+                    npcs.add(myNpc);
+                }
+            }
+        }
+        return npcs;
     }
 
     @Override
@@ -255,21 +320,20 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void addRoom(Room ARoom) {
         //wenn der Raum existiert, wird er überschrieben, wenn nicht, wird ein neuer Raum in die Datenbank gespeichert
-        roomRepo.save(ARoom);
         //Raum dem aktuellen Dungeon hinzufügen
         dungeon.addRoom(ARoom);
+        roomRepo.save(ARoom);
         //geupdateten Dungeon in die Datenbank speichern
-        try {
-            dungeonRepo.save(dungeon);
-        } catch (Exception e) {
-            roomRepo.save(ARoom);
-            //Notification.show("Hier findet er den Entity nicht!");
-        }
     }
 
     @Override
     public void saveRoom(Room ARoom) {
         roomRepo.save(ARoom);
         //TODO test: dungeonRepo.save(dungeon);
+    }
+
+    @Override
+    public void addItemInstance(ItemInstance AInstance) {
+        itemInstanceRepo.save(AInstance);
     }
 }

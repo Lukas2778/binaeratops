@@ -16,8 +16,6 @@ public class NotificationView extends HorizontalLayout {
      * Konstruktor zum Erzeugen der View für den Tab 'Mitteilungen'.
      */
     public NotificationView() {
-        super ();
-
         com.vaadin.flow.component.html.H1 l = new H1("Coming Soon ...");
         this.add ( l );
 

@@ -135,19 +135,19 @@ public interface AvatarI {
      *
      * @return Liste von Gegenständen (Inventar).
      */
-    List<Item> getInventory();
+    List<ItemInstance> getInventory();
 
     /**
      * Fügt dem Inventar des Avatars einen Gegenstand hinzu.
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
-    void addInventoryItem(Item AItem);
+    void addInventoryItem(ItemInstance AItem);
 
     /**
      * Entfernt dem Inventar des Avatars einen Gegenstand.
      * @param AItem Gegenstand, der entfernt werden soll.
      */
-    void removeInventoryItem(Item AItem);
+    void removeInventoryItem(ItemInstance AItem);
 
     /**
      * Gibt das ausgerüstete Equipment eines Avatars als Liste von Gegenständen zurück.
@@ -155,17 +155,17 @@ public interface AvatarI {
      * WICHTIG: Diese Liste darf jeden Gegenstandstyp nur 1x beinhalten.
      * @return Liste von Gegenständen (Equipment)
      */
-    List<Item> getEquipment();
+    List<ItemInstance> getEquipment();
 
     /**
      * Fügt der Ausrüstung des Avatars einen Gegenstand hinzu.
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
-    void addEquipmentItem(Item AItem);
+    void addEquipmentItem(ItemInstance AItem);
 
     /**
      * Entfernt der Ausrüstung des Avatars einen Gegenstand.
      * @param AItem Gegenstand, der entfernt werden soll.
      */
-    void removeEquipmentItem(Item AItem);
+    void removeEquipmentItem(ItemInstance AItem);
 }

@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.listbox.ListBox;
@@ -14,7 +15,9 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -23,17 +26,18 @@ import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
 import de.dhbw.binaeratops.model.map.Tile;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 @CssImport("./views/mainviewtabs/configurator/map.css")
 public class RoomConfigurationTab extends VerticalLayout {
+
+    private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     NpcSelectionDialog npcSelectionDialog;
     ItemSelectionDialog itemSelectionDialog;
 
-    ListBox<Item> itemList = new ListBox<>();
+    ListBox<ItemInstance> itemList = new ListBox<>();
     ListBox<NPC> npcList = new ListBox<>();
 
     VerticalLayout mapArea = new VerticalLayout();
@@ -49,8 +53,6 @@ public class RoomConfigurationTab extends VerticalLayout {
     public RoomConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI, MapServiceI AMapServiceI) {
         mapService = AMapServiceI;
         configuratorServiceI = AConfiguratorServiceI;
-        itemSelectionDialog = new ItemSelectionDialog(AConfiguratorServiceI);
-        npcSelectionDialog = new NpcSelectionDialog(AConfiguratorServiceI);
 
         //TODO sartraum suchen und setzen
         try {
@@ -59,19 +61,18 @@ public class RoomConfigurationTab extends VerticalLayout {
         } catch (IndexOutOfBoundsException ignored) {
         }
 
-        //initRoom();
         initMap();
 
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addToPrimary(mapArea);
         splitLayout.addToSecondary(roomArea);
-        splitLayout.setWidth("100%");
-        //splitLayout.setPrimaryStyle("minWidth", "870px");
+        splitLayout.setSizeFull();
         splitLayout.setPrimaryStyle("minWidth", "150px");
         splitLayout.setPrimaryStyle("width", "1950px");
         splitLayout.setSecondaryStyle("minWidth", "350px");
 
         add(splitLayout);
+        setSizeFull();
     }
 
     private void initMap() {
@@ -79,8 +80,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
-        ArrayList<Tile> initTiles = mapService.init(configuratorServiceI);
-        //map.setSizeFull();
+        ArrayList<Tile> initTiles = mapService.initConfigure(configuratorServiceI);
         mapArea.setJustifyContentMode(JustifyContentMode.CENTER);
         mapArea.setAlignItems(Alignment.CENTER);
         VerticalLayout lines = new VerticalLayout();
@@ -130,8 +130,8 @@ public class RoomConfigurationTab extends VerticalLayout {
                     }
                     //wenn der Raum existiert, kann er bearbeitet werden
                     else {
-                        if(mapService.getRoomByCoordinate(finalI,finalJ) != null)
-                            currentRoom=mapService.getRoomByCoordinate(finalI,finalJ);
+                        if (mapService.getRoomByCoordinate(finalI, finalJ) != null)
+                            currentRoom = mapService.getRoomByCoordinate(finalI, finalJ);
                         //Notification.show(currentRoom.getRoomId().toString());
                     }
                     initRoom();
@@ -145,7 +145,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show("Fehler!");
+                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
                     }
 
                 });
@@ -156,7 +156,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show("Fehler!");
+                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
                     }
                 });
 
@@ -193,26 +193,54 @@ public class RoomConfigurationTab extends VerticalLayout {
                     t.getStyle().set("opacity", "1");
                 }
             }
-        }catch (Exception e){}
-
-        //button-container:hover vom CSS-File wieder einschalten
-
+        }catch (Exception ignored){}
 
         //aktuellen Raum anwählen
         try {
             tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
-        }catch (Exception e){}
+        }catch (Exception ignored){}
 
-        String chosenRoom=currentRoom.getRoomName();
-        HorizontalLayout roomThings=new HorizontalLayout();
-        VerticalLayout itemLayout=new VerticalLayout();
-        VerticalLayout npcLayout=new VerticalLayout();
+        String chosenRoom = currentRoom.getRoomName();
 
-        H2 configureRoomsTitle = new H2("Räume bearbeiten");
+        VerticalLayout specificRoom=new VerticalLayout();
+        HorizontalLayout roomThings = new HorizontalLayout();
+        VerticalLayout itemLayout = new VerticalLayout();
+        VerticalLayout npcLayout = new VerticalLayout();
 
-        TextField startRoom=new TextField("Startraum");
-        H3 actualRoomHeadline=new H3("Aktueller Raum:");
-        Button deleteRoomButt=new Button("Raum löschen",e->{
+        H2 configureRoomsTitle = new H2(res.getString("view.configurator.room.configureRoomsTitle"));
+
+        List<Room> roomList=configuratorServiceI.getDungeon().getRooms();
+        ComboBox<Room> startRoomBox = new ComboBox(res.getString("view.configurator.room.startroom"));
+        startRoomBox.setItemLabelGenerator(e->{
+            if (e.getRoomName()!=null){
+                return e.getRoomName();
+            }
+            else {
+                return String.valueOf(e.getRoomId());
+            }
+        });
+        startRoomBox.setItems(roomList);
+        H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
+        TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
+
+        roomName.setValue(Objects.requireNonNullElse(chosenRoom,
+                res.getString("view.configurator.room.defaultroomname")));
+        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
+        roomName.addValueChangeListener(e -> {
+            currentRoom.setRoomName(roomName.getValue());
+            configuratorServiceI.saveRoom(currentRoom);
+        });
+
+        TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
+        roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),
+                res.getString("view.configurator.room.defaultroomdescription")));
+        roomDescription.setMinWidth(400, Unit.PIXELS);
+        roomDescription.setValueChangeMode(ValueChangeMode.ON_BLUR);
+        roomDescription.addValueChangeListener(e -> {
+            currentRoom.setDescription(roomDescription.getValue());
+            configuratorServiceI.saveRoom(currentRoom);
+        });
+        Button deleteRoomButt = new Button(res.getString("view.configurator.room.delete"),e->{
             if(currentRoom != null) {
                 if (mapService.canDeleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
                     for (Tile t : mapService.deleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
@@ -222,62 +250,56 @@ public class RoomConfigurationTab extends VerticalLayout {
                     tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "1");
                     //TODO zum startraum navigieren
                 } else {
-                    Notification.show("Du kannst einen Raum nicht löschen," +
-                            " wenn der Dungeon dadurch geteilt wird!");
+                    Notification.show(res.getString("view.configurator.room.notification.deleteroomerror"));
                 }
             }
         });
         deleteRoomButt.getStyle().set("color", "red");
-        TextField roomName =new TextField("Name des Raums");
 
-        roomName.setValue(Objects.requireNonNullElse(chosenRoom, "Beispiel Name"));
-        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
-        roomName.addValueChangeListener(e -> {
-            currentRoom.setRoomName(roomName.getValue());
-            configuratorServiceI.saveRoom(currentRoom);
-        });
-
-        TextArea roomDescription = new TextArea("Beschreibung");
-        roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),"Beispiel Beschreibung"));
-        roomDescription.setMinWidth(400, Unit.PIXELS);
-        roomDescription.setValueChangeMode(ValueChangeMode.ON_BLUR);
-        roomDescription.addValueChangeListener(e -> {
-            currentRoom.setDescription(roomDescription.getValue());
-            configuratorServiceI.saveRoom(currentRoom);
-        });
-
-        H4 itemsNPCsHeadline=new H4("Was soll in diesem Raum vorhanden sein?");
+        H4 itemsNPCsHeadline = new H4(res.getString("view.configurator.room.itemnpcheadline"));
         itemsNPCsHeadline.getStyle().set("color", "grey");
 
-        H4 itemsHeadline = new H4("Gegenstände");
-        Button editItemButton = new Button("Hinzufügen");
-        H4 npcHeadline = new H4("NPCs");
-        Button editNPCButton = new Button("Hinzufügen");
+        H4 itemsHeadline = new H4(res.getString("view.configurator.room.itemheadline"));
+        Button editItemButton = new Button(res.getString("view.configurator.room.edititemnpc"));
+        H4 npcHeadline = new H4(res.getString("view.configurator.room.npcheadline"));
+        Button editNPCButton = new Button(res.getString("view.configurator.room.edititemnpc"));
 
-        itemLayout.add(itemsHeadline, itemList, editItemButton);
-        npcLayout.add(npcHeadline, npcList, editNPCButton);
+        itemLayout.add(itemsHeadline, editItemButton, itemList);
+        npcLayout.add(npcHeadline, editNPCButton, npcList);
 
         roomThings.add(itemLayout, npcLayout);
 
-        roomArea.add(configureRoomsTitle, startRoom, actualRoomHeadline, roomName, roomDescription, deleteRoomButt, itemsNPCsHeadline, roomThings);
+        //TODO muss als einziges aus- und eingeblendet werden
+        specificRoom.add(roomName, roomDescription, deleteRoomButt, itemsNPCsHeadline, roomThings);
+
+        roomArea.add(configureRoomsTitle, startRoomBox, actualRoomHeadline, specificRoom);
+
+        itemList.clear();
+        if (currentRoom != null) {
+            List<ItemInstance> roomItems = configuratorServiceI.getAllItems(currentRoom);
+            itemList.setItems(roomItems);
+        }
 
         itemList.setEnabled(false);
         itemList.setRenderer(new ComponentRenderer<>(item -> {
-            Label label = new Label(item.getItemName());
+            Label label = new Label(item.getItem().getItemName());
             label.getStyle().set("propertyName", "value");
             label.addClassName("itemLabel");
             return label;
         }));
+
         editItemButton.addClickListener(t -> {
+            itemSelectionDialog = new ItemSelectionDialog(configuratorServiceI, currentRoom, itemList);
             itemSelectionDialog.dialogResult = false;
             itemSelectionDialog.open();
         });
-        itemSelectionDialog.addOpenedChangeListener(e -> {
-            if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
-                itemList.clear();
-                itemList.setItems(itemSelectionDialog.getItemSelection());
-            }
-        });
+
+
+        npcList.clear();
+        if (currentRoom != null) {
+            List<NPC> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
+            npcList.setItems(roomItems);
+        }
 
         npcList.setEnabled(false);
         npcList.setRenderer(new ComponentRenderer<>(item -> {
@@ -286,11 +308,23 @@ public class RoomConfigurationTab extends VerticalLayout {
             label.addClassName("itemLabel");
             return label;
         }));
-        editNPCButton.addClickListener(t -> npcSelectionDialog.open());
+
+        editNPCButton.addClickListener(t -> {
+            npcSelectionDialog = new NpcSelectionDialog(configuratorServiceI, currentRoom);
+            initNPCButtonListener();
+            npcSelectionDialog.dialogResult = false;
+            npcSelectionDialog.open();
+        });
+
+    }
+
+    private void initNPCButtonListener(){
         npcSelectionDialog.addOpenedChangeListener(e -> {
-            if (npcSelectionDialog.dialogResult) {
-                npcList.clear();
-                npcList.setItems(npcSelectionDialog.getNPCSelection());
+            if (npcSelectionDialog.dialogResult && !npcSelectionDialog.isOpened()) {
+                itemList.clear();
+                List<NPC> selectedNPCList = npcSelectionDialog.getNPCSelection();
+                npcList.setItems(selectedNPCList);
+                configuratorServiceI.setNPCs(currentRoom, selectedNPCList);
             }
         });
     }

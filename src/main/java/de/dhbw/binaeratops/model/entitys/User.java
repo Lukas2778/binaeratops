@@ -51,6 +51,9 @@ public class User implements UserI {
     @ManyToOne
     private Dungeon blockedDungeons;
 
+    @ManyToOne
+    private Dungeon currentDungeon;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> myAvatars = new ArrayList<>();
 
@@ -147,6 +150,14 @@ public class User implements UserI {
 
     public void setBlockedDungeon(Dungeon ABlockedDungeons) {
         this.blockedDungeons = ABlockedDungeons;
+    }
+
+    public Dungeon getCurrentDungeon() {
+        return currentDungeon;
+    }
+
+    public void setCurrentDungeon(Dungeon ACurrentDungeon) {
+        this.currentDungeon = ACurrentDungeon;
     }
 
     public List<Avatar> getAvatars() {

@@ -1,10 +1,12 @@
 package de.dhbw.binaeratops.service.impl.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.map.Tuple;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,14 @@ public class MapService implements MapServiceI {
     //Räume, die von einem Algorithmus schon durchsucht wurden, werden hier gespeichert
     HashMap<Tuple<Integer>, Room> searchedRooms;
 
+    @Autowired
+    DungeonRepositoryI dungeonRepositoryI;
 
     @Override
-    public ArrayList<Tile> init(ConfiguratorServiceI AConfiguratorServiceI) {
+    public ArrayList<Tile> initConfigure(ConfiguratorServiceI AConfiguratorServiceI) {
         configuratorServiceI = AConfiguratorServiceI;
         ArrayList<Tile> tiles = new ArrayList<>();
         rooms = new HashMap<>();
-        searchedRooms = new HashMap<>();
 
         for (Room r :
                 configuratorServiceI.getDungeon().getRooms()) {
@@ -35,6 +38,46 @@ public class MapService implements MapServiceI {
             tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
         }
         return tiles;
+    }
+
+    @Override
+    public Tile[][] getMapGame(long ADungeonID) {
+        ArrayList<Tile> tiles = new ArrayList<>();
+        int minX = 8;
+        int minY = 8;
+        int maxX = 0;
+        int maxY = 0;
+        for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
+            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
+            if (r.getXCoordinate() < minX)
+                minX = r.getXCoordinate();
+            if (r.getYCoordinate() < minY)
+                minY = r.getYCoordinate();
+            if (r.getXCoordinate() > maxX)
+                maxX = r.getXCoordinate();
+            if (r.getYCoordinate() > maxY)
+                maxY = r.getYCoordinate();
+        }
+        if (tiles.size() == 0){
+            Tile[][] a= new Tile[1][1];
+            a[0][0]=new Tile(0,0,"KarteBack");
+            return a;
+        }
+
+        int sizeX = maxX - minX + 1;
+        int sizeY = maxY - minY + 1;
+        Tile[][] output = new Tile[sizeX][sizeY];
+        for (int i = 0; i < sizeX; i++) {
+            for (int j = 0; j < sizeY; j++) {
+                output[i][j] = new Tile(i, j, "KarteBack");
+            }
+        }
+        for (Tile t : tiles) {
+            t.setX(t.getX() - minX);
+            t.setY(t.getY() - minY);
+            output[t.getX()][t.getY()] = t;
+        }
+        return output;
     }
 
 
@@ -124,50 +167,18 @@ public class MapService implements MapServiceI {
 
     @Override
     public boolean canDeleteRoom(int ALocationX, int ALocationY) {
-        //wenn es nur zwei Räume gibt, kann dieser entfernt werden
-        if (rooms.size() <= 2) {
+        if (rooms.size() == 1)
             return true;
-        } else {
-            Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            searchedRooms.put(new Tuple<>(ALocationX, ALocationY), room);
-            canReachAllRooms(Objects.requireNonNull(findANeighbor(room)));
-            if (searchedRooms.size() == rooms.size()) {
-                searchedRooms.clear();
-                return true;
-            } else {
-                searchedRooms.clear();
+        Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
+        LinkedList<Room> allNeighbours = getAllNeighbours(room);
+        Room startRoom = allNeighbours.pop();
+        for (Room r : allNeighbours) {
+            ArrayList<Room> searchedRooms = new ArrayList<>();
+            searchedRooms.add(room);
+            if (!canReachRoom(startRoom, r, searchedRooms))
                 return false;
-            }
         }
-    }
-
-    /**
-     * Sucht rekursiv nach verbundenen Räumen und speichert die Ergebnisse in der Variable 'searchedRooms'.
-     *
-     * @param ACurrentRoom Übergabe des aktuellen Raums, von dem aus gesucht werden soll.
-     */
-    private void canReachAllRooms(Room ACurrentRoom) {
-        Room north = getRoomById(ACurrentRoom.getNorthRoomId());
-        Room east = getRoomById(ACurrentRoom.getEastRoomId());
-        Room west = getRoomById(ACurrentRoom.getWestRoomId());
-        Room south = getRoomById(ACurrentRoom.getSouthRoomId());
-
-        if (north != null && !searchedRooms.containsKey(new Tuple<>(north.getXCoordinate(), north.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(north.getXCoordinate(), north.getYCoordinate()), north);
-            canReachAllRooms(north);
-        }
-        if (east != null && !searchedRooms.containsKey(new Tuple<>(east.getXCoordinate(), east.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(east.getXCoordinate(), east.getYCoordinate()), east);
-            canReachAllRooms(east);
-        }
-        if (west != null && !searchedRooms.containsKey(new Tuple<>(west.getXCoordinate(), west.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(west.getXCoordinate(), west.getYCoordinate()), west);
-            canReachAllRooms(west);
-        }
-        if (south != null && !searchedRooms.containsKey(new Tuple<>(south.getXCoordinate(), south.getYCoordinate()))) {
-            searchedRooms.put(new Tuple<>(south.getXCoordinate(), south.getYCoordinate()), south);
-            canReachAllRooms(south);
-        }
+        return true;
     }
 
 
@@ -250,78 +261,59 @@ public class MapService implements MapServiceI {
         return tiles;
     }
 
+    private boolean canReachRoom(Room r1, Room r2, ArrayList<Room> checkedRooms) {
+        //Man sucht mit r1 r2. Entweder r1 ist r2 und es war erfolgreich oder man sucht noch weiter. Mit checked Rooms werden schon besuchte Räume gespeichert.
+        if (r1 == null || checkedRooms.contains(r1))
+            return false;
+        if (r1 == r2)
+            return true;
+        checkedRooms.add(r1);
+        return canReachRoom(getRoomById(r1.getNorthRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getEastRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getSouthRoomId()), r2, checkedRooms)
+                || canReachRoom(getRoomById(r1.getWestRoomId()), r2, checkedRooms);
+    }
+
     @Override
     public boolean canToggleWall(int ALocationX, int ALocationY, boolean AHorizontal) {
-        //hier werden die Mauern verarbeitet, die Räume westlich oder östlich von sich haben
-        if (!AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX, ALocationY + 1))) {
+        //Die Koordinate muss existieren
+        if (rooms.containsKey(new Tuple<>(ALocationX, ALocationY))) {
             Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            if (room.getEastRoomId() == null) {
-                return true;
-            } else {
-                if (rooms.size() <= 3)
-                    return false;
-
-                Room roomEast = rooms.get(new Tuple<>(ALocationX, ALocationY + 1));
-                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgeschnitten wird
+            //Bei der Wand geht es um das Trennen von room und dem östlich liegenden Raum
+            if (!AHorizontal) {
+                Room roomEast = getRoomById(room.getEastRoomId());
+                //Wenn roomEast nicht existiert
+                if (roomEast == null)
+                    return true;
                 room.setEastRoomId(null);
                 roomEast.setWestRoomId(null);
-
-                Room startRoom = findANeighbor(room);
-                if (startRoom == null) {
+                //Kann ich auf irgendeinen anderen Weg von room zu roomEast kommen. Setze aber auf jeden Fall die Wände wieder
+                if (!canReachRoom(room, roomEast, new ArrayList<>())) {
                     room.setEastRoomId(roomEast.getRoomId());
                     roomEast.setWestRoomId(room.getRoomId());
                     return false;
-                }
-                canReachAllRooms(startRoom);
-
-                //wir setzen die Mauern wieder zurück
-                room.setEastRoomId(roomEast.getRoomId());
-                roomEast.setWestRoomId(room.getRoomId());
-
-                if (rooms.size() == searchedRooms.size()) {
-                    searchedRooms.clear();
-                    return true;
                 } else {
-                    searchedRooms.clear();
-                    return false;
+                    room.setEastRoomId(roomEast.getRoomId());
+                    roomEast.setWestRoomId(room.getRoomId());
+                    return true;
                 }
-            }
-        }
-        //hier werden die Mauern verarbeitet, die nördlich und südlich Räume haben
-        else if (AHorizontal && rooms.containsKey(new Tuple<>(ALocationX, ALocationY))
-                && rooms.containsKey(new Tuple<>(ALocationX + 1, ALocationY))) {
-            Room room = rooms.get(new Tuple<>(ALocationX, ALocationY));
-            if (room.getSouthRoomId() == null) {
-                return true;
             } else {
-                if (rooms.size() <= 3)
-                    return false;
-
-                Room roomSouth = rooms.get(new Tuple<>(ALocationX + 1, ALocationY));
-                //wir setzen testweise eine Mauer, um zu prüfen ob der Dungeon abgesnitten wird
+                //In diesem else geht es um das Trennen von room und dem südlich liegenden Raum
+                Room roomSouth = getRoomById(room.getSouthRoomId());
+                //Wenn roomSouth nicht existiert
+                if (roomSouth == null)
+                    return true;
                 room.setSouthRoomId(null);
                 roomSouth.setNorthRoomId(null);
-
-                Room startRoom = findANeighbor(room);
-                if (startRoom == null) {
+                //Kann ich auf irgendeinen anderen Weg von room zu roomSouth kommen. Setze aber auf jeden Fall die Wände wieder
+                if (!canReachRoom(room, roomSouth, new ArrayList<>())) {
                     room.setSouthRoomId(roomSouth.getRoomId());
                     roomSouth.setNorthRoomId(room.getRoomId());
                     return false;
-                }
-
-                canReachAllRooms(startRoom);
-
-                //wir setzen die Mauern wieder zurück
-                room.setSouthRoomId(roomSouth.getRoomId());
-                roomSouth.setNorthRoomId(room.getRoomId());
-
-                if (rooms.size() == searchedRooms.size()) {
-                    searchedRooms.clear();
-                    return true;
                 } else {
-                    searchedRooms.clear();
-                    return false;
+                    room.setSouthRoomId(roomSouth.getRoomId());
+                    roomSouth.setNorthRoomId(room.getRoomId());
+                    return true;
                 }
             }
         } else {
@@ -385,6 +377,19 @@ public class MapService implements MapServiceI {
         if (ARoom.getWestRoomId() != null)
             returnS += "W";
         return returnS;
+    }
+
+    private LinkedList<Room> getAllNeighbours(Room ARoom) {
+        LinkedList<Room> returnR = new LinkedList<>();
+        if (ARoom.getNorthRoomId() != null)
+            returnR.push(getRoomById(ARoom.getNorthRoomId()));
+        if (ARoom.getEastRoomId() != null)
+            returnR.push(getRoomById(ARoom.getEastRoomId()));
+        if (ARoom.getSouthRoomId() != null)
+            returnR.push(getRoomById(ARoom.getSouthRoomId()));
+        if (ARoom.getWestRoomId() != null)
+            returnR.push(getRoomById(ARoom.getWestRoomId()));
+        return returnR;
     }
 
 }

@@ -4,6 +4,7 @@ import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.model.enums.ItemType;
 
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import java.util.List;
 
@@ -13,9 +14,10 @@ public interface ConfiguratorServiceI {
      * Initialisierung des Dungeons.
      * @param AName Dungeonname.
      * @param AUser Benutzer.
+     * @param AStatus Status.
      * @return Dungeon mit Standardwerten.
      */
-    Dungeon createDungeon(String AName, User AUser);
+    Dungeon createDungeon(String AName, User AUser, Status AStatus);
 
     /**
      * Initialisierung des Dungeons.
@@ -57,12 +59,13 @@ public interface ConfiguratorServiceI {
      */
     void setStartRoom(Room ARoom);
 
+    char getCommandSymbol();
+
     /**
      * Startraum des Dungeons setzen.
      * @param ACommandSymbol Ein Text, der das Befehlssymbol ist.
      */
-    void setCommandSymbol(String ACommandSymbol);
-
+    void setCommandSymbol(char ACommandSymbol);
     /**
      * Maximale Anzahl der Spiler des Dungeons setzen.
      * @param ACount Anzahl der maximalen Spieler.
@@ -195,11 +198,18 @@ public interface ConfiguratorServiceI {
     void removeNeighborRoom(String ADirection);
 
     /**
+     * Erhalte die Anzahl von ItemInstances die von AItem im Raum ARoom vorhanden sind.
+     * @param ARoom Raum.
+     * @param AItem Item.
+     * @return
+     */
+    int getNumberOfItem (Room ARoom, Item AItem);
+    /**
      * Die Gegenstandsliste wird gesetzt und die vorherige gelöscht.
      * @param ARoom Raum.
      * @param AItemList Gegenstandsliste.
      */
-    void setItems(Room ARoom, List<Item> AItemList);
+    void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
     /**
      * Die NPCliste wird gesetzt und die vorherige gelöscht.
@@ -208,6 +218,7 @@ public interface ConfiguratorServiceI {
      */
     void setNPCs(Room ARoom, List<NPC> ANPCList);
 
+
     /**
      * Gibt alle Gegenstände eines Dungeons zurück.
      * @return Liste mit Gegenständen.
@@ -215,10 +226,24 @@ public interface ConfiguratorServiceI {
     List<Item> getAllItems();
 
     /**
+     * Gibt alle Gegenstände eines Raumes zurück.
+     * @param ARoom Raum.
+     * @return Liste mit Gegenständen.
+     */
+    public List<ItemInstance> getAllItems(Room ARoom);
+
+    /**
      * Gibt alle Gegenstände eines Dungeons zurück.
      * @return Liste mit Gegenständen.
      */
     List<NPC> getAllNPCs();
+
+    /**
+     * Gibt alle NPCs eines Raumes zurück.
+     * @param ARoom Raum.
+     * @return Liste mit NPCs.
+     */
+    List<NPC> getAllNPCs(Room ARoom);
 
     /**
      * Entfernt den Raum aus dem Dungeon und löscht ihn.
@@ -236,4 +261,6 @@ public interface ConfiguratorServiceI {
     void addRoom(Room ARoom);
 
     void saveRoom(Room ARoom);
+
+    void addItemInstance(ItemInstance AInstance);
 }

@@ -4,6 +4,7 @@ import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -37,6 +38,7 @@ public class Dungeon implements DungeonI {
     @Enumerated(EnumType.STRING)
     private Visibility dungeonVisibility;
 
+    //@Column(columnDefinition = "varchar(255) default 'INACTIVE'")
     @Enumerated(EnumType.STRING)
     private Status dungeonStatus;
 
@@ -65,6 +67,9 @@ public class Dungeon implements DungeonI {
 
     @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<User> currentUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Room> rooms = new ArrayList<>();
@@ -269,6 +274,20 @@ public class Dungeon implements DungeonI {
     public void removeBlockedUser(User AUser) {
         blockedUsers.remove(AUser);
         AUser.setBlockedDungeon(null);
+    }
+
+    public List<User> getCurrentUsers() {
+        return currentUsers;
+    }
+
+    public void addCurrentUser(User AUser) {
+        AUser.setCurrentDungeon(this);
+        currentUsers.add(AUser);
+    }
+
+    public void removeCurrentUser(User AUser) {
+        currentUsers.remove(AUser);
+        AUser.setCurrentDungeon(null);
     }
 
     public List<Room> getRooms() {
