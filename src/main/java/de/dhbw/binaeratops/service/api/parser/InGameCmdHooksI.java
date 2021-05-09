@@ -13,6 +13,13 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
  * @author Nicolas Haug
  */
 public interface InGameCmdHooksI {
+
+    UserMessage onCmdHelp(DungeonI ADungeon);
+
+    UserMessage onCmdHelpCmds(DungeonI ADungeon);
+
+    UserMessage onCmdHelpCtrl(DungeonI ADungeon);
+
     /**
      * Callback Befehl "whisper".
      *

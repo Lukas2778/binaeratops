@@ -9,7 +9,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -23,7 +22,6 @@ import java.util.List;
 /**
  * Oberfläche des Tabs 'Lobby'
  */
-//@Route(value = "lobby")
 @PageTitle("Lobby")
 public class LobbyView extends VerticalLayout {
     H1 titleText;

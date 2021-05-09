@@ -34,6 +34,21 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     ChatServiceI myChatService;
 
     @Override
+    public UserMessage onCmdHelp(DungeonI ADungeon) {
+        return new UserMessage("view.game.cmd.help", String.valueOf(ADungeon.getCommandSymbol()));
+    }
+
+    @Override
+    public UserMessage onCmdHelpCmds(DungeonI ADungeon) {
+        return new UserMessage("view.game.cmd.help.cmds", String.valueOf(ADungeon.getCommandSymbol()));
+    }
+
+    @Override
+    public UserMessage onCmdHelpCtrl(DungeonI ADungeon) {
+        return new UserMessage("view.game.cmd.help.ctrl");
+    }
+
+    @Override
     public UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException {
         // TODO
         return null;

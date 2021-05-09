@@ -81,8 +81,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private ParserService  myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
-    Long dungeonId;
     Dungeon dungeon;
+    Long dungeonId;
     H2 binTitle;
     String aboutText;
     Html html;
@@ -111,6 +111,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
         dungeon = dungeonRepositoryI.findByDungeonId(ALong);
+        dungeonId=ALong;
         createLayoutBasic(ALong);
     }
 
@@ -135,9 +136,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     private void game(){
-
-
-
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
@@ -152,7 +150,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         confirmButt.addClickListener(e->{
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um=myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(
+                UserMessage um=myParserService.parseCommand(textField.getValue(), dungeon.getDungeonId(), myAvatar, VaadinSession.getCurrent().getAttribute(
                         User.class));
                 if(um.getKey()!=null) {
                     System.out.println(um.getParams().get(0));
@@ -163,6 +161,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             } catch ( InvalidImplementationException invalidImplementationException) {
                 invalidImplementationException.printStackTrace();
             }
+            textField.clear();
         });
         insertInputLayout=new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
@@ -184,6 +183,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Button authorisationButton = new Button("Spielberechtigungen");
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
+        leaveButton.addClickListener(e->{
+            dungeonServiceI.deactivateDungeon(dungeonId);
+            UI.getCurrent().navigate("myDungeons");
+
+        });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         vl.add(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         hl.add(grid, vl);
