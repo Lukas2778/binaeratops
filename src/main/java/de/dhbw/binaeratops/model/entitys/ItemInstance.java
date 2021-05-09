@@ -1,7 +1,6 @@
 package de.dhbw.binaeratops.model.entitys;
 
 import de.dhbw.binaeratops.model.api.ItemI;
-import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
@@ -21,99 +20,98 @@ import java.util.ResourceBundle;
  * @author Nicolas Haug
  */
 @Entity
-public class Item{
+public class ItemInstance {
 
     @Id
     @GeneratedValue
-    private Long itemId;
-
-    private String itemName;
-
-    private Long size;
-
-    private String description;
-
-    @Enumerated(EnumType.STRING)
-    private ItemType type;
+    private Long itemInstanceId;
 
     @ManyToOne
-    private Dungeon dungeon;
+    private Item item;
+
+    @ManyToOne
+    private Room room;
+
+    @ManyToOne
+    private Avatar inventoryAvatar;
+
+    @ManyToOne
+    private Avatar equipmentAvatar;
+
+    @ManyToOne
+    private NPC npc;
 
     /**
      * Konstruktor zum Erzeugen eines Gegenstandes mit allen Eigenschaften.
      *
-     * @param AName Name des Gegenstandes.
-     * @param ASize Größe des Gegenstandes.
-     * @param ADescription Beschreibung des Gegenstandes.
+     * @param AItem Die erstellte Instanz ist von AItem.
      */
-    public Item(String AName, Long ASize, String ADescription) {
-        this.itemName = AName;
-        this.size = ASize;
-        this.description = ADescription;
+    public ItemInstance(Item AItem) {
+        this.item = AItem;
     }
 
     /**
      * Standardkonstruktor zum Erzeugen eines Gegenstandes.
      */
-    public Item() {
+    public ItemInstance() {
 
     }
 
-    public Long getItemId() {
-        return itemId;
+    public Long getItemInstanceId() {
+        return itemInstanceId;
     }
 
-    public void setItemId(Long AItemId) {
-        this.itemId = AItemId;
+    public void setItemInstanceId(Long AItemId) {
+        this.itemInstanceId = AItemId;
     }
 
-    public String getItemName() {
-        return itemName;
+    public Item getItem() {
+        return item;
     }
 
-    public void setItemName(String AItemName) {
-        this.itemName = AItemName;
+    public void setItem(Item AItem) {
+        this.item = AItem;
     }
 
-    public Long getSize() {
-        return size;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setSize(Long ASize) {
-        this.size = ASize;
+    public void setRoom(Room ARoom) {
+        this.room = ARoom;
     }
 
-    public String getDescription() {
-        return description;
+    public Avatar getInventoryAvatar() {
+        return inventoryAvatar;
     }
 
-    public void setDescription(String ADescription) {
-        this.description = ADescription;
+    public void setInventoryAvatar(Avatar AInventoryAvatar) {
+        this.inventoryAvatar = AInventoryAvatar;
     }
 
-    public ItemType getType() {
-        return type;
+    public Avatar getEquipmentAvatar() {
+        return equipmentAvatar;
     }
 
-    public void setType(ItemType AType) {
-        this.type = AType;
+    public void setEquipmentAvatar(Avatar AEquipmentAvatar) {
+        this.equipmentAvatar = AEquipmentAvatar;
     }
 
-    public Dungeon getDungeon() {
-        return dungeon;
+    public NPC getNpc() {
+        return npc;
     }
 
-    public void setDungeon(Dungeon ADungeon) {
-        this.dungeon = ADungeon;
+    public void setNpc(NPC ANpc) {
+        this.npc = ANpc;
     }
 
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
 
-        if (!equals && AOther instanceof Item) {
-            Item other = (Item) AOther;
-            equals = (itemId == other.itemId);
+        if (!equals && AOther instanceof ItemInstance) {
+            ItemInstance other = (ItemInstance) AOther;
+            equals = (itemInstanceId == other.itemInstanceId);
             // && (name == other.name || (name != null &&
             //                    name.equalsIgnoreCase(other.name)))
         }
@@ -123,22 +121,22 @@ public class Item{
 
     @Override
     public int hashCode() {
-        return Objects.hash(itemId);
+        return Objects.hash(itemInstanceId);
     }
 
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("Item[ID = ")
-                .append(itemId)
+                .append(itemInstanceId)
                 .append(" | Name = ")
-                .append(itemName)
+                .append(item.getItemName())
                 .append(" | Größe = ")
-                .append(size)
+                .append(item.getSize())
                 .append(" | Typ = ")
-                .append(type)
+                .append(item.getType())
                 .append(" | Beschreibung = ")
-                .append(description)
+                .append(item.getDescription())
                 .append("]\n");
         return s.toString();
     }
@@ -151,13 +149,13 @@ public class Item{
      * @return Objekt.
      * @throws InvalidImplementationException Objekt ungültig.
      */
-    public static Item check(ItemI AItem) throws InvalidImplementationException {
-        if (!(AItem instanceof Item)) {
+    public static ItemInstance check(ItemInstance AItem) throws InvalidImplementationException {
+        if (!(AItem instanceof ItemInstance)) {
             throw new InvalidImplementationException(-1,
                     MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
                             Item.class, AItem.getClass()));
         }
 
-        return (Item) AItem;
+        return (ItemInstance) AItem;
     }
 }

@@ -42,7 +42,7 @@ public class NPC implements NPCI {
     private Room room;
 
     @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Item> luggage = new ArrayList<>();
+    private final List<ItemInstance> luggage = new ArrayList<>();
 
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
@@ -112,16 +112,16 @@ public class NPC implements NPCI {
         this.room = room;
     }
 
-    public List<Item> getLuggage() {
+    public List<ItemInstance> getLuggage() {
         return luggage;
     }
 
-    public void addItem(Item AItem) {
+    public void addItem(ItemInstance AItem) {
         AItem.setNpc(this);
         luggage.add(AItem);
     }
 
-    public void removeItem(Item AItem) {
+    public void removeItem(ItemInstance AItem) {
         luggage.remove(AItem);
         AItem.setNpc(null);
     }

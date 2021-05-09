@@ -20,6 +20,7 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
+import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -40,12 +41,15 @@ public class LobbyView extends VerticalLayout {
 
     DungeonServiceI dungeonServiceI;
 
+    GameService gameService;
+
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService gameService){
         dungeonServiceI=ADungeonService;
+        this.gameService = gameService;
 
         titleText=new H1("Dungeon spielen");
         explanationText=new String("<div>Du kannst hier aus einer Lister der für dich spielbaren Dungeons auswählen.<br>" +
@@ -79,6 +83,7 @@ public class LobbyView extends VerticalLayout {
         Button button = new Button("", clickEvent -> {
             ListDataProvider<Dungeon> dataProvider = (ListDataProvider<Dungeon>) AGrid
                     .getDataProvider();
+            gameService.updateView(ADungeon.getDungeonId());
             //TODO
         });
 

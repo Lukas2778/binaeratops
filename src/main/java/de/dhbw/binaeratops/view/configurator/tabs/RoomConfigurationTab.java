@@ -17,6 +17,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -25,10 +26,7 @@ import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemSelectionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NpcSelectionDialog;
 import de.dhbw.binaeratops.model.map.Tile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
@@ -39,7 +37,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     NpcSelectionDialog npcSelectionDialog;
     ItemSelectionDialog itemSelectionDialog;
 
-    ListBox<Item> itemList = new ListBox<>();
+    ListBox<ItemInstance> itemList = new ListBox<>();
     ListBox<NPC> npcList = new ListBox<>();
 
     VerticalLayout mapArea = new VerticalLayout();
@@ -68,12 +66,13 @@ public class RoomConfigurationTab extends VerticalLayout {
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addToPrimary(mapArea);
         splitLayout.addToSecondary(roomArea);
-        splitLayout.setWidth("100%");
+        splitLayout.setSizeFull();
         splitLayout.setPrimaryStyle("minWidth", "150px");
         splitLayout.setPrimaryStyle("width", "1950px");
         splitLayout.setSecondaryStyle("minWidth", "350px");
 
         add(splitLayout);
+        setSizeFull();
     }
 
     private void initMap() {
@@ -277,21 +276,20 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         itemList.clear();
         if (currentRoom != null) {
-            List<Item> roomItems = configuratorServiceI.getAllItems(currentRoom);
+            List<ItemInstance> roomItems = configuratorServiceI.getAllItems(currentRoom);
             itemList.setItems(roomItems);
         }
 
         itemList.setEnabled(false);
         itemList.setRenderer(new ComponentRenderer<>(item -> {
-            Label label = new Label(item.getItemName());
+            Label label = new Label(item.getItem().getItemName());
             label.getStyle().set("propertyName", "value");
             label.addClassName("itemLabel");
             return label;
         }));
 
         editItemButton.addClickListener(t -> {
-            itemSelectionDialog = new ItemSelectionDialog(configuratorServiceI, currentRoom);
-            initItemButtonListeners();
+            itemSelectionDialog = new ItemSelectionDialog(configuratorServiceI, currentRoom, itemList);
             itemSelectionDialog.dialogResult = false;
             itemSelectionDialog.open();
         });
@@ -318,17 +316,6 @@ public class RoomConfigurationTab extends VerticalLayout {
             npcSelectionDialog.open();
         });
 
-    }
-
-    private void initItemButtonListeners(){
-        itemSelectionDialog.addOpenedChangeListener(e -> {
-            if (itemSelectionDialog.dialogResult && !itemSelectionDialog.isOpened()) {
-                itemList.clear();
-                List<Item> selectedItemList = itemSelectionDialog.getItemSelection();
-                itemList.setItems(selectedItemList);
-                configuratorServiceI.setItems(currentRoom, selectedItemList);
-            }
-        });
     }
 
     private void initNPCButtonListener(){

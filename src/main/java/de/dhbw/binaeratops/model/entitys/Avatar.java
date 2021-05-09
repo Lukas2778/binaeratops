@@ -43,10 +43,10 @@ public class Avatar implements AvatarI {
     private Dungeon dungeon;
 
     @OneToMany(mappedBy = "inventoryAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Item> inventory = new ArrayList<>();
+    private final List<ItemInstance> inventory = new ArrayList<>();
 
     @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Item> equipment = new ArrayList<>();
+    private final List<ItemInstance> equipment = new ArrayList<>();
 
     @OneToOne
     private Race race;
@@ -150,30 +150,30 @@ public class Avatar implements AvatarI {
         this.role = ARole;
     }
 
-    public List<Item> getInventory() {
+    public List<ItemInstance> getInventory() {
         return inventory;
     }
 
-    public void addInventoryItem(Item AItem) {
+    public void addInventoryItem(ItemInstance AItem) {
         AItem.setInventoryAvatar(this);
         inventory.add(AItem);
     }
 
-    public void removeInventoryItem(Item AItem) {
+    public void removeInventoryItem(ItemInstance AItem) {
         inventory.remove(AItem);
         AItem.setRoom(null);
     }
 
-    public List<Item> getEquipment() {
+    public List<ItemInstance> getEquipment() {
         return equipment;
     }
 
-    public void addEquipmentItem(Item AItem) {
+    public void addEquipmentItem(ItemInstance AItem) {
         AItem.setEquipmentAvatar(this);
         equipment.add(AItem);
     }
 
-    public void removeEquipmentItem(Item AItem) {
+    public void removeEquipmentItem(ItemInstance AItem) {
         equipment.remove(AItem);
         AItem.setRoom(null);
     }
