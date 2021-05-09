@@ -31,5 +31,9 @@ public interface DungeonServiceI {
      * @param ADungeonId Id des Dungeon.
      */
     void deactivateDungeon(long ADungeonId);
+
+    void saveDungeon(Dungeon ADungeon);
+
+    void saveUser(User AUser);
 }
 

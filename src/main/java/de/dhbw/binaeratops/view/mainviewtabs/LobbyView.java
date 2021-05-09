@@ -95,4 +95,6 @@ public class LobbyView extends VerticalLayout {
         button.getStyle().set("color", "blue");
         return button;
     }
+
+
 }

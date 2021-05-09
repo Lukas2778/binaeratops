@@ -139,7 +139,6 @@ public class AuthService implements AuthServiceI {
         returnList.add(new AuthorizedRoute("myDungeons","Eigene Dungeons", MyDungeonsView.class));
         returnList.add(new AuthorizedRoute("notification","Mitteilungen", NotificationView.class));
         returnList.add(new AuthorizedRoute("configurator","Konfigurator", ConfiguratorMainView.class));
-        returnList.add(new AuthorizedRoute("game","Spielansicht", GameView.class));
         return returnList;
     }
 
@@ -150,6 +149,7 @@ public class AuthService implements AuthServiceI {
     private List<AuthorizedRoute> getRouts() {
         List<AuthorizedRoute> returnList = new ArrayList<>();
         returnList.add(new AuthorizedRoute("play/dungeonmaster","dungeonmaster", DungeonMasterView.class));
+        returnList.add(new AuthorizedRoute("game","Spielansicht", GameView.class));
         return returnList;
     }
 }

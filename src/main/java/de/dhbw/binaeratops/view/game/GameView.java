@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-@Route(value = "game")
+//@Route(value = "game")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     ParserService myParserService;

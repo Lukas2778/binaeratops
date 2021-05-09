@@ -71,4 +71,14 @@ public class DungeonService implements DungeonServiceI {
         dungeon.setDungeonStatus(Status.INACTIVE);
         dungeonRepo.save(dungeon);
     }
+
+    @Override
+    public void saveDungeon(Dungeon ADungeon) {
+        dungeonRepo.save(ADungeon);
+    }
+
+    @Override
+    public void saveUser(User AUser) {
+        userRepo.save(AUser);
+    }
 }
