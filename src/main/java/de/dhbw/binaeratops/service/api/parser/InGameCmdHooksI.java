@@ -78,6 +78,7 @@ public interface InGameCmdHooksI {
      * @param ARecipent Benutzer, dem die Dungeon-Master Rolle übergeben werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdWithdrawRole(DungeonI ADungeon, UserI AUser, String ARecipent) throws CmdScannerException, InvalidImplementationException;
 
