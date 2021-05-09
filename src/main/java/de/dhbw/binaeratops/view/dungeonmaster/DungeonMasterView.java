@@ -82,6 +82,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     Dungeon dungeon;
+    Long dungeonId;
     H2 binTitle;
     String aboutText;
     Html html;
