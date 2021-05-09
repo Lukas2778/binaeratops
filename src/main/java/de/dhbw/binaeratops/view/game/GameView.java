@@ -59,7 +59,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         this.messages = messages;
         binTitle=new H2("Du bist in der Spieloberfläche!");
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
-                " testen.<br>Schau dir zuerst die 'Help' an, indem du den Befehl '[Befehlszeichen] help' eingibst.</div>";
+                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
 
         myDungeonChat=new Chat(messages);
@@ -74,20 +74,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
             try {
                 UserMessage um=myParserService.parseCommand(textField.getValue(),dungeonId,myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
                 if(um.getKey()!=null) {
-                    switch (um.getKey()) {
-                        case "view.game.ingame.cmd.notify.all":
-                        case "view.game.cmd.help":
-                        case "view.game.cmd.help.cmds":
-                        case "view.game.cmd.help.all":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
-                        case "view.game.cmd.help.ctrl":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
-                            break;
-                        default:
-                            Notification.show("An Error Occured.");
-                            break;
-                    }
+                    myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                 }
             } catch (CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
