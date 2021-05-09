@@ -39,8 +39,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language");
 
-    //res.getString("view.login.pagetitle") -> Später für die Language verwenden statt Strings
-
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
     ArrayList<User> users;
@@ -81,12 +79,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
         else
             titleField.setValue(configuratorServiceI.getDungeon().getDungeonName());
 
-//        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
-//        roomName.addValueChangeListener(e -> {
-//            currentRoom.setRoomName(roomName.getValue());
-//            configuratorServiceI.saveRoom(currentRoom);
-//        });
-
         titleField.addValueChangeListener(e->{
             configuratorServiceI.getDungeon().setDungeonName(titleField.getValue());
             configuratorServiceI.saveDungeon();
@@ -105,7 +97,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
         if(configuratorServiceI.getDungeon().getPlayerMaxSize() == null)
             playerCountField.setValue("30");
         else
-
             playerCountField.setValue(String.valueOf(configuratorServiceI.getDungeon().getPlayerMaxSize()));
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
@@ -139,16 +130,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
             configuratorServiceI.saveDungeon();
 
         });
-
-        // create Dungeon Button
-//        Button createDungeonButton = new Button("Erstelle Button");
-//        createDungeonButton.setWidth("300px");
-//        createDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-//
-//        createDungeonButton.addClickListener(e -> {
-//            configuratorService.createDungeon("test", VaadinSession.getCurrent().getAttribute(User.class), Long.parseLong(playerCountField.getValue()), getVisibility(viewRadioButton.getValue()));
-//        });
-        //initFieldLayout.add(title, hint, titleField, playerCountField, viewRadioButton, dungeonDescription, createDungeonButton);
         initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, hint, dungeonDescription);
 
     }
@@ -171,9 +152,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
         Grid<User> grid = new Grid<>();
 
         grid.setItems(users);
-//        Column<User> nameColumn = grid.addColumn(User::getUsername)
-//                .setHeader("Benutzername");
-
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();

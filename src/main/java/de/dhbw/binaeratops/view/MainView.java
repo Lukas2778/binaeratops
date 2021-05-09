@@ -92,8 +92,6 @@ public class MainView extends AppLayout {
                 createTab("Lobby", LobbyView.class),
                 createTab("Eigene Dungeons", MyDungeonsView.class)
         };
-//        return new Tab[]{createTab("List", ListView.class), // Beispiel
-//                createTab("Personal", PersonalView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {

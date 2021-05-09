@@ -48,7 +48,7 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
     }
 
     public void createMenuItems() {
-        //wir setzen dem Service den dungeon mit der übergebenen ID aus der URL
+        //wir setzen dem Service den Dungeon mit der übergebenen ID aus der URL
 
         configuratorServiceI.setDungeon(dungeonId);
         if(!configuratorServiceI.getDungeon().getUser().getUserId()
@@ -103,8 +103,6 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         this.dungeonId=ALong;
         createMenuItems();
     }
-
-
 }
 
 

@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -76,9 +77,7 @@ public class LobbyView extends VerticalLayout {
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
-            ListDataProvider<Dungeon> dataProvider = (ListDataProvider<Dungeon>) AGrid
-                    .getDataProvider();
-            //TODO
+            UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
         });
 
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
