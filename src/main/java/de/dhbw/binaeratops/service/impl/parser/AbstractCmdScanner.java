@@ -1,5 +1,9 @@
 package de.dhbw.binaeratops.service.impl.parser;
 
+import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
@@ -52,12 +56,12 @@ public abstract class AbstractCmdScanner {
      * @throws CmdScannerException Fehlermeldung oder
      *         Signalisierung von Zustandswechseln.
      */
-    public UserMessage scan(String AInput) throws CmdScannerException {
+    public UserMessage scan(String AInput, DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         input = AInput;
         currentToken = null;
         currentTokenPos = -1;
 
-        return scanStart();
+        return scanStart(ADungeon, AAvatar, AUser);
     }
 
     /**
@@ -84,7 +88,7 @@ public abstract class AbstractCmdScanner {
      * @throws CmdScannerException Fehlermeldung oder
      *         Signalisierung von Zustandswechseln.
      */
-    protected abstract UserMessage scanStart() throws CmdScannerException;
+    protected abstract UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Hiermit kann der Index in der Eingabe festgelegt werden, an dem

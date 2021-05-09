@@ -1,6 +1,9 @@
 package de.dhbw.binaeratops.service.impl.parser;
 
+import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.UserMessageI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdHooks;
@@ -31,15 +34,15 @@ public class ParserService {
      * @param AInput
      * @return
      */
-    public UserMessage parseCommand(String AInput, DungeonI ADungeon) throws CmdScannerException {
+    public UserMessage parseCommand(String AInput, DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         // TODO Scanner hinzufügen
         AInput = AInput.trim();
         AInput = AInput.toUpperCase();
         UserMessageI userMessage;
         if (checkPrefix(AInput, ADungeon)) {
-            userMessage = ingameCmdScanner.scan(AInput);
+            userMessage = ingameCmdScanner.scan(AInput, ADungeon, AAvatar, AUser);
         } else {
-            userMessage = gameCtrlCmdScanner.scan(AInput);
+            userMessage = gameCtrlCmdScanner.scan(AInput, ADungeon, AAvatar, AUser);
         }
         return (UserMessage) userMessage;
     }

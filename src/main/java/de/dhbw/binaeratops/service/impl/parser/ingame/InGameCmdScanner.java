@@ -1,5 +1,9 @@
 package de.dhbw.binaeratops.service.impl.parser.ingame;
 
+import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.InGameCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.AbstractCmdScanner;
@@ -54,7 +58,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     /**
      * Scanner im Zustand "Start".
      */
-    protected UserMessage scanStart() throws CmdScannerException {
+    protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         startWithPos(1); // Überspringe Befehlszeichen
 
         String token = findNextToken();
@@ -66,17 +70,17 @@ public class InGameCmdScanner extends AbstractCmdScanner {
                 case CMD_HELP:
                     return scanHelp1();
                 case CMD_WHISPER:
-                    return scanWhisper1();
+                    return scanWhisper1(ADungeon, AAvatar);
                 case CMD_SPEAK:
-                    return scanSpeak();
+                    return scanSpeak(ADungeon, AAvatar);
                 case CMD_NOTIFY:
-                    return scanNotify();
+                    return scanNotify(ADungeon, AUser);
                 case CMD_WITHDRAW:
-                    return scanWithdraw();
+                    return scanWithdraw(ADungeon, AUser);
                 case CMD_EXIT:
-                    return scanGame(false);
+                    return scanGame(ADungeon, AUser, false);
                 case CMD_STOP:
-                    return scanGame(true);
+                    return scanGame(ADungeon, AUser, true);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -103,7 +107,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanWhisper1() throws CmdScannerException {
+    private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
         String avatarname = findNextToken();
         if (avatarname == null) {
             onMissingToken("<Avatarname>");
@@ -111,44 +115,44 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             switch (avatarname.toUpperCase()) {
                 case CMD_WHISPER_MASTER:
-                    return scanWhisperMaster();
+                    return scanWhisperMaster(ADungeon, AAvatar);
                 default:
-                    return scanWhisperAvatarName(avatarname);
+                    return scanWhisperAvatarName(ADungeon, AAvatar, avatarname);
             }
         }
     }
 
-    private UserMessage scanWhisperAvatarName(String AAvatarname) throws CmdScannerException {
+    private UserMessage scanWhisperAvatarName(DungeonI ADungeon, AvatarI AAvatar, String ARecipent) throws CmdScannerException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
         } else {
-            //TODO hooks.onCmdWhisper(AAvatarname, message);
+            return hooks.onCmdWhisper(ADungeon, AAvatar, ARecipent, message);
         }
         return null;
     }
 
-    private UserMessage scanWhisperMaster() throws CmdScannerException {
+    private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
+            return null;
         } else {
-            // TODO hooks.onCmdWhisperMaster(message);
+            return hooks.onCmdWhisperMaster(ADungeon, AAvatar, message);
         }
-        return null;
     }
 
-    private UserMessage scanSpeak() throws CmdScannerException {
+    private UserMessage scanSpeak(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
+            return null;
         } else {
-            // TODO hooks.onCmdSpeak(ARoomId, message); --> Woher kriegen wir die RaumID?
+            return hooks.onCmdSpeak(ADungeon, AAvatar, message); //--> Woher kriegen wir die RaumID?
         }
-        return null;
     }
 
-    private UserMessage scanNotify() throws CmdScannerException {
+    private UserMessage scanNotify(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
         String token = findNextToken();
         if (token == null) {
             onMissingToken("<ALL|ROOM>");
@@ -156,9 +160,9 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             switch (token.toUpperCase()) {
                 case CMD_NOTIFY_ROOM:
-                    return scanNotifyRoom();
+                    return scanNotifyRoom(ADungeon, AUser);
                 case CMD_NOTIFY_ALL:
-                    return scanNotifyAll();
+                    return scanNotifyAll(ADungeon, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -166,39 +170,37 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanNotifyRoom() throws CmdScannerException {
+    private UserMessage scanNotifyRoom(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
         String roomName = findNextToken();
         if (roomName == null) {
             onMissingToken("<Raumname>");
             return null;
         } else {
-            return scanNotifyRoomMessage(roomName);
+            return scanNotifyRoomMessage(ADungeon, AUser, roomName);
         }
     }
 
-    private UserMessage scanNotifyRoomMessage(String ARoomName) throws CmdScannerException {
+    private UserMessage scanNotifyRoomMessage(DungeonI ADungeon, UserI AUser, String ARoomName) throws CmdScannerException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
             return null;
         } else {
-            // TODO return hooks.onCmdNotifyRoom(ARoomName, message);
+            return hooks.onCmdNotifyRoom(ADungeon, AUser, ARoomName, message);
         }
-        return null;
     }
 
-    private UserMessage scanNotifyAll() throws CmdScannerException {
+    private UserMessage scanNotifyAll(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
         String message = findRestOfInput();
         if(message == null) {
             onMissingToken("<Nachricht>");
             return null;
         } else {
-            // TODO return hooks.onCmdNotifyAll(message);
+            return hooks.onCmdNotifyAll(ADungeon, AUser, message);
         }
-        return null;
     }
 
-    private UserMessage scanWithdraw() throws CmdScannerException {
+    private UserMessage scanWithdraw(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
             onMissingToken("<ROLE>");
@@ -206,7 +208,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             switch (token.toUpperCase()) {
                 case CMD_WITHDRAW_ROLE:
-                    return scanWithdrawRole();
+                    return scanWithdrawRole(ADungeon, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -214,17 +216,17 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanWithdrawRole() throws CmdScannerException {
+    private UserMessage scanWithdrawRole(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String username = findRestOfInput();
         if (username == null) {
             onMissingToken("<Benutzername>");
+            return null;
         } else {
-            // TODO return hooks.onCmdWithdrawRole(username);
+            return hooks.onCmdWithdrawRole(ADungeon, AUser, username);
         }
-        return null;
     }
 
-    private UserMessage scanGame(Boolean AStop) throws CmdScannerException {
+    private UserMessage scanGame(DungeonI ADungeon, UserI AUser, Boolean AStop) throws CmdScannerException {
         String game = findRestOfInput();
         if (game == null) {
             onMissingToken("<GAME>");
@@ -232,9 +234,9 @@ public class InGameCmdScanner extends AbstractCmdScanner {
             switch (game.toUpperCase()) {
                 case CMD_EXIT_STOP_GAME:
                     if (AStop) {
-                        // TODO return hooks.onCmdStop();
+                        return hooks.onCmdStop(ADungeon, AUser);
                     } else {
-                        // TODO return hooks.onCmdExit();
+                        return hooks.onCmdExit(ADungeon, AUser);
                     }
                 default:
                     onUnexpectedToken();
@@ -280,26 +282,26 @@ public class InGameCmdScanner extends AbstractCmdScanner {
 //        hooks.onCmdLogout();
     }
 
-    /**
-     * Scanner Zustand "Whisper" Level 1.
-     */
-    private void _scanWhisper1() throws CmdScannerException {
-        String userName = findNextToken();
-        if (userName == null) {
-            onMissingToken("Benutzername");
-        } else {
-            _scanWhisper2(userName);
-        }
-    }
-    /**
-     * Scanner Zustand "Whisper" Level 2.
-     */
-    private void _scanWhisper2(String AUserName) throws CmdScannerException {
-        String message = findRestOfInput();
-        if (message == null) {
-            onMissingToken("Meldung");
-        } else {
-            hooks.onCmdWhisper(AUserName, message);
-        }
-    }
+//    /**
+//     * Scanner Zustand "Whisper" Level 1.
+//     */
+//    private void _scanWhisper1() throws CmdScannerException {
+//        String userName = findNextToken();
+//        if (userName == null) {
+//            onMissingToken("Benutzername");
+//        } else {
+//            _scanWhisper2(userName);
+//        }
+//    }
+//    /**
+//     * Scanner Zustand "Whisper" Level 2.
+//     */
+//    private void _scanWhisper2(String AUserName) throws CmdScannerException {
+//        String message = findRestOfInput();
+//        if (message == null) {
+//            onMissingToken("Meldung");
+//        } else {
+//            hooks.onCmdWhisper(AUserName, message);
+//        }
+//    }
 }

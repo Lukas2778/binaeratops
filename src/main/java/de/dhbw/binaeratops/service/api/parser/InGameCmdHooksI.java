@@ -1,5 +1,9 @@
 package de.dhbw.binaeratops.service.api.parser;
 
+import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 
@@ -17,7 +21,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdWhisper(String AUserName, String AMessage) throws CmdScannerException;
+    UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException;
 
     /**
      * Callback Befehl "whisper master".
@@ -26,17 +30,16 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdWhisperMaster(String AMessage) throws CmdScannerException;
+    UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException;
 
     /**
      * Callback Befehl "speak".
      *
-     * @param ARoomId Raum, in den gesprochen wird.
      * @param AMessage Nachricht.
      * @return Benutzernachricht
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdSpeak(String ARoomId, String AMessage) throws CmdScannerException;
+    UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException;
 
     /**
      * Callback Befehl "notify room".
@@ -46,7 +49,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdNotifyRoom(String ARoomName, String AMessage) throws CmdScannerException;
+    UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException;
 
     /**
      * Callback Befehl "notify all".
@@ -54,16 +57,16 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdNotifyAll(String AMessage) throws CmdScannerException;
+    UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException;
 
     /**
      * Callback Befehl "withdraw role".
      *
-     * @param AUsername Benutzer, dem die Dungeon-Master Rolle übergeben werden soll.
+     * @param ARecipent Benutzer, dem die Dungeon-Master Rolle übergeben werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdWithdrawRole(String AUsername) throws CmdScannerException;
+    UserMessage onCmdWithdrawRole(DungeonI ADungeon, UserI AUser, String ARecipent) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "stop game".
@@ -71,7 +74,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdStop() throws CmdScannerException;
+    UserMessage onCmdStop(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
 
     /**
      * Callback Befehl "exit game".
@@ -79,6 +82,5 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdExit() throws CmdScannerException;
-
+    UserMessage onCmdExit(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
 }
