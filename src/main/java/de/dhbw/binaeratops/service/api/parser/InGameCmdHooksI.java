@@ -18,6 +18,8 @@ public interface InGameCmdHooksI {
      *
      * @param AMessage Nachricht.
      * @param AUserName Empfänger.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -26,6 +28,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "whisper master".
      *
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
      * @param AMessage Nachricht
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
@@ -35,6 +39,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "speak".
      *
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
      * @param AMessage Nachricht.
      * @return Benutzernachricht
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
@@ -44,6 +50,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "notify room".
      *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param ARoomName Raum, in den gesprochen wird.
      * @param AMessage Nachricht.
      * @return Benutzernachricht.
@@ -53,6 +61,9 @@ public interface InGameCmdHooksI {
 
     /**
      * Callback Befehl "notify all".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AMessage Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
@@ -62,6 +73,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "withdraw role".
      *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param ARecipent Benutzer, dem die Dungeon-Master Rolle übergeben werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
@@ -71,6 +84,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "stop game".
      *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -79,6 +94,8 @@ public interface InGameCmdHooksI {
     /**
      * Callback Befehl "exit game".
      *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
