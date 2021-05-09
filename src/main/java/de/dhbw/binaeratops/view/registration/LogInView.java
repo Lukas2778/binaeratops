@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
@@ -30,6 +31,7 @@ import java.util.ResourceBundle;
  */
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @RouteAlias("")
+@PWA(name = "Binäratops", shortName = "Binäratops", enableInstallPrompt = false)
 @Route("login")
 public class LogInView extends VerticalLayout {
 
