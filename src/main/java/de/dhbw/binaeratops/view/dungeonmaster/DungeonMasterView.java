@@ -1,6 +1,8 @@
 package de.dhbw.binaeratops.view.dungeonmaster;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -8,13 +10,16 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
@@ -23,18 +28,29 @@ import com.vaadin.flow.server.RequestHandler;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinResponse;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
+import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.game.GameService;
+import de.dhbw.binaeratops.service.impl.parser.ParserService;
+import de.dhbw.binaeratops.service.impl.parser.UserMessage;
+import de.dhbw.binaeratops.view.chat.Chat;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Enumeration;
+import reactor.core.publisher.Flux;
 
 /**
  * @author Mathias Rall
@@ -61,13 +77,30 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     private DungeonServiceI dungeonServiceI;
     private DungeonRepositoryI dungeonRepositoryI;
-    Dungeon dungeon;
+    private Flux<ChatMessage> messages;
+    private ParserService  myParserService;
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
-    public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI, @Autowired DungeonRepositoryI dungeonRepositoryI) {
+    Long dungeonId;
+    Dungeon dungeon;
+    H2 binTitle;
+    String aboutText;
+    Html html;
+    Chat myDungeonChat;
+
+    HorizontalLayout insertInputLayout;
+    TextField textField;
+    Button confirmButt;
+    VerticalLayout gameLayout = new VerticalLayout();
+
+    public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
+                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserService AParserService) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
         this.dungeonRepositoryI = dungeonRepositoryI;
+        this.messages = messages;
+        this. myParserService = AParserService;
     }
 
     @Override
@@ -83,9 +116,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     void createLayoutBasic(Long ALong) {
         setSizeFull();
+        game();
 
         splitChatWithRest.setSizeFull();
-        splitChatWithRest.addToPrimary(new VerticalLayout()); //TODO chat ergänzen
+        splitChatWithRest.addToPrimary(gameLayout);
         splitChatWithRest.addToSecondary(splitMapAndRoomWithActions);
 
         splitMapAndRoomWithActions.setSizeFull();
@@ -99,6 +133,44 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         add(splitChatWithRest);
     }
+
+    private void game(){
+
+
+
+        aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
+                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
+        html=new Html(aboutText);
+
+        myDungeonChat=new Chat(messages);
+
+        textField=new TextField();
+        textField.focus();
+        confirmButt=new Button("Eingabe");
+        confirmButt.addClickShortcut(Key.ENTER);
+        AvatarI myAvatar=new Avatar();
+        confirmButt.addClickListener(e->{
+            //Parser wird mit Texteingabe aufgerufen
+            try {
+                UserMessage um=myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(
+                        User.class));
+                if(um.getKey()!=null) {
+                    System.out.println(um.getParams().get(0));
+                    myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                }
+            } catch ( CmdScannerException cmdScannerException) {
+                cmdScannerException.printStackTrace();
+            } catch ( InvalidImplementationException invalidImplementationException) {
+                invalidImplementationException.printStackTrace();
+            }
+        });
+        insertInputLayout=new HorizontalLayout();
+        insertInputLayout.add(textField, confirmButt);
+
+        gameLayout.setSizeFull();
+        gameLayout.add(html, myDungeonChat, insertInputLayout);
+    }
+
 
     private void createLayoutAction() {
         createGrid();
@@ -197,4 +269,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }
         return columns;
     }
+
+
 }
