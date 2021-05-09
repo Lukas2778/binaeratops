@@ -310,22 +310,22 @@ public class RoomConfigurationTab extends VerticalLayout {
         }));
 
         editNPCButton.addClickListener(t -> {
-            npcSelectionDialog = new NpcSelectionDialog(configuratorServiceI, currentRoom);
-            initNPCButtonListener();
+            npcSelectionDialog = new NpcSelectionDialog(configuratorServiceI, currentRoom, npcList);
+            //initNPCButtonListener();
             npcSelectionDialog.dialogResult = false;
             npcSelectionDialog.open();
         });
 
     }
 
-    private void initNPCButtonListener(){
-        npcSelectionDialog.addOpenedChangeListener(e -> {
-            if (npcSelectionDialog.dialogResult && !npcSelectionDialog.isOpened()) {
-                itemList.clear();
-                List<NPC> selectedNPCList = npcSelectionDialog.getNPCSelection();
-                npcList.setItems(selectedNPCList);
-                configuratorServiceI.setNPCs(currentRoom, selectedNPCList);
-            }
-        });
-    }
+    //private void initNPCButtonListener(){
+    //    npcSelectionDialog.addOpenedChangeListener(e -> {
+    //        if (npcSelectionDialog.dialogResult && !npcSelectionDialog.isOpened()) {
+    //            itemList.clear();
+    //            List<NPC> selectedNPCList = npcSelectionDialog.getNPCSelection();
+    //            npcList.setItems(selectedNPCList);
+    //            configuratorServiceI.setNPCs(currentRoom, selectedNPCList);
+    //        }
+    //    });
+    //}
 }

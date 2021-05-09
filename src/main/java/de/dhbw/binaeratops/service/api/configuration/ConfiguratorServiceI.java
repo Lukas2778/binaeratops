@@ -215,7 +215,7 @@ public interface ConfiguratorServiceI {
      * @param ARoom Raum.
      * @param ANPCList NPCliste.
      */
-    void setNPCs(Room ARoom, List<NPC> ANPCList);
+    void setNPCInstances(Room ARoom, List<NpcInstance> ANPCList);
 
 
     /**
@@ -242,7 +242,7 @@ public interface ConfiguratorServiceI {
      * @param ARoom Raum.
      * @return Liste mit NPCs.
      */
-    List<NPC> getAllNPCs(Room ARoom);
+    List<NpcInstance> getAllNPCs(Room ARoom);
 
     /**
      * Entfernt den Raum aus dem Dungeon und löscht ihn.

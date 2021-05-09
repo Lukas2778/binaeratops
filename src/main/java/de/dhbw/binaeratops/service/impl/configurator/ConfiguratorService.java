@@ -283,16 +283,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<NPC> getAllNPCs(Room ARoom){
-        List<NPC> npcs = new ArrayList<>();
-        for (NPC myNpc: dungeon.getNpcs()) {
-            if(myNpc.getRoom() != null){
-                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()){
-                    npcs.add(myNpc);
-                }
-            }
-        }
-        return npcs;
+    public List<NpcInstance> getAllNPCs(Room ARoom){
+        return npcInstanceRepo.findByRoom(ARoom);
     }
 
     @Override

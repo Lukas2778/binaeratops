@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
@@ -66,19 +67,21 @@ public class ItemSelectionDialog extends Dialog {
         });
 
         confirmButton.addClickListener(e->{
-            List<ItemInstance> instances = new ArrayList<>();
-            for (Item item: itemNumberFieldHashMap.keySet()) {
-                if (!itemNumberFieldHashMap.get(item).isEmpty() && itemNumberFieldHashMap.get(item).getValue() >= 1) {
-                    for (int i = 0; i < itemNumberFieldHashMap.get(item).getValue(); i++) {
-                        ItemInstance instance = new ItemInstance();
-                        instance.setItem(item);
-                        instances.add(instance);
+            if(validate()) {
+                List<ItemInstance> instances = new ArrayList<>();
+                for (Item item : itemNumberFieldHashMap.keySet()) {
+                    if (!itemNumberFieldHashMap.get(item).isEmpty() && itemNumberFieldHashMap.get(item).getValue() >= 1) {
+                        for (int i = 0; i < itemNumberFieldHashMap.get(item).getValue(); i++) {
+                            ItemInstance instance = new ItemInstance();
+                            instance.setItem(item);
+                            instances.add(instance);
+                        }
                     }
                 }
+                configuratorServiceI.setItemInstances(ARoom, instances);
+                refreshItemList();
+                close();
             }
-            configuratorServiceI.setItemInstances(ARoom, instances);
-            refreshItemList();
-            close();
         });
 
         itemGrid.setItems(configuratorServiceI.getAllItems());

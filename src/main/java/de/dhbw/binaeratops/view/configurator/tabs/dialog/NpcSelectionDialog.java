@@ -6,10 +6,10 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import de.dhbw.binaeratops.model.entitys.Item;
-import de.dhbw.binaeratops.model.entitys.NPC;
-import de.dhbw.binaeratops.model.entitys.Room;
+import com.vaadin.flow.component.textfield.IntegerField;
+import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
