@@ -81,7 +81,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private ParserService  myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
-    Long dungeonId;
     Dungeon dungeon;
     H2 binTitle;
     String aboutText;
@@ -152,7 +151,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         confirmButt.addClickListener(e->{
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um=myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(
+                UserMessage um=myParserService.parseCommand(textField.getValue(), dungeon.getDungeonId(), myAvatar, VaadinSession.getCurrent().getAttribute(
                         User.class));
                 if(um.getKey()!=null) {
                     System.out.println(um.getParams().get(0));
@@ -163,6 +162,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             } catch ( InvalidImplementationException invalidImplementationException) {
                 invalidImplementationException.printStackTrace();
             }
+            textField.clear();
         });
         insertInputLayout=new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
