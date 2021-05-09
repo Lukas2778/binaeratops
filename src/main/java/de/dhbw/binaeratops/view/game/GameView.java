@@ -76,15 +76,9 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 if(um.getKey()!=null) {
                     switch (um.getKey()) {
                         case "view.game.ingame.cmd.notify.all":
-                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
-                            break;
                         case "view.game.cmd.help":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
-                        case "view.game.cmd.help.all":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
                         case "view.game.cmd.help.cmds":
+                        case "view.game.cmd.help.all":
                             myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.ctrl":

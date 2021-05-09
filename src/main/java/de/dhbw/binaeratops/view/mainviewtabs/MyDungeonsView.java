@@ -76,11 +76,11 @@ public class MyDungeonsView extends VerticalLayout {
             Button button = new Button("Starten");
             button.addClickListener(e -> UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString()));
             dungeon.setDungeonStatus(Status.ACTIVE);
+            dungeonServiceI.saveDungeon(dungeon);
             return button;
         }).setHeader("Spielstart");
-        dungeonGrid.addComponentColumn(item -> createRemoveButton(dungeonGrid, item)).setHeader("Aktion");
+        dungeonGrid.addComponentColumn(item -> createRemoveButton(dungeonGrid, item)).setHeader("Löschen");
 
-//        dungeonList.setHeightFull();
 
         add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
