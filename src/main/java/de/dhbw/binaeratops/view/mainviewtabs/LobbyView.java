@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Oberfläche des Tabs 'Lobby'
  */
-@Route(value = "lobby")
+//@Route(value = "lobby")
 @PageTitle("Lobby")
 public class LobbyView extends VerticalLayout {
     H1 titleText;
