@@ -225,9 +225,6 @@ public class RoomConfigurationTab extends VerticalLayout {
         VerticalLayout npcLayout = new VerticalLayout();
 
 
-
-
-
         H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
         TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
 
@@ -283,8 +280,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         roomArea.add(actualRoomHeadline, specificRoom);
 
-
-                itemList.clear();
+        itemList.clear();
         if (currentRoom != null) {
             List<ItemInstance> roomItems = configuratorServiceI.getAllItems(currentRoom);
             itemList.setItems(roomItems);
