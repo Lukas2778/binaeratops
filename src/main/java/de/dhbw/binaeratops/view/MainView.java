@@ -33,7 +33,6 @@ import java.util.ResourceBundle;
  * The main view is a top-level placeholder for other views.
  */
 @Push
-@PWA(name = "Binäratops", shortName = "Binäratops", enableInstallPrompt = false)
 @JsModule("./styles/shared-styles.js")
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
