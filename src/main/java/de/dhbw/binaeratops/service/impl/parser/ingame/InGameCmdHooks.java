@@ -57,6 +57,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     @Override
     public UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException {
         myChatService.sendMessage(AMessage,ADungeon.getCurrentUsers());
+        System.out.println("Anzahl aktuelle User: "+ ADungeon.getCurrentUsers().size());
         return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
     }
 

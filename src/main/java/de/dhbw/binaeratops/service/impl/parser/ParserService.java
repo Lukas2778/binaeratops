@@ -3,7 +3,6 @@ package de.dhbw.binaeratops.service.impl.parser;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
-import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.parser.UserMessageI;
@@ -40,8 +39,6 @@ public class ParserService {
      */
     public UserMessage parseCommand(String AInput, Long ADungeonId, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         DungeonI myDungeon=myDungeonRepo.findByDungeonId(ADungeonId);
-        User user = User.check(AUser); // TODO UNSCHÖN, muss raus hier
-        myDungeon.addCurrentUser(user);
         // TODO Scanner hinzufügen
         AInput = AInput.trim();
         UserMessageI userMessage;

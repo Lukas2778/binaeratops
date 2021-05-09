@@ -68,7 +68,7 @@ public class Dungeon implements DungeonI {
     @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> currentUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

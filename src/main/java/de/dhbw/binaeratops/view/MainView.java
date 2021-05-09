@@ -13,6 +13,7 @@ import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
@@ -31,7 +32,7 @@ import java.util.ResourceBundle;
 /**
  * The main view is a top-level placeholder for other views.
  */
-
+@Push
 @JsModule("./styles/shared-styles.js")
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
