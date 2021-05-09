@@ -104,11 +104,28 @@ public class DungeonConfigurationTab extends VerticalLayout {
         viewRadioButton.setItems("Öffentlich", "Privat", "In Konfiguration");
         viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
 
-
         viewRadioButton.addValueChangeListener(e-> {
             configuratorServiceI.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
             configuratorServiceI.saveDungeon();
         });
+
+        Details commandSymbolDefinition = new Details("Was sind Befehlszeichen",
+                new Text("Um Befehle im Dungeon ausführen zu können muss man vor diese ein bestimmtes Zeichen setzen, " +
+                        "das sogenannte Befehlszeichen. Falls dir das / nicht gefällt kannst du es hier anpassen. " +
+                        "Es ist ein beliebiges Zeichen erlaubt, aber Buchstaben und Zahlen sind nicht zu empfehlen."));
+
+        TextField commandSymbolField = new TextField("Befehlszeichen");
+        commandSymbolField.setMinLength(1);
+        commandSymbolField.setMaxLength(1);
+        commandSymbolField.setWidth("100px");
+
+        commandSymbolField.addValueChangeListener(e -> {
+            if (!commandSymbolField.isInvalid()) {
+                configuratorServiceI.setCommandSymbol(commandSymbolField.getValue().charAt(0));
+            }
+        });
+        commandSymbolField.setValue(String.valueOf(configuratorServiceI.getCommandSymbol()));
+
         if(configuratorServiceI.getDungeon().getDungeonVisibility() == null)
             viewRadioButton.setValue("Öffentlich");
         else
@@ -130,7 +147,7 @@ public class DungeonConfigurationTab extends VerticalLayout {
             configuratorServiceI.saveDungeon();
 
         });
-        initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, hint, dungeonDescription);
+        initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, commandSymbolDefinition, commandSymbolField, hint, dungeonDescription);
 
     }
 
