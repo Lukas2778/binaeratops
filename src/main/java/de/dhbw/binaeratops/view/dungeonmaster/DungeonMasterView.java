@@ -154,7 +154,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         User.class));
                 if(um.getKey()!=null) {
                     System.out.println(um.getParams().get(0));
-                    myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                    myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                 }
             } catch ( CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
