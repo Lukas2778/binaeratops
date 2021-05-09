@@ -7,7 +7,6 @@ import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
-import org.apache.http.auth.AUTH;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

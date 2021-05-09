@@ -5,13 +5,13 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -59,7 +59,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         this.messages = messages;
         binTitle=new H2("Du bist in der Spieloberfläche!");
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
-                " testen.<br>Schau dir zuerst die 'Help' an, indem du den Befehl 'help' eingibst.</div>";
+                " testen.<br>Schau dir zuerst die 'Help' an, indem du den Befehl '[Befehlszeichen] help' eingibst.</div>";
         html=new Html(aboutText);
 
         myDungeonChat=new Chat(messages);
@@ -74,8 +74,26 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
             try {
                 UserMessage um=myParserService.parseCommand(textField.getValue(),dungeonId,myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
                 if(um.getKey()!=null) {
-                    System.out.println(um.getParams().get(0));
-                    myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                    switch (um.getKey()) {
+                        case "view.game.ingame.cmd.notify.all":
+                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                            break;
+                        case "view.game.cmd.help":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.all":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.cmds":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.ctrl":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+                            break;
+                        default:
+                            Notification.show("An Error Occured.");
+                            break;
+                    }
                 }
             } catch (CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
