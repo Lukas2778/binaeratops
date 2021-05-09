@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.model.api;
 
 import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 
 import java.util.List;
@@ -121,19 +122,19 @@ public interface RoomI {
      *
      * @return Liste von Gegenständen im Raum.
      */
-    List<Item> getItems();
+    List<ItemInstance> getItems();
 
     /**
      * Fügt einem Raum einen Gegenstand hinzu.
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
-    void addItem(Item AItem);
+    void addItem(ItemInstance AItem);
 
     /**
      * Entfernt den übergebenen Gegenstand dem Raum.
      * @param AItem Gegenstand, der entfernt werden soll.
      */
-    void removeItem(Item AItem);
+    void removeItem(ItemInstance AItem);
 
     /**
      * Gibt die NPCs des Raumes als Liste von NPCs zurück.

@@ -44,7 +44,7 @@ public class Room implements RoomI {
     private Dungeon dungeon;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Item> items = new ArrayList<>();
+    private final List<ItemInstance> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NPC> npcs = new ArrayList<>();
@@ -152,16 +152,16 @@ public class Room implements RoomI {
         this.dungeon = dungeon;
     }
 
-    public List<Item> getItems() {
+    public List<ItemInstance> getItems() {
         return items;
     }
 
-    public void addItem(Item AItem) {
+    public void addItem(ItemInstance AItem) {
         AItem.setRoom(this);
         items.add(AItem);
     }
 
-    public void removeItem(Item AItem) {
+    public void removeItem(ItemInstance AItem) {
         items.remove(AItem);
         AItem.setRoom(null);
     }

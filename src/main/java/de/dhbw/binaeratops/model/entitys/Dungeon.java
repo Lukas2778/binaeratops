@@ -4,6 +4,7 @@ import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -37,6 +38,7 @@ public class Dungeon implements DungeonI {
     @Enumerated(EnumType.STRING)
     private Visibility dungeonVisibility;
 
+    //@Column(columnDefinition = "varchar(255) default 'INACTIVE'")
     @Enumerated(EnumType.STRING)
     private Status dungeonStatus;
 

@@ -19,4 +19,17 @@ public interface DungeonServiceI {
      * @return Liste der Dungeons, die dem übergebenen Benutzer angezeigt werden sollen.
      */
     List<Dungeon> getDungeonsLobby(User AUser);
+
+    /**
+     * setzt einen Dungeon auf aktiv.
+     * @param ADungeonId Id des Dungeon.
+     */
+    void activateDungeon(long ADungeonId);
+
+    /**
+     * setzt einen Dungeon auf inaktiv.
+     * @param ADungeonId Id des Dungeon.
+     */
+    void deactivateDungeon(long ADungeonId);
 }
+

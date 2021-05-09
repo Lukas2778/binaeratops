@@ -46,15 +46,15 @@ public class ItemRepositoryTest extends Logger {
     @Autowired
     ItemRepositoryI itemRepo;
 
-    private ItemI item1;
-    private ItemI item2;
+    private Item item1;
+    private Item item2;
 
     /**
      * Initialisierungsmethode, zum Befüllen der In-Memory-Datenbank.
      */
     @Before
     public void init() {
-        ItemI item = new Item();
+        Item item = new Item();
         item.setItemName("Punsch");
         item.setType(ItemType.CONSUMABLE);
         item.setDescription("Trinkbar");
@@ -92,7 +92,7 @@ public class ItemRepositoryTest extends Logger {
      */
     @Test
     public void testFindByItemId() {
-        ItemI item = itemRepo.findByItemId(item1.getItemId());
+        Item item = itemRepo.findByItemId(item1.getItemId());
         Assert.assertEquals(ItemType.WEAPON, item.getType());
     }
 
@@ -102,9 +102,9 @@ public class ItemRepositoryTest extends Logger {
      */
     @Test
     public void testUpdateItem() {
-        ItemI item = itemRepo.findByItemId(item1.getItemId());
+        Item item = itemRepo.findByItemId(item1.getItemId());
         item.setSize(4L);
-        ItemI itemModified = itemRepo.findByItemId(item1.getItemId());
+        Item itemModified = itemRepo.findByItemId(item1.getItemId());
         Assert.assertEquals((Long) 4l, itemModified.getSize());
     }
 

@@ -12,6 +12,7 @@ import de.dhbw.binaeratops.service.exceptions.NotVerifiedException;
 import de.dhbw.binaeratops.service.exceptions.RegistrationException;
 import de.dhbw.binaeratops.view.*;
 
+import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 import de.dhbw.binaeratops.view.game.GameView;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
@@ -148,6 +149,7 @@ public class AuthService implements AuthServiceI {
      */
     private List<AuthorizedRoute> getRouts() {
         List<AuthorizedRoute> returnList = new ArrayList<>();
+        returnList.add(new AuthorizedRoute("play/dungeonmaster","dungeonmaster", DungeonMasterView.class));
         return returnList;
     }
 }

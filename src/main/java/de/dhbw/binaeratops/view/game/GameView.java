@@ -59,7 +59,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         this.messages = messages;
         binTitle=new H2("Du bist in der Spieloberfläche!");
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
-                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
+                " testen.<br>Schau dir zuerst die 'Help' an, indem du den Befehl 'help' eingibst.</div>";
         html=new Html(aboutText);
 
         myDungeonChat=new Chat(messages);

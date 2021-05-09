@@ -45,6 +45,8 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
     public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
         configuratorServiceI=AConfiguratorServiceI;
         mapServiceI=AMapServiceI;
+
+        setSizeFull();
     }
 
     public void createMenuItems() {
@@ -94,7 +96,6 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
             selected.setVisible(true);
         });
 
-        System.out.println(dungeonId);
 
     }
 

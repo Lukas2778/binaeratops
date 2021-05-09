@@ -16,6 +16,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class MyDungeonsView extends VerticalLayout {
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Eigene Dungeons'.
      *
-     * @param ADungeonService DungeonService.
+     * @param ADungeonService      DungeonService.
      * @param AConfiguratorService KonfiguratorService.
      */
     public MyDungeonsView(@Autowired DungeonServiceI ADungeonService, @Autowired ConfiguratorServiceI AConfiguratorService) {
@@ -67,10 +68,16 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonGrid.setItems(dungeonList);
         dungeonGrid.setVerticalScrollingEnabled(true);
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
-        dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader("Dungeon ID");
+        //dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader("Dungeon ID");
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader("Sichtbarkeit");
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
+        dungeonGrid.addComponentColumn(dungeon -> {
+            Button button = new Button("starten");
+            button.addClickListener(e -> UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString()));
+            dungeon.setDungeonStatus(Status.ACTIVE);
+            return button;
+        }).setHeader("Spielstart");
         dungeonGrid.addComponentColumn(item -> createRemoveButton(dungeonGrid, item)).setHeader("Aktion");
 
 //        dungeonList.setHeightFull();
@@ -125,18 +132,22 @@ public class MyDungeonsView extends VerticalLayout {
 
     private void initEditDungeonButton() {
         editDungeonButton.addClickListener(e -> {
-            if (dungeonGrid.getSelectedItems().size() > 0) {
-                //das ist das hässlichste stück code ever ever
-                UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
+            if ( true||!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {//TODO
+                if (dungeonGrid.getSelectedItems().size() > 0) {
+                    //das ist das hässlichste stück code ever ever
+                    UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
+                } else {
+                    Notification.show("Wähle einen Dungeon aus, den du bearbeiten möchtest.\nSofern du noch keinen hast, kannst du einfach einen erstellen.");
+                }
             } else {
-                Notification.show("Wähle einen Dungeon aus, den du bearbeiten möchtest.\nSofern du noch keinen hast, kannst du einfach einen erstellen.");
+                Notification.show("Der Dungeon wird gerade bespielt.");
             }
         });
     }
 
     private void initNewDungeonButton() {
         newDungeonButton.addClickListener(e -> {
-            Dungeon dungeon = configuratorServiceI.createDungeon("Mein Dungeon", VaadinSession.getCurrent().getAttribute(User.class));
+            Dungeon dungeon = configuratorServiceI.createDungeon("Mein Dungeon", VaadinSession.getCurrent().getAttribute(User.class),Status.INACTIVE);
             Notification.show("Neuen Dungeon erstellt");
             //TODO param ID hinzufügen
             UI.getCurrent().navigate("configurator/" + dungeon.getDungeonId());

@@ -1,9 +1,6 @@
 package de.dhbw.binaeratops.model.api;
 
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Item;
-import de.dhbw.binaeratops.model.entitys.Race;
-import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.entitys.*;
 
 import java.util.List;
 
@@ -108,17 +105,17 @@ public interface NPCI {
      *
      * @return Gepäck des NPCs.
      */
-    List<Item> getLuggage();
+    List<ItemInstance> getLuggage();
 
     /**
      * Fügt dem Gepäck des NPCs einen Gegenstand hinzu.
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
-    void addItem(Item AItem);
+    void addItem(ItemInstance AItem);
 
     /**
      * Entfernt dem Gepäck des NPCs einen Gegenstand.
      * @param AItem Gegenstand, der entfernt werden soll.
      */
-    void removeItem(Item AItem);
+    void removeItem(ItemInstance AItem);
 }
