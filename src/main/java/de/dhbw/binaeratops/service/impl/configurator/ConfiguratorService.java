@@ -86,8 +86,17 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setCommandSymbol(String ACommandSymbol) {
+    public char getCommandSymbol() {
+        if (dungeon.getCommandSymbol() == null) {
+            dungeon.setCommandSymbol('/');
+        }
+        return dungeon.getCommandSymbol();
+    }
 
+    @Override
+    public void setCommandSymbol(char ACommandSymbol) {
+        dungeon.setCommandSymbol(ACommandSymbol);
+        dungeonRepo.save(dungeon);
     }
 
     @Override

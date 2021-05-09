@@ -59,12 +59,13 @@ public interface ConfiguratorServiceI {
      */
     void setStartRoom(Room ARoom);
 
+    char getCommandSymbol();
+
     /**
      * Startraum des Dungeons setzen.
      * @param ACommandSymbol Ein Text, der das Befehlssymbol ist.
      */
-    void setCommandSymbol(String ACommandSymbol);
-
+    void setCommandSymbol(char ACommandSymbol);
     /**
      * Maximale Anzahl der Spiler des Dungeons setzen.
      * @param ACount Anzahl der maximalen Spieler.
