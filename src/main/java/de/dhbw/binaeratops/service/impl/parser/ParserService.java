@@ -53,4 +53,8 @@ public class ParserService {
     private boolean checkPrefix(String AInput, DungeonI  ADungeon) {
         return AInput.startsWith(ADungeon.getCommandSymbol().toString());
     }
+
+    public Character getCommandSymbol(Long ADungeonId) {
+        return myDungeonRepo.findByDungeonId(ADungeonId).getCommandSymbol();
+    }
 }

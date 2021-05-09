@@ -26,8 +26,8 @@ public class InGameCmdScanner extends AbstractCmdScanner {
 
     // Schlüsselwörter.
     private static final String CMD_HELP = "HELP";
-    private static final String CMD_HELP_CONTROL = "CONTROL";
-    private static final String CMD_HELP_CMDS = "COMMANDS";
+    private static final String CMD_HELP_CONTROL = "CTRL";
+    private static final String CMD_HELP_CMDS = "CMDS";
     private static final String CMD_HELP_ALL = "ALL";
     private static final String CMD_WHISPER = "WHISPER";
     private static final String CMD_WHISPER_MASTER = "MASTER";
@@ -68,7 +68,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             switch (token.toUpperCase()) {
                 case CMD_HELP:
-                    return scanHelp1();
+                    return scanHelp1(ADungeon);
                 case CMD_WHISPER:
                     return scanWhisper1(ADungeon, AAvatar);
                 case CMD_SPEAK:
@@ -88,18 +88,18 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanHelp1() throws CmdScannerException {
+    private UserMessage scanHelp1(DungeonI ADungeon) throws CmdScannerException {
         String token = findRestOfInput();
         if (token == null) {
-            return new UserMessage("view.game.cmd.help");
+            return hooks.onCmdHelp(ADungeon);
         } else {
             switch (token.toUpperCase()) {
                 case CMD_HELP_ALL:
-                    return new UserMessage("view.game.cmd.help.all");
+                    return hooks.onCmdHelp(ADungeon);
                 case CMD_HELP_CMDS:
-                    return new UserMessage("view.game.cmd.help.cmds");
+                    return hooks.onCmdHelpCmds(ADungeon);
                 case CMD_HELP_CONTROL:
-                    return new UserMessage("view.game.cmd.help.ctrl");
+                    return hooks.onCmdHelpCtrl(ADungeon);
                 default:
                     onUnexpectedToken();
                     return null;
