@@ -1,19 +1,11 @@
 package de.dhbw.binaeratops.view.dungeonmaster;
 
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -24,9 +16,6 @@ import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
-import com.vaadin.flow.server.RequestHandler;
-import com.vaadin.flow.server.VaadinRequest;
-import com.vaadin.flow.server.VaadinResponse;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -43,14 +32,12 @@ import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.Chat;
-import java.text.MessageFormat;
-import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.util.Comparator;
-import java.util.Enumeration;
 import reactor.core.publisher.Flux;
+
+import java.text.MessageFormat;
+import java.util.Comparator;
+import java.util.ResourceBundle;
 
 /**
  * @author Mathias Rall
@@ -153,8 +140,26 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 UserMessage um=myParserService.parseCommand(textField.getValue(), dungeon.getDungeonId(), myAvatar, VaadinSession.getCurrent().getAttribute(
                         User.class));
                 if(um.getKey()!=null) {
-                    System.out.println(um.getParams().get(0));
-                    myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                    switch (um.getKey()) {
+                        case "view.game.ingame.cmd.notify.all":
+                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                            break;
+                        case "view.game.cmd.help":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.all":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.cmds":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.ctrl":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+                            break;
+                        default:
+                            Notification.show("An Error Occured.");
+                            break;
+                    }
                 }
             } catch ( CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();

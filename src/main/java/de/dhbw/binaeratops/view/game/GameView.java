@@ -74,7 +74,26 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
             try {
                 UserMessage um=myParserService.parseCommand(textField.getValue(),dungeonId,myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
                 if(um.getKey()!=null) {
-                    myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                    switch (um.getKey()) {
+                        case "view.game.ingame.cmd.notify.all":
+                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                            break;
+                        case "view.game.cmd.help":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.all":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.cmds":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            break;
+                        case "view.game.cmd.help.ctrl":
+                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+                            break;
+                        default:
+                            Notification.show("An Error Occured.");
+                            break;
+                    }
                 }
             } catch (CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
