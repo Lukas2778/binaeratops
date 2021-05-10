@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.view.game;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
@@ -32,6 +33,7 @@ import java.util.ResourceBundle;
  * Oberfläche des Tabs 'Über uns'
  */
 //@Route(value = "game")
+@CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     ParserService myParserService;
@@ -106,6 +108,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         setSizeFull();
         add(binTitle, html, myDungeonChat, insertInputLayout);
+        expand(myDungeonChat);
     }
 
     @Override

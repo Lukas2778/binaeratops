@@ -1,4 +1,5 @@
 package de.dhbw.binaeratops.view.chat;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
@@ -7,10 +8,15 @@ import de.dhbw.binaeratops.model.chat.MessageList;
 import de.dhbw.binaeratops.model.entitys.User;
 import reactor.core.publisher.Flux;
 
+
 /**
  * Chatoberfläche der die Nachrichten für den Benutzer anzeigt.
  */
 public class Chat extends VerticalLayout {
+    {
+        addClassName("chat-component");
+    }
+
     private final Flux<ChatMessage> messages;
     public MessageList messageList;
 
