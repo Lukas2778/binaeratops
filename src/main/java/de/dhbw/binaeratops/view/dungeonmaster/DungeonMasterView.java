@@ -32,6 +32,7 @@ import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.Chat;
+import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
@@ -161,10 +162,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             break;
                     }
                 }
-            } catch ( CmdScannerException cmdScannerException) {
+            } catch ( CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
-            } catch ( InvalidImplementationException invalidImplementationException) {
-                invalidImplementationException.printStackTrace();
             }
             textField.clear();
         });

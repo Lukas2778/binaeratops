@@ -5,20 +5,25 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import de.dhbw.binaeratops.model.map.Tile;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
@@ -32,11 +37,13 @@ import java.util.ResourceBundle;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-//@Route(value = "game")
+@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     ParserService myParserService;
+    MapServiceI mapServiceI;
+    public Image[][] tiles;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     Long dungeonId;
@@ -45,6 +52,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     H2 binTitle;
     String aboutText;
     Html html;
+    HorizontalLayout gameLayout;
+    SplitLayout gameSplitLayout;
+    VerticalLayout gameFirstLayout;
+
     Chat myDungeonChat;
 
     HorizontalLayout insertInputLayout;
@@ -55,14 +66,19 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      * @param messages
      */
-    public GameView(Flux<ChatMessage> messages, @Autowired ParserService AParserService) {
+    public GameView(Flux<ChatMessage> messages, @Autowired ParserService AParserService, @Autowired MapServiceI AMapService) {
         myParserService=AParserService;
+        mapServiceI=AMapService;
 
         this.messages = messages;
+
         binTitle=new H2("Du bist in der Spieloberfläche!");
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
+
+        gameLayout=new HorizontalLayout();
+        gameSplitLayout=new SplitLayout();
 
         myDungeonChat=new Chat(messages);
 
@@ -106,13 +122,48 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         insertInputLayout=new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
 
-        setSizeFull();
-        add(binTitle, html, myDungeonChat, insertInputLayout);
+        gameFirstLayout = new VerticalLayout();
+        //VerticalLayout gameSecondLayout = new VerticalLayout();
+
+        gameFirstLayout.setSizeFull();
+        //gameSecondLayout.setSizeFull();
+
+        gameFirstLayout.add(myDungeonChat, insertInputLayout);
+        //gameSecondLayout.add(initMap(dungeonId));
+
+        gameLayout.add(gameSplitLayout);
+        add(binTitle, html, gameLayout);
         expand(myDungeonChat);
+        setSizeFull();
+    }
+
+    void createMap(Long ALong) {
+        gameSplitLayout.addToPrimary(gameFirstLayout);
+        gameSplitLayout.addToSecondary(initMap(dungeonId));
+        gameSplitLayout.setSizeFull();
+    }
+
+    VerticalLayout initMap(Long ADungeonId) {
+        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId);
+        tiles = new Image[newTiles.length][newTiles[0].length];
+        VerticalLayout columns = new VerticalLayout();
+        columns.setSpacing(false);
+        for (int i = 0; i < newTiles.length; i++) {
+            HorizontalLayout rows = new HorizontalLayout();
+            rows.setSpacing(false);
+            for (int j = 0; j < newTiles[0].length; j++) {
+                tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
+                tiles[i][j].addClassName("room");
+                rows.add(tiles[i][j]);
+            }
+            columns.add(rows);
+        }
+        return columns;
     }
 
     @Override
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
-        this.dungeonId=ALong;
+        dungeonId=ALong;
+        createMap(dungeonId);
     }
 }
