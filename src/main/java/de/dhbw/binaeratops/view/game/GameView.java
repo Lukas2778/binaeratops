@@ -28,6 +28,7 @@ import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.Chat;
+import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
@@ -43,7 +44,8 @@ import java.util.ResourceBundle;
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     ParserService myParserService;
     MapServiceI mapServiceI;
-    public Image[][] tiles;
+    MapView mapView;
+    Image[][] tiles;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     Long dungeonId;
@@ -113,14 +115,13 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                             break;
                     }
                 }
-            } catch (CmdScannerException cmdScannerException) {
+            } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
-            } catch (InvalidImplementationException invalidImplementationException) {
-                invalidImplementationException.printStackTrace();
             }
         });
         insertInputLayout=new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
+        insertInputLayout.setSizeFull();
 
         gameFirstLayout = new VerticalLayout();
         //VerticalLayout gameSecondLayout = new VerticalLayout();
@@ -132,33 +133,17 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         //gameSecondLayout.add(initMap(dungeonId));
 
         gameLayout.add(gameSplitLayout);
+        gameLayout.setSizeFull();
         add(binTitle, html, gameLayout);
         expand(myDungeonChat);
-        setSizeFull();
+        //setSizeFull();
     }
 
     void createMap(Long ALong) {
+        mapView=new MapView();
         gameSplitLayout.addToPrimary(gameFirstLayout);
-        gameSplitLayout.addToSecondary(initMap(dungeonId));
+        gameSplitLayout.addToSecondary(mapView.initMap(mapServiceI,dungeonId, tiles));
         gameSplitLayout.setSizeFull();
-    }
-
-    VerticalLayout initMap(Long ADungeonId) {
-        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId);
-        tiles = new Image[newTiles.length][newTiles[0].length];
-        VerticalLayout columns = new VerticalLayout();
-        columns.setSpacing(false);
-        for (int i = 0; i < newTiles.length; i++) {
-            HorizontalLayout rows = new HorizontalLayout();
-            rows.setSpacing(false);
-            for (int j = 0; j < newTiles[0].length; j++) {
-                tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
-                tiles[i][j].addClassName("room");
-                rows.add(tiles[i][j]);
-            }
-            columns.add(rows);
-        }
-        return columns;
     }
 
     @Override

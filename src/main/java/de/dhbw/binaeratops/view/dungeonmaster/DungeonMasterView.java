@@ -52,6 +52,7 @@ import java.util.ResourceBundle;
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout {
     private final int WIDTH = 8;
     Image[][] tiles;
+    MapView mapView;
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
@@ -104,6 +105,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     void createLayoutBasic(Long ALong) {
+        mapView=new MapView();
         setSizeFull();
         game();
 
@@ -117,7 +119,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         createLayoutAction();
 
         splitMapWithRoom.setSizeFull();
-        splitMapWithRoom.addToPrimary(initMap(ALong));
+        splitMapWithRoom.addToPrimary(mapView.initMap(mapServiceI, ALong, tiles));
         splitMapWithRoom.addToSecondary(new Label("AKTUELLER RAUM"));
 
         add(splitChatWithRest);

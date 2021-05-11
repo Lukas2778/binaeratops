@@ -14,26 +14,18 @@ import de.dhbw.binaeratops.service.impl.map.MapService;
  */
 public class MapView {
 
-    public Image[][] tiles;
-
-    private MapServiceI mapServiceI;
-    public MapView(Image[][] ATiles){
-        tiles=ATiles;
-        mapServiceI=new MapService();
-    }
-
-    public VerticalLayout initMap(Long ADungeonId) {
-        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId);
-        tiles = new Image[newTiles.length][newTiles[0].length];
+    public VerticalLayout initMap(MapServiceI AMapService, Long ADungeonId, Image[][] ATiles) {
+        Tile[][] newTiles = AMapService.getMapGame(ADungeonId);
+        ATiles = new Image[newTiles.length][newTiles[0].length];
         VerticalLayout columns = new VerticalLayout();
         columns.setSpacing(false);
         for (int i = 0; i < newTiles.length; i++) {
             HorizontalLayout rows = new HorizontalLayout();
             rows.setSpacing(false);
             for (int j = 0; j < newTiles[0].length; j++) {
-                tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
-                tiles[i][j].addClassName("room");
-                rows.add(tiles[i][j]);
+                ATiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
+                ATiles[i][j].addClassName("room");
+                rows.add(ATiles[i][j]);
             }
             columns.add(rows);
         }
