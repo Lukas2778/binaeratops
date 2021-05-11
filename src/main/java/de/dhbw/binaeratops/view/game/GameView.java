@@ -136,7 +136,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameLayout.setSizeFull();
         add(binTitle, html, gameLayout);
         expand(myDungeonChat);
-        //setSizeFull();
+        setSizeFull();
     }
 
     void createMap(Long ALong) {
