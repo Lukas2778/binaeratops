@@ -2,8 +2,10 @@ package de.dhbw.binaeratops.view.game;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -18,8 +20,10 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.api.ItemI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
@@ -32,7 +36,10 @@ import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
+import java.awt.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -56,13 +63,18 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     Html html;
     HorizontalLayout gameLayout;
     SplitLayout gameSplitLayout;
+
     VerticalLayout gameFirstLayout;
+    VerticalLayout gameSecondLayout;
 
     Chat myDungeonChat;
 
     HorizontalLayout insertInputLayout;
     TextField textField;
     Button confirmButt;
+
+    private List<Item> inventoryList;
+    private List<Item> armorList;
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
@@ -82,10 +94,15 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameLayout=new HorizontalLayout();
         gameSplitLayout=new SplitLayout();
 
+        gameFirstLayout = new VerticalLayout();
+        gameSecondLayout = new VerticalLayout();
+
         myDungeonChat=new Chat(messages);
 
         textField=new TextField();
         textField.focus();
+        textField.setWidthFull();
+
         confirmButt=new Button("Eingabe");
         confirmButt.addClickShortcut(Key.ENTER);
         AvatarI myAvatar=new Avatar();
@@ -119,19 +136,21 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 cmdScannerException.printStackTrace();
             }
         });
+        confirmButt.setWidth("120px");
+
         insertInputLayout=new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
-        insertInputLayout.setSizeFull();
-
-        gameFirstLayout = new VerticalLayout();
-        //VerticalLayout gameSecondLayout = new VerticalLayout();
+        insertInputLayout.setWidthFull();
 
         gameFirstLayout.setSizeFull();
-        //gameSecondLayout.setSizeFull();
+        gameSecondLayout.setSizeFull();
 
         gameFirstLayout.add(myDungeonChat, insertInputLayout);
-        //gameSecondLayout.add(initMap(dungeonId));
 
+        gameSplitLayout.addToPrimary(gameFirstLayout);
+        gameSplitLayout.addToSecondary(gameSecondLayout);
+
+        gameSplitLayout.setSizeFull();
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
         add(binTitle, html, gameLayout);
@@ -141,9 +160,48 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
     void createMap(Long ALong) {
         mapView=new MapView();
-        gameSplitLayout.addToPrimary(gameFirstLayout);
-        gameSplitLayout.addToSecondary(mapView.initMap(mapServiceI,dungeonId, tiles));
-        gameSplitLayout.setSizeFull();
+        VerticalLayout mapLayout=new VerticalLayout();
+        mapLayout.add(mapView.initMap(mapServiceI,dungeonId, tiles));
+        gameSecondLayout.add(mapLayout);
+        createInventory();
+    }
+
+    void createInventory(){
+        HorizontalLayout gridLayout =new HorizontalLayout();
+
+        VerticalLayout inventoryLayout = new VerticalLayout();
+        Text inventoryTitle = new Text("Inventar");
+        inventoryList=new ArrayList<>();
+        Grid<Item> inventoryGrid = new Grid<>();
+        inventoryGrid.setItems(inventoryList);
+        inventoryGrid.setVerticalScrollingEnabled(true);
+        inventoryGrid.addColumn(Item::getItemName).setHeader("Item");
+        inventoryGrid.addColumn(Item::getType).setHeader("Typ");
+        inventoryGrid.addColumn(Item::getSize).setHeader("Größe");
+        inventoryGrid.getStyle().set("background", "grey");
+        inventoryGrid.setSizeFull();
+        inventoryLayout.add(inventoryTitle, inventoryGrid);
+
+        VerticalLayout armorLayout = new VerticalLayout();
+        Text armorTitle = new Text("Rüstung");
+        armorList=new ArrayList<>();
+        Grid<Item> armorGrid = new Grid<>();
+        armorGrid.setItems(armorList);
+        armorGrid.setVerticalScrollingEnabled(true);
+        armorGrid.addColumn(Item::getItemName).setHeader("Item");
+        armorGrid.addColumn(Item::getType).setHeader("Typ");
+        armorGrid.addColumn(Item::getSize).setHeader("Größe");
+        armorGrid.getStyle().set("background", "grey");
+        armorGrid.setSizeFull();
+        armorLayout.add(armorTitle,armorGrid);
+
+        gridLayout.add(inventoryLayout, armorLayout);
+        gridLayout.setSizeFull();
+
+        Button leftDungeonButt=new Button("Dungeon verlassen");
+        leftDungeonButt.getStyle().set("color" , "red");
+
+        gameSecondLayout.add(gridLayout, leftDungeonButt);
     }
 
     @Override
