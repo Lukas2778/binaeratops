@@ -1,16 +1,20 @@
 package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 
 import de.dhbw.binaeratops.model.api.DungeonI;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Item;
-import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.enums.Direction;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+/**
+ * Callbacks des Scanners für die Spielsteuerungs-Befehle.
+ * <p>
+ *     Für Schnittstelle siehe @{@link GameCtrlCmdHooksI}.
+ * </p>
+ *
+ * @author Nicolas Haug, Lukas Göpel
+ */
 @Scope(value = "session")
 @Service
 public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {

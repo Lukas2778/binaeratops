@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.model.api;
 
-import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 
@@ -126,12 +125,14 @@ public interface RoomI {
 
     /**
      * Fügt einem Raum einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addItem(ItemInstance AItem);
 
     /**
      * Entfernt den übergebenen Gegenstand dem Raum.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeItem(ItemInstance AItem);
@@ -145,36 +146,42 @@ public interface RoomI {
 
     /**
      * Fügt dem Raum den NPC hinzu.
+     *
      * @param ANpc NPC, der hinzugefügt werden soll.
      */
     void addNpc(NPC ANpc);
 
     /**
      * Entfernt dem Raum den NPC.
+     *
      * @param ANpc NPC, der entfernt werden soll.
      */
     void removeNPC(NPC ANpc);
 
     /**
      * Gibt die X-Koordinate des Raumes zurück.
+     *
      * @return X-Koordinate.
      */
     Integer getXCoordinate();
 
     /**
      * Setzt die X-Koordinate des Raumes.
+     *
      * @param AXCoordinate Zu setzende X-Koordinate des Raumes.
      */
     void setXCoordinate(Integer AXCoordinate);
 
     /**
      * Gibt die Y-Koordinate des Raumes zurück.
+     *
      * @return Y-Koordinate des Raumes.
      */
     Integer getYCoordinate();
 
     /**
      * Setzt die Y-Koordinate des Raumes.
+     *
      * @param AYCoordinate Zu setzende Y-Koordinate des Raumes.
      */
     void setYCoordinate(Integer AYCoordinate);

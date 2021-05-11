@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für einen Benutzer.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Benutzers aus der Datenbank bereit.
  *
- * @see User
- *
  * @author Nicolas Haug
+ * @see User
  */
 @Repository
-public interface UserRepositoryI extends JpaRepository<User,Long> {
+public interface UserRepositoryI extends JpaRepository<User, Long> {
 
     /**
      * Sucht alle Benutzereinträge aus der Datenbank zurück.
+     *
      * @return Alle Benutzereinträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface UserRepositoryI extends JpaRepository<User,Long> {
 
     /**
      * Sucht den Benutzer mit der übergebenen ID in der Datenbank.
+     *
      * @param AUserId ID des gesuchten Benutzers.
      * @return Gesuchter Benutzer.
      */
@@ -36,6 +37,7 @@ public interface UserRepositoryI extends JpaRepository<User,Long> {
 
     /**
      * Sucht den Benutzer mit dem übergebenen Benutzernamen.
+     *
      * @param AName Zu suchender Benutzername.
      * @return Benutzer mit diesem Benutzernamen.
      */

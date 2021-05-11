@@ -12,7 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
+/**
+ * Komponente "MapService".
+ * <p>
+ * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link MapServiceI}.
+ * </p>
+ *
+ * @author Lukas Göpel, Matthias Rall, Lars Rösel
+ */
 @Scope(value = "session")
 @Service
 public class MapService implements MapServiceI {

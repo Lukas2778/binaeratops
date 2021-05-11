@@ -1,23 +1,25 @@
 package de.dhbw.binaeratops.model.entitys;
 
-import de.dhbw.binaeratops.model.api.ItemI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Entity Objekt für einen Gegenstand.
+ * Entity Objekt für eine Gegenstand-Blaupause.
  * <p>
- * Es repräsentiert die Entity "Gegenstand" der Datenbank in der Programmlogik.
+ * Es repräsentiert die Entity "Gegenstand-Blaupause" der Datenbank in der Programmlogik.
  * <p>
- * Es implementiert dazu alle Funktionalitäten der Gegenstand Schnittstelle.
- * <p>
- * @see ItemI
+ * Es stellt eine Blaupause für die Entität "Gegenstand" dar.
  *
- * @author Nicolas Haug
+ * @author Nicolas Haug, Lars Rösel
+ * @see de.dhbw.binaeratops.model.api.ItemI
+ * @see Item
  */
 @Entity
 public class ItemInstance {
@@ -56,6 +58,8 @@ public class ItemInstance {
     public ItemInstance() {
 
     }
+
+    // TODO GETTER + SETTER in Interface auslagern + Kommentare
 
     public Long getItemInstanceId() {
         return itemInstanceId;
@@ -145,17 +149,17 @@ public class ItemInstance {
      * Prüft die Gültigkeit eines Objekts und konvertiert das API-Interface zur
      * erwarteten Klasse der Implementation.
      *
-     * @param AItem Objekt.
+     * @param AItemInstance Objekt.
      * @return Objekt.
      * @throws InvalidImplementationException Objekt ungültig.
      */
-    public static ItemInstance check(ItemInstance AItem) throws InvalidImplementationException {
-        if (!(AItem instanceof ItemInstance)) {
+    public static ItemInstance check(ItemInstance AItemInstance) throws InvalidImplementationException {
+        if (!(AItemInstance instanceof ItemInstance)) {
             throw new InvalidImplementationException(-1,
                     MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
-                            Item.class, AItem.getClass()));
+                            ItemInstance.class, AItemInstance.getClass()));
         }
 
-        return (ItemInstance) AItem;
+        return (ItemInstance) AItemInstance;
     }
 }

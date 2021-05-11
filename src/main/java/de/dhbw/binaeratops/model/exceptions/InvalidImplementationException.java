@@ -7,7 +7,6 @@ package de.dhbw.binaeratops.model.exceptions;
  * <p>
  *
  * @author Nicolas Haug
- *
  */
 public class InvalidImplementationException extends Exception {
     private static final long serialVersionUID = 1L;
@@ -29,8 +28,8 @@ public class InvalidImplementationException extends Exception {
      * <p>
      *
      * @param AErrorCode ErrorCode.
-     * @param AMessage Fehlermeldung.
-     * @param ACause Vorgängerexception.
+     * @param AMessage   Fehlermeldung.
+     * @param ACause     Vorgängerexception.
      */
     public InvalidImplementationException(int AErrorCode, String AMessage, Throwable ACause) {
         super(AMessage, ACause);
@@ -42,7 +41,7 @@ public class InvalidImplementationException extends Exception {
      * <p>
      *
      * @param AErrorCode ErrorCode.
-     * @param AMessage Fehlermeldung.
+     * @param AMessage   Fehlermeldung.
      */
     public InvalidImplementationException(int AErrorCode, String AMessage) {
         super(AMessage);
@@ -54,7 +53,7 @@ public class InvalidImplementationException extends Exception {
      * <p>
      *
      * @param AErrorCode ErrorCode.
-     * @param ACause Vorgängerexception.
+     * @param ACause     Vorgängerexception.
      */
     public InvalidImplementationException(int AErrorCode, Throwable ACause) {
         super(ACause);

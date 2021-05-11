@@ -2,38 +2,84 @@ package de.dhbw.binaeratops.service.impl.registration;
 
 import com.vaadin.flow.component.Component;
 
+/**
+ * Klasse für die autorisierten Routen.
+ * <p>
+ * Stellt alle Funktionalitäten für die Bewegungsfreiheit des Benutzers bereit.
+ * <p>
+ * Es besteht aus der Route, dem Namen der Route und der View-Komponente.
+ *
+ * @author Matthias Rall, Nicolas Haug
+ */
 public class AuthorizedRoute {
-    private String rout;
+    private String route;
     private String name;
     private Class<? extends Component> view;
 
-    public AuthorizedRoute(String rout, String name, Class<? extends Component> view) {
-        this.rout = rout;
-        this.name = name;
-        this.view = view;
+    /**
+     * Konstruktor zum Erzeugen einer autorisierten Route.
+     *
+     * @param ARoute Route, die autorisiert werden soll.
+     * @param AName  Name der Route.
+     * @param AView  View-Komponente der Route.
+     */
+    public AuthorizedRoute(String ARoute, String AName, Class<? extends Component> AView) {
+        this.route = ARoute;
+        this.name = AName;
+        this.view = AView;
     }
 
-    public String getRout() {
-        return rout;
+    /**
+     * Gibt die autorisierte Route zurück.
+     *
+     * @return Autorisierte Route.
+     */
+    public String getRoute() {
+        return route;
     }
 
-    public void setRout(String rout) {
-        this.rout = rout;
+    /**
+     * Setzt die autorisierte Route.
+     *
+     * @param ARoute Autorisierte Route.
+     */
+    public void setRoute(String ARoute) {
+        this.route = ARoute;
     }
 
+    /**
+     * Gibt den Namen der Route zurück.
+     *
+     * @return Name der Route.
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * Setzt den Namen der Route.
+     *
+     * @return Name der Route.
+     */
+    public void setName(String AName) {
+        this.name = AName;
     }
 
+    /**
+     * Gibt die Klasse der View-Komponente zurück.
+     *
+     * @return Klasse der View-Komponente.
+     */
     public Class<? extends Component> getView() {
         return view;
     }
 
-    public void setView(Class<? extends Component> view) {
-        this.view = view;
+    /**
+     * Setzt die Klasse der View-Komponente.
+     *
+     * @return Klasse der View-Komponente.
+     */
+    public void setView(Class<? extends Component> AView) {
+        this.view = AView;
     }
 }

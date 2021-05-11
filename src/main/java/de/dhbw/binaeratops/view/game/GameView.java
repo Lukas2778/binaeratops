@@ -22,7 +22,7 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
-import de.dhbw.binaeratops.view.chat.Chat;
+import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
@@ -45,7 +45,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     H2 binTitle;
     String aboutText;
     Html html;
-    Chat myDungeonChat;
+    ChatView myDungeonChatView;
 
     HorizontalLayout insertInputLayout;
     TextField textField;
@@ -64,7 +64,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
 
-        myDungeonChat=new Chat(messages);
+        myDungeonChatView =new ChatView(messages);
 
         textField=new TextField();
         textField.focus();
@@ -78,19 +78,19 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 if(um.getKey()!=null) {
                     switch (um.getKey()) {
                         case "view.game.ingame.cmd.notify.all":
-                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                            myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
                             break;
                         case "view.game.cmd.help":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.all":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.cmds":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.ctrl":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
                             break;
                         default:
                             Notification.show("An Error Occured.");
@@ -107,8 +107,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         insertInputLayout.add(textField, confirmButt);
 
         setSizeFull();
-        add(binTitle, html, myDungeonChat, insertInputLayout);
-        expand(myDungeonChat);
+        add(binTitle, html, myDungeonChatView, insertInputLayout);
+        expand(myDungeonChatView);
     }
 
     @Override

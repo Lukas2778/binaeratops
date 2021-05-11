@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für eine Rolle.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen einer Rolle aus der Datenbank bereit.
  *
- * @see Role
- *
  * @author Nicolas Haug
+ * @see Role
  */
 @Repository
 public interface RoleRepositoryI extends JpaRepository<Role, Long> {
 
     /**
      * Sucht alle Rolleneinträge aus der Datenbank.
+     *
      * @return Alle Rolleneinträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface RoleRepositoryI extends JpaRepository<Role, Long> {
 
     /**
      * Sucht die Rolle mit der übergebenen ID in der Datenbank.
+     *
      * @param ARoleId ID der gesuchten Rolle.
      * @return Gesuchte Rolle.
      */

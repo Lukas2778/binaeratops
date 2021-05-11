@@ -5,6 +5,7 @@ import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
+import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.parser.UserMessageI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdScanner;
@@ -14,11 +15,19 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 /**
- * TODO
+ * Komponente "ParserService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten zum Parsen der Spielereingabe bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link ParserServiceI}.
+ * </p>
+ *
+ * @author Nicolas Haug, Lukas Göpel
  */
 @Scope(value = "session")
 @Service
-public class ParserService {
+public class ParserService implements ParserServiceI {
     @Autowired
     InGameCmdScanner ingameCmdScanner;
 
@@ -28,17 +37,15 @@ public class ParserService {
     @Autowired
     DungeonRepositoryI myDungeonRepo;
 
+    /**
+     * Standardkonstruktor zum Erzeugen des ParserService.
+     */
     public ParserService() {
 
     }
 
-    /**
-     * TODO Avatarname muss eindeutig sein!
-     * @param AInput
-     * @return
-     */
     public UserMessage parseCommand(String AInput, Long ADungeonId, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
-        DungeonI myDungeon=myDungeonRepo.findByDungeonId(ADungeonId);
+        DungeonI myDungeon = myDungeonRepo.findByDungeonId(ADungeonId);
         // TODO Scanner hinzufügen
         AInput = AInput.trim();
         UserMessageI userMessage;
@@ -50,11 +57,18 @@ public class ParserService {
         return (UserMessage) userMessage;
     }
 
-    private boolean checkPrefix(String AInput, DungeonI  ADungeon) {
-        return AInput.startsWith(ADungeon.getCommandSymbol().toString());
-    }
-
     public Character getCommandSymbol(Long ADungeonId) {
         return myDungeonRepo.findByDungeonId(ADungeonId).getCommandSymbol();
+    }
+
+    /**
+     * Überprüft, ob die Spielereingabe mit dem Befehlssymbol startet.
+     *
+     * @param AInput   Spielereingabe.
+     * @param ADungeon Dungeon, in dem der Befehl abgesetzt wird.
+     * @return Wahrheitswert.
+     */
+    private boolean checkPrefix(String AInput, DungeonI ADungeon) {
+        return AInput.startsWith(ADungeon.getCommandSymbol().toString());
     }
 }

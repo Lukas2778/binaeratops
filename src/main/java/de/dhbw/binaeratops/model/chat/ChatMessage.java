@@ -1,8 +1,11 @@
 package de.dhbw.binaeratops.model.chat;
+
 import java.util.List;
 
 /**
- * Klasse für eine Nachricht.
+ * Klasse für eine Chat-Nachricht.
+ *
+ * @author Pedro Treuer, Timon Gartung
  */
 public class ChatMessage {
     private String message;
@@ -19,14 +22,25 @@ public class ChatMessage {
         this.userIdList = AUserIdList;
     }
 
+    /**
+     * Gibt die Textnachricht zurück.
+     *
+     * @return Textnachrciht.
+     */
     public String getMessage() {
         return message;
     }
 
+    // TODO Duplikat -> entfernen.
     public String getMessages() {
         return message;
     }
 
+    /**
+     * Gibt die Liste der Benutzer zurück, an welche die Chat-Nachricht geschickt werden soll.
+     *
+     * @return Liste der Benutzer, an welche die Chat-Nachricht geschickt werden soll.
+     */
     public List<Long> getUserIdList() {
         return userIdList;
     }

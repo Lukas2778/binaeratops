@@ -13,6 +13,13 @@ package de.dhbw.binaeratops.service.exceptions.parser;
 public class CmdScannerSyntaxUnexpectedException extends CmdScannerSyntaxException {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Exception mit fehlendem Token.
+     * <p>
+     *
+     * @param AUnexpectedToken Fehlendem Token.
+     * @param APosition Position, an der das Token aufgetreten ist.
+     */
     public CmdScannerSyntaxUnexpectedException(String AUnexpectedToken, int APosition) {
         super(String.format("Unerwartetes Schlüsselwort '%s' an Position %d",
                 AUnexpectedToken, APosition + 1));

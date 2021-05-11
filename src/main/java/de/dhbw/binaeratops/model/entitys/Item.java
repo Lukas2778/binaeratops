@@ -16,12 +16,12 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Gegenstand Schnittstelle.
  * <p>
- * @see ItemI
  *
  * @author Nicolas Haug
+ * @see ItemI
  */
 @Entity
-public class Item{
+public class Item {
 
     @Id
     @GeneratedValue
@@ -42,8 +42,8 @@ public class Item{
     /**
      * Konstruktor zum Erzeugen eines Gegenstandes mit allen Eigenschaften.
      *
-     * @param AName Name des Gegenstandes.
-     * @param ASize Größe des Gegenstandes.
+     * @param AName        Name des Gegenstandes.
+     * @param ASize        Größe des Gegenstandes.
      * @param ADescription Beschreibung des Gegenstandes.
      */
     public Item(String AName, Long ASize, String ADescription) {

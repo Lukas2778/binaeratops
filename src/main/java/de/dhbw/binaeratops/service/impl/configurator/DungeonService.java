@@ -12,7 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Komponente "DungeonService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten zum Umgang mit einem Dungen bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link DungeonServiceI}.
+ * </p>
+ *
+ * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
+ */
 @Service
 public class DungeonService implements DungeonServiceI {
     @Autowired

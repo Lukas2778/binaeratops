@@ -17,6 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+/**
+ * Callbacks des Scanners für die "In-Game"-Befehle.
+ * <p>
+ * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.ingame.InGameCmdHooks}.
+ * </p>
+ *
+ * @author Nicolas Haug
+ */
 @Scope(value = "session")
 @Service
 public class InGameCmdHooks implements InGameCmdHooksI {

@@ -17,9 +17,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der NPC Schnittstelle.
  * <p>
- * @see NPCI
  *
  * @author Nicolas Haug
+ * @see NPCI
  */
 @Entity
 public class NPC implements NPCI {
@@ -47,8 +47,8 @@ public class NPC implements NPCI {
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
      *
-     * @param ANpcName Name des NPCs.
-     * @param ARace Rasse des NPCs.
+     * @param ANpcName     Name des NPCs.
+     * @param ARace        Rasse des NPCs.
      * @param ADescription Beschreibung des NPCs.
      */
     public NPC(String ANpcName, Race ARace, String ADescription) {
