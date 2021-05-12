@@ -242,7 +242,7 @@ public interface ConfiguratorServiceI {
      *
      * @param ARoom Raum.
      * @param AItem Item.
-     * @return
+     * @return Anzahl von ItemInstances.
      */
     int getNumberOfItem(Room ARoom, Item AItem);
 

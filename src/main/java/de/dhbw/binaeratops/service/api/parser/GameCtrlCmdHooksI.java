@@ -98,6 +98,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "examine".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItemOrNpc Gegenstand oder NPC der untersucht werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -125,6 +126,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "take".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand der aufgenommen werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -134,6 +136,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "drop".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand, der fallen gelassen werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -143,6 +146,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "eat".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand, der gegessen werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -152,6 +156,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "drink".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand, der getrunken werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -161,6 +166,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "equip".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand, der ausgerüstet werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -170,6 +176,7 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "laydown".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AItem Gegenstand, der hingelegt werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
@@ -188,6 +195,8 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "talk".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param ANpcName Name des NPCs.
+     * @param AMessage Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */

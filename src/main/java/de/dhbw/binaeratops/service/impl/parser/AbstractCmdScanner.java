@@ -51,10 +51,13 @@ public abstract class AbstractCmdScanner {
      * Kann für eine Scanner-Instanz mehrfach aufgerufen werden,
      * der Zustand des Scanners wird jeweils zurückgesetzt.
      *
-     * @param AInput Zu parsende Eingabe.
-     *
-     * @throws CmdScannerException Fehlermeldung oder
-     *         Signalisierung von Zustandswechseln.
+     * @param AInput   Zu parsende Eingabe.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     * @throws CmdScannerException            Fehlermeldung oder Signalisierung von Zustandswechseln.
+     * @throws InvalidImplementationException Übergebenes Objekt ungültig.
      */
     public UserMessage scan(String AInput, DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         input = AInput;
@@ -75,6 +78,7 @@ public abstract class AbstractCmdScanner {
      * Callback bei einem Syntaxfehler (unerwartetes Befehlsende, fehlendes Schlüsselwort).
      *
      * @param AExpected Erwartetes Schlüsselwort.
+     * @throws CmdScannerException Fehlermeldung oder Signalisierung von Zustandswechseln.
      */
     protected void onMissingToken(String AExpected) throws CmdScannerException {
         throw new CmdScannerSyntaxMissingException(AExpected);
@@ -85,8 +89,11 @@ public abstract class AbstractCmdScanner {
      * <p>
      * Muss in einer konkreten Klasse überschrieben werden.
      *
-     * @throws CmdScannerException Fehlermeldung oder
-     *         Signalisierung von Zustandswechseln.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @throws CmdScannerException            Fehlermeldung oder Signalisierung von Zustandswechseln.
+     * @throws InvalidImplementationException Übergebenes Objekt ungültig.
      */
     protected abstract UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -123,7 +130,7 @@ public abstract class AbstractCmdScanner {
      * Liefert die gesamte restliche Eingabe hinter dem aktuellen Token.
      *
      * @return Restliche Eingabe. {@code null}, wenn hinter dem aktuellen
-     *         Token keine Eingabe vorhanden ist.
+     * Token keine Eingabe vorhanden ist.
      */
     protected String findRestOfInput() {
         return findInput(true);
@@ -132,6 +139,7 @@ public abstract class AbstractCmdScanner {
     /**
      * Liefert aus dem restlichen zu parsenden String das erste Wort.
      *
+     * @param AUpToLineEnd Wahrheitswert, ob bis zum Stringende eingelesen werden soll.
      * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
      */
     private String findInput(boolean AUpToLineEnd) {

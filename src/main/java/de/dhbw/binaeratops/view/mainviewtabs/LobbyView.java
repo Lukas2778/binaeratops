@@ -38,10 +38,12 @@ public class LobbyView extends VerticalLayout {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
+     * @param ADungeonService DungeonService.
+     * @param AGameService GameService.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService gameService){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService){
         dungeonServiceI=ADungeonService;
-        this.gameService = gameService;
+        this.gameService = AGameService;
 
         titleText=new H1("Dungeon spielen");
         explanationText=new String("<div>Du kannst hier aus einer Liste der für dich spielbaren Dungeons" +

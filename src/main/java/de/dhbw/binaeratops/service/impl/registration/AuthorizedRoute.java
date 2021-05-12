@@ -59,7 +59,7 @@ public class AuthorizedRoute {
     /**
      * Setzt den Namen der Route.
      *
-     * @return Name der Route.
+     * @param AName  Name der Route.
      */
     public void setName(String AName) {
         this.name = AName;
@@ -77,7 +77,7 @@ public class AuthorizedRoute {
     /**
      * Setzt die Klasse der View-Komponente.
      *
-     * @return Klasse der View-Komponente.
+     * @param AView Klasse der View-Komponente.
      */
     public void setView(Class<? extends Component> AView) {
         this.view = AView;

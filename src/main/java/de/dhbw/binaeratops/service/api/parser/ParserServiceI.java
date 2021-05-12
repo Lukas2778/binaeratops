@@ -27,8 +27,8 @@ public interface ParserServiceI {
      * @param AAvatar    Avatar, der den Befehl absetzt.
      * @param AUser      Spieler, der den Befehl absetzt.
      * @return Benutzernachricht.
-     * @throws CmdScannerException
-     * @throws InvalidImplementationException
+     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Übergebenes Objekt ungültig.
      */
     UserMessage parseCommand(String AInput, Long ADungeonId, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 

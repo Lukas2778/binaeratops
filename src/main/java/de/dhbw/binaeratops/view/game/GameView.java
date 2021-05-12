@@ -21,7 +21,6 @@ import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
-import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +53,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     * @param messages
+     * @param messages Nachrichten.
+     * @param AParserService ParserService.
      */
-    public GameView(Flux<ChatMessage> messages, @Autowired ParserService AParserService) {
+    public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService) {
         myParserService=AParserService;
 
         this.messages = messages;
