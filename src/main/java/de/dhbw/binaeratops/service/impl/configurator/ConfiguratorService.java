@@ -14,6 +14,17 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Komponente "ConfiguratorService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten zum Konfigurieren eines Dungeons bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link ConfiguratorServiceI}.
+ * </p>
+ *
+ * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
+ */
 @Scope(value = "session")
 @Service
 public class ConfiguratorService implements ConfiguratorServiceI {
@@ -22,7 +33,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     private User dungeonDesigner;
 
     @Autowired
-    DungeonRepositoryI dungeonRepo;
+    public DungeonRepositoryI dungeonRepo;
     @Autowired
     NPCRepositoryI npcRepo;
     @Autowired
@@ -35,11 +46,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemRepositoryI itemRepo;
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
-
-    public void init(DungeonRepositoryI ADungeonRepo) {
-        dungeonRepo = ADungeonRepo;
-    }
-
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -82,7 +88,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void setStartRoom(Room ARoom) {
-
+        dungeon.setStartRoomId(ARoom.getRoomId());
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -228,9 +235,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public int getNumberOfItem (Room ARoom, Item AItem) {
+    public int getNumberOfItem(Room ARoom, Item AItem) {
         int counter = 0;
-        for (ItemInstance itemInstance: getAllItems(ARoom)) {
+        for (ItemInstance itemInstance : getAllItems(ARoom)) {
             if (itemInstance.getItem().getItemId().equals(AItem.getItemId())) {
                 counter++;
             }
@@ -242,10 +249,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void setItemInstances(Room ARoom, List<ItemInstance> AItemList) {
         ARoom.getItems()
                 .clear();
-        for (ItemInstance myItem: itemInstanceRepo.findByRoom(ARoom)) {
+        for (ItemInstance myItem : itemInstanceRepo.findByRoom(ARoom)) {
             itemInstanceRepo.delete(myItem);
         }
-        for (ItemInstance myItem: AItemList) {
+        for (ItemInstance myItem : AItemList) {
             myItem.setRoom(ARoom);
             itemInstanceRepo.save(myItem);
         }
@@ -255,7 +262,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
             roomRepo.save(ARoom);
         } catch (Exception e) {
 
-            for (ItemInstance myItem: AItemList) {
+            for (ItemInstance myItem : AItemList) {
                 myItem.setRoom(ARoom);
                 itemInstanceRepo.save(myItem);
             }
@@ -281,8 +288,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
         return dungeon.getItems();
     }
+
     @Override
-    public List<ItemInstance> getAllItems(Room ARoom){
+    public List<ItemInstance> getAllItems(Room ARoom) {
         return itemInstanceRepo.findByRoom(ARoom);
     }
 
@@ -292,11 +300,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<NPC> getAllNPCs(Room ARoom){
+    public List<NPC> getAllNPCs(Room ARoom) {
         List<NPC> npcs = new ArrayList<>();
-        for (NPC myNpc: dungeon.getNpcs()) {
-            if(myNpc.getRoom() != null){
-                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()){
+        for (NPC myNpc : dungeon.getNpcs()) {
+            if (myNpc.getRoom() != null) {
+                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()) {
                     npcs.add(myNpc);
                 }
             }
@@ -314,6 +322,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public Room getRoom(Long ARoomID) {
+        for (Room r : dungeon.getRooms()) {
+            if(r.getRoomId().equals(ARoomID)){
+                return r;
+            }
+        }
         return null;
     }
 

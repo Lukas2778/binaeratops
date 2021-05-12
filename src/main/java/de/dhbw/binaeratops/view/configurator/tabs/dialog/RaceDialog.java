@@ -9,6 +9,7 @@ package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,7 +18,8 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
 
 public class RaceDialog
-        extends Dialog {
+        extends Dialog
+{
     private TextField currentRaceField;
     private TextField currentDescriptionField;
 
@@ -26,83 +28,95 @@ public class RaceDialog
     Grid<Race> grid;
     ConfiguratorServiceI configuratorServiceI;
 
-    public RaceDialog() {}
+    public RaceDialog()
+    {
+    }
 
-    public RaceDialog(ArrayList<Race> raceList, Race currentRace, Grid<Race> grid, ConfiguratorServiceI AConfiguratorServiceI) {
+    public RaceDialog(ArrayList<Race> raceList,
+                      Race currentRace,
+                      Grid<Race> grid,
+                      ConfiguratorServiceI AConfiguratorServiceI)
+    {
         this.raceList = raceList;
         this.currentRace = currentRace;
         this.grid = grid;
         this.configuratorServiceI = AConfiguratorServiceI;
         init();
     }
-    private void init() {
+
+    private void init()
+    {
         currentRaceField = new TextField("Rassenbezeichnung");
         currentDescriptionField = new TextField("Beschreibung");
         Button saveDialog = new Button("Speichern");
         Button closeDialog = new Button("Abbrechen");
 
         this.add(new VerticalLayout(currentRaceField,
-                                    currentDescriptionField, new HorizontalLayout(saveDialog, closeDialog)));
-
-
+                                    currentDescriptionField,
+                                    new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
-            currentRace.setRaceName(currentRaceField.getValue());
-            currentRace.setDescription(currentDescriptionField.getValue());
+            if ( currentRaceField.getValue() != "" )
+            {
+
+                currentRace.setRaceName(currentRaceField.getValue());
+                currentRace.setDescription(currentDescriptionField.getValue());
 
 
-            if (!configuratorServiceI.getAllRace().contains(currentRace))  {
-                configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
+                if ( !findRace(currentRace.getRaceName(), currentRace.getDescription()) )
+                {
+                    configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
+                    refreshGrid();
+                    this.close();
+                }
+                else
+                {
+                    Notification.show("Warum denn zwei Mal die gleiche Rasse erstellen? Eine reicht ;)");
+                }
+
             }
-            refreshGrid();
+            else
+            {
+                Notification.show("Du hast die Rassenbezeichnung vergessen ;)");
 
-            this.close();
+            }
+
         });
+//
+//        saveDialog.addClickListener(e -> {
+//            currentRace.setRaceName(currentRaceField.getValue());
+//            currentRace.setDescription(currentDescriptionField.getValue());
+//
+//            if ( !configuratorServiceI.getAllRace()
+//                    .contains(currentRace) )
+//            {
+//                configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
+//            }
+//            refreshGrid();
+//
+//            this.close();
+//        });
         closeDialog.addClickListener(e -> this.close());
     }
 
-
-    private void refreshGrid() {
+    private void refreshGrid()
+    {
         grid.setItems(configuratorServiceI.getAllRace());
-   }
-//
-//    public TextField getCurrentName() {
-//        return currentName;
-//    }
-//
-//    public void setCurrentName(TextField currentName) {
-//        this.currentName = currentName;
-//    }
-//
-//    public NumberField getCurrentSize() {
-//        return currentSize;
-//    }
-//
-//    public void setCurrentSize(NumberField currentSize) {
-//        this.currentSize = currentSize;
-//    }
-//
-//    public TextField getCurrentDescriptionField() {
-//        return currentDescriptionField;
-//    }
-//
-//    public void setCurrentDescriptionField(TextField currentDescriptionField) {
-//        this.currentDescriptionField = currentDescriptionField;
-//    }
-//
-//    public ComboBox<ItemType> getCurrentType() {
-//        return currentType;
-//    }
-//
-//    public void setCurrentType(ComboBox<ItemType> currentType) {
-//        this.currentType = currentType;
-//    }
-//
-//    public Item getCurrentItem() {
-//        return currentItem;
-//    }
-//
-//    public void setCurrentItem(Item currentItem) {
-//        this.currentItem = currentItem;
-//    }
+    }
+
+    private boolean findRace(String ARaceName, String ARaceDescription)
+    {
+        boolean result = false;
+        for ( Race race : configuratorServiceI.getAllRace() )
+        {
+            if ( race.getRaceName()
+                    .equals(ARaceName) && race.getDescription()
+                    .equals(ARaceDescription) )
+            {
+                result = true;
+            }
+
+        }
+        return result;
+    }
 }

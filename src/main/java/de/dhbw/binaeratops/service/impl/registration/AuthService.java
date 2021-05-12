@@ -26,6 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Komponente "AuthService".
+ * <p>
+ * Dieser Service stellt die Schnittstelle zwischen der User-Authentifizierung und der Benutzeroberfläche dar.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link AuthServiceI}.
+ * </p>
+ *
+ * @author Lukas Göpel, Matthias Rall
+ */
 @Service
 public class AuthService implements AuthServiceI {
 
@@ -121,10 +132,10 @@ public class AuthService implements AuthServiceI {
     private void createRoutes() {
         getRoutsForMenu().stream()
                 .forEach(r ->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView(), MainView.class));
+                        RouteConfiguration.forSessionScope().setRoute(r.getRoute(), r.getView(), MainView.class));
         getRouts().stream()
                 .forEach(r ->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView()));
+                        RouteConfiguration.forSessionScope().setRoute(r.getRoute(), r.getView()));
     }
 
     /**

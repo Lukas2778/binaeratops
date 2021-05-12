@@ -17,26 +17,24 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
-import de.dhbw.binaeratops.model.api.ItemI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
-import de.dhbw.binaeratops.model.map.Tile;
+import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
-import de.dhbw.binaeratops.service.impl.parser.ParserService;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
-import de.dhbw.binaeratops.view.chat.Chat;
+import de.dhbw.binaeratops.view.chat.ChatView;
 import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
-import java.awt.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,11 +43,11 @@ import java.util.ResourceBundle;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-@Route(value = "gameView")
+//@Route(value = "game")
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
-    ParserService myParserService;
+    ParserServiceI myParserService;
     MapServiceI mapServiceI;
     MapView mapView;
     Image[][] tiles;
@@ -67,7 +65,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     VerticalLayout gameFirstLayout;
     VerticalLayout gameSecondLayout;
 
-    Chat myDungeonChat;
+    ChatView myDungeonChatView;
 
     HorizontalLayout insertInputLayout;
     TextField textField;
@@ -78,9 +76,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     * @param messages
+     * @param messages Nachrichten.
+     * @param AParserService ParserService.
      */
-    public GameView(Flux<ChatMessage> messages, @Autowired ParserService AParserService, @Autowired MapServiceI AMapService) {
+    public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, @Autowired MapServiceI AMapService) {
         myParserService=AParserService;
         mapServiceI=AMapService;
 
@@ -91,13 +90,12 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
         html=new Html(aboutText);
 
+        myDungeonChatView =new ChatView(messages);
         gameLayout=new HorizontalLayout();
         gameSplitLayout=new SplitLayout();
 
         gameFirstLayout = new VerticalLayout();
         gameSecondLayout = new VerticalLayout();
-
-        myDungeonChat=new Chat(messages);
 
         textField=new TextField();
         textField.focus();
@@ -109,31 +107,37 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         confirmButt.addClickListener(e->{
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um=myParserService.parseCommand(textField.getValue(),dungeonId,myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
-                if(um.getKey()!=null) {
+                UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
+                if (um.getKey() != null) {
                     switch (um.getKey()) {
                         case "view.game.ingame.cmd.notify.all":
-                            myDungeonChat.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+                            myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
                             break;
                         case "view.game.cmd.help":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.all":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.cmds":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.ctrl":
-                            myDungeonChat.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+                            myDungeonChatView.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
                             break;
                         default:
                             Notification.show("An Error Occured.");
                             break;
                     }
                 }
-            } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
+            } catch (CmdScannerSyntaxMissingException syntaxMissing) {
+                Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
+                Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
+            } catch (InvalidImplementationException invalidImplementationException) {
+                invalidImplementationException.printStackTrace();
             }
         });
         confirmButt.setWidth("120px");
@@ -145,7 +149,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameFirstLayout.setSizeFull();
         gameSecondLayout.setSizeFull();
 
-        gameFirstLayout.add(myDungeonChat, insertInputLayout);
+        gameFirstLayout.add(myDungeonChatView, insertInputLayout);
 
         gameSplitLayout.addToPrimary(gameFirstLayout);
         gameSplitLayout.addToSecondary(gameSecondLayout);
@@ -154,7 +158,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
         add(binTitle, html, gameLayout);
-        expand(myDungeonChat);
+        expand(myDungeonChatView);
         setSizeFull();
     }
 

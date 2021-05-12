@@ -20,13 +20,13 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.sql.SQLOutput;
 import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,15 +47,15 @@ public class DungeonConfigurationTab extends VerticalLayout {
     Visibility visibility;
     String visibilityValue;
 
-    private ConfiguratorServiceI configuratorServiceI;
+    private ConfiguratorServiceI configuratorService;
 
     public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
-        this.configuratorServiceI = AConfiguratorServiceI;
+        this.configuratorService = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
         users = new ArrayList<>();
         titleField = new TextField("Name des Dungeons");
-        playerCountField = new TextField("Maximale Anzahl Spieler");
+
 
         initField();
         permissionList();
@@ -74,30 +74,33 @@ public class DungeonConfigurationTab extends VerticalLayout {
     private void initField() {
         H1 title = new H1("Dungeon-Konfiguration");
 
-        if(configuratorServiceI.getDungeon().getDungeonName() == null)
+        if( configuratorService.getDungeon().getDungeonName() == null)
             titleField.setValue("Neuer Dungeon");
         else
-            titleField.setValue(configuratorServiceI.getDungeon().getDungeonName());
+            titleField.setValue(configuratorService.getDungeon().getDungeonName());
 
         titleField.addValueChangeListener(e->{
-            configuratorServiceI.getDungeon().setDungeonName(titleField.getValue());
-            configuratorServiceI.saveDungeon();
+            configuratorService.getDungeon().setDungeonName(titleField.getValue());
+            configuratorService.saveDungeon();
         });
 
         titleField.setWidth("400px");
-        //titleField.setValue(titleField.getValue());
+
+        NumberField playerCountField = new NumberField("Max. Anzahl Spieler");
+        playerCountField.setHasControls(true);
+        playerCountField.setMin(2);
 
         playerCountField.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setPlayerMaxSize(Long.parseLong(playerCountField.getValue()));
-            configuratorServiceI.saveDungeon();
+            configuratorService.getDungeon().setPlayerMaxSize(playerCountField.getValue().longValue());
+            configuratorService.saveDungeon();
         });
 
-        playerCountField.setWidth("170px");
+        playerCountField.setWidth("150px");
 
-        if(configuratorServiceI.getDungeon().getPlayerMaxSize() == null)
-            playerCountField.setValue("30");
+        if( configuratorService.getDungeon().getPlayerMaxSize() == null)
+            playerCountField.setValue(30.0);
         else
-            playerCountField.setValue(String.valueOf(configuratorServiceI.getDungeon().getPlayerMaxSize()));
+            playerCountField.setValue((double) configuratorService.getDungeon().getPlayerMaxSize());
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
         viewRadioButton.setLabel("Sichtbarkeit");
@@ -105,9 +108,14 @@ public class DungeonConfigurationTab extends VerticalLayout {
         viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
 
         viewRadioButton.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
-            configuratorServiceI.saveDungeon();
+            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+            configuratorService.saveDungeon();
         });
+
+        if( configuratorService.getDungeon().getDungeonVisibility() == null)
+            viewRadioButton.setValue("Öffentlich");
+        else
+            viewRadioButton.setValue(getVisibility(configuratorService.getDungeon().getDungeonVisibility()) );
 
         Details commandSymbolDefinition = new Details("Was sind Befehlszeichen",
                 new Text("Um Befehle im Dungeon ausführen zu können muss man vor diese ein bestimmtes Zeichen setzen, " +
@@ -121,15 +129,12 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
         commandSymbolField.addValueChangeListener(e -> {
             if (!commandSymbolField.isInvalid()) {
-                configuratorServiceI.setCommandSymbol(commandSymbolField.getValue().charAt(0));
+                configuratorService.setCommandSymbol(commandSymbolField.getValue().charAt(0));
             }
         });
-        commandSymbolField.setValue(String.valueOf(configuratorServiceI.getCommandSymbol()));
+        commandSymbolField.setValue(String.valueOf(configuratorService.getCommandSymbol()));
 
-        if(configuratorServiceI.getDungeon().getDungeonVisibility() == null)
-            viewRadioButton.setValue("Öffentlich");
-        else
-            viewRadioButton.setValue(getVisibility(configuratorServiceI.getDungeon().getDungeonVisibility()) );
+
 
         Details hint = new Details("Info",
                                    new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
@@ -139,14 +144,15 @@ public class DungeonConfigurationTab extends VerticalLayout {
         TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
         dungeonDescription.setWidth("500px");
 
-        if(configuratorServiceI.getDungeon().getDescription() != null)
-        dungeonDescription.setValue(configuratorServiceI.getDungeon().getDescription());
-
         dungeonDescription.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setDescription(dungeonDescription.getValue());
-            configuratorServiceI.saveDungeon();
+            configuratorService.getDungeon().setDescription(dungeonDescription.getValue());
+            configuratorService.saveDungeon();
 
         });
+
+        if( configuratorService.getDungeon().getDescription() != null)
+            dungeonDescription.setValue(configuratorService.getDungeon().getDescription());
+
         initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, commandSymbolDefinition, commandSymbolField, hint, dungeonDescription);
 
     }

@@ -1,13 +1,19 @@
-package de.dhbw.binaeratops.model.chat;
+package de.dhbw.binaeratops.view.chat;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 
-import java.util.List;
+/**
+ * TODO JAVADOC Kommentar schreiben.
+ *
+ * @author Pedro Treuer, Timon Gartung
+ */
+public class MessageListView extends Div {
 
-public class MessageList extends Div {
-
-    public MessageList() {
+    /**
+     * Standard-Konstruktor zum Erzeugen einer MessageList.
+     */
+    public MessageListView() {
         addClassName("message-list");
     }
 

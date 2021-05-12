@@ -75,24 +75,28 @@ public interface NPCI {
 
     /**
      * Gibt den Dungeon des NPCs zurück.
+     *
      * @return Dungeon des NPCs.
      */
     Dungeon getDungeon();
 
     /**
      * Setzt den Dungeon eines NPS.
+     *
      * @param ADungeon Dungeon des NPCs.
      */
     void setDungeon(Dungeon ADungeon);
 
     /**
      * Gibt den Raum des NPCs zurück.
+     *
      * @return Raum des NPCs.
      */
     Room getRoom();
 
     /**
      * Setzt den Raum des NPCs.
+     *
      * @param room Raum des NPCs.
      */
     void setRoom(Room room);
@@ -109,12 +113,14 @@ public interface NPCI {
 
     /**
      * Fügt dem Gepäck des NPCs einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addItem(ItemInstance AItem);
 
     /**
      * Entfernt dem Gepäck des NPCs einen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeItem(ItemInstance AItem);

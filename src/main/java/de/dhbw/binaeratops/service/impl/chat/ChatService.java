@@ -12,12 +12,24 @@ import java.util.List;
 
 @Service
 /**
- * Service zum versenden von nachrichten.
+ * Komponente "ChatService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten zum Versenden von Chatnachrichten bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link ChatServiceI}.
+ * </p>
+ *
+ * @author Timon Gartung, Pedro Treuer
  */
 public class ChatService implements ChatServiceI
 {
     private final UnicastProcessor publisher;
 
+    /**
+     * Konstruktor zum Erzeugen eines ChatService.
+     * @param publisher Publisher.
+     */
     public ChatService(UnicastProcessor publisher) {
         this.publisher = publisher;
     }

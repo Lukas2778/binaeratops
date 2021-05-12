@@ -21,9 +21,8 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Benutzer Schnittstelle.
  *
- * @see UserI
- *
  * @author Matthias Rall, Nicolas Haug
+ * @see UserI
  */
 @Entity
 public class User implements UserI {

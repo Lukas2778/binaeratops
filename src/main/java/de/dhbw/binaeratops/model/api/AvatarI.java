@@ -50,7 +50,6 @@ public interface AvatarI {
      * Gibt das Geschlecht des Avatars zurück.
      *
      * @return Gechlecht des Avatars.
-     *
      * @see Gender
      */
     Gender getGender();
@@ -59,7 +58,6 @@ public interface AvatarI {
      * Setzt das Geschlecht des Avatars.
      *
      * @param AGender Geschlecht des Avatars.
-     *
      * @see Gender
      */
     void setGender(Gender AGender);
@@ -80,24 +78,28 @@ public interface AvatarI {
 
     /**
      * Gibt den Benutzer des Avatars zurück.
+     *
      * @return Benutzer des Avatars.
      */
     User getUser();
 
     /**
      * Setzt den Benutzer des Avatars.
+     *
      * @param AUser Benutzer des Avatars.
      */
     void setUser(User AUser);
 
     /**
      * Gibt den Dungeon des Avatars zurück.
+     *
      * @return Dungeon des Avatars.
      */
     Dungeon getDungeon();
 
     /**
      * Setzt den Dungeon des Avatars.
+     *
      * @param ADungeon Dungeon des Avatars.
      */
     void setDungeon(Dungeon ADungeon);
@@ -139,12 +141,14 @@ public interface AvatarI {
 
     /**
      * Fügt dem Inventar des Avatars einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addInventoryItem(ItemInstance AItem);
 
     /**
      * Entfernt dem Inventar des Avatars einen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeInventoryItem(ItemInstance AItem);
@@ -153,18 +157,21 @@ public interface AvatarI {
      * Gibt das ausgerüstete Equipment eines Avatars als Liste von Gegenständen zurück.
      * <p>
      * WICHTIG: Diese Liste darf jeden Gegenstandstyp nur 1x beinhalten.
+     *
      * @return Liste von Gegenständen (Equipment)
      */
     List<ItemInstance> getEquipment();
 
     /**
      * Fügt der Ausrüstung des Avatars einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addEquipmentItem(ItemInstance AItem);
 
     /**
      * Entfernt der Ausrüstung des Avatars einen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeEquipmentItem(ItemInstance AItem);

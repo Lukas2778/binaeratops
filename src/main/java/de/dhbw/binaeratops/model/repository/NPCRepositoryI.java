@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für einen NPC.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines NPC aus der Datenbank bereit.
  *
- * @see NPC
- *
  * @author Nicolas Haug
+ * @see NPC
  */
 @Repository
 public interface NPCRepositoryI extends JpaRepository<NPC, Long> {
 
     /**
      * Sucht alle NPC-Einträge aus der Datenbank.
+     *
      * @return Alle NPC-Einträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface NPCRepositoryI extends JpaRepository<NPC, Long> {
 
     /**
      * Sucht den NPC mit der übergebenen ID in der Datenbank.
+     *
      * @param ANpcId ID des gesuchten NPC.
      * @return Gesuchter NPC.
      */
