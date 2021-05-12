@@ -119,12 +119,18 @@ public class CharacterConfigurationTab extends VerticalLayout {
         addRoleClickListener();
         deleteRoleClickListener();
         H2 title = new H2("Rollenliste");
-        grid.setItems(roleArrayList);
+
+        if(configuratorService.getDungeon().getRoles() != null){
+            grid.setItems(configuratorService.getAllRoles());
+        }else{
+            grid.setItems(roleArrayList);
+        }
 
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
                 .setHeader("Rollenbezeichnung");
         Column<Role> descriptionColumn = grid.addColumn(Role::getDescription)
                 .setHeader("Beschreibung");
+
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
@@ -152,7 +158,12 @@ public class CharacterConfigurationTab extends VerticalLayout {
 
         H2 title = new H2("Rassenliste");
 
-        raceGrid.setItems(raceArrayList);
+        if(configuratorService.getDungeon().getRaces() != null){
+            raceGrid.setItems(configuratorService.getAllRace());
+        }else{
+            raceGrid.setItems(raceArrayList);
+        }
+
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
                 .setHeader("Rassenbezeichnung");
         Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription)

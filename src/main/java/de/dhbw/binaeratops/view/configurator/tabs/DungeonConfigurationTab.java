@@ -139,9 +139,6 @@ public class DungeonConfigurationTab extends VerticalLayout {
         TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
         dungeonDescription.setWidth("500px");
 
-        if(configuratorServiceI.getDungeon().getDescription() != null)
-        dungeonDescription.setValue(configuratorServiceI.getDungeon().getDescription());
-
         dungeonDescription.addValueChangeListener(e-> {
             configuratorServiceI.getDungeon().setDescription(dungeonDescription.getValue());
             configuratorServiceI.saveDungeon();
