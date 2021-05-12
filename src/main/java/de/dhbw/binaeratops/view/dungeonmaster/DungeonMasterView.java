@@ -173,6 +173,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         gameLayout.setSizeFull();
         gameLayout.add(html, myDungeonChatView, insertInputLayout);
+        gameLayout.expand(myDungeonChatView);
     }
 
 

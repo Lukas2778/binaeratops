@@ -14,3 +14,14 @@ border: none;
 cursor: pointer;
 }
 
+.chat-component{
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.chat-component p {
+    width: 100%;
+
+}
+
+
