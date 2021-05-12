@@ -33,7 +33,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     private User dungeonDesigner;
 
     @Autowired
-    DungeonRepositoryI dungeonRepo;
+    public DungeonRepositoryI dungeonRepo;
     @Autowired
     NPCRepositoryI npcRepo;
     @Autowired
@@ -46,16 +46,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemRepositoryI itemRepo;
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
-
-    /**
-     * Initialisierungsmethode für das Dungeon-Repository.
-     *
-     * @param ADungeonRepo Dungeon-Repository.
-     */
-    private void init(DungeonRepositoryI ADungeonRepo) {
-        dungeonRepo = ADungeonRepo;
-    }
-
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {

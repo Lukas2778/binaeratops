@@ -42,7 +42,7 @@ public class ConfigurationServiceTest extends Logger {
         testDungeon = new Dungeon();
         configuratorService = new ConfiguratorService();
         Mockito.when(dungeonRepositoryI.save(Mockito.any(Dungeon.class))).thenAnswer(i-> i.getArguments()[0]);
-        configuratorService.init(dungeonRepositoryI);
+        configuratorService.dungeonRepo = dungeonRepositoryI;
     }
 
     @Test
