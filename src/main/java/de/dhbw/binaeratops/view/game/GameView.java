@@ -19,6 +19,7 @@ import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
@@ -36,7 +37,7 @@ import java.util.ResourceBundle;
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
-    ParserService myParserService;
+    ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     Long dungeonId;

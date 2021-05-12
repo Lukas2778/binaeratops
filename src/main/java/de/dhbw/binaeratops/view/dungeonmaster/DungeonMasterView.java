@@ -27,6 +27,7 @@ import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.ParserService;
@@ -65,7 +66,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private DungeonServiceI dungeonServiceI;
     private DungeonRepositoryI dungeonRepositoryI;
     private Flux<ChatMessage> messages;
-    private ParserService  myParserService;
+    private ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     Dungeon dungeon;
