@@ -59,8 +59,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         try {
             this.currentRoom = configuratorServiceI.getDungeon().getRooms().get(0);
             initRoom();
-        } catch (IndexOutOfBoundsException ignored) {
-        }
+        } catch (IndexOutOfBoundsException ignored) {}
 
         List<Room> roomList = configuratorServiceI.getDungeon().getRooms();
         ComboBox<Room> startRoomBox = new ComboBox(res.getString("view.configurator.room.startroom"));
@@ -74,7 +73,8 @@ public class RoomConfigurationTab extends VerticalLayout {
         startRoomBox.setItems(roomList);
 
         H2 configureRoomsTitle = new H2(res.getString("view.configurator.room.configureRoomsTitle"));
-        globalRoomArea.add(configureRoomsTitle, startRoomBox,roomArea);
+        H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
+        globalRoomArea.add(configureRoomsTitle, startRoomBox, actualRoomHeadline, roomArea);
 
         initMap();
 
@@ -198,7 +198,6 @@ public class RoomConfigurationTab extends VerticalLayout {
     }
 
     private void initRoom() {
-        //TODO Raumname wird übergeben
         roomArea.removeAll();
 
         //alle anderen Räume abwählen
@@ -234,6 +233,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         roomName.addValueChangeListener(e -> {
             currentRoom.setRoomName(roomName.getValue());
             configuratorServiceI.saveRoom(currentRoom);
+            initRoom();
         });
 
         TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
@@ -254,6 +254,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                     //wird der Raum gelöscht, soll die Hervorhebung nicht weiter existieren
                     tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "1");
                     //TODO zum startraum navigieren
+                    roomArea.removeAll();
                 } else {
                     Notification.show(res.getString("view.configurator.room.notification.deleteroomerror"));
                 }

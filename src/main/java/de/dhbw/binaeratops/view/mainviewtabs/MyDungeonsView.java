@@ -74,9 +74,10 @@ public class MyDungeonsView extends VerticalLayout {
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
         dungeonGrid.addComponentColumn(dungeon -> {
             Button button = new Button("Starten");
-            button.addClickListener(e -> UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString()));
-            dungeon.setDungeonStatus(Status.ACTIVE);
-            dungeonServiceI.saveDungeon(dungeon);
+            button.addClickListener(e -> {
+                UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
+                dungeonServiceI.activateDungeon(dungeon.getDungeonId());
+            });
             return button;
         }).setHeader("Spielstart");
         dungeonGrid.addComponentColumn(item -> createRemoveButton(dungeonGrid, item)).setHeader("Löschen");
@@ -132,7 +133,7 @@ public class MyDungeonsView extends VerticalLayout {
 
     private void initEditDungeonButton() {
         editDungeonButton.addClickListener(e -> {
-            if ( true||!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {//TODO
+            if (true || !((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {//TODO
                 if (dungeonGrid.getSelectedItems().size() > 0) {
                     //das ist das hässlichste stück code ever ever
                     UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
@@ -147,7 +148,7 @@ public class MyDungeonsView extends VerticalLayout {
 
     private void initNewDungeonButton() {
         newDungeonButton.addClickListener(e -> {
-            Dungeon dungeon = configuratorServiceI.createDungeon("Mein Dungeon", VaadinSession.getCurrent().getAttribute(User.class),Status.INACTIVE);
+            Dungeon dungeon = configuratorServiceI.createDungeon("Mein Dungeon", VaadinSession.getCurrent().getAttribute(User.class), Status.INACTIVE);
             Notification.show("Neuen Dungeon erstellt");
             //TODO param ID hinzufügen
             UI.getCurrent().navigate("configurator/" + dungeon.getDungeonId());
