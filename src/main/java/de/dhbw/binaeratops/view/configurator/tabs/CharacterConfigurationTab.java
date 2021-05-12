@@ -103,7 +103,16 @@ public class CharacterConfigurationTab extends VerticalLayout {
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
         //inventorySize.setMax(100);
-        inventorySize.setValue(50.0);
+
+        if(configuratorService.getDungeon().getDefaultInventoryCapacity() != null)
+            inventorySize.setValue((double) configuratorService.getDungeon().getDefaultInventoryCapacity());
+        else
+            inventorySize.setValue(50.0);
+
+        inventorySize.addValueChangeListener(e-> {
+            configuratorService.getDungeon().setDefaultInventoryCapacity(inventorySize.getValue().longValue());
+            configuratorService.saveDungeon();
+        });
 
         RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
         genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
