@@ -29,6 +29,8 @@ import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
@@ -161,6 +163,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             break;
                     }
                 }
+            } catch (CmdScannerSyntaxMissingException syntaxMissing) {
+                Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
+                Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
             } catch ( CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
             } catch ( InvalidImplementationException invalidImplementationException) {

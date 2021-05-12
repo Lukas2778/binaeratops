@@ -21,6 +21,8 @@ import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,8 +77,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         confirmButt.addClickListener(e->{
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um=myParserService.parseCommand(textField.getValue(),dungeonId,myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
-                if(um.getKey()!=null) {
+                UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
+                if (um.getKey() != null) {
                     switch (um.getKey()) {
                         case "view.game.ingame.cmd.notify.all":
                             myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
@@ -98,6 +100,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                             break;
                     }
                 }
+            } catch (CmdScannerSyntaxMissingException syntaxMissing) {
+                Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
+                Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerException cmdScannerException) {
                 cmdScannerException.printStackTrace();
             } catch (InvalidImplementationException invalidImplementationException) {
