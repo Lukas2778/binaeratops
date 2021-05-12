@@ -17,24 +17,20 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
-import de.dhbw.binaeratops.model.api.ItemI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
-import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
-import de.dhbw.binaeratops.view.chat.Chat;
 import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
@@ -153,7 +149,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameFirstLayout.setSizeFull();
         gameSecondLayout.setSizeFull();
 
-        gameFirstLayout.add(myDungeonChat, insertInputLayout);
+        gameFirstLayout.add(myDungeonChatView, insertInputLayout);
 
         gameSplitLayout.addToPrimary(gameFirstLayout);
         gameSplitLayout.addToSecondary(gameSecondLayout);
@@ -162,7 +158,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
         add(binTitle, html, gameLayout);
-        expand(myDungeonChat);
+        expand(myDungeonChatView);
         setSizeFull();
     }
 

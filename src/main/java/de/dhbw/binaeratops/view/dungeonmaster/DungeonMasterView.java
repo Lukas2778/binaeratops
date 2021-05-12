@@ -33,7 +33,6 @@ import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingExce
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
-import de.dhbw.binaeratops.view.chat.Chat;
 import de.dhbw.binaeratops.view.map.MapView;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
