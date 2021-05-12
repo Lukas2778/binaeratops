@@ -211,8 +211,10 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
 
-        roomName.setValue(Objects.requireNonNullElse(currentRoom.getRoomName(),
-                res.getString("view.configurator.room.defaultroomname")));
+        try {
+            roomName.setValue(Objects.requireNonNullElse(currentRoom.getRoomName(),
+                    res.getString("view.configurator.room.defaultroomname")));
+        }catch (Exception e){}
         roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomName.addValueChangeListener(e -> {
             currentRoom.setRoomName(roomName.getValue());
@@ -221,8 +223,10 @@ public class RoomConfigurationTab extends VerticalLayout {
         });
 
         TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
+        try {
         roomDescription.setValue(Objects.requireNonNullElse(currentRoom.getDescription(),
                 res.getString("view.configurator.room.defaultroomdescription")));
+        }catch (Exception e){}
         roomDescription.setMinWidth(400, Unit.PIXELS);
         roomDescription.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomDescription.addValueChangeListener(e -> {
