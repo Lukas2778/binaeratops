@@ -122,4 +122,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
         this.dungeonId=ALong;
     }
+
+
+
 }

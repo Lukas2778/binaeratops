@@ -88,7 +88,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void setStartRoom(Room ARoom) {
-
+        dungeon.setStartRoomId(ARoom.getRoomId());
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -321,6 +322,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public Room getRoom(Long ARoomID) {
+        for (Room r : dungeon.getRooms()) {
+            if(r.getRoomId().equals(ARoomID)){
+                return r;
+            }
+        }
         return null;
     }
 

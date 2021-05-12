@@ -47,6 +47,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     MapServiceI mapService;
     ConfiguratorServiceI configuratorServiceI;
     private Room currentRoom;
+    ComboBox<Room> startRoomBox;
 
     private final int width = 8;
     Image[][] tiles = new Image[width][width];
@@ -55,26 +56,23 @@ public class RoomConfigurationTab extends VerticalLayout {
         mapService = AMapServiceI;
         configuratorServiceI = AConfiguratorServiceI;
 
-        //TODO sartraum suchen und setzen
-        try {
-            this.currentRoom = configuratorServiceI.getDungeon().getRooms().get(0);
-            initRoom();
-        } catch (IndexOutOfBoundsException ignored) {
-        }
-
         List<Room> roomList = configuratorServiceI.getDungeon().getRooms();
-        ComboBox<Room> startRoomBox = new ComboBox(res.getString("view.configurator.room.startroom"));
-        startRoomBox.setItemLabelGenerator(e -> {
-            if (e.getRoomName() != null) {
-                return e.getRoomName();
-            } else {
-                return String.valueOf(e.getRoomId());
-            }
-        });
+        startRoomBox = new ComboBox(res.getString("view.configurator.room.startroom"));
         startRoomBox.setItems(roomList);
+        startRoomBox.setValue(configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId()));
+        startRoomBox.addValueChangeListener(e->{
+            configuratorServiceI.setStartRoom(e.getValue());
+        });
+        initStartroomCombobox();
+
+        try {
+            this.currentRoom = configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId());
+            initRoom();
+        } catch (IndexOutOfBoundsException ignored) {}
 
         H2 configureRoomsTitle = new H2(res.getString("view.configurator.room.configureRoomsTitle"));
-        globalRoomArea.add(configureRoomsTitle, startRoomBox,roomArea);
+        H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
+        globalRoomArea.add(configureRoomsTitle, startRoomBox, actualRoomHeadline, roomArea);
 
         initMap();
 
@@ -91,7 +89,6 @@ public class RoomConfigurationTab extends VerticalLayout {
     }
 
     private void initMap() {
-
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
@@ -185,6 +182,9 @@ public class RoomConfigurationTab extends VerticalLayout {
             }
             lines.add(line);
             lines.add(lineRoomBorder);
+
+            //aktuell angezeigten Raum auf der Map auswählen
+            selectCurrentRoom();
         }
 
         //Oberfläche bekommt die Bilder aus der Datenbank gesetzt
@@ -198,42 +198,26 @@ public class RoomConfigurationTab extends VerticalLayout {
     }
 
     private void initRoom() {
-        //TODO Raumname wird übergeben
         roomArea.removeAll();
+        initStartroomCombobox();
 
-        //alle anderen Räume abwählen
-        try {
-            for (Image[] tL : tiles) {
-                for (Image t : tL) {
-                    t.getStyle().set("opacity", "1");
-                }
-            }
-        } catch (Exception ignored) {
-        }
-
-        //aktuellen Raum anwählen
-        try {
-            tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
-        } catch (Exception ignored) {
-        }
-
-        String chosenRoom = currentRoom.getRoomName();
+        //aktuell angezeigten Raum auf der Map auswählen
+        selectCurrentRoom();
 
         VerticalLayout specificRoom = new VerticalLayout();
         HorizontalLayout roomThings = new HorizontalLayout();
         VerticalLayout itemLayout = new VerticalLayout();
         VerticalLayout npcLayout = new VerticalLayout();
 
-
-        H3 actualRoomHeadline = new H3(res.getString("view.configurator.room.actualroomheadline"));
         TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
 
-        roomName.setValue(Objects.requireNonNullElse(chosenRoom,
+        roomName.setValue(Objects.requireNonNullElse(currentRoom.getRoomName(),
                 res.getString("view.configurator.room.defaultroomname")));
         roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
         roomName.addValueChangeListener(e -> {
             currentRoom.setRoomName(roomName.getValue());
             configuratorServiceI.saveRoom(currentRoom);
+            initRoom();
         });
 
         TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
@@ -253,7 +237,9 @@ public class RoomConfigurationTab extends VerticalLayout {
                     }
                     //wird der Raum gelöscht, soll die Hervorhebung nicht weiter existieren
                     tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "1");
-                    //TODO zum startraum navigieren
+                    //zum Startraum navigieren
+                    this.currentRoom = configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId());
+                    initRoom();
                 } else {
                     Notification.show(res.getString("view.configurator.room.notification.deleteroomerror"));
                 }
@@ -274,11 +260,10 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         roomThings.add(itemLayout, npcLayout);
 
-        //TODO muss als einziges aus- und eingeblendet werden
         specificRoom.add(roomName, roomDescription, deleteRoomButt, itemsNPCsHeadline, roomThings);
 
 
-        roomArea.add(actualRoomHeadline, specificRoom);
+        roomArea.add(specificRoom);
 
         itemList.clear();
         if (currentRoom != null) {
@@ -321,7 +306,6 @@ public class RoomConfigurationTab extends VerticalLayout {
             npcSelectionDialog.dialogResult = false;
             npcSelectionDialog.open();
         });
-
     }
 
     private void initNPCButtonListener() {
@@ -334,4 +318,31 @@ public class RoomConfigurationTab extends VerticalLayout {
             }
         });
     }
+    private void selectCurrentRoom(){
+        //alle anderen Räume abwählen
+        try {
+            for (Image[] tL : tiles) {
+                for (Image t : tL) {
+                    t.getStyle().set("opacity", "1");
+                }
+            }
+        } catch (Exception ignored) {
+        }
+
+        //aktuellen Raum anwählen
+        try {
+            tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
+        } catch (Exception ignored) {
+        }
+    }
+    private void initStartroomCombobox(){
+        startRoomBox.setItemLabelGenerator(e -> {
+            if (e.getRoomName() != null) {
+                return e.getRoomName();
+            } else {
+                return String.valueOf(e.getRoomId());
+            }
+        });
+    }
+
 }

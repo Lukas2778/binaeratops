@@ -2,9 +2,11 @@ package de.dhbw.binaeratops.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.Anchor;
@@ -103,7 +105,7 @@ public class MainView extends AppLayout {
         layout.add(viewTitle);
         layout.add(menuLayout);
         //layout.add(avatar);
-        layout.add(new Anchor("/logout","Log out"));
+        layout.add(new Button("logout",e -> UI.getCurrent().navigate("logout")));
         return layout;
     }
 
