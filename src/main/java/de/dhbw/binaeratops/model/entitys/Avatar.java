@@ -57,6 +57,9 @@ public class Avatar implements AvatarI {
     @OneToOne
     private Role role;
 
+    @OneToOne
+    private Room currentRoom;
+
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
@@ -151,6 +154,14 @@ public class Avatar implements AvatarI {
 
     public void setRole(Role ARole) {
         this.role = ARole;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(Room ACurrentRoom) {
+        this.currentRoom = ACurrentRoom;
     }
 
     public List<ItemInstance> getInventory() {

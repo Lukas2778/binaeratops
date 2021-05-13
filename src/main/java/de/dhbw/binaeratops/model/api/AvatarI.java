@@ -133,6 +133,20 @@ public interface AvatarI {
     void setRole(Role ARole);
 
     /**
+     * Gibt den aktuellen Raum des Avatars zurück.
+     *
+     * @return Aktueller Raum des Avatars.
+     */
+    Room getCurrentRoom();
+
+    /**
+     * Setzt den aktuellen Raum des Avatars.
+     *
+     * @param ACurrentRoom Aktueller Raum, der gesetzt werden soll.
+     */
+    void setCurrentRoom(Room ACurrentRoom);
+
+    /**
      * Gibt das Inventar eines Avatars als Liste von Gegenständen zurück.
      *
      * @return Liste von Gegenständen (Inventar).

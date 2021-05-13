@@ -190,9 +190,9 @@ public interface RoomI {
     /**
      * Setzt den Avatar, der diesen Raum besucht hat.
      *
-     * @param visitedByAvatar Avatar, der diesen Raum besucht hat.
+     * @param AVisitedByAvatar Avatar, der diesen Raum besucht hat.
      */
-    void setVisitedByAvatar(Avatar visitedByAvatar);
+    void setVisitedByAvatar(Avatar AVisitedByAvatar);
 
     /**
      * Gibt den Avatar zurück, der diesen Raum besucht hat.

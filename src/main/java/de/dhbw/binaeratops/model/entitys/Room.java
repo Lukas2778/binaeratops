@@ -158,8 +158,8 @@ public class Room implements RoomI {
         return visitedByAvatar;
     }
 
-    public void setVisitedByAvatar(Avatar visitedByAvatar) {
-        this.visitedByAvatar = visitedByAvatar;
+    public void setVisitedByAvatar(Avatar AVisitedByAvatar) {
+        this.visitedByAvatar = AVisitedByAvatar;
     }
 
     public List<ItemInstance> getItems() {
