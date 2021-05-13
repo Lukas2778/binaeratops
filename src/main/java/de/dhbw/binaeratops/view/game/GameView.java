@@ -17,18 +17,22 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.api.AvatarI;
+import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
-import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Item;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
+import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
+import de.dhbw.binaeratops.service.impl.configurator.DungeonService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import de.dhbw.binaeratops.view.map.MapView;
@@ -43,51 +47,62 @@ import java.util.ResourceBundle;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-//@Route(value = "game")
+@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     ParserServiceI myParserService;
     MapServiceI mapServiceI;
-    MapView mapView;
-    Image[][] tiles;
-    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+    RoomRepositoryI myRoomRepo;//@TODO nur zu Testzwecken, dann entfernen
+    DungeonRepositoryI myDungeonRepo;
 
     Long dungeonId;
-    private final Flux<ChatMessage> messages;
+    Dungeon myDungeon;
+    MapView mapView;
+    Image[][] tiles;
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+    private final Flux<ChatMessage> myMessages;
 
     H2 binTitle;
     String aboutText;
     Html html;
+
     HorizontalLayout gameLayout;
     SplitLayout gameSplitLayout;
-
     VerticalLayout gameFirstLayout;
     VerticalLayout gameSecondLayout;
+    HorizontalLayout insertInputLayout;
 
     ChatView myDungeonChatView;
-
-    HorizontalLayout insertInputLayout;
     TextField textField;
     Button confirmButt;
 
     private List<Item> inventoryList;
     private List<Item> armorList;
 
+    private Avatar myAvatar;
+    private Room currentRoom;
+    private List<Room> visitedRooms;
+
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      * @param messages Nachrichten.
      * @param AParserService ParserService.
      */
-    public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, @Autowired MapServiceI AMapService) {
+    public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
+                    @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
+                    @Autowired DungeonRepositoryI ADungeonRepo) {
         myParserService=AParserService;
         mapServiceI=AMapService;
+        myRoomRepo=ARoomRepo;//@TODO remove
+        myDungeonRepo=ADungeonRepo;
 
-        this.messages = messages;
+        this.myMessages = messages;
 
         binTitle=new H2("Du bist in der Spieloberfläche!");
         aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
-                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibst.</div>";
+                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibsty.</div>";
         html=new Html(aboutText);
 
         myDungeonChatView =new ChatView(messages);
@@ -103,7 +118,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         confirmButt=new Button("Eingabe");
         confirmButt.addClickShortcut(Key.ENTER);
-        AvatarI myAvatar=new Avatar();
         confirmButt.addClickListener(e->{
             //Parser wird mit Texteingabe aufgerufen
             try {
@@ -114,12 +128,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                             myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
                             break;
                         case "view.game.cmd.help":
-                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
-                        case "view.game.cmd.help.all":
-                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
                         case "view.game.cmd.help.cmds":
+                        case "view.game.cmd.help.all":
                             myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
                             break;
                         case "view.game.cmd.help.ctrl":
@@ -134,10 +144,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
                 Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
-            } catch (CmdScannerException cmdScannerException) {
+            } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
-            } catch (InvalidImplementationException invalidImplementationException) {
-                invalidImplementationException.printStackTrace();
             }
         });
         confirmButt.setWidth("120px");
@@ -162,12 +170,30 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         setSizeFull();
     }
 
+    void loadAvatarProgress(Avatar AAvatar){
+        this.myAvatar=AAvatar;
+        this.currentRoom=myAvatar.getCurrentRoom();
+        if(currentRoom==null){
+            currentRoom=myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
+        }
+        this.visitedRooms=myAvatar.getVisitedRooms();
+    }
+    void saveAvatarProgress(){
+        myAvatar.addVisitedRoom(currentRoom);
+    }
+    void updateMapView(){
+        saveAvatarProgress();
+        mapView.updateMap(currentRoom, visitedRooms);
+    }
+
     void createMap(Long ALong) {
         mapView=new MapView();
         VerticalLayout mapLayout=new VerticalLayout();
-        mapLayout.add(mapView.initMap(mapServiceI,dungeonId, tiles));
+        mapLayout.add(mapView.initMap(mapServiceI, dungeonId, tiles));
         gameSecondLayout.add(mapLayout);
+        updateMapView();
         createInventory();
+        changeRoom(myRoomRepo.findByRoomId(131L));//@TODO remove
     }
 
     void createInventory(){
@@ -208,9 +234,18 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameSecondLayout.add(gridLayout, leftDungeonButt);
     }
 
+    void changeRoom(Room ARoom){
+        currentRoom=ARoom;
+        myAvatar.setCurrentRoom(ARoom);
+        myAvatar.addVisitedRoom(ARoom);
+        updateMapView();
+    }
     @Override
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
         dungeonId=ALong;
+        myDungeon=myDungeonRepo.findByDungeonId(dungeonId);
+        Avatar test=new Avatar();//@TODO remove
+        loadAvatarProgress(test);
         createMap(dungeonId);
     }
 }

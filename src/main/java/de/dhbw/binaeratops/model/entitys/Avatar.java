@@ -197,8 +197,15 @@ public class Avatar implements AvatarI {
     }
 
     public void addVisitedRoom(Room ARoom) {
+        //falls der Raum nicht schon hinzugefügt wurde
+        for (Room visitedR : visitedRooms) {
+            if (ARoom.getRoomId().equals(visitedR.getRoomId())) {
+                return;
+            }
+        }
         ARoom.setVisitedByAvatar(this);
         visitedRooms.add(ARoom);
+
     }
 
     public void removeVisitedRoom(Room ARoom) {
@@ -209,14 +216,10 @@ public class Avatar implements AvatarI {
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
-
         if (!equals && AOther instanceof Avatar) {
             Avatar other = (Avatar) AOther;
             equals = (avatarId == other.avatarId);
-            // && (name == other.name || (name != null &&
-            //                    name.equalsIgnoreCase(other.name)))
         }
-
         return equals;
     }
 
