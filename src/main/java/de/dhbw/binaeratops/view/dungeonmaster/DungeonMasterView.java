@@ -267,26 +267,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }).setHeader("Informationen");
     }
 
-    VerticalLayout initMap(Long ADungeonId) {
-        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId);
-        tiles = new Image[newTiles.length][newTiles[0].length];
-        VerticalLayout columns = new VerticalLayout();
-        columns.setSpacing(false);
-        for (int i = 0; i < newTiles.length; i++) {
-            HorizontalLayout rows = new HorizontalLayout();
-            rows.setSpacing(false);
-            for (int j = 0; j < newTiles[0].length; j++) {
-                tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
-                tiles[i][j].addClassName("room");
-                rows.add(tiles[i][j]);
-            }
-            columns.add(rows);
-        }
-        return columns;
-    }
-
     private VerticalLayout initMap() {
-        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId);
+        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId,false);
         tiles = new Image[newTiles.length][newTiles[0].length];
         VerticalLayout columns = new VerticalLayout();
         columns.setSpacing(false);

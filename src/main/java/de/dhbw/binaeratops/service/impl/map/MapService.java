@@ -51,7 +51,7 @@ public class MapService implements MapServiceI {
     }
 
     @Override
-    public Tile[][] getMapGame(long ADungeonID) {
+    public Tile[][] getMapGame(long ADungeonID, boolean AGameView) {
         ArrayList<Tile> tiles = new ArrayList<>();
         int minX = 8;
         int minY = 8;
@@ -59,14 +59,22 @@ public class MapService implements MapServiceI {
         int maxY = 0;
         for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
             tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
-            if (r.getXCoordinate() < minX)
-                minX = r.getXCoordinate();
-            if (r.getYCoordinate() < minY)
-                minY = r.getYCoordinate();
-            if (r.getXCoordinate() > maxX)
-                maxX = r.getXCoordinate();
-            if (r.getYCoordinate() > maxY)
-                maxY = r.getYCoordinate();
+            if (!AGameView) {
+                if (r.getXCoordinate() < minX)
+                    minX = r.getXCoordinate();
+                if (r.getYCoordinate() < minY)
+                    minY = r.getYCoordinate();
+                if (r.getXCoordinate() > maxX)
+                    maxX = r.getXCoordinate();
+                if (r.getYCoordinate() > maxY)
+                    maxY = r.getYCoordinate();
+            }
+            else {
+                minX=0;
+                minY=0;
+                maxX=8;
+                maxY=8;
+            }
         }
         if (tiles.size() == 0){
             Tile[][] a= new Tile[1][1];

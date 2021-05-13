@@ -205,7 +205,6 @@ public class Avatar implements AvatarI {
         }
         ARoom.setVisitedByAvatar(this);
         visitedRooms.add(ARoom);
-
     }
 
     public void removeVisitedRoom(Room ARoom) {

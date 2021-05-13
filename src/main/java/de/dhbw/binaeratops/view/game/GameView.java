@@ -219,7 +219,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     }
 
     VerticalLayout initMap() {
-        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId);
+        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId,true);
         myTiles = new Image[newTiles.length][newTiles[0].length];
         VerticalLayout columns = new VerticalLayout();
         columns.setSpacing(false);
@@ -285,6 +285,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         myAvatar.setCurrentRoom(currentRoom);
         //Avatar Fortschritt speichern
         myAvatar.addVisitedRoom(currentRoom);
+        visitedRooms=myAvatar.getVisitedRooms();//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
     }
@@ -307,6 +308,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         for (Image[] tL : myTiles) {
             for (Image t : tL) {
+                t.getStyle().set("width", "100px");
+                t.getStyle().set("height", "100px");
                 t.getStyle().set("border-style", "none");
                 t.getStyle().set("border-color", "inherit");
             }
@@ -315,9 +318,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         //aktuellen Raum roten Rand anwählen
         int x = currentRoom.getXCoordinate();
         int y = currentRoom.getYCoordinate();
+        myTiles[x][y].getStyle().set("width", "99px");
+        myTiles[x][y].getStyle().set("height", "99px");
         myTiles[x][y].getStyle().set("border-style", "solid");
         myTiles[x][y].getStyle().set("border-color", "red");
-
     }
 
 }

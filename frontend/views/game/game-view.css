@@ -11,7 +11,7 @@ height: 100px;
 margin-bottom: 0px;
 background: none;
 border-radius: 0px;
-border: none;
+border: 1px solid;
 }
 
 .chat-component{

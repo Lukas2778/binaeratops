@@ -32,7 +32,7 @@ public interface MapServiceI {
      * @param ADungeonId id vom Dungeon.
      * @return Kacheln der Map.
      */
-    Tile[][] getMapGame(long ADungeonId);
+    Tile[][] getMapGame(long ADungeonId, boolean AGameView);
 
 
     /**
