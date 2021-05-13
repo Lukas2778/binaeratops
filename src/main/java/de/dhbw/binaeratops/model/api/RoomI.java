@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 
@@ -185,4 +186,18 @@ public interface RoomI {
      * @param AYCoordinate Zu setzende Y-Koordinate des Raumes.
      */
     void setYCoordinate(Integer AYCoordinate);
+
+    /**
+     * Setzt den Avatar, der diesen Raum besucht hat.
+     *
+     * @param visitedByAvatar Avatar, der diesen Raum besucht hat.
+     */
+    void setVisitedByAvatar(Avatar visitedByAvatar);
+
+    /**
+     * Gibt den Avatar zurück, der diesen Raum besucht hat.
+     *
+     * @return Avatar, der diesen Raum besucht hat.
+     */
+    Avatar getVisitedByAvatar();
 }

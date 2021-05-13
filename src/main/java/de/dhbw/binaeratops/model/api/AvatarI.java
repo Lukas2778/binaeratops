@@ -175,4 +175,25 @@ public interface AvatarI {
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeEquipmentItem(ItemInstance AItem);
+
+    /**
+     * Gibt die Liste der besuchten Räume des Avatars zurück.
+     *
+     * @return Liste der besuchten Räume.
+     */
+    List<Room> getVisitedRooms();
+
+    /**
+     * Fügt der Liste der besuchten Räume den übergebenen Raum hinzu.
+     *
+     * @param ARoom Raum, der hinzugefügt werden soll.
+     */
+    void addVisitedRoom(Room ARoom);
+
+    /**
+     * Entfernt der Liste der besuchten Räume den übergebenen Raum.
+     *
+     * @param ARoom Raum, der entfernt werden soll.
+     */
+    void removeVisitedRoom(Room ARoom);
 }

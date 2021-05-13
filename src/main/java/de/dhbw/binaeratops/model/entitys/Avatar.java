@@ -48,6 +48,9 @@ public class Avatar implements AvatarI {
     @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> equipment = new ArrayList<>();
 
+    @OneToMany(mappedBy = "visitedByAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Room> visitedRooms = new ArrayList<>();
+
     @OneToOne
     private Race race;
 
@@ -176,6 +179,20 @@ public class Avatar implements AvatarI {
     public void removeEquipmentItem(ItemInstance AItem) {
         equipment.remove(AItem);
         AItem.setRoom(null);
+    }
+
+    public List<Room> getVisitedRooms() {
+        return visitedRooms;
+    }
+
+    public void addVisitedRoom(Room ARoom) {
+        ARoom.setVisitedByAvatar(this);
+        visitedRooms.add(ARoom);
+    }
+
+    public void removeVisitedRoom(Room ARoom) {
+        visitedRooms.remove(ARoom);
+        ARoom.setVisitedByAvatar(null);
     }
 
     @Override
