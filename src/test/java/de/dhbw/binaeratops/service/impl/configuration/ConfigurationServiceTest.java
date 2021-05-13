@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.impl.configuration;
 
 
+import de.dhbw.binaeratops.groups.ImplGroup;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -10,12 +11,14 @@ import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.context.ActiveProfiles;
 
+@Category({ImplGroup.class})
 @RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles("test")
 public class ConfigurationServiceTest extends Logger {

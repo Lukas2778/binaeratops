@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.player.map;
 
+import de.dhbw.binaeratops.groups.ImplGroup;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -8,6 +9,7 @@ import de.dhbw.binaeratops.service.impl.map.MapService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.Assert;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.ArrayList;
 import java.util.List;
 
+@Category({ImplGroup.class})
 @RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles("test")
 public class MapServiceTest extends Logger {
@@ -28,7 +31,7 @@ public class MapServiceTest extends Logger {
 
     MapService myMapService;
 
-    List<Room> myTestList = new ArrayList();
+    List<Room> myTestList = new ArrayList<>();
 
     @Before
     public void setUp(){

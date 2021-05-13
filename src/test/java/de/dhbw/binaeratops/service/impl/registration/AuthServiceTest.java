@@ -1,20 +1,21 @@
 package de.dhbw.binaeratops.service.impl.registration;
 
+import de.dhbw.binaeratops.groups.ImplGroup;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
-import org.aspectj.apache.bcel.classfile.Code;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.Assert.*;
 
+@Category({ImplGroup.class})
 @RunWith(MockitoJUnitRunner.class)
 @ActiveProfiles("test")
 public class AuthServiceTest extends Logger {
