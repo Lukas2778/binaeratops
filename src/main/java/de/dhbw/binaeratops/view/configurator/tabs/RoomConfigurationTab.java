@@ -16,7 +16,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -210,16 +209,28 @@ public class RoomConfigurationTab extends VerticalLayout {
         VerticalLayout npcLayout = new VerticalLayout();
 
         TextField roomName = new TextField(res.getString("view.configurator.room.roomname"));
-
+        roomName.setErrorMessage(res.getString("view.configurator.room.message.roomused"));
         try {
-            roomName.setValue(Objects.requireNonNullElse(currentRoom.getRoomName(),
-                    res.getString("view.configurator.room.defaultroomname")));
-        }catch (Exception e){}
-        roomName.setValueChangeMode(ValueChangeMode.ON_BLUR);
+            if (currentRoom.getRoomName() == null) {
+                String newName = getUniqueRoomName();
+                roomName.setValue(newName);
+                currentRoom.setRoomName(newName);
+                configuratorServiceI.saveRoom(currentRoom);
+            } else {
+                roomName.setValue(currentRoom.getRoomName());
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         roomName.addValueChangeListener(e -> {
-            currentRoom.setRoomName(roomName.getValue());
-            configuratorServiceI.saveRoom(currentRoom);
-            initRoom();
+            if (isRoomNameUnique(roomName.getValue())) {
+                currentRoom.setRoomName(roomName.getValue());
+                configuratorServiceI.saveRoom(currentRoom);
+                initRoom();
+                roomName.setInvalid(false);
+            } else {
+                roomName.setInvalid(true);
+            }
         });
 
         TextArea roomDescription = new TextArea(res.getString("view.configurator.room.roomdescription"));
@@ -349,4 +360,24 @@ public class RoomConfigurationTab extends VerticalLayout {
         });
     }
 
+    private boolean isRoomNameUnique(String name) {
+        Room[] rooms = configuratorServiceI.getAllDungeonRooms().toArray(Room[]::new);
+        for (Room r : rooms) {
+            if (r.getRoomName() != null) {
+                if (r.getRoomName().equals(name)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private String getUniqueRoomName () {
+        String out = res.getString("view.configurator.room.defaultroomname") + " ";
+        int counter = 1;
+        while (!isRoomNameUnique(out + counter)) {
+            counter++;
+        }
+        return out + counter;
+    }
 }

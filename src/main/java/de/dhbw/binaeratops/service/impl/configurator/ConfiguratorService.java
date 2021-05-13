@@ -113,7 +113,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<Room> getAllDungeonRooms() {
-        return null;
+        return dungeon.getRooms();
     }
 
     @Override
