@@ -4,6 +4,16 @@
     width: 100%;
 }
 
+.game-room{
+z-index: 1;
+width: 100px;
+height: 100px;
+margin-bottom: 0px;
+background: none;
+border-radius: 0px;
+border: none;
+}
+
 .chat-component{
   overflow-y: scroll;
   width: 100%;
@@ -14,4 +24,6 @@
 
 }
 
-.mymargins.v-margin-left   {padding-left:   10px;}
+.mymargins.v-margin-left{
+padding-left:   10px;
+}

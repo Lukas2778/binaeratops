@@ -19,23 +19,20 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
-import de.dhbw.binaeratops.service.impl.configurator.DungeonService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
-import de.dhbw.binaeratops.view.map.MapView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
@@ -58,8 +55,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
     Long dungeonId;
     Dungeon myDungeon;
-    MapView mapView;
-    Image[][] tiles;
+    Image[][] myTiles;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private final Flux<ChatMessage> myMessages;
@@ -78,6 +74,12 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     TextField textField;
     Button confirmButt;
 
+    //@TODO remove test navigation
+    Button northButt;
+    Button eastButt;
+    Button southButt;
+    Button westButt;
+
     private List<Item> inventoryList;
     private List<Item> armorList;
 
@@ -87,38 +89,37 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     * @param messages Nachrichten.
+     *
+     * @param messages       Nachrichten.
      * @param AParserService ParserService.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo) {
-        myParserService=AParserService;
-        mapServiceI=AMapService;
-        myRoomRepo=ARoomRepo;//@TODO remove
-        myDungeonRepo=ADungeonRepo;
+        myParserService = AParserService;
+        mapServiceI = AMapService;
+        myRoomRepo = ARoomRepo;//@TODO remove
+        myDungeonRepo = ADungeonRepo;
 
-        this.myMessages = messages;
-
-        binTitle=new H2("Du bist in der Spieloberfläche!");
-        aboutText= "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
+        myMessages = messages;
+        binTitle = new H2("Du bist in der Spieloberfläche!");
+        aboutText = "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
                 " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibsty.</div>";
-        html=new Html(aboutText);
+        html = new Html(aboutText);
 
-        myDungeonChatView =new ChatView(messages);
-        gameLayout=new HorizontalLayout();
-        gameSplitLayout=new SplitLayout();
-
+        myDungeonChatView = new ChatView(messages);
+        gameLayout = new HorizontalLayout();
+        gameSplitLayout = new SplitLayout();
         gameFirstLayout = new VerticalLayout();
         gameSecondLayout = new VerticalLayout();
 
-        textField=new TextField();
+        textField = new TextField();
         textField.focus();
         textField.setWidthFull();
 
-        confirmButt=new Button("Eingabe");
+        confirmButt = new Button("Eingabe");
         confirmButt.addClickShortcut(Key.ENTER);
-        confirmButt.addClickListener(e->{
+        confirmButt.addClickListener(e -> {
             //Parser wird mit Texteingabe aufgerufen
             try {
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
@@ -150,7 +151,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         });
         confirmButt.setWidth("120px");
 
-        insertInputLayout=new HorizontalLayout();
+        insertInputLayout = new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
         insertInputLayout.setWidthFull();
 
@@ -165,43 +166,84 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameSplitLayout.setSizeFull();
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
-        add(binTitle, html, gameLayout);
+
+        //@TODO remove
+        northButt = new Button("north");
+        northButt.addClickListener(e -> {
+            changeRoom(currentRoom.getNorthRoomId());
+        });
+        eastButt = new Button("east");
+        eastButt.addClickListener(e -> {
+            changeRoom(currentRoom.getEastRoomId());
+        });
+        southButt = new Button("south");
+        southButt.addClickListener(e -> {
+            changeRoom(currentRoom.getSouthRoomId());
+        });
+        westButt = new Button("west");
+        westButt.addClickListener(e -> {
+            changeRoom(currentRoom.getWestRoomId());
+        });
+        //@TODO remove
+
+        add(binTitle, html, northButt, eastButt, southButt, westButt, gameLayout);
         expand(myDungeonChatView);
         setSizeFull();
     }
 
-    void loadAvatarProgress(Avatar AAvatar){
-        this.myAvatar=AAvatar;
-        this.currentRoom=myAvatar.getCurrentRoom();
-        if(currentRoom==null){
-            currentRoom=myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
+    @Override
+    public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
+        dungeonId = ALong;
+        myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
+        Avatar test = new Avatar();//@TODO remove
+        loadAvatarProgress(test);
+        createMap();
+        changeRoom(currentRoom.getRoomId());
+    }
+
+    void loadAvatarProgress(Avatar AAvatar) {
+        this.myAvatar = AAvatar;
+        this.currentRoom = myAvatar.getCurrentRoom();
+        this.visitedRooms = myAvatar.getVisitedRooms();
+        if (currentRoom == null) {
+            currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
-        this.visitedRooms=myAvatar.getVisitedRooms();
-    }
-    void saveAvatarProgress(){
-        myAvatar.addVisitedRoom(currentRoom);
-    }
-    void updateMapView(){
-        saveAvatarProgress();
-        mapView.updateMap(currentRoom, visitedRooms);
     }
 
-    void createMap(Long ALong) {
-        mapView=new MapView();
-        VerticalLayout mapLayout=new VerticalLayout();
-        mapLayout.add(mapView.initMap(mapServiceI, dungeonId, tiles));
+    void createMap() {
+        VerticalLayout mapLayout = new VerticalLayout();
+        mapLayout.add(initMap());
         gameSecondLayout.add(mapLayout);
-        updateMapView();
         createInventory();
-        changeRoom(myRoomRepo.findByRoomId(131L));//@TODO remove
+        //changeRoom(myRoomRepo.findByRoomId(602L));//@TODO remove
     }
 
-    void createInventory(){
-        HorizontalLayout gridLayout =new HorizontalLayout();
+    VerticalLayout initMap() {
+        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId);
+        myTiles = new Image[newTiles.length][newTiles[0].length];
+        VerticalLayout columns = new VerticalLayout();
+        columns.setSpacing(false);
+        for (int i = 0; i < newTiles.length; i++) {
+            HorizontalLayout rows = new HorizontalLayout();
+            rows.setSpacing(false);
+            for (int j = 0; j < newTiles[0].length; j++) {
+                myTiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
+                myTiles[i][j].getStyle().set("opacity", "0.0");
+                myTiles[i][j].addClassName("game-room");
+                rows.add(myTiles[i][j]);
+            }
+            columns.add(rows);
+        }
+        updateMap();
+        return columns;
+    }
+
+    void createInventory() {
+        HorizontalLayout gridLayout = new HorizontalLayout();
 
         VerticalLayout inventoryLayout = new VerticalLayout();
         Text inventoryTitle = new Text("Inventar");
-        inventoryList=new ArrayList<>();
+        inventoryList = new ArrayList<>();
         Grid<Item> inventoryGrid = new Grid<>();
         inventoryGrid.setItems(inventoryList);
         inventoryGrid.setVerticalScrollingEnabled(true);
@@ -214,7 +256,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         VerticalLayout armorLayout = new VerticalLayout();
         Text armorTitle = new Text("Rüstung");
-        armorList=new ArrayList<>();
+        armorList = new ArrayList<>();
         Grid<Item> armorGrid = new Grid<>();
         armorGrid.setItems(armorList);
         armorGrid.setVerticalScrollingEnabled(true);
@@ -223,29 +265,59 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         armorGrid.addColumn(Item::getSize).setHeader("Größe");
         armorGrid.getStyle().set("background", "grey");
         armorGrid.setSizeFull();
-        armorLayout.add(armorTitle,armorGrid);
+        armorLayout.add(armorTitle, armorGrid);
 
         gridLayout.add(inventoryLayout, armorLayout);
         gridLayout.setSizeFull();
 
-        Button leftDungeonButt=new Button("Dungeon verlassen");
-        leftDungeonButt.getStyle().set("color" , "red");
+        Button leftDungeonButt = new Button("Dungeon verlassen");
+        leftDungeonButt.getStyle().set("color", "red");
 
         gameSecondLayout.add(gridLayout, leftDungeonButt);
     }
 
-    void changeRoom(Room ARoom){
-        currentRoom=ARoom;
-        myAvatar.setCurrentRoom(ARoom);
-        myAvatar.addVisitedRoom(ARoom);
-        updateMapView();
+    void changeRoom(Long ARoomId) {
+        if (ARoomId == null) {
+            Notification.show("Room null");
+            return;
+        }
+        currentRoom = myRoomRepo.findByRoomId(ARoomId);
+        myAvatar.setCurrentRoom(currentRoom);
+        //Avatar Fortschritt speichern
+        myAvatar.addVisitedRoom(currentRoom);
+        //Kartenanzeige aktualisieren
+        updateMap();
     }
-    @Override
-    public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
-        dungeonId=ALong;
-        myDungeon=myDungeonRepo.findByDungeonId(dungeonId);
-        Avatar test=new Avatar();//@TODO remove
-        loadAvatarProgress(test);
-        createMap(dungeonId);
+
+    void updateMap() {
+        //alle Stellen des Dungeons schwarz färben, die noch nicht durch den Avatar erforscht wurden
+        for (int i = 0; i < myTiles.length; i++) {
+            for (int j = 0; j < myTiles[0].length; j++) {
+                //noch nicht besucht -> Raum ausblenden
+                myTiles[i][j].getStyle().set("opacity", "0.0");
+            }
+        }
+
+        for (RoomI room : visitedRooms) {
+            //schon besucht
+            myTiles[room.getXCoordinate()][room.getYCoordinate()].getStyle().set("opacity", "1.0");
+        }
+
+        //alle anderen Räume roten Rand abwählen
+
+        for (Image[] tL : myTiles) {
+            for (Image t : tL) {
+                t.getStyle().set("border-style", "none");
+                t.getStyle().set("border-color", "inherit");
+            }
+        }
+
+        //aktuellen Raum roten Rand anwählen
+        int x = currentRoom.getXCoordinate();
+        int y = currentRoom.getYCoordinate();
+        myTiles[x][y].getStyle().set("border-style", "solid");
+        myTiles[x][y].getStyle().set("border-color", "red");
+
     }
+
 }

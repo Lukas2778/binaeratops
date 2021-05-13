@@ -33,7 +33,6 @@ import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingExce
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
-import de.dhbw.binaeratops.view.map.MapView;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
@@ -54,7 +53,6 @@ import java.util.ResourceBundle;
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout {
     private final int WIDTH = 8;
     Image[][] tiles;
-    MapView mapView;
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
@@ -74,7 +72,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     Dungeon dungeon;
     Long dungeonId;
-    H2 binTitle;
     String aboutText;
     Html html;
     ChatView myDungeonChatView;
@@ -103,11 +100,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
         dungeon = dungeonRepositoryI.findByDungeonId(ALong);
         dungeonId=ALong;
-        createLayoutBasic(ALong);
+        createLayoutBasic(dungeonId);
     }
 
     void createLayoutBasic(Long ALong) {
-        mapView=new MapView();
         setSizeFull();
         game();
 
@@ -121,7 +117,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         createLayoutAction();
 
         splitMapWithRoom.setSizeFull();
-        splitMapWithRoom.addToPrimary(mapView.initMap(mapServiceI, ALong, tiles));
+        splitMapWithRoom.addToPrimary(initMap());
         splitMapWithRoom.addToSecondary(new Label("AKTUELLER RAUM"));
 
         add(splitChatWithRest);
@@ -289,5 +285,22 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         return columns;
     }
 
+    private VerticalLayout initMap() {
+        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId);
+        tiles = new Image[newTiles.length][newTiles[0].length];
+        VerticalLayout columns = new VerticalLayout();
+        columns.setSpacing(false);
+        for (int i = 0; i < newTiles.length; i++) {
+            HorizontalLayout rows = new HorizontalLayout();
+            rows.setSpacing(false);
+            for (int j = 0; j < newTiles[0].length; j++) {
+                tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
+                tiles[i][j].addClassName("room");
+                rows.add(tiles[i][j]);
+            }
+            columns.add(rows);
+        }
+        return columns;
+    }
 
 }
