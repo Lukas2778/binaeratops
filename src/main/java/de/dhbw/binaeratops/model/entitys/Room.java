@@ -47,7 +47,7 @@ public class Room implements RoomI {
     private final List<ItemInstance> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<NPC> npcs = new ArrayList<>();
+    private final List<NpcIn> npcs = new ArrayList<>();
 
     private Integer xCoordinate;
 

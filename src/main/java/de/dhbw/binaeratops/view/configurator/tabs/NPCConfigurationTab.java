@@ -115,9 +115,9 @@ public class NPCConfigurationTab extends VerticalLayout {
 
         filterRow.getCell(nameColumn).setComponent(nameField);
         filterRow.getCell(descriptionColumn).setComponent(raceField);
+        nameField.setSizeFull();
         filterRow.getCell(raceColumn).setComponent(descriptionField);
 
-        nameField.setSizeFull();
         nameField.setPlaceholder("Filter");
         nameField.getElement().setAttribute("focus-target", "");
         raceField.setSizeFull();

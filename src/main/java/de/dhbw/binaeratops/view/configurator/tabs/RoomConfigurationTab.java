@@ -16,6 +16,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -45,8 +46,8 @@ public class RoomConfigurationTab extends VerticalLayout {
 
     MapServiceI mapService;
     ConfiguratorServiceI configuratorServiceI;
-    private Room currentRoom;
     ComboBox<Room> startRoomBox;
+    private Room currentRoom;
 
     private final int width = 8;
     Image[][] tiles = new Image[width][width];
@@ -56,7 +57,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         configuratorServiceI = AConfiguratorServiceI;
 
         List<Room> roomList = configuratorServiceI.getDungeon().getRooms();
-        startRoomBox = new ComboBox(res.getString("view.configurator.room.startroom"));
+        startRoomBox = new ComboBox<>(res.getString("view.configurator.room.startroom"));
         startRoomBox.setItems(roomList);
         startRoomBox.setValue(configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId()));
         startRoomBox.addValueChangeListener(e->{
@@ -88,6 +89,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     }
 
     private void initMap() {
+
         //KARTE
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
@@ -197,6 +199,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     }
 
     private void initRoom() {
+        //TODO Raumname wird übergeben
         roomArea.removeAll();
         initStartroomCombobox();
 
@@ -275,6 +278,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         roomThings.add(itemLayout, npcLayout);
 
+        //TODO muss als einziges aus- und eingeblendet werden
         specificRoom.add(roomName, roomDescription, deleteRoomButt, itemsNPCsHeadline, roomThings);
 
 
@@ -321,6 +325,7 @@ public class RoomConfigurationTab extends VerticalLayout {
             npcSelectionDialog.dialogResult = false;
             npcSelectionDialog.open();
         });
+
     }
 
     private void initNPCButtonListener() {
@@ -363,7 +368,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     private boolean isRoomNameUnique(String name) {
         Room[] rooms = configuratorServiceI.getAllDungeonRooms().toArray(Room[]::new);
         for (Room r : rooms) {
-            if (r.getRoomName() != null) {
+            if (r.getRoomName() != null && r.getRoomId() != currentRoom.getRoomId()) {
                 if (r.getRoomName().equals(name)) {
                     return false;
                 }

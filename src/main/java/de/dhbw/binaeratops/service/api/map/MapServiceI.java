@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.api.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.map.Tuple;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.model.map.Tile;
 
@@ -34,8 +35,14 @@ public interface MapServiceI {
      */
     Tile[][] getMapGame(long ADungeonId);
 
-
     /**
+     *
+     * @param ADungeonID ID.
+     * @return so n zeug.
+     */
+    Tuple<Integer> getMinXY(long ADungeonID);
+
+                                   /**
      * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.
      *
      * @param ALocationX X Koordinate.

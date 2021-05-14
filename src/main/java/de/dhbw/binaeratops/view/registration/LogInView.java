@@ -47,7 +47,7 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle, PageCo
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {
         //UI.getCurrent().addBeforeLeaveListener(e->System.out.println("test"));
-        setId("SomeView");
+        setId("SomeViewL");
 
 
 
@@ -100,12 +100,12 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle, PageCo
 
     @Override
     public void configurePage(InitialPageSettings initialPageSettings) {
-        String script = "window.onbeforeunload = function (e) { var e = e || window.event; document.getElementById(\"SomeView\").$server.browserIsLeaving(); return; };";
+        String script = "window.onbeforeunload = function (e) { var e = e || window.event; document.getElementById(\"SomeViewL\").$server.browserIsLeavingLogin(); return; };";
         initialPageSettings.addInlineWithContents(InitialPageSettings.Position.PREPEND, script, InitialPageSettings.WrapMode.JAVASCRIPT);
     }
 
     @ClientCallable
-    public void browserIsLeaving() {
-        System.out.println("Called browserIsLeaving");
+    public void browserIsLeavingLogin() {
+        System.out.println("Called browserIsLeavingLogin");
     }
 }

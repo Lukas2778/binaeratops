@@ -51,6 +51,25 @@ public class MapService implements MapServiceI {
     }
 
     @Override
+    public Tuple<Integer> getMinXY(long ADungeonID){
+        int minX = 8;
+        int minY = 8;
+        int maxX = 0;
+        int maxY = 0;
+        for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
+            if (r.getXCoordinate() < minX)
+                minX = r.getXCoordinate();
+            if (r.getYCoordinate() < minY)
+                minY = r.getYCoordinate();
+            if (r.getXCoordinate() > maxX)
+                maxX = r.getXCoordinate();
+            if (r.getYCoordinate() > maxY)
+                maxY = r.getYCoordinate();
+        }
+        return new Tuple<>(minX,minY);
+    }
+
+    @Override
     public Tile[][] getMapGame(long ADungeonID) {
         ArrayList<Tile> tiles = new ArrayList<>();
         int minX = 8;

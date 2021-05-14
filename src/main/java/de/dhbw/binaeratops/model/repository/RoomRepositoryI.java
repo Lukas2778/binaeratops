@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.repository;
 
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -34,4 +35,6 @@ public interface RoomRepositoryI extends JpaRepository<Room, Long> {
      * @return Gesuchter Raum.
      */
     Room findByRoomId(Long ARoomId);
+
+    List<Room> findRoomByDungeonAndXCoordinateAndYCoordinate(Dungeon ADungeon,int AX, int AY);
 }

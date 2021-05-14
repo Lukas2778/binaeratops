@@ -36,6 +36,8 @@ public class Avatar implements AvatarI {
 
     private String name;
 
+    private boolean active;
+
     @ManyToOne
     private User user;
 
@@ -116,6 +118,14 @@ public class Avatar implements AvatarI {
     @Override
     public void setName(String AName) {
         name = AName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean AActive) {
+        active = AActive;
     }
 
     public User getUser() {

@@ -1,6 +1,8 @@
 package de.dhbw.binaeratops.service.api.configuration;
 
+import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.entitys.User;
 
 import java.util.List;
@@ -60,5 +62,22 @@ public interface DungeonServiceI {
      * @param AUser Benutzer, der gespeichert werden soll.
      */
     void saveUser(User AUser);
+
+    /**
+     *
+     * @param ADungeonId  ID des Dungeon.
+     * @return Liste der activen Spieleravatare.
+     */
+    List<Avatar> getCurrentAvatars( long ADungeonId);
+
+
+    /**
+     *
+     * @param AAvatar den gesucheten Avatar.
+     * @return den aktuellen Raum des Avatars.
+     */
+    Room getRoomOfAvatar ( Avatar AAvatar);
+
+    Room getRoomByPosition(Dungeon ADungeon ,int AX, int AY);
 }
 
