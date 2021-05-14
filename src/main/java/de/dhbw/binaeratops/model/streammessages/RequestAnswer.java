@@ -14,7 +14,8 @@ public class RequestAnswer {
     private User user;
     private boolean isEntitled;
 
-
+    public RequestAnswer() {
+    }
 
     /**
      * Konstruktor für die Berechtigungsmeldung.

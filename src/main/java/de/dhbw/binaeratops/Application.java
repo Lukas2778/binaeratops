@@ -2,6 +2,7 @@ package de.dhbw.binaeratops;
 
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.streammessages.RequestAnswer;
+import de.dhbw.binaeratops.model.streammessages.UserAction;
 import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -53,6 +54,27 @@ public class Application extends SpringBootServletInitializer {
     Flux<RequestAnswer> requestAnswers(UnicastProcessor<RequestAnswer> ARequestAnswerPublisher) {
         return ARequestAnswerPublisher.replay(30).autoConnect();
     }
+
+
+    @Bean
+    UnicastProcessor<UserAction> userActionsPublisher(){
+        return UnicastProcessor.create();
+    }
+
+    @Bean
+    Flux<UserAction> userActions(UnicastProcessor<UserAction> AUserActionsPublisher) {
+        return AUserActionsPublisher.replay(30).autoConnect();
+    }
+
+//    @Bean
+//    UnicastProcessor<UserAction> userActionsPublisher(){
+//        return UnicastProcessor.create();
+//    }
+//
+//    @Bean
+//    Flux<UserAction> userActionsPublisher(UnicastProcessor<UserAction> AUserActionsPublisher) {
+//        return AUserActionsPublisher.replay(30).autoConnect();
+//    }
 
     /**
      * Main-Methode der Applikation.
