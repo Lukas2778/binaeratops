@@ -47,7 +47,7 @@ public class Room implements RoomI {
     private final List<ItemInstance> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<NPC> npcs = new ArrayList<>();
+    private final List<NpcInstance> npcs = new ArrayList<>();
 
     private Integer xCoordinate;
 
@@ -165,16 +165,16 @@ public class Room implements RoomI {
         AItem.setRoom(null);
     }
 
-    public List<NPC> getNpcs() {
+    public List<NpcInstance> getNpcs() {
         return npcs;
     }
 
-    public void addNpc(NPC ANpc) {
+    public void addNpc(NpcInstance ANpc) {
         ANpc.setRoom(this);
         npcs.add(ANpc);
     }
 
-    public void removeNPC(NPC ANpc) {
+    public void removeNPC(NpcInstance ANpc) {
         npcs.remove(ANpc);
         ANpc.setRoom(null);
     }

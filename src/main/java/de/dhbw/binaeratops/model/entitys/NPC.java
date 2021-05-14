@@ -1,6 +1,6 @@
 package de.dhbw.binaeratops.model.entitys;
 
-import de.dhbw.binaeratops.model.api.NPCI;
+import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
  * @see NPCI
  */
 @Entity
-public class NPC implements NPCI {
+public class NPC  {
 
     @Id
     @GeneratedValue
@@ -38,11 +38,9 @@ public class NPC implements NPCI {
     @ManyToOne
     private Dungeon dungeon;
 
-    @ManyToOne
-    private Room room;
-
     @OneToMany(mappedBy = "npc", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> luggage = new ArrayList<>();
+
 
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
@@ -104,27 +102,14 @@ public class NPC implements NPCI {
         this.dungeon = ADungeon;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public List<ItemInstance> getLuggage() {
         return luggage;
     }
 
-    public void addItem(ItemInstance AItem) {
-        AItem.setNpc(this);
-        luggage.add(AItem);
-    }
 
-    public void removeItem(ItemInstance AItem) {
-        luggage.remove(AItem);
-        AItem.setNpc(null);
-    }
+
+
+
 
     @Override
     public boolean equals(Object AOther) {
@@ -168,7 +153,7 @@ public class NPC implements NPCI {
      * @return Objekt.
      * @throws InvalidImplementationException Objekt ungültig.
      */
-    public static NPC check(NPCI ANpc) throws InvalidImplementationException {
+    public static NPC check(NPC ANpc) throws InvalidImplementationException {
         if (!(ANpc instanceof NPC)) {
             throw new InvalidImplementationException(-1,
                     MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),
@@ -177,4 +162,5 @@ public class NPC implements NPCI {
 
         return (NPC) ANpc;
     }
+
 }

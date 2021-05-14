@@ -7,6 +7,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Item;
@@ -18,7 +19,7 @@ public class ItemDialog extends Dialog {
     ConfiguratorServiceI configuratorServiceI;
 
     private TextField currentName;
-    private NumberField currentSize;
+    private IntegerField currentSize;
     private TextField currentDescription;
     private ComboBox<ItemType> currentType;
 
@@ -36,10 +37,10 @@ public class ItemDialog extends Dialog {
 
     private void init() {
         currentName = new TextField("Name");
-        currentSize = new NumberField("Größe");
+        currentSize = new IntegerField("Größe");
         currentSize.setHasControls(true);
         currentSize.setMin(1);
-        currentSize.setValue(1.0);
+        currentSize.setValue(1);
         currentDescription = new TextField("Beschreibung");
         currentType = new ComboBox<>("Typ");
         Button saveDialog = new Button("Speichern");
@@ -78,7 +79,7 @@ public class ItemDialog extends Dialog {
 
     public void fillDialog(Item item) {
         currentName.setValue(item.getItemName());
-        currentSize.setValue(item.getSize().doubleValue());
+        currentSize.setValue(item.getSize().intValue());
         currentDescription.setValue(item.getDescription());
         currentType.setValue(item.getType());
     }
@@ -95,11 +96,11 @@ public class ItemDialog extends Dialog {
         this.currentName = currentName;
     }
 
-    public NumberField getCurrentSize() {
+    public IntegerField getCurrentSize() {
         return currentSize;
     }
 
-    public void setCurrentSize(NumberField currentSize) {
+    public void setCurrentSize(IntegerField currentSize) {
         this.currentSize = currentSize;
     }
 
