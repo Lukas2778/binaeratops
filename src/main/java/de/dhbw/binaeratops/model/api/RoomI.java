@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.model.api;
 
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.NpcInstance;
 
 import java.util.List;
 
@@ -142,21 +143,21 @@ public interface RoomI {
      *
      * @return Liste von NPCs im Raum.
      */
-    List<NPC> getNpcs();
+    List<NpcInstance> getNpcs();
 
     /**
      * Fügt dem Raum den NPC hinzu.
      *
      * @param ANpc NPC, der hinzugefügt werden soll.
      */
-    void addNpc(NPC ANpc);
+    void addNpc(NpcInstance ANpc);
 
     /**
      * Entfernt dem Raum den NPC.
      *
      * @param ANpc NPC, der entfernt werden soll.
      */
-    void removeNPC(NPC ANpc);
+    void removeNPC(NpcInstance ANpc);
 
     /**
      * Gibt die X-Koordinate des Raumes zurück.

@@ -2,7 +2,6 @@ package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.groups.RepositoryGroup;
-import de.dhbw.binaeratops.model.api.NPCI;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +30,7 @@ import java.util.List;
  *
  * @author Nicolas Haug
  * @see NPCRepositoryI
- * @see NPCI
+ * @see NPC
  * @see NPC
  */
 @Category({RepositoryGroup.class})
@@ -44,15 +43,15 @@ public class NpcRepositoryTest extends Logger {
     @Autowired
     NPCRepositoryI npcRepo;
 
-    private NPCI npc1;
-    private NPCI npc2;
+    private NPC npc1;
+    private NPC npc2;
 
     /**
      * Initialisierungsmethode, zum Befüllen der In-Memory-Datenbank.
      */
     @Before
     public void init() {
-        NPCI npc = new NPC();
+        NPC npc = new NPC();
         npc.setNpcName("Olaf Herden");
         npc.setDescription("Studiengangsleiter");
         npcRepo.save((NPC) npc);
@@ -84,7 +83,7 @@ public class NpcRepositoryTest extends Logger {
      */
     @Test
     public void testFindByNpcId() {
-        NPCI npc = npcRepo.findByNpcId(npc1.getNpcId());
+        NPC npc = npcRepo.findByNpcId(npc1.getNpcId());
         Assert.assertEquals("avh", npc.getNpcName());
     }
 
@@ -94,9 +93,9 @@ public class NpcRepositoryTest extends Logger {
      */
     @Test
     public void testUpdateNpc() {
-        NPCI npc = npcRepo.findByNpcId(npc1.getNpcId());
+        NPC npc = npcRepo.findByNpcId(npc1.getNpcId());
         npc.setDescription("Dozent des Wissenschaftlichen Arbeitens");
-        NPCI npcModified = npcRepo.findByNpcId(npc1.getNpcId());
+        NPC npcModified = npcRepo.findByNpcId(npc1.getNpcId());
         Assert.assertEquals("Dozent des Wissenschaftlichen Arbeitens", npcModified.getDescription());
     }
 

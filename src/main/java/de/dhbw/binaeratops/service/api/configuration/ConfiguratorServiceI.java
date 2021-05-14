@@ -254,14 +254,15 @@ public interface ConfiguratorServiceI {
      */
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
+    int getNumberOfNPC(Room ARoom, NPC ANPC);
+
     /**
      * Die NPCliste wird gesetzt und die vorherige gelöscht.
      *
      * @param ARoom    Raum.
      * @param ANPCList NPCliste.
      */
-    void setNPCs(Room ARoom, List<NPC> ANPCList);
-
+    void setNpcInstances(Room ARoom, List<NpcInstance> ANPCList);
 
     /**
      * Gibt alle Gegenstände eines Dungeons zurück.
@@ -291,7 +292,7 @@ public interface ConfiguratorServiceI {
      * @param ARoom Raum.
      * @return Liste mit NPCs.
      */
-    List<NPC> getAllNPCs(Room ARoom);
+    List<NpcInstance> getAllNPCs(Room ARoom);
 
     /**
      * Entfernt den Raum aus dem Dungeon und löscht ihn.
