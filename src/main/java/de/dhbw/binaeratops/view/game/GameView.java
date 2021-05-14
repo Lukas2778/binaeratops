@@ -5,12 +5,12 @@ import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.html.Image;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -58,6 +58,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     Long dungeonId;
     Dungeon myDungeon;
     Image[][] myTiles;
+    Dialog myAvatarDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private final Flux<ChatMessage> myMessages;
@@ -72,7 +73,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     VerticalLayout gameSecondLayout;
     HorizontalLayout insertInputLayout;
     VerticalLayout mapLayout;
-    Anchor roomAnchor;
     HorizontalLayout gridLayout;
     VerticalLayout gridLayoutVert;
 
@@ -121,7 +121,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameSecondLayout = new VerticalLayout();
         mapLayout = new VerticalLayout();
         gridLayout = new HorizontalLayout();
-        gridLayoutVert=new VerticalLayout();
+        gridLayoutVert = new VerticalLayout();
         leftDungeonButt = new Button("Dungeon verlassen");
         leftDungeonButt.getStyle().set("color", "red");
 
@@ -211,10 +211,72 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
         dungeonId = ALong;
         myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
-        Avatar test = new Avatar();//@TODO remove
-        loadAvatarProgress(test);
-        createMap();
-        changeRoom(currentRoom.getRoomId());
+        //Avatarauswahl öffnen
+        createAvatarDialog();
+    }
+
+    void createAvatarDialog() {
+        HorizontalLayout buttLayout;
+        VerticalLayout gridLayoutVert;
+        H2 title;
+        List<Avatar> avatarList;
+        Grid<Avatar> avatarGrid;
+
+        myAvatarDialog= new Dialog();
+        myAvatarDialog.open();
+
+        myAvatarDialog.setCloseOnEsc(false);
+        myAvatarDialog.setCloseOnOutsideClick(false);
+        buttLayout = new HorizontalLayout();
+        gridLayoutVert=new VerticalLayout();
+
+        // Header
+        title = new H2("Avatarauswahl");
+        Header header = new Header(title);
+
+        avatarList = new ArrayList<>();
+        User user = VaadinSession.getCurrent().getAttribute(User.class);
+        avatarList.addAll(user.getAvatars());
+
+        avatarGrid = new Grid<>();
+        avatarGrid.setItems(avatarList);
+        avatarGrid.setVerticalScrollingEnabled(true);
+        avatarGrid.addColumn(Avatar::getName).setHeader("Avatarname");
+        avatarGrid.addColumn(Avatar::getRace).setHeader("Rasse");
+        avatarGrid.addColumn(Avatar::getRole).setHeader("Rolle");
+        avatarGrid.addColumn(Avatar::getCurrentRoom).setHeader("letzter Raum");
+        //avatarGrid.setSizeFull();
+        expand(avatarGrid);
+        gridLayoutVert.add(avatarGrid);
+
+        // Footer
+        Button cancel = new Button("Verlassen", e -> {
+            myAvatarDialog.close();
+            UI.getCurrent().navigate("lobby");
+        });
+        cancel.getStyle().set("color", "red");
+
+        Button createAvatar = new Button("Neuer Avatar", e -> myAvatarDialog.close());
+        createAvatar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        createAvatar.focus();
+
+        Button enterDungeon = new Button("Eintreten", e -> {
+            //Dungeon betreten
+            myAvatarDialog.close();
+            Avatar test = new Avatar();//@TODO remove
+            loadAvatarProgress(test);
+            createMap();
+            changeRoom(currentRoom.getRoomId());
+        });
+        createAvatar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        buttLayout.add(cancel, createAvatar, enterDungeon);
+        buttLayout.setWidthFull();
+
+        // Add it all together
+        myAvatarDialog.add(header, gridLayoutVert, buttLayout);
+        myAvatarDialog.setHeight("70%");
+        myAvatarDialog.setWidth("50%");
     }
 
     void loadAvatarProgress(Avatar AAvatar) {
@@ -229,11 +291,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     void createMap() {
         mapLayout.add(initMap());
         createInventory();
-        //changeRoom(myRoomRepo.findByRoomId(602L));//@TODO remove
     }
 
     VerticalLayout initMap() {
-        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId,true);
+        Tile[][] newTiles = mapServiceI.getMapGame(dungeonId, true);
         myTiles = new Image[newTiles.length][newTiles[0].length];
         VerticalLayout columns = new VerticalLayout();
         columns.setSpacing(false);
@@ -293,7 +354,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         myAvatar.setCurrentRoom(currentRoom);
         //Avatar Fortschritt speichern
         myAvatar.addVisitedRoom(currentRoom);
-        visitedRooms=myAvatar.getVisitedRooms();//Liste updaten
+        visitedRooms = myAvatar.getVisitedRooms();//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
     }
@@ -337,5 +398,4 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         myTiles[x][y].getStyle().set("border-style", "solid");
         myTiles[x][y].getStyle().set("border-color", "red");
     }
-
 }
