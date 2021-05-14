@@ -46,6 +46,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemRepositoryI itemRepo;
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
+    @Autowired
+    NpcInstanceRepositoryI npcInstanceRepositoryI;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -272,15 +274,40 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setNPCs(Room ARoom, List<NPC> ANPCList) {
-        for (NPC myNpc : ANPCList) {
+    public int getNumberOfNPC(Room ARoom, NPC ANPC) {
+        int counter = 0;
+        for (NpcInstance npcInstance : getAllNPCs(ARoom)) {
+            if (npcInstance.getNpc().getNpcId().equals(ANPC.getNpcId())) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    @Override
+    public void setNpcInstances(Room ARoom, List<NpcInstance> ANPCList) {
+        ARoom.getItems()
+                .clear();
+        for (NpcInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
+            npcInstanceRepositoryI.delete(myNpc);
+        }
+        for (NpcInstance myNpc : ANPCList) {
             myNpc.setRoom(ARoom);
-            npcRepo.save(myNpc);
+            npcInstanceRepositoryI.save(myNpc);
         }
         ARoom.getNpcs()
-                .clear();
-        ARoom.getNpcs()
                 .addAll(ANPCList);
+        try {
+            roomRepo.save(ARoom);
+        } catch (Exception e) {
+
+            for (NpcInstance myNpc : ANPCList) {
+                myNpc.setRoom(ARoom);
+                npcInstanceRepositoryI.save(myNpc);
+            }
+            System.out.println("FALSCH");
+            //Notification.show("Hier findet er den Entity nicht!");
+        }
     }
 
     @Override
@@ -301,7 +328,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<NpcInstance> getAllNPCs(Room ARoom){
-        return npcInstanceRepo.findByRoom(ARoom);
+        return npcInstanceRepositoryI.findByRoom(ARoom);
     }
 
     @Override

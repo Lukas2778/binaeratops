@@ -22,8 +22,6 @@ public class NpcInstance {
     @ManyToOne
     private Room room;
 
-
-
     public NpcInstance(Long npcInstanceId, NPC npc, Room room) {
         this.npcInstanceId = npcInstanceId;
         this.npc = npc;

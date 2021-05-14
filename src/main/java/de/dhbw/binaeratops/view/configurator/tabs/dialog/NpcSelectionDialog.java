@@ -14,6 +14,7 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class NpcSelectionDialog extends Dialog {
@@ -23,41 +24,36 @@ public class NpcSelectionDialog extends Dialog {
 
     public Button comfirmButton = new Button("Übernehmen");
     public Button cancelButton = new Button("Abbrechen");
+    HashMap<NPC, IntegerField> npcIntegerFieldHashMap = new HashMap<>();
+    private ListBox<NpcInstance> npcList;
     Grid<NPC> npcGrid = new Grid(NPC.class);
+    ConfiguratorServiceI configuratorServiceI;
+    Room room;
 
-
-    public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom){
+    public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<NpcInstance> npcListBox){
+        configuratorServiceI = AConfiguratorService;
+        room = ARoom;
+        npcList = npcListBox;
         H1 title = new H1("NPC Liste");
         H2 headline = new H2("NPCs für ...");
 
-
         npcGrid.setWidth(500, Unit.PIXELS);
 
-        //List<NPC> npcList = configuratorService.getAllNPCs();
-
-        //npcGrid.setItems(npcList);
         npcGrid.removeAllColumns();
 
-        npcGrid.setSelectionMode(Grid.SelectionMode.MULTI);
+        npcGrid.addComponentColumn(npc -> {
+            IntegerField nf = new IntegerField();
+            npcIntegerFieldHashMap.put(npc, nf);
 
+            nf.setValue(configuratorServiceI.getNumberOfNPC(room, npc));
+
+            return nf;
+        }).setHeader("Anzahl");
         npcGrid.addColumn(NPC::getNpcName).setHeader("Name");
         npcGrid.addColumn(npc -> npc.getRace().getRaceName()).setHeader("Rasse");
         npcGrid.addColumn(NPC::getDescription).setHeader("Beschreibung");
 
         add(new VerticalLayout(title, headline, npcGrid, comfirmButton, cancelButton));
-
-        this.addOpenedChangeListener(e->{
-            if (isOpened()){
-                List<NPC> tempList = AConfiguratorService.getAllNPCs();
-                selectedNpcs = AConfiguratorService.getAllNPCs(ARoom);
-                npcGrid.setItems(tempList);
-                for (NPC myNPC: selectedNpcs){
-                    if(tempList.contains(myNPC)){
-                        npcGrid.select(myNPC);
-                    }
-                }
-            }
-        });
 
         cancelButton.addClickListener(e->{
             dialogResult = false;
@@ -65,13 +61,41 @@ public class NpcSelectionDialog extends Dialog {
         });
 
         comfirmButton.addClickListener(e->{
-            dialogResult = true;
-            close();
+            if(validate()) {
+                List<NpcInstance> instances = new ArrayList<>();
+                for (NPC npc : npcIntegerFieldHashMap.keySet()) {
+                    if (!npcIntegerFieldHashMap.get(npc).isEmpty() && npcIntegerFieldHashMap.get(npc).getValue() >= 1) {
+                        for (int i = 0; i < npcIntegerFieldHashMap.get(npc).getValue(); i++) {
+                            NpcInstance instance = new NpcInstance();
+                            instance.setNpc(npc);
+                            instances.add(instance);
+                        }
+                    }
+                }
+                AConfiguratorService.setNpcInstances(ARoom, instances);
+                refreshNpcList();
+                close();
+            }
         });
+
+        npcGrid.setItems(configuratorServiceI.getAllNPCs());
     }
 
     public List<NPC> getNPCSelection(){
         selectedNpcs = Arrays.asList(npcGrid.getSelectedItems().toArray(NPC[]::new));
         return selectedNpcs;
+    }
+
+    private void refreshNpcList () {
+        npcList.setItems(configuratorServiceI.getAllNPCs(room));
+    }
+
+    private boolean validate() {
+        for (NPC npc : npcIntegerFieldHashMap.keySet()) {
+            if (npcIntegerFieldHashMap.get(npc).isInvalid()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

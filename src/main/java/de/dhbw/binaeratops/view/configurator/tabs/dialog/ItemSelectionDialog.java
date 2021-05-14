@@ -9,7 +9,6 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
 public class ItemSelectionDialog extends Dialog {
 
@@ -28,8 +26,7 @@ public class ItemSelectionDialog extends Dialog {
     public Button confirmButton = new Button("Übernehmen");
     public Button cancelButton = new Button("Abbrechen");
     Grid<Item> itemGrid = new Grid(Item.class);
-    HashMap<Item, NumberField> itemNumberFieldHashMap = new HashMap<>();
-    List<ItemInstance> selectedItems = new ArrayList<>();
+    HashMap<Item, IntegerField> itemIntegerFieldHashMap = new HashMap<>();
     private ListBox<ItemInstance> itemList;
     private Room room;
 
@@ -48,10 +45,10 @@ public class ItemSelectionDialog extends Dialog {
         itemGrid.removeAllColumns();
 
         itemGrid.addComponentColumn(item -> {
-            NumberField nf = new NumberField();
-            itemNumberFieldHashMap.put(item, nf);
+            IntegerField nf = new IntegerField();
+            itemIntegerFieldHashMap.put(item, nf);
 
-            nf.setValue((double) configuratorServiceI.getNumberOfItem(room, item));
+            nf.setValue(configuratorServiceI.getNumberOfItem(room, item));
 
             return nf;
         }).setHeader("Anzahl");
@@ -69,9 +66,9 @@ public class ItemSelectionDialog extends Dialog {
         confirmButton.addClickListener(e->{
             if(validate()) {
                 List<ItemInstance> instances = new ArrayList<>();
-                for (Item item : itemNumberFieldHashMap.keySet()) {
-                    if (!itemNumberFieldHashMap.get(item).isEmpty() && itemNumberFieldHashMap.get(item).getValue() >= 1) {
-                        for (int i = 0; i < itemNumberFieldHashMap.get(item).getValue(); i++) {
+                for (Item item : itemIntegerFieldHashMap.keySet()) {
+                    if (!itemIntegerFieldHashMap.get(item).isEmpty() && itemIntegerFieldHashMap.get(item).getValue() >= 1) {
+                        for (int i = 0; i < itemIntegerFieldHashMap.get(item).getValue(); i++) {
                             ItemInstance instance = new ItemInstance();
                             instance.setItem(item);
                             instances.add(instance);
@@ -94,5 +91,14 @@ public class ItemSelectionDialog extends Dialog {
 
     private void refreshItemList () {
         itemList.setItems(configuratorServiceI.getAllItems(room));
+    }
+
+    private boolean validate() {
+        for (Item item : itemIntegerFieldHashMap.keySet()) {
+            if (itemIntegerFieldHashMap.get(item).isInvalid()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

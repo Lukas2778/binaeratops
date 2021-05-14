@@ -17,7 +17,7 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
-import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.NpcInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
@@ -37,7 +37,7 @@ public class RoomConfigurationTab extends VerticalLayout {
     ItemSelectionDialog itemSelectionDialog;
 
     ListBox<ItemInstance> itemList = new ListBox<>();
-    ListBox<NPC> npcList = new ListBox<>();
+    ListBox<NpcInstance> npcList = new ListBox<>();
 
     VerticalLayout mapArea = new VerticalLayout();
     VerticalLayout globalRoomArea = new VerticalLayout();
@@ -303,7 +303,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         npcList.clear();
         if (currentRoom != null) {
-            List<NPC> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
+            List<NpcInstance> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
             npcList.setItems(roomItems);
         }
 
