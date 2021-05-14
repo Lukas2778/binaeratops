@@ -199,6 +199,13 @@ public interface DungeonI {
     List<Avatar> getAvatars();
 
     /**
+     * Gibt den Avatar zurück der über die übergebene ID gefunden wurde.
+     * @param AAvatarId
+     * @return Gefundener Avatar oder null falls nicht gefunden.
+     */
+    Avatar getAvatarById(Long AAvatarId);
+
+    /**
      * Fügt dem Dungeon einen Avatar hinzu.
      *
      * @param AAvatar Avatar, der hinzugefügt werden soll.

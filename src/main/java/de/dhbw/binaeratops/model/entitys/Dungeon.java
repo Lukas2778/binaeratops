@@ -247,6 +247,14 @@ public class Dungeon implements DungeonI {
         return avatars;
     }
 
+    public Avatar getAvatarById(Long AAvatarId){
+        for(Avatar a:getAvatars()){
+            if(a.getAvatarId().equals(AAvatarId))
+                return a;
+        }
+        return null;
+    }
+
     public void addAvatar(Avatar AAvatar) {
         AAvatar.setDungeon(this);
         avatars.add(AAvatar);
