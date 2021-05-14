@@ -57,14 +57,14 @@ public class MapService implements MapServiceI {
         int maxX = 0;
         int maxY = 0;
         for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
-            if (r.getXCoordinate() < minX)
-                minX = r.getXCoordinate();
-            if (r.getYCoordinate() < minY)
-                minY = r.getYCoordinate();
-            if (r.getXCoordinate() > maxX)
-                maxX = r.getXCoordinate();
-            if (r.getYCoordinate() > maxY)
-                maxY = r.getYCoordinate();
+            if (r.getXcoordinate() < minX)
+                minX = r.getXcoordinate();
+            if (r.getYcoordinate() < minY)
+                minY = r.getYcoordinate();
+            if (r.getXcoordinate() > maxX)
+                maxX = r.getXcoordinate();
+            if (r.getYcoordinate() > maxY)
+                maxY = r.getYcoordinate();
         }
         return new Tuple<>(minX,minY);
     }
@@ -77,15 +77,15 @@ public class MapService implements MapServiceI {
         int maxX = 0;
         int maxY = 0;
         for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
-            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
-            if (r.getXCoordinate() < minX)
-                minX = r.getXCoordinate();
-            if (r.getYCoordinate() < minY)
-                minY = r.getYCoordinate();
-            if (r.getXCoordinate() > maxX)
-                maxX = r.getXCoordinate();
-            if (r.getYCoordinate() > maxY)
-                maxY = r.getYCoordinate();
+            tiles.add(new Tile(r.getXcoordinate(), r.getYcoordinate(), tileName(r)));
+            if (r.getXcoordinate() < minX)
+                minX = r.getXcoordinate();
+            if (r.getYcoordinate() < minY)
+                minY = r.getYcoordinate();
+            if (r.getXcoordinate() > maxX)
+                maxX = r.getXcoordinate();
+            if (r.getYcoordinate() > maxY)
+                maxY = r.getYcoordinate();
         }
         if (tiles.size() == 0){
             Tile[][] a= new Tile[1][1];

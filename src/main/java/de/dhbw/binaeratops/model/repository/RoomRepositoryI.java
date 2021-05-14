@@ -36,5 +36,11 @@ public interface RoomRepositoryI extends JpaRepository<Room, Long> {
      */
     Room findByRoomId(Long ARoomId);
 
-    List<Room> findRoomByDungeonAndXCoordinateAndYCoordinate(Dungeon ADungeon,int AX, int AY);
+    List<Room> findByXcoordinate (Integer AXCoordinate);
+
+    List<Room> findByYcoordinate (Integer AYCoordinate);
+
+    List<Room> findByDungeon (Dungeon ADungeon);
+
+    List<Room> findByDungeonAndXcoordinateAndYcoordinate(Dungeon ADungeon, Integer AX, Integer AY);
 }

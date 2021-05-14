@@ -254,7 +254,7 @@ public class RoomConfigurationTab extends VerticalLayout {
                         tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                     }
                     //wird der Raum gelöscht, soll die Hervorhebung nicht weiter existieren
-                    tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "1");
+                    tiles[currentRoom.getXcoordinate()][currentRoom.getYcoordinate()].getStyle().set("opacity", "1");
                     //zum Startraum navigieren
                     this.currentRoom = configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId());
                     initRoom();
@@ -341,7 +341,7 @@ public class RoomConfigurationTab extends VerticalLayout {
 
         //aktuellen Raum anwählen
         try {
-            tiles[currentRoom.getXCoordinate()][currentRoom.getYCoordinate()].getStyle().set("opacity", "0.5");
+            tiles[currentRoom.getXcoordinate()][currentRoom.getYcoordinate()].getStyle().set("opacity", "0.5");
         } catch (Exception ignored) {
         }
     }

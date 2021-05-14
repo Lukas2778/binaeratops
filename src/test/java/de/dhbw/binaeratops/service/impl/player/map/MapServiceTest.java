@@ -38,37 +38,37 @@ public class MapServiceTest extends Logger {
         //new Dungeon("testDungeon");
         myMapService=new MapService();
         Room testRoom1=new Room("testRoom", "descr");
-        testRoom1.setXCoordinate(0);
-        testRoom1.setYCoordinate(0);
+        testRoom1.setXcoordinate(0);
+        testRoom1.setYcoordinate(0);
         testRoom1.setRoomId(1L);
         testRoom1.setEastRoomId(2L);
         testRoom1.setSouthRoomId(5L);
 
         Room testRoom2=new Room("testRoom", "descr");
-        testRoom2.setXCoordinate(0);
-        testRoom2.setYCoordinate(1);
+        testRoom2.setXcoordinate(0);
+        testRoom2.setYcoordinate(1);
         testRoom2.setRoomId(2L);
         testRoom2.setEastRoomId(3L);
         testRoom2.setSouthRoomId(6L);
         testRoom2.setWestRoomId(1L);
 
         Room testRoom3=new Room("testRoom", "descr");
-        testRoom3.setXCoordinate(0);
-        testRoom3.setYCoordinate(2);
+        testRoom3.setXcoordinate(0);
+        testRoom3.setYcoordinate(2);
         testRoom3.setRoomId(3L);
         testRoom3.setEastRoomId(4L);
         testRoom3.setSouthRoomId(7L);
         testRoom3.setWestRoomId(2L);
 
         Room testRoom4=new Room("testRoom", "descr");
-        testRoom4.setXCoordinate(0);
-        testRoom4.setYCoordinate(3);
+        testRoom4.setXcoordinate(0);
+        testRoom4.setYcoordinate(3);
         testRoom4.setRoomId(4L);
         testRoom4.setWestRoomId(3L);
 
         Room testRoom5=new Room("testRoom", "descr");
-        testRoom5.setXCoordinate(1);
-        testRoom5.setYCoordinate(0);
+        testRoom5.setXcoordinate(1);
+        testRoom5.setYcoordinate(0);
         testRoom5.setRoomId(5L);
         testRoom5.setEastRoomId(6L);
         testRoom5.setNorthRoomId(1L);

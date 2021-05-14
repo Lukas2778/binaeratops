@@ -51,7 +51,6 @@ import java.util.ResourceBundle;
 @PageTitle("Title")
 @Push
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
-    private final int WIDTH = 8;
     Image[][] tiles;
     MapView mapView;
 
@@ -174,10 +173,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
                 Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
-            } catch (CmdScannerException cmdScannerException) {
+            } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
-            } catch (InvalidImplementationException invalidImplementationException) {
-                invalidImplementationException.printStackTrace();
             }
             textField.clear();
         });
@@ -209,7 +206,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
-        vl.add(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
+        HorizontalLayout leaveAndPause=new HorizontalLayout();
+        leaveAndPause.add(pauseButton,leaveButton);
+        //leaveAndPause.
+        vl.add(actionsButton, npcsButton, authorisationButton, leaveAndPause);
+        //vl.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
         hl.add(grid, vl);
         splitMapAndRoomWithActions.addToSecondary(hl);
     }

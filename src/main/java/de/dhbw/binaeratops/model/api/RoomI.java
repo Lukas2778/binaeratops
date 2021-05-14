@@ -171,7 +171,7 @@ public interface RoomI {
      *
      * @param AXCoordinate Zu setzende X-Koordinate des Raumes.
      */
-    void setXCoordinate(Integer AXCoordinate);
+    void setXcoordinate(Integer AXCoordinate);
 
     /**
      * Gibt die Y-Koordinate des Raumes zurück.

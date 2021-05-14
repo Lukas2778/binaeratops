@@ -104,7 +104,7 @@ public class DungeonService implements DungeonServiceI {
 
     @Override
     public Room getRoomByPosition(Dungeon ADungeon, int AX, int AY) {
-        return  roomRepo.findRoomByDungeonAndXCoordinateAndYCoordinate(ADungeon, AX, AY).get(0);
+        return  roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AX, AY).get(0);
     }
 
     @Override

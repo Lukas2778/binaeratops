@@ -49,9 +49,9 @@ public class Room implements RoomI {
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NpcInstance> npcs = new ArrayList<>();
 
-    private Integer xCoordinate;
+    private Integer xcoordinate;
 
-    private Integer yCoordinate;
+    private Integer ycoordinate;
 
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
@@ -76,8 +76,8 @@ public class Room implements RoomI {
      */
     public Room(int AXCoordinate, int AYCoordinate) {
 
-        this.xCoordinate = AXCoordinate;
-        this.yCoordinate = AYCoordinate;
+        this.xcoordinate = AXCoordinate;
+        this.ycoordinate = AYCoordinate;
     }
 
     /**
@@ -179,20 +179,21 @@ public class Room implements RoomI {
         ANpc.setRoom(null);
     }
 
-    public Integer getXCoordinate() {
-        return xCoordinate;
+
+    public Integer getXcoordinate() {
+        return xcoordinate;
     }
 
-    public void setXCoordinate(Integer AXCoordinate) {
-        this.xCoordinate = AXCoordinate;
+    public void setXcoordinate(Integer xcoordinate) {
+        this.xcoordinate = xcoordinate;
     }
 
-    public Integer getYCoordinate() {
-        return yCoordinate;
+    public Integer getYcoordinate() {
+        return ycoordinate;
     }
 
-    public void setYCoordinate(Integer AYCoordinate) {
-        this.yCoordinate = AYCoordinate;
+    public void setYcoordinate(Integer ycoordinate) {
+        this.ycoordinate = ycoordinate;
     }
 
     @Override
