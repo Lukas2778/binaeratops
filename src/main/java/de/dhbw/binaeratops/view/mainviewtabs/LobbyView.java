@@ -12,9 +12,12 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
+import de.dhbw.binaeratops.service.api.permission.PermissionServiceI;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +38,20 @@ public class LobbyView extends VerticalLayout {
 
     GameService gameService;
 
+    PermissionServiceI permissionService;
+
+
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
      * @param ADungeonService DungeonService.
      * @param AGameService GameService.
+     * @param APermissionService Berechtigungsverwaltung.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, @Autowired PermissionServiceI APermissionService){
         dungeonServiceI=ADungeonService;
         this.gameService = AGameService;
-
+        this.permissionService = APermissionService;
         titleText=new H1("Dungeon spielen");
         explanationText=new String("<div>Du kannst hier aus einer Liste der für dich spielbaren Dungeons" +
                 " auswählen.<br>Es werden dir hier alle aktiven Dungeons angezeigt, die entweder öffentlich zugänglich sind, " +
@@ -64,6 +71,7 @@ public class LobbyView extends VerticalLayout {
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader("Sichtbarkeit");
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
         dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader("Aktion");
+        dungeonGrid.addComponentColumn(item -> createPermissionButton(dungeonGrid, item)).setHeader("Anfrage");
 
         add(titleText, html, dungeonGrid);
 
@@ -84,6 +92,19 @@ public class LobbyView extends VerticalLayout {
         button.setIcon(iconEntryButton);
 
         button.getStyle().set("color", "blue");
+        return button;
+    }
+
+    private Button createPermissionButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
+
+        Button button = new Button("", clickEvent -> {
+            permissionService.requestPermission(VaadinSession.getCurrent().getAttribute(User.class), ADungeon);
+        });
+
+        Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
+        button.setIcon(iconEntryButton);
+
+        button.getStyle().set("color", "red");
         return button;
     }
 

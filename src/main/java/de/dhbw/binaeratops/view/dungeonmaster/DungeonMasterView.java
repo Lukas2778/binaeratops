@@ -18,16 +18,19 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.AvatarI;
-import de.dhbw.binaeratops.model.chat.ChatMessage;
+import de.dhbw.binaeratops.model.streammessages.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
+import de.dhbw.binaeratops.model.streammessages.Permission;
+import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
+import de.dhbw.binaeratops.service.api.permission.PermissionServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
@@ -65,12 +68,14 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private GameService gameService;
 
     private MapServiceI mapServiceI;
-
+    private PermissionServiceI permissionServiceI;
     private DungeonServiceI dungeonServiceI;
     private DungeonRepositoryI dungeonRepositoryI;
     private Flux<ChatMessage> messages;
     private ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+
+    private final Flux<UserRequest> permissions;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -84,14 +89,23 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Button confirmButt;
     VerticalLayout gameLayout = new VerticalLayout();
 
-    public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService) {
+    public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService,
+                             @Autowired DungeonServiceI dungeonServiceI, @Autowired DungeonRepositoryI dungeonRepositoryI,
+                             Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
+                             Flux<UserRequest> permissions, @Autowired PermissionServiceI APermissionService) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
         this.dungeonRepositoryI = dungeonRepositoryI;
         this.messages = messages;
         this. myParserService = AParserService;
+        this.permissions = permissions;
+        this.permissionServiceI = APermissionService;
+
+        // Spieleranfragen werden hier abgefangen
+        this.permissions.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
+            Notification.show(message.getUser().getName()+": Will mitspielen!");
+        })));
     }
 
     @Override
@@ -220,6 +234,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         });
         authorisationButton.addClickListener(e -> {
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
+            permissionServiceI.answerRequest(VaadinSession.getCurrent().getAttribute(User.class), dungeon, true);
             authorisationDialog.open();
         });
         pauseButton.addClickListener(e -> {
@@ -288,6 +303,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }
         return columns;
     }
+
+
 
 
 }

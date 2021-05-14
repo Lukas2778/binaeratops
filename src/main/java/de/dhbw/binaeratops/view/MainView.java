@@ -9,9 +9,10 @@ import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,12 +22,15 @@ import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.streammessages.Permission;
+import de.dhbw.binaeratops.model.streammessages.RequestAnswer;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
 import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
+import reactor.core.publisher.Flux;
 
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -39,6 +43,8 @@ import java.util.ResourceBundle;
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
+    private final Flux<Permission> permissions;
+    private final Flux<RequestAnswer> requestAnswers;
     private final Tabs menu;
     private H1 viewTitle;
     //private Select<Locale> languageSelect;
@@ -46,7 +52,9 @@ public class MainView extends AppLayout {
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
 
-    public MainView() {
+    public MainView(Flux<Permission> permissions, Flux<RequestAnswer> requestAnswers) {
+        this.permissions = permissions;
+        this.requestAnswers = requestAnswers;
         setPrimarySection(Section.DRAWER);
         createTopRightMenu();
         addToNavbar(true, createHeaderContent());
@@ -134,18 +142,36 @@ public class MainView extends AppLayout {
         return tabs;
     }
 
+    Tab messageTab;
     private Component[] createMenuItems() {
+
+        messageTab = createTab("Mitteilungen", NotificationView.class);
+        requestAnswers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
+            //Prüfung ob der Spieler die Nachricht erhalten darf.
+            if (!(message.getUser().getUserId() == VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                menu.replace(messageTab, createTab("Mitteilungen", NotificationView.class, new Icon(VaadinIcon.ALARM)));
+            };
+
+        })));
         return new Tab[]{
                 createTab("Über uns", AboutUsView.class),
-                createTab("Mitteilungen", NotificationView.class),
+                messageTab,
                 createTab("Lobby", LobbyView.class),
                 createTab("Eigene Dungeons", MyDungeonsView.class)
         };
+
+
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
         final Tab tab = new Tab();
         tab.add(new RouterLink(text, navigationTarget));
+        ComponentUtil.setData(tab, Class.class, navigationTarget);
+        return tab;
+    }
+    private static Tab createTab(String text, Class<? extends Component> navigationTarget, Icon AIcon) {
+        final Tab tab = new Tab();
+        tab.add(new HorizontalLayout(new RouterLink(text, navigationTarget), AIcon));
         ComponentUtil.setData(tab, Class.class, navigationTarget);
         return tab;
     }

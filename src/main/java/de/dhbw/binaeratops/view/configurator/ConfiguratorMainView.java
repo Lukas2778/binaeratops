@@ -16,6 +16,7 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
+import de.dhbw.binaeratops.service.api.permission.PermissionServiceI;
 import de.dhbw.binaeratops.service.impl.map.MapService;
 import de.dhbw.binaeratops.view.configurator.tabs.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,13 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
 
     private ConfiguratorServiceI configuratorServiceI;
     private MapServiceI mapServiceI;
+    private PermissionServiceI permissionServiceI;
 
     private Long dungeonId;
 
-    public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
-        configuratorServiceI=AConfiguratorServiceI;
+    public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI, @Autowired PermissionServiceI APermissionService) {
+        this.configuratorServiceI=AConfiguratorServiceI;
+        this.permissionServiceI = APermissionService;
         mapServiceI=AMapServiceI;
 
         setSizeFull();
@@ -60,7 +63,7 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         }
 
         //Dialog dungeonnameDialog = new NewDungeonDialog(AConfiguratorServiceI);
-        dungeonsConfigurator = new DungeonConfigurationTab(configuratorServiceI);
+        dungeonsConfigurator = new DungeonConfigurationTab(configuratorServiceI, permissionServiceI);
         characterConfigurator = new CharacterConfigurationTab(configuratorServiceI);
         itemsConfigurator = new ItemConfigurationTab(configuratorServiceI);
         npcConfigurator = new NPCConfigurationTab(configuratorServiceI);

@@ -24,10 +24,13 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ResourceBundle;
+
+import de.dhbw.binaeratops.service.api.permission.PermissionServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -48,9 +51,11 @@ public class DungeonConfigurationTab extends VerticalLayout {
     String visibilityValue;
 
     private ConfiguratorServiceI configuratorService;
+    private PermissionServiceI permissionServiceI;
 
-    public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
+    public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired PermissionServiceI APermissionService) {
         this.configuratorService = AConfiguratorServiceI;
+        this.permissionServiceI = APermissionService;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
         users = new ArrayList<>();
@@ -189,14 +194,19 @@ public class DungeonConfigurationTab extends VerticalLayout {
         HorizontalLayout buttonView = new HorizontalLayout();
         buttonView.setVerticalComponentAlignment(Alignment.END);
 
+        TextField tField = new TextField();
         Button addB = new Button("Hinzufügen");
         Button deleteB = new Button("Löschen");
 
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-        buttonView.addAndExpand(addB, deleteB);
+        buttonView.addAndExpand(tField, addB, deleteB);
         permissionLayout.setSizeFull();
         permissionLayout.add(title, permissionText, grid, buttonView);
+
+        addB.addClickListener(e->{
+            permissionServiceI.givePermission( VaadinSession.getCurrent().getAttribute(User.class),configuratorService.getDungeon());
+        });
 
     }
 
