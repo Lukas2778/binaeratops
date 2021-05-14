@@ -68,7 +68,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveNorth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onMoveNorth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move east" und "move e".
@@ -77,7 +77,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveEast(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onMoveEast(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move south" und "move s".
@@ -86,7 +86,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveSouth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onMoveSouth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move west" und "move w".
@@ -95,7 +95,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveWest(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onMoveWest(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "look around".
@@ -104,7 +104,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onLookAround(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onLookAround(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "examine".
