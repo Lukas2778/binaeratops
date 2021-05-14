@@ -24,8 +24,8 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.streammessages.Permission;
 import de.dhbw.binaeratops.model.streammessages.RequestAnswer;
+import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 @CssImport("./views/main/main-view.css")
 public class MainView extends AppLayout {
 
-    private final Flux<Permission> permissions;
+    private final Flux<UserRequest> permissions;
     private final Flux<RequestAnswer> requestAnswers;
     private final Tabs menu;
     private H1 viewTitle;
@@ -52,7 +52,7 @@ public class MainView extends AppLayout {
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
 
-    public MainView(Flux<Permission> permissions, Flux<RequestAnswer> requestAnswers) {
+    public MainView(Flux<UserRequest> permissions, Flux<RequestAnswer> requestAnswers) {
         this.permissions = permissions;
         this.requestAnswers = requestAnswers;
         setPrimarySection(Section.DRAWER);

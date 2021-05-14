@@ -1,11 +1,8 @@
 package de.dhbw.binaeratops.service.impl.permission;
 
-import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
-import de.dhbw.binaeratops.model.repository.UserRepositoryI;
-import de.dhbw.binaeratops.model.streammessages.Permission;
 import de.dhbw.binaeratops.model.streammessages.RequestAnswer;
 import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import de.dhbw.binaeratops.service.api.permission.PermissionServiceI;
@@ -30,24 +27,25 @@ public class PermissionService implements PermissionServiceI {
 
     @Autowired
     private DungeonRepositoryI dungeonRepo;
-
-    private final UnicastProcessor<UserRequest> userRequestsPublisher;
-    private final UnicastProcessor<RequestAnswer> requestAnswerPublisher;
+    @Autowired
+    private  UnicastProcessor<UserRequest> userRequestPublisher;
+    @Autowired
+    private  UnicastProcessor<RequestAnswer> requestAnswerPublisher;
 
     /**
      *Konstruktor für den Service.
      *
-     * @param AUserRequestsPublisher Publisher für die Berechtigungsanfrage.
-     * @param APermissionPublisher
+     * //@param AUserRequestsPublisher Publisher für die Berechtigungsanfrage.
+     * //@param APermissionPublisher
      */
-    public PermissionService(UnicastProcessor<UserRequest> AUserRequestsPublisher, UnicastProcessor<RequestAnswer> APermissionPublisher) {
-        this.userRequestsPublisher = AUserRequestsPublisher;
-        this.requestAnswerPublisher = APermissionPublisher;
+    public PermissionService() {
+        //this.userRequestPublisher = AUserRequestsPublisher;
+        //this.requestAnswerPublisher = APermissionPublisher;
     }
 
     @Override
     public void requestPermission(User AUser, Dungeon ADungeon) {
-        userRequestsPublisher.onNext(new UserRequest(ADungeon, AUser));
+       userRequestPublisher.onNext(new UserRequest(ADungeon, AUser));
     }
 
     @Override
@@ -77,7 +75,7 @@ public class PermissionService implements PermissionServiceI {
             ADungeon.removeBlockedUser(AUser);
         }
         ADungeon.addAllowedUser(AUser);
-        dungeonRepo.save(ADungeon);
+        //dungeonRepo.save(ADungeon);
     }
 
     /**

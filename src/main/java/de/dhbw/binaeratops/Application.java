@@ -1,13 +1,13 @@
 package de.dhbw.binaeratops;
 
-import de.dhbw.binaeratops.model.streammessages.ChatMessage;
-import de.dhbw.binaeratops.model.streammessages.Permission;
+import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.streammessages.RequestAnswer;
 import de.dhbw.binaeratops.model.streammessages.UserRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
@@ -18,18 +18,11 @@ import java.util.Locale;
  */
 
 @SpringBootApplication
+@Configuration
 public class Application extends SpringBootServletInitializer {
 
 
-    @Bean
-    UnicastProcessor<UserRequest> userRequestPublisher(){
-        return UnicastProcessor.create();
-    }
 
-    @Bean
-    Flux<UserRequest> userRequestPublisher(UnicastProcessor<UserRequest> AUserRequestPublisher) {
-        return AUserRequestPublisher.replay(30).autoConnect();
-    }
 
     @Bean
     UnicastProcessor<ChatMessage> publisher(){
@@ -42,13 +35,13 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    UnicastProcessor<Permission> permissionPublisher(){
+    UnicastProcessor<UserRequest> permissionPublisher(){
         return UnicastProcessor.create();
     }
 
     @Bean
-    Flux<Permission> permissions(UnicastProcessor<Permission> permissionPublisher) {
-        return permissionPublisher.replay(30).autoConnect();
+    Flux<UserRequest> permissions(UnicastProcessor<UserRequest> APermissionPublisher) {
+        return APermissionPublisher.replay(30).autoConnect();
     }
 
     @Bean
@@ -57,8 +50,8 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    Flux<RequestAnswer> requestAnswers(UnicastProcessor<RequestAnswer> requestAnswerPublisher) {
-        return requestAnswerPublisher.replay(30).autoConnect();
+    Flux<RequestAnswer> requestAnswers(UnicastProcessor<RequestAnswer> ARequestAnswerPublisher) {
+        return ARequestAnswerPublisher.replay(30).autoConnect();
     }
 
     /**
