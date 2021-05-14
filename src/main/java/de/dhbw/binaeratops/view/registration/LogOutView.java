@@ -19,7 +19,6 @@ public class LogOutView extends Div {
     public LogOutView() {
         VaadinSession.getCurrent().getSession().invalidate();
         VaadinSession.getCurrent().close();
-        UI.getCurrent().getPage().setLocation("login");
         UI.getCurrent().navigate("login");
     }
 }

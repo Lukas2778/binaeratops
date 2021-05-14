@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für einen Avatar.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Avatars aus der Datenbank bereit.
  *
- * @see Avatar
- *
  * @author Nicolas Haug
+ * @see Avatar
  */
 @Repository
 public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
 
     /**
      * Sucht alle Avatareinträge aus der Datenbank zurück.
+     *
      * @return Alle Avatareinträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
 
     /**
      * Sucht den Avatar mit der übergebenen ID in der Datenbank.
+     *
      * @param AAvatarId ID des gesuchten Avatars.
      * @return Gesuchter Avatar.
      */

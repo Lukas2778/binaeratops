@@ -17,9 +17,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Raum Schnittstelle.
  * <p>
- * @see RoomI
  *
  * @author Nicolas Haug
+ * @see RoomI
  */
 @Entity
 public class Room implements RoomI {
@@ -56,7 +56,7 @@ public class Room implements RoomI {
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
      *
-     * @param ARoomName Name des Raumes.
+     * @param ARoomName    Name des Raumes.
      * @param ADescription Beschreibung des Raumes.
      */
     public Room(String ARoomName, String ADescription) {
@@ -71,14 +71,13 @@ public class Room implements RoomI {
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
      *
-
      * @param AXCoordinate Positon des Raums.
      * @param AYCoordinate Positon des Raums.
      */
-    public Room( int AXCoordinate, int AYCoordinate) {
+    public Room(int AXCoordinate, int AYCoordinate) {
 
-        this.xCoordinate=AXCoordinate;
-        this.yCoordinate=AYCoordinate;
+        this.xCoordinate = AXCoordinate;
+        this.yCoordinate = AYCoordinate;
     }
 
     /**

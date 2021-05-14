@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Rasse Schnittstelle.
  * <p>
- * @see RaceI
  *
  * @author Nicolas Haug
+ * @see RaceI
  */
 @Entity
 public class Race implements RaceI {
@@ -39,7 +39,7 @@ public class Race implements RaceI {
     /**
      * Konstruktor zum Erzeugen einer Rasse mit allen Eigenschaften.
      *
-     * @param ARaceName Name der Rasse.
+     * @param ARaceName    Name der Rasse.
      * @param ADescription Beschreibung der Rasse.
      */
     public Race(String ARaceName, String ADescription) {

@@ -51,7 +51,6 @@ public interface DungeonI {
      * Gibt die Sichtbarkeit des Dungeons zurück.
      *
      * @return Sichtbarkeit des Dungeons.
-     *
      * @see Visibility
      */
     Visibility getDungeonVisibility();
@@ -60,7 +59,6 @@ public interface DungeonI {
      * Setzt die Sichtbarkeit des Dungeons.
      *
      * @param ADungeonVisibility Zu setzende Sichtbarkeit des Dungeons.
-     *
      * @see Visibility
      */
     void setDungeonVisibility(Visibility ADungeonVisibility);
@@ -69,7 +67,6 @@ public interface DungeonI {
      * Gibt den Status des Dungeons zurück.
      *
      * @return Status des Dungeons.
-     *
      * @see Status
      */
     Status getDungeonStatus();
@@ -78,7 +75,6 @@ public interface DungeonI {
      * Setzt den Status des Dungeons.
      *
      * @param ADungeonStatus Zu setzender Status des Dungeons.
-     *
      * @see Status
      */
     public void setDungeonStatus(Status ADungeonStatus);
@@ -169,24 +165,28 @@ public interface DungeonI {
 
     /**
      * Gibt die Beschreibung des Dungeons zurück.
+     *
      * @return Beschreibung des Dungeons.
      */
     String getDescription();
 
     /**
      * Setzt die Beschreibung des Dungeons.
+     *
      * @param ADescription Beschreibung des Dungeons.
      */
     void setDescription(String ADescription);
 
     /**
      * Gibt den Ersteller des Dungeons zurück.
+     *
      * @return Ersteller des Dungeons.
      */
     User getUser();
 
     /**
      * Setzt den Ersteller des Dungeons.
+     *
      * @param AUser Ersteller des Dungeons.
      */
     void setUser(User AUser);
@@ -200,12 +200,14 @@ public interface DungeonI {
 
     /**
      * Fügt dem Dungeon einen Avatar hinzu.
+     *
      * @param AAvatar Avatar, der hinzugefügt werden soll.
      */
     void addAvatar(Avatar AAvatar);
 
     /**
      * Entfernt dem Dungeon den übergebenen Avatar,
+     *
      * @param AAvatar Avatar, der entfernt werden soll.
      */
     void removeAvatar(Avatar AAvatar);
@@ -219,12 +221,14 @@ public interface DungeonI {
 
     /**
      * Fügt den übergebenen Benutzer der WhiteList hinzu.
+     *
      * @param AUser Benutzer, welcher der WhiteList hinzugefügt werden soll,
      */
     void addAllowedUser(User AUser);
 
     /**
      * Entfernt den übergebenen Benutzer der Whitelist.
+     *
      * @param AUser Benutzer, welcher der Whitelist entfernt werden soll.
      */
     void removeAllowedUser(User AUser);
@@ -238,12 +242,35 @@ public interface DungeonI {
 
     /**
      * Fügt den übergebenen Benutzer der Blacklist hinzu.
+     *
      * @param AUser Benutzer, welcher der Blacklist hinzugefügt werden soll,
      */
     void addBlockedUser(User AUser);
 
     /**
+     * Gibt die Liste der Spieler zurück, die sich momentan im Dungeon befinden.
+     *
+     * @return Liste der Spieler, die sich momentan im Dungeon befinden.
+     */
+    List<User> getCurrentUsers();
+
+    /**
+     * Fügt den übergebenen Benutzer der Liste der aktuellen Spieler hinzu.
+     *
+     * @param AUser Benutzer, welcher der Liste hinzugefügt werden soll.
+     */
+    void addCurrentUser(User AUser);
+
+    /**
+     * Entfernt den übergebenen Benutzer aus der Liste der aktuellen Spieler.
+     *
+     * @param AUser Benutzer, welcher der Liste entfernt werden soll.
+     */
+    void removeCurrentUser(User AUser);
+
+    /**
      * Entfernt den übergebenen Benutzer der Blacklist.
+     *
      * @param AUser Benutzer, welcher der Blacklist entfernt werden soll.
      */
     void removeBlockedUser(User AUser);
@@ -257,48 +284,56 @@ public interface DungeonI {
 
     /**
      * Fügt dem Dungeon einen Raum hinzu.
+     *
      * @param ARoom Raum, der dem Dungeon hinzugefügt werden soll.
      */
     void addRoom(Room ARoom);
 
     /**
      * Entfernt dem Dungeon den übergebenen Raum.
+     *
      * @param ARoom Raum, der entfernt werden soll.
      */
     void removeRoom(Room ARoom);
 
     /**
      * Gibt alle NPCs des Dungeons zurück.
+     *
      * @return NPCs des Dungeons.
      */
     List<NPC> getNpcs();
 
     /**
      * Fügt dem Dungeon einen NPC hinzu.
+     *
      * @param ANpc NPC, der hinzugefügt werden soll.
      */
     void addNpc(NPC ANpc);
 
     /**
      * Entfernt dem Dungeon einen NPC.
+     *
      * @param ANpc NPC, der entfernt werden soll.
      */
     void removeNpc(NPC ANpc);
 
     /**
      * Gibt alle Gegenstände des Dungeons zurück.
+     *
      * @return Gegenstände des Dungeons.
      */
     List<Item> getItems();
 
     /**
      * Fügt dem Dungeon den übergebenen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addItem(Item AItem);
 
     /**
      * Entfernt dem Dungeon den übergebenen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeItem(Item AItem);
@@ -312,12 +347,14 @@ public interface DungeonI {
 
     /**
      * Fügt dem Dungeon eine Rolle hinzu.
+     *
      * @param ARole Rolle, die hinzugefügt werden soll.
      */
     void addRole(Role ARole);
 
     /**
      * Entfernt dem Dungeon die übergebene Rolle.
+     *
      * @param ARole Rolle, die entfernt werden soll.
      */
     void removeRole(Role ARole);
@@ -331,12 +368,14 @@ public interface DungeonI {
 
     /**
      * Fügt dem Dungeon eine Rasse hinzu.
+     *
      * @param ARace Rasse, die hinzugefügt werden soll.
      */
     void addRace(Race ARace);
 
     /**
      * Entfernt dem Dungeon die übergebene Rasse.
+     *
      * @param ARace Rasse, die entfernt werden soll.
      */
     void removeRace(Race ARace);

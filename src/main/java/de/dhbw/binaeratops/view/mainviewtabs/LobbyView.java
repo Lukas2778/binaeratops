@@ -1,21 +1,14 @@
 package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -29,7 +22,6 @@ import java.util.List;
 /**
  * Oberfläche des Tabs 'Lobby'
  */
-@Route(value = "lobby")
 @PageTitle("Lobby")
 public class LobbyView extends VerticalLayout {
     H1 titleText;
@@ -46,20 +38,22 @@ public class LobbyView extends VerticalLayout {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
+     * @param ADungeonService DungeonService.
+     * @param AGameService GameService.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService gameService){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService){
         dungeonServiceI=ADungeonService;
-        this.gameService = gameService;
+        this.gameService = AGameService;
 
         titleText=new H1("Dungeon spielen");
-        explanationText=new String("<div>Du kannst hier aus einer Lister der für dich spielbaren Dungeons auswählen.<br>" +
-                "Es werden dir hier alle öffentlich zugänglichen Dungeons angezeigt, sowie alle Dungeons für die du " +
-                "die Berechtigung hast, sie zu spielen (privat).<br>Viel Spaß ;)</div>");
+        explanationText=new String("<div>Du kannst hier aus einer Liste der für dich spielbaren Dungeons" +
+                " auswählen.<br>Es werden dir hier alle aktiven Dungeons angezeigt, die entweder öffentlich zugänglich sind, " +
+                "oder zu denen du eine Berechtigung besitzt.<br>Viel Spaß ;)</div>");
         html=new Html(explanationText);
         dungeonList = new ArrayList<>();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
-        dungeonList.addAll(dungeonServiceI.getAllDungeonsFromUser(user));
+        dungeonList.addAll(dungeonServiceI.getDungeonsLobby(user));
 
         dungeonGrid=new Grid<>();
         dungeonGrid.setItems(dungeonList);
@@ -74,17 +68,16 @@ public class LobbyView extends VerticalLayout {
         add(titleText, html, dungeonGrid);
 
         setSizeFull ();
-        //setJustifyContentMode ( FlexComponent.JustifyContentMode.CENTER ); // Put content in the middle horizontally.
-        //setDefaultVerticalComponentAlignment ( FlexComponent.Alignment.CENTER ); // Put content in the middle vertically.
     }
 
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
-            ListDataProvider<Dungeon> dataProvider = (ListDataProvider<Dungeon>) AGrid
-                    .getDataProvider();
-            gameService.updateView(ADungeon.getDungeonId());
-            //TODO
+            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
+                dungeonServiceI.saveDungeon(ADungeon);
+            }
+            UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
         });
 
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
@@ -93,4 +86,6 @@ public class LobbyView extends VerticalLayout {
         button.getStyle().set("color", "blue");
         return button;
     }
+
+
 }

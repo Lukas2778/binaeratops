@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
  * <p>
  *
  * @author Nicolas Haug
+ * @see NPCI
  */
 @Entity
 public class NPC  {
@@ -44,8 +45,8 @@ public class NPC  {
     /**
      * Konstruktor zum Erzeugen eines NPCs mit allen Eigenschaften.
      *
-     * @param ANpcName Name des NPCs.
-     * @param ARace Rasse des NPCs.
+     * @param ANpcName     Name des NPCs.
+     * @param ARace        Rasse des NPCs.
      * @param ADescription Beschreibung des NPCs.
      */
     public NPC(String ANpcName, Race ARace, String ADescription) {

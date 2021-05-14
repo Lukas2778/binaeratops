@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.view.registration;
 
+import com.vaadin.flow.component.ClientCallable;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -11,9 +12,13 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.InitialPageSettings;
+import com.vaadin.flow.server.PWA;
+import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.registration.AuthServiceI;
@@ -30,8 +35,9 @@ import java.util.ResourceBundle;
  */
 //wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @RouteAlias("")
+@PWA(name = "Binäratops", shortName = "Binäratops", enableInstallPrompt = false)
 @Route("login")
-public class LogInView extends VerticalLayout {
+public class LogInView extends VerticalLayout implements HasDynamicTitle, PageConfigurator {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language");
 
@@ -40,9 +46,9 @@ public class LogInView extends VerticalLayout {
      * @param authServiceI Übergabe des Authentifizierungsservices.
      */
     public LogInView(@Autowired AuthServiceI authServiceI) {
-        // Titel der Seite
-        UI current = UI.getCurrent();
-        current.getPage().setTitle(res.getString("view.login.pagetitle"));
+        //UI.getCurrent().addBeforeLeaveListener(e->System.out.println("test"));
+        setId("SomeView");
+
 
 
         TextField name = new TextField(res.getString("view.login.field.username"));
@@ -85,5 +91,21 @@ public class LogInView extends VerticalLayout {
                 changePasswRegisterLay
         );
         name.focus();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.login.pagetitle");
+    }
+
+    @Override
+    public void configurePage(InitialPageSettings initialPageSettings) {
+        String script = "window.onbeforeunload = function (e) { var e = e || window.event; document.getElementById(\"SomeView\").$server.browserIsLeaving(); return; };";
+        initialPageSettings.addInlineWithContents(InitialPageSettings.Position.PREPEND, script, InitialPageSettings.WrapMode.JAVASCRIPT);
+    }
+
+    @ClientCallable
+    public void browserIsLeaving() {
+        System.out.println("Called browserIsLeaving");
     }
 }

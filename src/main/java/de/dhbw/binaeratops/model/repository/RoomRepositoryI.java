@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für einen Raum.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Raumes aus der Datenbank bereit.
  *
- * @see Room
- *
  * @author Nicolas Haug
+ * @see Room
  */
 @Repository
 public interface RoomRepositoryI extends JpaRepository<Room, Long> {
 
     /**
      * Sucht alle Raumeinträge aus der Datenbank.
+     *
      * @return Alle Raumeinträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface RoomRepositoryI extends JpaRepository<Room, Long> {
 
     /**
      * Sucht den Raum mit der übergebenen ID in der Datenbank.
+     *
      * @param ARoomId ID des gesuchten Raumes.
      * @return Gesuchter Raum.
      */

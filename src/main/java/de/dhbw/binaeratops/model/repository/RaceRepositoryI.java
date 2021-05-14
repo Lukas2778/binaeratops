@@ -9,18 +9,18 @@ import java.util.List;
 
 /**
  * Repository für eine Rasse.
- *
+ * <p>
  * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen einer Rasse aus der Datenbank bereit.
  *
- * @see Race
- *
  * @author Nicolas Haug
+ * @see Race
  */
 @Repository
 public interface RaceRepositoryI extends JpaRepository<Race, Long> {
 
     /**
      * Sucht alle Rasseneinträge aus der Datenbank.
+     *
      * @return Alle Rasseneinträge aus der Datenbank.
      */
     @Override
@@ -29,6 +29,7 @@ public interface RaceRepositoryI extends JpaRepository<Race, Long> {
 
     /**
      * Sucht die Rasse mit der übergebenen ID in der Datenbank.
+     *
      * @param ARaceId ID der gesuchten Rasse.
      * @return Gesuchte Rasse.
      */

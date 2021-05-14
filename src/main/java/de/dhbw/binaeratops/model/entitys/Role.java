@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Rolle Schnittstelle.
  * <p>
- * @see RoleI
  *
  * @author Nicolas Haug
+ * @see RoleI
  */
 @Entity
 public class Role implements RoleI {
@@ -39,7 +39,7 @@ public class Role implements RoleI {
     /**
      * Konstruktor zum Erzeugen einer Rolle mit allen Eigenschaften.
      *
-     * @param ARoleName Name der Rolle.
+     * @param ARoleName    Name der Rolle.
      * @param ADescription Beschreibung der Rolle.
      */
     public Role(String ARoleName, String ADescription) {

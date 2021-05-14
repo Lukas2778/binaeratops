@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Avatar Schnittstelle.
  * <p>
- * @see AvatarI
  *
  * @author Nicolas Haug
+ * @see AvatarI
  */
 @Entity
 public class Avatar implements AvatarI {
@@ -59,9 +59,9 @@ public class Avatar implements AvatarI {
      *
      * @param ARoomId Raum des Avatars, in dem er sich befindet.
      * @param AGender Geschlecht des Avatars.
-     * @param AName Name des Avatars.
-     * @param ARace Rasse des Avatars.
-     * @param ARole Rolle des Avatars.
+     * @param AName   Name des Avatars.
+     * @param ARace   Rasse des Avatars.
+     * @param ARole   Rolle des Avatars.
      */
     public Avatar(Long ARoomId, Gender AGender, String AName, Race ARace, Role ARole) {
         this.roomId = ARoomId;

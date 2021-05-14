@@ -9,6 +9,7 @@ package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -16,95 +17,97 @@ import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoleDialog
-        extends Dialog {
+        extends Dialog
+{
     private TextField currentRoleField;
     private TextField currentDescriptionField;
 
     private Role currentRole;
-    private ArrayList<Role> roleList;
     Grid<Role> grid;
     private ConfiguratorServiceI configuratorServiceI;
 
-    public RoleDialog() {}
 
-    public RoleDialog(ArrayList<Role> roleList, Role currentRole, Grid<Role> grid, ConfiguratorServiceI AConfiguratorServiceI ) {
-        this.roleList = roleList;
+
+    public RoleDialog()
+    {
+    }
+
+    public RoleDialog(ArrayList<Role> roleList,
+                      Role currentRole,
+                      Grid<Role> grid,
+                      ConfiguratorServiceI AConfiguratorServiceI)
+    {
+
         this.currentRole = currentRole;
         this.grid = grid;
         this.configuratorServiceI = AConfiguratorServiceI;
         init();
     }
-    private void init() {
+
+    private void init()
+    {
         currentRoleField = new TextField("Rollenbezeichnung");
         currentDescriptionField = new TextField("Beschreibung");
         Button saveDialog = new Button("Speichern");
         Button closeDialog = new Button("Abbrechen");
 
         this.add(new VerticalLayout(currentRoleField,
-                                    currentDescriptionField, new HorizontalLayout(saveDialog, closeDialog)));
-
-
+                                    currentDescriptionField,
+                                    new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
-            currentRole.setRoleName(currentRoleField.getValue());
-            currentRole.setDescription(currentDescriptionField.getValue());
+            if ( currentRoleField.getValue() != "" )
+            {
+
+                currentRole.setRoleName(currentRoleField.getValue());
+                currentRole.setDescription(currentDescriptionField.getValue());
 
 
-            if (!configuratorServiceI.getAllRace().contains(currentRole)) {
-                configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
+                if ( !findRole(currentRole.getRoleName(), currentRole.getDescription()) )
+                {
+                    configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
+                    refreshGrid();
+                    this.close();
+                }
+                else
+                {
+                    Notification.show("Warum denn zwei Mal die gleiche Rolle erstellen? Einmal reicht ;)");
+                }
+
             }
-            refreshGrid();
+            else
+            {
+                Notification.show("Du hast die Rollenbezeichnung vergessen ;)");
 
-            this.close();
+            }
+
         });
         closeDialog.addClickListener(e -> this.close());
     }
 
-
-    private void refreshGrid() {
+    private void refreshGrid()
+    {
 
         grid.setItems(configuratorServiceI.getAllRoles());
-   }
-//
-//    public TextField getCurrentName() {
-//        return currentName;
-//    }
-//
-//    public void setCurrentName(TextField currentName) {
-//        this.currentName = currentName;
-//    }
-//
-//    public NumberField getCurrentSize() {
-//        return currentSize;
-//    }
-//
-//    public void setCurrentSize(NumberField currentSize) {
-//        this.currentSize = currentSize;
-//    }
-//
-//    public TextField getCurrentDescriptionField() {
-//        return currentDescriptionField;
-//    }
-//
-//    public void setCurrentDescriptionField(TextField currentDescriptionField) {
-//        this.currentDescriptionField = currentDescriptionField;
-//    }
-//
-//    public ComboBox<ItemType> getCurrentType() {
-//        return currentType;
-//    }
-//
-//    public void setCurrentType(ComboBox<ItemType> currentType) {
-//        this.currentType = currentType;
-//    }
-//
-//    public Item getCurrentItem() {
-//        return currentItem;
-//    }
-//
-//    public void setCurrentItem(Item currentItem) {
-//        this.currentItem = currentItem;
-//    }
+    }
+
+    private boolean findRole(String ARoleName, String ARoleDescription)
+    {
+        boolean result = false;
+        for ( Role role : configuratorServiceI.getAllRoles() )
+        {
+            if ( role.getRoleName()
+                    .equals(ARoleName) && role.getDescription()
+                    .equals(ARoleDescription) )
+            {
+                result = true;
+            }
+
+        }
+        return result;
+    }
+
 }

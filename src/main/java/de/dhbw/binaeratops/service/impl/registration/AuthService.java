@@ -13,6 +13,7 @@ import de.dhbw.binaeratops.service.exceptions.RegistrationException;
 import de.dhbw.binaeratops.view.*;
 
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
+import de.dhbw.binaeratops.view.game.GameView;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
@@ -25,6 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Komponente "AuthService".
+ * <p>
+ * Dieser Service stellt die Schnittstelle zwischen der User-Authentifizierung und der Benutzeroberfläche dar.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link AuthServiceI}.
+ * </p>
+ *
+ * @author Lukas Göpel, Matthias Rall
+ */
 @Service
 public class AuthService implements AuthServiceI {
 
@@ -120,10 +132,10 @@ public class AuthService implements AuthServiceI {
     private void createRoutes() {
         getRoutsForMenu().stream()
                 .forEach(r ->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView(), MainView.class));
+                        RouteConfiguration.forSessionScope().setRoute(r.getRoute(), r.getView(), MainView.class));
         getRouts().stream()
                 .forEach(r ->
-                        RouteConfiguration.forSessionScope().setRoute(r.getRout(), r.getView()));
+                        RouteConfiguration.forSessionScope().setRoute(r.getRoute(), r.getView()));
     }
 
     /**
@@ -148,6 +160,7 @@ public class AuthService implements AuthServiceI {
     private List<AuthorizedRoute> getRouts() {
         List<AuthorizedRoute> returnList = new ArrayList<>();
         returnList.add(new AuthorizedRoute("play/dungeonmaster","dungeonmaster", DungeonMasterView.class));
+        returnList.add(new AuthorizedRoute("game","Spielansicht", GameView.class));
         return returnList;
     }
 }

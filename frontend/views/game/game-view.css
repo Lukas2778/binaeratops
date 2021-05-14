@@ -1,0 +1,17 @@
+.game-view h1 {
+    margin: 0;
+    padding: 16px;
+    width: 100%;
+}
+
+.chat-component{
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.chat-component p {
+    width: 100%;
+
+}
+
+.mymargins.v-margin-left   {padding-left:   10px;}

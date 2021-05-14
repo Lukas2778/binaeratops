@@ -38,6 +38,9 @@ public class ItemDialog extends Dialog {
     private void init() {
         currentName = new TextField("Name");
         currentSize = new IntegerField("Größe");
+        currentSize.setHasControls(true);
+        currentSize.setMin(1);
+        currentSize.setValue(1.0);
         currentDescription = new TextField("Beschreibung");
         currentType = new ComboBox<>("Typ");
         Button saveDialog = new Button("Speichern");

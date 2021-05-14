@@ -6,16 +6,21 @@ import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
-import de.dhbw.binaeratops.view.dungeonmaster.PushyView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 /**
- * @author Lars Rösel
- * Date: 08.05.2021
- * Time: 16:35
+ * Komponente "GameService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten für das Spiel bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link de.dhbw.binaeratops.service.api.game.GameServiceI}.
+ * </p>
+ *
+ * @author Timon Gartung, Lukas Göpel, Matthias Rall, Lars Rösel
  */
 @Service
 public class GameService {
@@ -28,11 +33,14 @@ public class GameService {
     @Autowired
     DungeonRepositoryI dungeonRepositoryI;
 
+    /**
+     * Standardkonstruktor zum erzeugen des GameService.
+     */
     public GameService() {}
 
-    public void initialize(Dungeon ADungeon, UI ui, DungeonMasterView view) {
-        dungeonUIHashMap.put(ADungeon.getDungeonId(), ui);
-        dungeonDungeonMasterViewHashMap.put(ADungeon.getDungeonId(), view);
+    public void initialize(Dungeon ADungeon, UI AUI, DungeonMasterView AView) {
+        dungeonUIHashMap.put(ADungeon.getDungeonId(), AUI);
+        dungeonDungeonMasterViewHashMap.put(ADungeon.getDungeonId(), AView);
     }
 
     public void updateView(Long ADungeonId) {
