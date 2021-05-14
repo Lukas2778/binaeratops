@@ -3,9 +3,11 @@ package de.dhbw.binaeratops.view.game;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -69,10 +71,15 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     VerticalLayout gameFirstLayout;
     VerticalLayout gameSecondLayout;
     HorizontalLayout insertInputLayout;
+    VerticalLayout mapLayout;
+    Anchor roomAnchor;
+    HorizontalLayout gridLayout;
+    VerticalLayout gridLayoutVert;
 
     ChatView myDungeonChatView;
     TextField textField;
     Button confirmButt;
+    Button leftDungeonButt;
 
     //@TODO remove test navigation
     Button northButt;
@@ -112,6 +119,11 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameSplitLayout = new SplitLayout();
         gameFirstLayout = new VerticalLayout();
         gameSecondLayout = new VerticalLayout();
+        mapLayout = new VerticalLayout();
+        gridLayout = new HorizontalLayout();
+        gridLayoutVert=new VerticalLayout();
+        leftDungeonButt = new Button("Dungeon verlassen");
+        leftDungeonButt.getStyle().set("color", "red");
 
         textField = new TextField();
         textField.focus();
@@ -158,8 +170,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gameFirstLayout.setSizeFull();
         gameSecondLayout.setSizeFull();
 
-        gameFirstLayout.add(myDungeonChatView, insertInputLayout);
-
         gameSplitLayout.addToPrimary(gameFirstLayout);
         gameSplitLayout.addToSecondary(gameSecondLayout);
 
@@ -186,8 +196,14 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         });
         //@TODO remove
 
-        add(binTitle, html, northButt, eastButt, southButt, westButt, gameLayout);
+        gameFirstLayout.add(new HorizontalLayout(northButt, eastButt, southButt, westButt), binTitle, html, myDungeonChatView, insertInputLayout);
+        gameSecondLayout.add(mapLayout, gridLayoutVert, leftDungeonButt);
+        mapLayout.setClassName("map-layout");
+        gridLayoutVert.setClassName("grid-layout");
+        expand(mapLayout);
         expand(myDungeonChatView);
+        add(gameLayout);
+
         setSizeFull();
     }
 
@@ -211,9 +227,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     }
 
     void createMap() {
-        VerticalLayout mapLayout = new VerticalLayout();
         mapLayout.add(initMap());
-        gameSecondLayout.add(mapLayout);
         createInventory();
         //changeRoom(myRoomRepo.findByRoomId(602L));//@TODO remove
     }
@@ -239,8 +253,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     }
 
     void createInventory() {
-        HorizontalLayout gridLayout = new HorizontalLayout();
-
         VerticalLayout inventoryLayout = new VerticalLayout();
         Text inventoryTitle = new Text("Inventar");
         inventoryList = new ArrayList<>();
@@ -269,11 +281,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         gridLayout.add(inventoryLayout, armorLayout);
         gridLayout.setSizeFull();
-
-        Button leftDungeonButt = new Button("Dungeon verlassen");
-        leftDungeonButt.getStyle().set("color", "red");
-
-        gameSecondLayout.add(gridLayout, leftDungeonButt);
+        gridLayoutVert.add(gridLayout);
     }
 
     void changeRoom(Long ARoomId) {
@@ -318,6 +326,12 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         //aktuellen Raum roten Rand anwählen
         int x = currentRoom.getXCoordinate();
         int y = currentRoom.getYCoordinate();
+        //zum aktuellen Raum mithilfe von JavaScript scrollen
+        UI.getCurrent().getPage().executeJs("arguments[0].scrollIntoView({\n" +
+                "            behavior: 'auto',\n" +
+                "            block: 'center',\n" +
+                "            inline: 'center'\n" +
+                "        });", myTiles[x][y]);
         myTiles[x][y].getStyle().set("width", "99px");
         myTiles[x][y].getStyle().set("height", "99px");
         myTiles[x][y].getStyle().set("border-style", "solid");
