@@ -12,6 +12,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -24,9 +25,12 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
+import de.dhbw.binaeratops.model.entitys.Race;
+import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.PermissionDialog;
 import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -41,19 +45,23 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
-    ArrayList<User> users;
+    ArrayList<User> userList;
     TextField titleField;
     TextField playerCountField;
     Visibility visibility;
     String visibilityValue;
+    User currentUser;
+
+    Grid<User> grid = new Grid<>();
 
     private ConfiguratorServiceI configuratorService;
+
 
     public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
         this.configuratorService = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
-        users = new ArrayList<>();
+        userList = new ArrayList<>();
         titleField = new TextField("Name des Dungeons");
 
 
@@ -159,25 +167,24 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
     private void permissionList() {
 
-        //Beispieldaten
-        User testUser = new User();
-        testUser.setName("DungeonDestroyer");
 
-        User testUser2 = new User();
-        testUser2.setName("DungeonKiller");
-
-        users.add(testUser);
-        users.add(testUser2);
 
         H2 title = new H2("Spielberechtigung");
         Text permissionText = new Text("Hier kannst du schon im Voraus Spielern eine Berechtigung geben, deinen Dungeon zu spielen.");
 
-        Grid<User> grid = new Grid<>();
 
-        grid.setItems(users);
+
+        if(configuratorService.getDungeon().getAllowedUsers() != null){
+            grid.setItems(configuratorService.getDungeon().getAllowedUsers());
+        }
+
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
+
+        Column<User> nameColumn = grid.addColumn(User::getName)
+                .setHeader("Berechtigte Spieler");
+
 
         roleNameField.getElement()
                 .setAttribute("focus-target", "");
@@ -194,6 +201,26 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        addB.addClickListener(e -> {
+            currentUser = new User();
+            PermissionDialog dialog = new PermissionDialog(userList, currentUser, grid, configuratorService);
+            dialog.open();
+        });
+
+        deleteB.addClickListener(e -> {
+            User[] selectedUser = grid.getSelectedItems().toArray(User[]::new);
+            if (selectedUser.length >= 1) {
+                currentUser = selectedUser[0];
+                configuratorService.getDungeon().removeAllowedUser(currentUser);
+                configuratorService.saveDungeon();
+                refreshRoleGrid();
+
+            }
+        });
+
+
+
         buttonView.addAndExpand(addB, deleteB);
         permissionLayout.setSizeFull();
         permissionLayout.add(title, permissionText, grid, buttonView);
@@ -223,7 +250,9 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
         return visibilityValue;
     }
-
+    private void refreshRoleGrid() {
+        grid.setItems(configuratorService.getDungeon().getAllowedUsers());
+    }
 
 }
 

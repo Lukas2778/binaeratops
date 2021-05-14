@@ -45,6 +45,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemRepositoryI itemRepo;
     @Autowired
+    UserRepositoryI userRepo;
+    @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
     NpcInstanceRepositoryI npcInstanceRepositoryI;
@@ -368,4 +370,19 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void addItemInstance(ItemInstance AInstance) {
         itemInstanceRepo.save(AInstance);
     }
+
+    @Override
+    public List<User> getAllUsers()
+    {
+
+        return userRepo.findAll();
+    }
+
+    @Override
+    public User getUser(String AName)
+    {
+
+       return userRepo.findByName(AName);
+    }
+
 }

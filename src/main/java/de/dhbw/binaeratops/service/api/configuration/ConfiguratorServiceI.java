@@ -280,7 +280,7 @@ public interface ConfiguratorServiceI {
     List<ItemInstance> getAllItems(Room ARoom);
 
     /**
-     * Gibt alle Gegenstände eines Dungeons zurück.
+     * Gibt alle NPCs eines Dungeons zurück.
      *
      * @return Liste mit Gegenständen.
      */
@@ -329,4 +329,15 @@ public interface ConfiguratorServiceI {
      * @param AInstance Gegenstand-Blaupause, die dem Dungeon hinzugefügt werden soll.
      */
     void addItemInstance(ItemInstance AInstance);
+
+    /**
+     * Gibt alle Users aus der DB zurück.
+     *
+     * @return Liste mit Usern
+     */
+    List<User> getAllUsers();
+
+    User getUser(String AName);
+
+
 }
