@@ -138,7 +138,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanMove1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String direction = findRestOfInput();
         if (direction == null) {
-            onMissingToken("<Richtung>");
+            onMissingToken("<Direction>");
             return null;
         } else {
             switch (direction.toUpperCase()) {
@@ -164,7 +164,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanLook1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
-            onMissingToken("<Schlüsselwort>");
+            onMissingToken("<AROUND>");
             return null;
         } else {
             switch (token.toUpperCase()) {
@@ -191,7 +191,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanShow1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
         String token = findRestOfInput();
         if (token == null) {
-            onMissingToken("<Schlüsselwort>");
+            onMissingToken("<INVENTORY | INV | EQUIPMENT | EQUIP>");
             return null;
         } else {
             switch (token.toUpperCase()) {
