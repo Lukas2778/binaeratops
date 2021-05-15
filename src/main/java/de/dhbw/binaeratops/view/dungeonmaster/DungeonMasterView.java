@@ -17,7 +17,6 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -36,7 +35,6 @@ import de.dhbw.binaeratops.view.map.MapView;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.UnicastProcessor;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -62,21 +60,18 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     private final Grid<Avatar> grid = new Grid<>(Avatar.class);
 
-    private GameService gameService;
+    private final GameService gameService;
 
-    private MapServiceI mapServiceI;
+    private final MapServiceI mapServiceI;
 
-    private DungeonServiceI dungeonServiceI;
-    private DungeonRepositoryI dungeonRepositoryI;
-    private Flux<ChatMessage> messages;
-    private ParserServiceI myParserService;
+    private final DungeonServiceI dungeonServiceI;
+    private final DungeonRepositoryI dungeonRepositoryI;
+    private final Flux<ChatMessage> messages;
+    private final ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-    private final UnicastProcessor<UserAction> userActionsPublisher;
-    private final Flux<UserAction> userAction;
 
     Dungeon dungeon;
     Long dungeonId;
-    H2 binTitle;
     String aboutText;
     Html html;
     ChatView myDungeonChatView;
@@ -92,24 +87,14 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction) {
+                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
         this.dungeonRepositoryI = dungeonRepositoryI;
         this.messages = messages;
         this.myParserService = AParserService;
-        this.userActionsPublisher = userActionsPublisher;
-        this.userAction = userAction;
         setId("SomeView");
-
-        userActionsIncoming();
-    }
-
-    private void userActionsIncoming(){
-        userAction.subscribe(action -> getUI().ifPresent(ui-> ui.access(()->{
-                Notification.show(action.getUserActionMessage(),5000, Notification.Position.TOP_END);
-        })));
     }
 
     @Override
@@ -121,10 +106,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
         dungeon = dungeonRepositoryI.findByDungeonId(ALong);
         dungeonId = ALong;
-        createLayoutBasic(ALong);
+        createLayoutBasic();
     }
 
-    void createLayoutBasic(Long ALong) {
+    void createLayoutBasic() {
         mapView = new MapView();
         setSizeFull();
         game();
@@ -139,7 +124,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         createLayoutAction();
 
         splitMapWithRoom.setSizeFull();
-        splitMapWithRoom.addToPrimary(mapView.initMap(mapServiceI, ALong, tiles));
+        splitMapWithRoom.addToPrimary(initMap(dungeon.getDungeonId()));
 
         add(splitChatWithRest);
     }
@@ -214,21 +199,12 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Button authorisationButton = new Button("Spielberechtigungen");
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
-        Button testActionsButton = new Button("Test Aktion");
-        testActionsButton.addClickListener(e -> {
-            //TODO Dies ist nur zum Testen
-            userActionsPublisher.onNext(new UserAction( "Nico trys to hit Timon."));
-        });
-        leaveButton.addClickListener(e -> {
-            dungeonServiceI.deactivateDungeon(dungeonId);
-            UI.getCurrent().navigate("myDungeons");
 
-        });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         HorizontalLayout leaveAndPause=new HorizontalLayout();
         leaveAndPause.add(pauseButton,leaveButton);
         //leaveAndPause.
-        vl.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
+        vl.add(actionsButton, npcsButton, authorisationButton, leaveAndPause);
         //vl.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
         hl.add(grid, vl);
         splitMapAndRoomWithActions.addToSecondary(hl);
@@ -239,17 +215,53 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             Dialog actionDialog = new Dialog(new Text("Aktionen zur Auswahl"));
             actionDialog.open();
         });
+        npcsButton.addClickListener(e -> {
+            Dialog npcDialog = new Dialog(new Text("NPCs zur Auswahl"));
+            npcDialog.open();
+        });
         authorisationButton.addClickListener(e -> {
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
             authorisationDialog.open();
         });
-        pauseButton.addClickListener(e -> {
-            Notification.show("Not Implemented");
-        });
+        pauseButton.addClickListener(e -> Notification.show("Not Implemented"));
         leaveButton.addClickListener(e -> {
-            Dialog leaveDialog = new Dialog(new Text("Willst du den Dungeon wirklich verlassen? Willst du einen anderen DM auswählen?"));
+            Dialog leaveDialog = new Dialog();
+            Text leaveOrNewDMText = new Text("Willst du den Dungeon wirklich verlassen? Willst du einen anderen DM auswählen?");
+            Button continueButton = new Button("Weiterspielen :)");
+            Button chooseDMButton = new Button("Neuen DM auswählen");
+            Button leaveForSureButton = new Button("Verlassen");
+
+            Grid<User> newDMGrid = new Grid<>(User.class);
+            newDMGrid.removeAllColumns();
+            newDMGrid.addColumn(User::getName).setHeader("Name");
+            newDMGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+            continueButton.addClickListener(event -> leaveDialog.close());
+
+            chooseDMButton.addClickListener(event -> {
+                if (newDMGrid.getSelectedItems().size() > 0) {
+                    User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
+                    dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
+                    dungeonServiceI.deactivateDungeon(dungeonId);
+                    leaveDialog.close();
+                    UI.getCurrent().navigate("myDungeons");
+                } else {
+                    Notification.show("Bitte wähle einen neuen DM aus!");
+                }
+            });
+
+            leaveForSureButton.addClickListener(event -> {
+                dungeonServiceI.deactivateDungeon(dungeonId);
+                leaveDialog.close();
+                UI.getCurrent().navigate("myDungeons");
+            });
+
+            newDMGrid.setItems(dungeonServiceI.getCurrentUsers(dungeon));
+
+            leaveDialog.add(leaveOrNewDMText, newDMGrid, new HorizontalLayout(continueButton, chooseDMButton, leaveForSureButton));
             leaveDialog.open();
         });
+
     }
 
     private void createAvatarGrid() {
@@ -266,25 +278,20 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 .setComparator(Comparator.comparing(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName()))
                 .setHeader("Raum");
         grid.addComponentColumn(avatar -> {
-            Button requestsButton = new Button("Anfragen");
+            Button requestsButton = new Button("Beantworten");
 
             Dialog requestDialog = new Dialog(new Label("Informationen zur Anfrage von: " + avatar.getName()));
-            requestsButton.addClickListener(e -> {
-                requestDialog.open();
-            });
+            requestsButton.addClickListener(e -> requestDialog.open());
             return requestsButton;
         }).setHeader("Anfragen");
         grid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
-            whisperButton.addClickListener(e -> {
-                Notification.show("Not Implemented");
-            });
+            whisperButton.addClickListener(e -> Notification.show("Not Implemented"));
             return whisperButton;
         }).setHeader("Anflüstern");
         grid.addComponentColumn(avatar -> {
             Button infoButton = new Button("Infos");
             VerticalLayout lay = new VerticalLayout();
-            //lay.setSizeFull();
             H4 headline = new H4("Informationen zu: " + avatar.getName());
             Label user = new Label("User: " + avatar.getUser().getName());
             Label room = new Label("Raum: " + dungeonServiceI.getRoomOfAvatar(avatar).getRoomName());
@@ -303,9 +310,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             infoDialog.setMinWidth("1000px");
             lay.add(headline, user, room, equipment);
             infoDialog.add(lay, inventoryLabel, inventory);
-            infoButton.addClickListener(e -> {
-                infoDialog.open();
-            });
+            infoButton.addClickListener(e -> infoDialog.open());
             return infoButton;
         }).setHeader("Informationen");
     }
@@ -356,14 +361,16 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         VerticalLayout vl = new VerticalLayout();
         HorizontalLayout hl = new HorizontalLayout();
 
-        roomNameTextField.setEnabled(false);
-        roomDescriptionTextArea.setEnabled(false);
+        roomNameTextField.setReadOnly(true);
+        roomDescriptionTextArea.setReadOnly(true);
 
         itemInRoomGrid.removeAllColumns();
-        itemInRoomGrid.addColumn(Item::getItemName).setHeader("Name");
+        itemInRoomGrid.addColumn(Item::getItemName).setHeader("Gegenstände");
+        itemInRoomGrid.setWidth("250px");
 
         npcInRoomGrid.removeAllColumns();
-        npcInRoomGrid.addColumn(NPC::getNpcName).setHeader("Name");
+        npcInRoomGrid.addColumn(NPC::getNpcName).setHeader("NPCs");
+        npcInRoomGrid.setWidth("250px");
 
         hl.add(itemInRoomGrid, npcInRoomGrid);
         vl.add(roomNameTextField, roomDescriptionTextArea, hl);
@@ -372,9 +379,14 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     private void fillCurrentRoom(Room ARoom) {
         roomNameTextField.setValue(ARoom.getRoomName());
-        roomDescriptionTextArea.setValue(ARoom.getDescription());
+
+        if (ARoom.getDescription() != null)
+            roomDescriptionTextArea.setValue(ARoom.getDescription());
+        else
+            roomDescriptionTextArea.setValue("");
+
         itemInRoomGrid.setItems(ARoom.getItems().stream().map(ItemInstance::getItem).toArray(Item[]::new));
-        //npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NpcIns));
+        npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NpcInstance::getNpc).toArray(NPC[]::new));
     }
 
     @Override

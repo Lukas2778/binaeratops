@@ -79,5 +79,9 @@ public interface DungeonServiceI {
     Room getRoomOfAvatar ( Avatar AAvatar);
 
     Room getRoomByPosition(Dungeon ADungeon ,int AX, int AY);
+
+    void setDungeonMaster(Dungeon ADungeon, Long AUserId);
+
+    List<User> getCurrentUsers(Dungeon ADungeon);
 }
 

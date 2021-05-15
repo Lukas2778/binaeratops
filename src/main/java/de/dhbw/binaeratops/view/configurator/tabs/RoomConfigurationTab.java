@@ -16,6 +16,7 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NpcInstance;
 import de.dhbw.binaeratops.model.entitys.Room;

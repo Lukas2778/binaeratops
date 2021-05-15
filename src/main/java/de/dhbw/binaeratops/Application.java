@@ -1,7 +1,6 @@
 package de.dhbw.binaeratops;
 
 import com.vaadin.flow.server.PWA;
-import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,16 +29,6 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     Flux<ChatMessage> messages(UnicastProcessor<ChatMessage> publisher) {
-        return publisher.replay(30).autoConnect();
-    }
-
-    @Bean
-    UnicastProcessor<UserAction> userActionPublisher(){
-        return UnicastProcessor.create();
-    }
-
-    @Bean
-    Flux<UserAction> userAction(UnicastProcessor<UserAction> publisher) {
         return publisher.replay(30).autoConnect();
     }
 

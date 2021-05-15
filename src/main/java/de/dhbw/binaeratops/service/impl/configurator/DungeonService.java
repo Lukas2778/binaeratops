@@ -121,12 +121,13 @@ public class DungeonService implements DungeonServiceI {
         userRepo.save(AUser);
     }
 
-
+    @Override
     public void setDungeonMaster(Dungeon ADungeon, Long AUserId) {
         ADungeon.setDungeonMasterId(AUserId);
         dungeonRepo.save(ADungeon);
     }
 
+    @Override
     public List<User> getCurrentUsers(Dungeon ADungeon) {
         return ADungeon.getCurrentUsers();
     }
