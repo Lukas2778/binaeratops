@@ -12,6 +12,7 @@ import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInsufficientPermissionException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInvalidItemTypeException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInvalidParameterException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -507,6 +508,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                     Item i = item.getItem();
                     if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
                         // Zum Inventar hinzufügen, da erlaubt
+                        avatar.getCurrentRoom().getItems().remove(item);
                         avatar.getInventory().add(item);
                         return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
                     } else {
@@ -553,13 +555,57 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onEquip(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException {
-        return null;
+    public UserMessage onEquip(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            for (ItemInstance item : avatar.getInventory()) {
+                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                    if (checkIfItemHasCorrectType(item)) {
+                        // Wenn ItemTyp equipped werden darf.
+                        if (checkIfItemTypeAlreadyInEquip(avatar, item)) {
+                            // Wenn Typ schon enthalten ist
+                            for (ItemInstance alreadyEquipped : avatar.getEquipment()) {
+                                if (alreadyEquipped.getItem().getType().equals(item.getItem().getType())) {
+                                    // Ausrüsten
+                                    avatar.getEquipment().remove(alreadyEquipped);
+                                    avatar.getEquipment().add(item);
+                                    return new UserMessage("");
+                                }
+                            }
+                        } else { // Wenn noch kein Items dieses Typs darin ist.
+                            avatar.getEquipment().add(item);
+                            return new UserMessage("");
+                        }
+                    } else {
+                        // Typ darf nicht equipped werden.
+                        throw new CmdScannerInvalidItemTypeException(item.getItem().getItemName(), item.getItem().getType().toString());
+                    }
+                }
+            }
+            // Gegenstand wurde nicht gefunden.
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("EQUIP");
+        }
     }
 
     @Override
-    public UserMessage onLayDown(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException {
-        return null;
+    public UserMessage onLayDown(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            for (ItemInstance item : avatar.getEquipment()) {
+                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                    // Wenn Item in Equipment
+                    avatar.getEquipment().remove(item);
+                }
+            }
+            // Gegenstand wurde nicht gefunden.
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("LAYDOWN");
+        }
     }
 
     @Override
@@ -627,5 +673,43 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             sum += item.getItem().getSize();
         }
         return sum;
+    }
+
+    private boolean checkIfItemHasCorrectType(ItemInstance AItem) {
+        boolean res = false;
+        switch (AItem.getItem().getType()) {
+            case BOOTS:
+                res = true;
+                break;
+            case PANTS:
+                res = true;
+                break;
+            case HELMET:
+                res = true;
+                break;
+            case WEAPON:
+                res = true;
+                break;
+            case CHESTPLATE:
+                res = true;
+                break;
+            case DEFAULT:
+                res = false;
+                break;
+            case CONSUMABLE:
+                res = false;
+                break;
+        }
+        return res;
+    }
+
+    private boolean checkIfItemTypeAlreadyInEquip(Avatar AAvatar, ItemInstance AItem) {
+        boolean res = false;
+        for (ItemInstance item : AAvatar.getEquipment()) {
+            if (item.getItem().getType().equals(AItem.getItem().getType())) {
+                res = true;
+            }
+        }
+        return res;
     }
 }
