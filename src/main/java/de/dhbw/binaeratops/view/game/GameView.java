@@ -319,6 +319,13 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         // Avatar Felder
         TextField avatarNameFiled = new TextField("Avatarname");
 
+        List<Gender> avatarGenderList = new ArrayList<>();
+        avatarGenderList.add(Gender.MALE);
+        avatarGenderList.add(Gender.FEMALE);
+        avatarGenderList.add(Gender.DIVERSE);
+        ComboBox<Gender> avatarGenderField = new ComboBox<>("Geschlecht");
+        avatarGenderField.setItems(avatarGenderList);
+
         //myConfiguratorService.setDungeon(myDungeon.getDungeonId());
         List<Role> avatarRoleList = myDungeon.getRoles();
         ComboBox<Role> avatarRoleField = new ComboBox("Rolle");
@@ -345,7 +352,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         createAvatarButt.focus();
         createAvatarButt.addClickShortcut(Key.ENTER);
 
-        contentLayout.add(header, description, avatarNameFiled, avatarRoleField, avatarRaceField);
+        contentLayout.add(header, description, avatarNameFiled, avatarGenderField, avatarRoleField, avatarRaceField);
         buttCreateLayout.add(cancelButt, createAvatarButt);
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
