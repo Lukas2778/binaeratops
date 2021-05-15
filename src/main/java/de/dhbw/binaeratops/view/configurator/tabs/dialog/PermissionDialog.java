@@ -14,11 +14,10 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import de.dhbw.binaeratops.model.entitys.Race;
-import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PermissionDialog
         extends Dialog
@@ -37,13 +36,14 @@ public class PermissionDialog
     public PermissionDialog()
     {
     }
-
     public PermissionDialog(ArrayList<User> userList,
+
                             User currentUser,
                             Grid<User> grid,
                             ConfiguratorServiceI AConfiguratorServiceI)
     {
         this.userList = userList;
+
         this.currentUser = currentUser;
         this.grid = grid;
         this.configuratorServiceI = AConfiguratorServiceI;
@@ -70,22 +70,22 @@ public class PermissionDialog
                 currentUser.setName(currentUserField.getValue());
                 currentUserDB = configuratorServiceI.getUser(currentUser.getName());
 
-                if ( currentUserDB.getPermission().contains() )
+                if ( findAllowedUser(currentUser.getName()))
                 {
                     Notification.show("Eine Spielberechtigung reicht ");
-                }
-                else if ( matchDungeonMasterId(currentUserField.getValue()) )
-                {
-                    Notification.show("Du darfst dein eigenes Spiel immer spielen ;)");
+
                 }
                 else
                 {
-
-                    if ( currentUserDB != null )
+                    if ( matchDungeonMasterId(currentUserField.getValue()) )
                     {
-                        configuratorServiceI.getDungeon()
-                                .addAllowedUser(currentUserDB);
-
+                        Notification.show("Du darfst dein eigenes Spiel immer spielen ;)");
+                    }
+                    else if ( currentUserDB != null )
+                    {
+                        //Hier wird die Berechtigung erteilt, falls alle Abfagen erfolgreich waren
+                        configuratorServiceI.getDungeon().addAllowedUser(currentUserDB);
+                        configuratorServiceI.saveUser(currentUserDB);
                         configuratorServiceI.saveDungeon();
 
                         refreshGrid();
@@ -95,7 +95,6 @@ public class PermissionDialog
                     {
                         Notification.show("Dieser Spieler wurde nicht gefunden");
                     }
-
                 }
             }
             else
@@ -106,15 +105,30 @@ public class PermissionDialog
 
         });
 
-        closeButton.addClickListener(e -> this.close());
+        closeButton.addClickListener(e -> this.
+
+                close());
     }
 
     private void refreshGrid()
     {
-        grid.setItems(configuratorServiceI.getDungeon()
-                              .getAllowedUsers());
+        grid.setItems(configuratorServiceI.getDungeon().getAllowedUsers());
     }
 
+
+    private boolean matchDungeonMasterId(String AName)
+    {
+        boolean result = false;
+
+        if ( configuratorServiceI.getDungeon()
+                .getDungeonMasterId() == configuratorServiceI.getUser(AName)
+                .getUserId() )
+        {
+            result = true;
+        }
+
+        return result;
+    }
     private boolean findAllowedUser(String AName)
     {
         boolean result = false;
@@ -130,18 +144,5 @@ public class PermissionDialog
         return result;
     }
 
-    private boolean matchDungeonMasterId(String AName)
-    {
-        boolean result = false;
-
-        if ( configuratorServiceI.getDungeon()
-                .getDungeonMasterId() == configuratorServiceI.getUser(AName)
-                .getUserId() )
-        {
-            result = true;
-        }
-
-        return result;
-    }
 
 }

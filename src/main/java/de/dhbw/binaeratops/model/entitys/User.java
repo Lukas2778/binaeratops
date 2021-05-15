@@ -59,8 +59,6 @@ public class User implements UserI {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Permission> myPermission = new ArrayList<>();
 
     /**
      * Konstruktor zum Erzeugen eines Benutzers mit allen Eigenschaften.
@@ -190,17 +188,7 @@ public class User implements UserI {
         ADungeon.setUser(null);
     }
 
-    public void addPermission(Dungeon ADungeon){
-        Permission p = new Permission(ADungeon, this, true);
-        myPermission.add(p);
-    }
-    public void removePermission(Permission APermission){
-        myPermission.remove(APermission);
-        APermission.setUser(null);
-    }
-    public List<Permission> getPermission(){
-        return myPermission;
-    }
+
    
 
     @Override

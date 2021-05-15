@@ -47,8 +47,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     UserRepositoryI userRepo;
     @Autowired
-    PermissionRepositoryI perRepo;
-    @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
     NpcInstanceRepositoryI npcInstanceRepositoryI;
@@ -387,22 +385,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
        return userRepo.findByName(AName);
     }
 
-    @Override
-    public List<Permission> getPermission()
-    {
-        return perRepo.findAll();
+
+    public void saveUser(User AUser) {
+        userRepo.save(AUser);
     }
 
-    @Override
-    public void addPermission(User AUser)
-    {
-
-    }
-
-    @Override
-    public void removePermission(User AUser)
-    {
-
-    }
 
 }

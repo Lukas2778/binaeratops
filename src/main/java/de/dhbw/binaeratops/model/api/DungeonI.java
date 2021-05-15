@@ -379,4 +379,5 @@ public interface DungeonI {
      * @param ARace Rasse, die entfernt werden soll.
      */
     void removeRace(Race ARace);
+
 }
