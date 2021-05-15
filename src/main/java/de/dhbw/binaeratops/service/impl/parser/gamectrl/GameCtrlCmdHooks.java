@@ -469,7 +469,6 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onShowInventory(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Inventargröße hinzufügen
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             if (avatar.getInventory().size() == 0) {
                 return new UserMessage("view.game.ctrl.cmd.show.inventory.empty");
@@ -680,23 +679,13 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         boolean res = false;
         switch (AItem.getItem().getType()) {
             case BOOTS:
-                res = true;
-                break;
-            case PANTS:
-                res = true;
-                break;
             case HELMET:
-                res = true;
-                break;
             case WEAPON:
-                res = true;
-                break;
+            case PANTS:
             case CHESTPLATE:
                 res = true;
                 break;
             case DEFAULT:
-                res = false;
-                break;
             case CONSUMABLE:
                 res = false;
                 break;
