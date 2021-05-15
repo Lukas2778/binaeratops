@@ -29,6 +29,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
+
+/**
+ * Tab-Oberfläche für die Komponente "Dungeon-Konfiguration" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration des Dungeons bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer
+ */
+
 @PageTitle("Dungeon-Konfiguration")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 
