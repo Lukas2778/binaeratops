@@ -44,8 +44,8 @@ public class MapService implements MapServiceI {
 
         for (Room r :
                 configuratorServiceI.getDungeon().getRooms()) {
-            rooms.put(new Tuple<>(r.getXCoordinate(), r.getYCoordinate()), r);
-            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
+            rooms.put(new Tuple<>(r.getXcoordinate(), r.getYcoordinate()), r);
+            tiles.add(new Tile(r.getXcoordinate(), r.getYcoordinate(), tileName(r)));
         }
         return tiles;
     }

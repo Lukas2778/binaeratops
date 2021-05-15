@@ -74,15 +74,15 @@ public class MapServiceTest extends Logger {
         testRoom5.setNorthRoomId(1L);
 
         Room testRoom6=new Room("testRoom", "descr");
-        testRoom6.setXCoordinate(1);
-        testRoom6.setYCoordinate(1);
+        testRoom6.setXcoordinate(1);
+        testRoom6.setYcoordinate(1);
         testRoom6.setRoomId(6L);
         testRoom6.setWestRoomId(5L);
         testRoom6.setNorthRoomId(2L);
 
         Room testRoom7=new Room("testRoom", "descr");
-        testRoom7.setXCoordinate(1);
-        testRoom7.setYCoordinate(2);
+        testRoom7.setXcoordinate(1);
+        testRoom7.setYcoordinate(2);
         testRoom7.setRoomId(7L);
         testRoom7.setNorthRoomId(3L);
 

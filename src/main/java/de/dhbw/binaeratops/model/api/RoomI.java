@@ -164,7 +164,7 @@ public interface RoomI {
      *
      * @return X-Koordinate.
      */
-    Integer getXCoordinate();
+    Integer getXcoordinate();
 
     /**
      * Setzt die X-Koordinate des Raumes.
@@ -178,12 +178,12 @@ public interface RoomI {
      *
      * @return Y-Koordinate des Raumes.
      */
-    Integer getYCoordinate();
+    Integer getYcoordinate();
 
     /**
      * Setzt die Y-Koordinate des Raumes.
      *
      * @param AYCoordinate Zu setzende Y-Koordinate des Raumes.
      */
-    void setYCoordinate(Integer AYCoordinate);
+    void setYcoordinate(Integer AYCoordinate);
 }

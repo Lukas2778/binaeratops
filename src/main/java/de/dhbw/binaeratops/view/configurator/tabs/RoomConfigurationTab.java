@@ -16,7 +16,6 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NpcInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -249,8 +248,8 @@ public class RoomConfigurationTab extends VerticalLayout {
         });
         Button deleteRoomButt = new Button(res.getString("view.configurator.room.delete"), e -> {
             if (currentRoom != null) {
-                if (mapService.canDeleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
-                    for (Tile t : mapService.deleteRoom(currentRoom.getXCoordinate(), currentRoom.getYCoordinate())) {
+                if (mapService.canDeleteRoom(currentRoom.getXcoordinate(), currentRoom.getYcoordinate())) {
+                    for (Tile t : mapService.deleteRoom(currentRoom.getXcoordinate(), currentRoom.getYcoordinate())) {
                         tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                     }
                     //wird der Raum gelöscht, soll die Hervorhebung nicht weiter existieren
