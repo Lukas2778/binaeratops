@@ -1,12 +1,10 @@
 package de.dhbw.binaeratops.view.game;
 
-import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,6 +17,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.PageTitle;
@@ -56,7 +57,9 @@ import java.util.Set;
 //@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
-public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
+public class GameView extends VerticalLayout implements HasUrlParameter<Long>, BeforeLeaveObserver {
+    BeforeLeaveEvent.ContinueNavigationAction action;
+
     ParserServiceI myParserService;
     MapServiceI mapServiceI;
     RoomRepositoryI myRoomRepo;//@TODO nur zu Testzwecken, dann entfernen
@@ -71,6 +74,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     Image[][] myTiles;
     Dialog myAvatarDialog;
     Dialog myCreateAvatarDialog;
+    Dialog myConfirmLeavingDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private final Flux<ChatMessage> myMessages;
@@ -243,7 +247,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         VerticalLayout gridLayoutVert;
         H2 title;
 
-
         myAvatarDialog= new Dialog();
         myAvatarDialog.open();
 
@@ -301,16 +304,17 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
                 createMap();
                 changeRoom(currentRoom.getRoomId());
             }
+            else {
+                Notification.show("Wähle zuerst einen Avatar aus!");
+            }
         });
         enterDungeon.addClickShortcut(Key.ENTER);
-        enterDungeon.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         buttLayout.add(cancel, createAvatar, enterDungeon);
         buttLayout.setWidthFull();
 
         // Add it all together
         myAvatarDialog.add(header, gridLayoutVert, buttLayout);
-        //myAvatarDialog.setHeight("70%");
         myAvatarDialog.setWidth("50%");
     }
 
@@ -383,9 +387,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         this.myAvatar = AAvatar;
         this.currentRoom = myAvatar.getCurrentRoom();
         this.visitedRooms = myAvatar.getVisitedRooms();
-        if (currentRoom == null) {
+        if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId())==null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
+        myGameService.addActivePlayer(myDungeon,currentUser);
     }
 
     void createMap() {
@@ -504,4 +509,52 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         myTiles[x][y].getStyle().set("border-style", "solid");
         myTiles[x][y].getStyle().set("border-color", "red");
     }
+
+    @Override
+    public void beforeLeave(BeforeLeaveEvent event) {
+        if (this.hasChanges()) {
+            action =
+                    event.postpone();
+            confirmLeaveDialog();
+            Notification.show("Du willst jetzt schon gehen?");
+        }
+    }
+    private boolean hasChanges() {
+        if (myAvatar!=null)
+            return true;
+        return false;
+    }
+
+    void confirmLeaveDialog(){
+        myConfirmLeavingDialog=new Dialog();
+        myConfirmLeavingDialog.open();
+
+        myConfirmLeavingDialog.setCloseOnEsc(false);
+        myConfirmLeavingDialog.setCloseOnOutsideClick(false);
+
+        // Header
+        H4 title = new H4("Willst du das Spiel wirklich verlassen?");
+
+        HorizontalLayout buttLayout=new HorizontalLayout();
+
+        Button leaveButt =new Button("Dungeon verlassen");
+        leaveButt.getStyle().set("color", "red");
+        leaveButt.addClickListener(e->{
+            myGameService.removeActivePlayer(myDungeon, currentUser);
+            myConfirmLeavingDialog.close();
+            action.proceed();
+        });
+
+        Button stayButt=new Button("Zurück");
+        stayButt.addClickListener(e->myConfirmLeavingDialog.close());
+        stayButt.focus();
+        stayButt.addClickShortcut(Key.ENTER);
+        buttLayout.add(leaveButt, stayButt);
+
+        myConfirmLeavingDialog.add(title,buttLayout);
+    }
+
+
+
+
 }
