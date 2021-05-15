@@ -5,6 +5,8 @@ import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 
+import java.util.List;
+
 /**
  * Interface für die Komponente "GameService".
  * <p>
@@ -43,4 +45,11 @@ public interface GameServiceI {
      */
     void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace);
 
+    /**
+     *
+     * @param AAvatar
+     * @param ACurrentRoom
+     * @return
+     */
+    List<Room> saveAvatarProgress(Avatar AAvatar, Room ACurrentRoom);
 }

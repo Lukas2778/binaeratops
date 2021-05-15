@@ -63,14 +63,14 @@ public class Avatar implements AvatarI {
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
-     * @param ARoomId Raum des Avatars, in dem er sich befindet.
+     * @param ARoom Raum des Avatars, in dem er sich befindet.
      * @param AGender Geschlecht des Avatars.
      * @param AName   Name des Avatars.
      * @param ARace   Rasse des Avatars.
      * @param ARole   Rolle des Avatars.
      */
-    public Avatar(Long ARoomId, Gender AGender, String AName, Race ARace, Role ARole) {
-        this.roomId = ARoomId;
+    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole) {
+        this.currentRoom = ARoom;
         this.gender = AGender;
         this.name = AName;
         this.race = ARace;

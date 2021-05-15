@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Komponente "GameService".
@@ -38,6 +39,9 @@ public class GameService implements GameServiceI {
     DungeonRepositoryI dungeonRepositoryI;
 
     @Autowired
+    RoomRepositoryI roomRepositoryI;
+
+    @Autowired
     AvatarRepositoryI avatarRepositoryI;
 
     /**
@@ -59,9 +63,20 @@ public class GameService implements GameServiceI {
 
     @Override
     public void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace){
-        Avatar createAvatar= new Avatar(ACurrentRoomId, AAvatarGender, AAvatarName, AAvatarRace, AAvatarRole);
+        Avatar createAvatar= new Avatar(roomRepositoryI.findByRoomId(ACurrentRoomId), AAvatarGender, AAvatarName, AAvatarRace, AAvatarRole);
+        createAvatar.setDungeon(ADungeon);
+        createAvatar.setUser(AUser);
+        //createAvatar.setCurrentRoom(ACurrentRoom);
         avatarRepositoryI.save(createAvatar);
         ADungeon.addAvatar(createAvatar);
+        AUser.addAvatar(createAvatar);
+    }
+
+    public List<Room> saveAvatarProgress(Avatar AAvatar, Room ACurrentRoom){
+        AAvatar.addVisitedRoom(ACurrentRoom);
+        AAvatar.setCurrentRoom(ACurrentRoom);
+        avatarRepositoryI.save(AAvatar);
+        return AAvatar.getVisitedRooms();
     }
 
 }

@@ -92,6 +92,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     TextField textField;
     Button confirmButt;
     Button leftDungeonButt;
+    List<Avatar> avatarList;
+    Grid<Avatar> avatarGrid;
 
     //@TODO remove test navigation
     Button northButt;
@@ -240,8 +242,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         HorizontalLayout buttLayout;
         VerticalLayout gridLayoutVert;
         H2 title;
-        List<Avatar> avatarList;
-        Grid<Avatar> avatarGrid;
+
 
         myAvatarDialog= new Dialog();
         myAvatarDialog.open();
@@ -255,11 +256,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         title = new H2("Avatarauswahl");
         Header header = new Header(title);
 
-        avatarList = new ArrayList<>();
-        avatarList.addAll(currentUser.getAvatars());
-
         avatarGrid = new Grid<>();
-        avatarGrid.setItems(avatarList);
+        refreshAvatarGrid();
         avatarGrid.setVerticalScrollingEnabled(true);
         avatarGrid.addColumn(Avatar::getName).setHeader("Avatarname");
         avatarGrid.addColumn(avatar -> {
@@ -312,7 +310,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
 
         // Add it all together
         myAvatarDialog.add(header, gridLayoutVert, buttLayout);
-        myAvatarDialog.setHeight("70%");
+        //myAvatarDialog.setHeight("70%");
         myAvatarDialog.setWidth("50%");
     }
 
@@ -349,18 +347,22 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         List<Role> avatarRoleList = myDungeon.getRoles();
         ComboBox<Role> avatarRoleField = new ComboBox("Rolle");
         avatarRoleField.setItems(avatarRoleList);
+        avatarRoleField.setItemLabelGenerator(Role::getRoleName);
 
         List<Race> avatarRaceList=myDungeon.getRaces();
         ComboBox<Race> avatarRaceField = new ComboBox("Rasse");
         avatarRaceField.setItems(avatarRaceList);
+        avatarRaceField.setItemLabelGenerator(Race::getRaceName);
 
         Button cancelButt =new Button("Abbrechen", e->myCreateAvatarDialog.close());
         cancelButt.getStyle().set("color", "red");
         Button createAvatarButt=new Button("Speichern");
         createAvatarButt.addClickListener(e->{
            //Neuen Avatar speichern
-            myGameService.createNewAvatar(myDungeon,currentUser, myDungeon.getStartRoomId() ,avatarNameFiled.getValue(),
+            myGameService.createNewAvatar(myDungeon,currentUser, myDungeon.getStartRoomId(),avatarNameFiled.getValue(),
                     avatarGenderField.getValue(),avatarRoleField.getValue(),avatarRaceField.getValue());
+            refreshAvatarGrid();
+            myCreateAvatarDialog.close();
         });
         createAvatarButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createAvatarButt.focus();
@@ -369,6 +371,12 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         contentLayout.add(header, description, avatarNameFiled, avatarGenderField, avatarRoleField, avatarRaceField);
         buttCreateLayout.add(cancelButt, createAvatarButt);
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
+    }
+
+    void refreshAvatarGrid(){
+        avatarList = new ArrayList<>();
+        avatarList.addAll(currentUser.getAvatars());
+        avatarGrid.setItems(avatarList);
     }
 
     void loadAvatarProgress(Avatar AAvatar) {
@@ -451,10 +459,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
             return;
         }
         currentRoom = myRoomRepo.findByRoomId(ARoomId);
-        myAvatar.setCurrentRoom(currentRoom);
         //Avatar Fortschritt speichern
-        myAvatar.addVisitedRoom(currentRoom);
-        visitedRooms = myAvatar.getVisitedRooms();//Liste updaten
+        visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
     }
