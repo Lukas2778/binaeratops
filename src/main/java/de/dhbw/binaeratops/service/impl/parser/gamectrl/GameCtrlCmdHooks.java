@@ -570,12 +570,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                                     // Ausrüsten
                                     avatar.getEquipment().remove(alreadyEquipped);
                                     avatar.getEquipment().add(item);
-                                    return new UserMessage("");
+                                    return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
                             avatar.getEquipment().add(item);
-                            return new UserMessage("");
+                            return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
                     } else {
                         // Typ darf nicht equipped werden.
@@ -599,6 +599,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                 if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
                     // Wenn Item in Equipment
                     avatar.getEquipment().remove(item);
+                    return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                 }
             }
             // Gegenstand wurde nicht gefunden.

@@ -75,7 +75,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
-            onMissingToken("<Control>");
+            onMissingToken("<CONTROL>");
             return null;
         } else {
             switch (token.toUpperCase()) {
@@ -140,7 +140,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanMove1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String direction = findRestOfInput();
         if (direction == null) {
-            onMissingToken("<Direction>");
+            onMissingToken("<DIRECTION>");
             return null;
         } else {
             switch (direction.toUpperCase()) {
