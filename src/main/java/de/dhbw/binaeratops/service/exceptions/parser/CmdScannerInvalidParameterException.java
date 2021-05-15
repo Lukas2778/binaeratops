@@ -7,7 +7,7 @@ public class CmdScannerInvalidParameterException extends CmdScannerException {
 
     private UserMessage um;
     /**
-     * Standard-Exception für den Fall, das die Berechtigung nicht ausreicht.
+     * Standard-Exception für den Fall, das der übergebene Parameter nicht ausgewertet werden konnte.
      * <p>
      *
      */

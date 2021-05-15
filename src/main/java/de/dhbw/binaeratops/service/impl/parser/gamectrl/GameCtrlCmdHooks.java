@@ -6,6 +6,7 @@ import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
+import de.dhbw.binaeratops.model.repository.ItemInstanceRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
@@ -40,6 +41,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
 
     @Autowired
     AvatarRepositoryI avatarRepo;
+
+    @Autowired
+    ItemInstanceRepositoryI itemInstanceRepo;
 
     @Override
     public UserMessage onWhereAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
@@ -428,7 +432,6 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onExamineNpc(DungeonI ADungeon, String AName, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             List<NPC> npcs = avatar.getCurrentRoom().getNpcs();
             for (NPC npc : npcs) {
@@ -447,7 +450,6 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onExamineItem(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             List<ItemInstance> items = avatar.getCurrentRoom().getItems();
             for (ItemInstance item : items) {
@@ -463,23 +465,81 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onShowInventory(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onShowInventory(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        // TODO Inventargröße hinzufügen
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            if (avatar.getInventory().size() == 0) {
+                return new UserMessage("view.game.ctrl.cmd.show.inventory.empty");
+            } else {
+                return new UserMessage("view.game.ctrl.cmd.show.inventory", String.valueOf(avatar.getInventory().size()),
+                        String.valueOf(getInventorySize(avatar)), String.valueOf(dungeon.getDefaultInventoryCapacity()),
+                        getInventory(avatar));
+            }
+        } else {
+            throw new CmdScannerInsufficientPermissionException("SHOW INVENTORY");
+        }
     }
 
     @Override
-    public UserMessage onShowEquipment(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onShowEquipment(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            if (avatar.getEquipment().size() == 0) {
+                return new UserMessage("view.game.ctrl.cmd.show.equipment.empty");
+            } else {
+                return new UserMessage("view.game.ctrl.cmd.show.equipment", getEquipment(avatar));
+            }
+        } else {
+            throw new CmdScannerInsufficientPermissionException("SHOW INVENTORY");
+        }
     }
 
     @Override
-    public UserMessage onTake(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onTake(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            for (ItemInstance item : avatar.getCurrentRoom().getItems()) {
+                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                    Item i = item.getItem();
+                    if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
+                        // Zum Inventar hinzufügen, da erlaubt
+                        avatar.getInventory().add(item);
+                        return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
+                    } else {
+                        // Inventar voll.
+                        return new UserMessage("view.game.ctrl.cmd.take.failure", String.valueOf(getInventorySize(avatar)),
+                                String.valueOf(dungeon.getDefaultInventoryCapacity()), String.valueOf(item.getItem().getSize()));
+                    }
+                }
+            }
+            // Gegenstand wurde nicht gefunden.
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("TAKE");
+        }
     }
 
     @Override
-    public UserMessage onDrop(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onDrop(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            for (ItemInstance item : avatar.getInventory()) {
+                if (item.getItem().getItemName().toLowerCase() == AItem) {
+                    avatar.removeInventoryItem(item);
+                    avatar.getCurrentRoom().getItems().add(item);
+                    return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
+                }
+            }
+            // Gegenstand wurde nicht gefunden.
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("DROP");
+        }
     }
 
     @Override
@@ -537,5 +597,35 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             s.append(item.getItem().getItemName());
         }
         return s.toString();
+    }
+
+    private String getInventory(Avatar AAvatar) {
+        StringBuilder s = new StringBuilder();
+        s.append("<ol>");
+        for (ItemInstance item : AAvatar.getInventory()) {
+            s.append("<li>").append(item.getItem().getType().toString()).append(": ")
+                    .append(item.getItem().getItemName()).append("</li>");
+        }
+        s.append("</ol>");
+        return s.toString();
+    }
+
+    private String getEquipment(Avatar AAvatar) {
+        StringBuilder s = new StringBuilder();
+        s.append("<ol>");
+        for (ItemInstance item : AAvatar.getEquipment()) {
+            s.append("<li>").append(item.getItem().getType().toString()).append(": ")
+                    .append(item.getItem().getItemName()).append("</li>");
+        }
+        s.append("</ol>");
+        return s.toString();
+    }
+
+    private int getInventorySize(Avatar AAvatar) {
+        int sum = 0;
+        for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
+            sum += item.getItem().getSize();
+        }
+        return sum;
     }
 }
