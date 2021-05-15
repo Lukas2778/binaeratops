@@ -209,7 +209,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         HorizontalLayout leaveAndPause=new HorizontalLayout();
         leaveAndPause.add(pauseButton,leaveButton);
         //leaveAndPause.
-        vl.add(actionsButton, npcsButton, authorisationButton, leaveAndPause);
+        vl.add(actionsButton,  authorisationButton, leaveAndPause);
         //vl.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
         hl.add(grid, vl);
         splitMapAndRoomWithActions.addToSecondary(hl);
@@ -219,10 +219,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         actionsButton.addClickListener(e -> {
             Dialog actionDialog = new Dialog(new Text("Aktionen zur Auswahl"));
             actionDialog.open();
-        });
-        npcsButton.addClickListener(e -> {
-            Dialog npcDialog = new Dialog(new Text("NPCs zur Auswahl"));
-            npcDialog.open();
         });
         authorisationButton.addClickListener(e -> {
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
@@ -314,7 +310,21 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 tiles[i][j].addClickListener(e->
                 {
                     Room room = dungeonServiceI.getRoomByPosition(dungeon, finalX,finalY);
-                    fillCurrentRoom(room);
+                    if(room != null) {
+                        fillCurrentRoom(room);
+                        for (int k = 0; k < newTiles.length; k++) {
+                            for (int l = 0; l < newTiles[0].length; l++) {
+                                tiles[k][l].getStyle().set("border-color", "inherit");
+                                tiles[k][l].getStyle().set("border-style", "none");
+                                tiles[k][l].getStyle().set("width", "100px");
+                                tiles[k][l].getStyle().set("height", "100px");
+                            }
+                        }
+                        tiles[finalX - minX][finalY - minY].getStyle().set("width", "95px");
+                        tiles[finalX - minX][finalY - minY].getStyle().set("height", "95px");
+                        tiles[finalX - minX][finalY - minY].getStyle().set("border-style", "solid");
+                        tiles[finalX - minX][finalY - minY].getStyle().set("border-color", "red");
+                    }
                 });
                 rows.add(tiles[i][j]);
             }

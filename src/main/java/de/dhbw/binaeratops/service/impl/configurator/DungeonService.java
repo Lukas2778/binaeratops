@@ -104,7 +104,11 @@ public class DungeonService implements DungeonServiceI {
 
     @Override
     public Room getRoomByPosition(Dungeon ADungeon, int AX, int AY) {
-        return  roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AX, AY).get(0);
+        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AX, AY);
+        if(room.size() == 0)
+            return null;
+        else
+            return  room.get(0);
     }
 
     @Override
@@ -115,5 +119,16 @@ public class DungeonService implements DungeonServiceI {
     @Override
     public void saveUser(User AUser) {
         userRepo.save(AUser);
+    }
+
+    @Override
+    public void setDungeonMaster(Dungeon ADungeon, Long AUserId) {
+        ADungeon.setDungeonMasterId(AUserId);
+        dungeonRepo.save(ADungeon);
+    }
+
+    @Override
+    public List<User> getCurrentUsers(Dungeon ADungeon) {
+        return ADungeon.getCurrentUsers();
     }
 }
