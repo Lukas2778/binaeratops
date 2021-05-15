@@ -339,5 +339,11 @@ public interface ConfiguratorServiceI {
 
     User getUser(String AName);
 
+    List<Permission> getPermission();
+
+    void addPermission(User AUser);
+
+    void removePermission(User AUser);
+
 
 }

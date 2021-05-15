@@ -70,7 +70,7 @@ public class PermissionDialog
                 currentUser.setName(currentUserField.getValue());
                 currentUserDB = configuratorServiceI.getUser(currentUser.getName());
 
-                if ( findAllowedUser(currentUserField.getValue()) )
+                if ( currentUserDB.getPermission().contains() )
                 {
                     Notification.show("Eine Spielberechtigung reicht ");
                 }
