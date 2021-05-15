@@ -17,6 +17,7 @@ import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Dialog-Oberfläche für die Komponente "Rolle hinzufügen" des Raum-Konfigurators.
@@ -27,9 +28,10 @@ import java.util.ArrayList;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-public class RoleDialog
-        extends Dialog
-{
+public class RoleDialog extends Dialog {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
     private TextField currentRoleField;
     private TextField currentDescriptionField;
 
@@ -38,16 +40,13 @@ public class RoleDialog
     private ConfiguratorServiceI configuratorServiceI;
 
 
-
-    public RoleDialog()
-    {
+    public RoleDialog() {
     }
 
     public RoleDialog(ArrayList<Role> roleList,
                       Role currentRole,
                       Grid<Role> grid,
-                      ConfiguratorServiceI AConfiguratorServiceI)
-    {
+                      ConfiguratorServiceI AConfiguratorServiceI) {
 
         this.currentRole = currentRole;
         this.grid = grid;
@@ -55,40 +54,33 @@ public class RoleDialog
         init();
     }
 
-    private void init()
-    {
-        currentRoleField = new TextField("Rollenbezeichnung");
-        currentDescriptionField = new TextField("Beschreibung");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+    private void init() {
+        currentRoleField = new TextField(res.getString("view.configurator.dialog.role.field.name"));
+        currentDescriptionField = new TextField(res.getString("view.configurator.dialog.role.field.description"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.role.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.role.button.cancel"));
 
         this.add(new VerticalLayout(currentRoleField,
-                                    currentDescriptionField,
-                                    new HorizontalLayout(saveDialog, closeDialog)));
+                currentDescriptionField,
+                new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
-            if ( currentRoleField.getValue() != "" )
-            {
+            if (currentRoleField.getValue() != "") {
 
                 currentRole.setRoleName(currentRoleField.getValue());
                 currentRole.setDescription(currentDescriptionField.getValue());
 
 
-                if ( !findRole(currentRole.getRoleName(), currentRole.getDescription()) )
-                {
+                if (!findRole(currentRole.getRoleName(), currentRole.getDescription())) {
                     configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
                     refreshGrid();
                     this.close();
-                }
-                else
-                {
-                    Notification.show("Warum denn zwei Mal die gleiche Rolle erstellen? Einmal reicht ;)");
+                } else {
+                    Notification.show(res.getString("view.configurator.dialog.role.notification.duplicate"));
                 }
 
-            }
-            else
-            {
-                Notification.show("Du hast die Rollenbezeichnung vergessen ;)");
+            } else {
+                Notification.show(res.getString("view.configurator.dialog.role.notification.forgot"));
 
             }
 
@@ -96,21 +88,17 @@ public class RoleDialog
         closeDialog.addClickListener(e -> this.close());
     }
 
-    private void refreshGrid()
-    {
+    private void refreshGrid() {
 
         grid.setItems(configuratorServiceI.getAllRoles());
     }
 
-    private boolean findRole(String ARoleName, String ARoleDescription)
-    {
+    private boolean findRole(String ARoleName, String ARoleDescription) {
         boolean result = false;
-        for ( Role role : configuratorServiceI.getAllRoles() )
-        {
-            if ( role.getRoleName()
+        for (Role role : configuratorServiceI.getAllRoles()) {
+            if (role.getRoleName()
                     .equals(ARoleName) && role.getDescription()
-                    .equals(ARoleDescription) )
-            {
+                    .equals(ARoleDescription)) {
                 result = true;
             }
 

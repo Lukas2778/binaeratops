@@ -10,11 +10,15 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NPCDialog;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ResourceBundle;
 
 /**
  * Tab-Oberfläche für die Komponente "NPC" des Konfigurators.
@@ -27,14 +31,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class NPCConfigurationTab extends VerticalLayout {
+public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTitle {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+
     ConfiguratorServiceI configuratorService;
     VerticalLayout items = new VerticalLayout();
 
     Grid<NPC> grid = new Grid<>(NPC.class);
-    Button addNPCButton = new Button("NPC hinzufügen");
-    Button editNPCButton = new Button("NPC anpassen");
-    Button deleteNPCButton = new Button("NPC entfernen");
+    Button addNPCButton = new Button(res.getString("view.configurator.npc.button.add.npc"));
+    Button editNPCButton = new Button(res.getString("view.configurator.npc.button.edit.npc"));
+    Button deleteNPCButton = new Button(res.getString("view.configurator.npc.button.remove.npc"));
 
     NPCDialog npcDialog;
     private NPC currentNPC;
@@ -43,7 +50,7 @@ public class NPCConfigurationTab extends VerticalLayout {
         configuratorService = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1("NPCs"), items);
+        add(new H1(res.getString("view.configurator.npc.headline")), items);
     }
 
     private void initRoom() {
@@ -67,7 +74,7 @@ public class NPCConfigurationTab extends VerticalLayout {
                 npcDialog.fillDialog(currentNPC);
                 npcDialog.open();
             } else {
-                Notification.show("Bitte wähle einen Gegenstand aus!");
+                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
             }
         });
 
@@ -78,7 +85,7 @@ public class NPCConfigurationTab extends VerticalLayout {
                 configuratorService.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
-                Notification.show("Bitte wähle einen Gegenstand aus!");
+                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
             }
         });
     }
@@ -96,15 +103,15 @@ public class NPCConfigurationTab extends VerticalLayout {
         Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName)
                 .setComparator((npc1, npc2) -> npc1.getNpcName()
                         .compareToIgnoreCase(npc2.getNpcName()))
-                .setHeader("Name");
+                .setHeader(res.getString("view.configurator.npc.grid.npcname"));
         Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName())
                 .setComparator((npc1, npc2) -> npc1.getRace().getRaceName()
                         .compareToIgnoreCase(npc2.getRace().getRaceName()))
-                .setHeader("Rasse");
+                .setHeader(res.getString("view.configurator.npc.grid.race"));
         Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription)
                 .setComparator((npc1, npc2) -> npc1.getDescription()
                         .compareToIgnoreCase(npc2.getDescription()))
-                .setHeader("Beschreibung");
+                .setHeader(res.getString("view.configurator.npc.grid.description"));
 
         HeaderRow filterRow = grid.appendHeaderRow();
 
@@ -127,13 +134,13 @@ public class NPCConfigurationTab extends VerticalLayout {
         nameField.setSizeFull();
         filterRow.getCell(raceColumn).setComponent(descriptionField);
 
-        nameField.setPlaceholder("Filter");
+        nameField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
         nameField.getElement().setAttribute("focus-target", "");
         raceField.setSizeFull();
-        raceField.setPlaceholder("Filter");
+        raceField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
         raceField.getElement().setAttribute("focus-target", "");
         descriptionField.setSizeFull();
-        descriptionField.setPlaceholder("Filter");
+        descriptionField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
         descriptionField.getElement().setAttribute("focus-target", "");
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
@@ -146,5 +153,10 @@ public class NPCConfigurationTab extends VerticalLayout {
 
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllNPCs());
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.npc.pagetitle");
     }
 }

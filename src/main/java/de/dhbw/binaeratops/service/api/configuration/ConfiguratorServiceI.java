@@ -244,7 +244,7 @@ public interface ConfiguratorServiceI {
      * @param AItem Item.
      * @return Anzahl von ItemInstances.
      */
-    int getNumberOfItem(Room ARoom, Item AItem);
+    double getNumberOfItem(Room ARoom, Item AItem);
 
     /**
      * Die Gegenstandsliste wird gesetzt und die vorherige gelöscht.
@@ -254,7 +254,7 @@ public interface ConfiguratorServiceI {
      */
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
-    int getNumberOfNPC(Room ARoom, NPC ANPC);
+    double getNumberOfNPC(Room ARoom, NPC ANPC);
 
     /**
      * Die NPCliste wird gesetzt und die vorherige gelöscht.

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
@@ -42,7 +43,7 @@ import java.util.ResourceBundle;
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 @CssImport("./views/mainviewtabs/configurator/map.css")
-public class RoomConfigurationTab extends VerticalLayout {
+public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     NpcSelectionDialog npcSelectionDialog;
@@ -312,6 +313,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         editItemButton.addClickListener(t -> {
             itemSelectionDialog = new ItemSelectionDialog(configuratorServiceI, currentRoom, itemList);
             itemSelectionDialog.dialogResult = false;
+            itemSelectionDialog.setWidth(40, Unit.PERCENTAGE);
             itemSelectionDialog.open();
         });
 
@@ -333,6 +335,7 @@ public class RoomConfigurationTab extends VerticalLayout {
         editNPCButton.addClickListener(t -> {
             npcSelectionDialog = new NpcSelectionDialog(configuratorServiceI, currentRoom, npcList);
             //initNPCButtonListener();
+            npcSelectionDialog.setWidth(40, Unit.PERCENTAGE);
             npcSelectionDialog.dialogResult = false;
             npcSelectionDialog.open();
         });
@@ -385,5 +388,10 @@ public class RoomConfigurationTab extends VerticalLayout {
             counter++;
         }
         return out + counter;
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.room.pagetitle");
     }
 }

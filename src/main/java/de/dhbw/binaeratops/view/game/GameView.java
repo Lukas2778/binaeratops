@@ -38,6 +38,7 @@ import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,13 +49,12 @@ import java.util.Set;
  */
 //@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
-@PageTitle("Dungeon - Spiel")
-public class GameView extends VerticalLayout implements HasUrlParameter<Long>, BeforeLeaveObserver {
+public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver {
     BeforeLeaveEvent.ContinueNavigationAction action;
 
     ParserServiceI myParserService;
     MapServiceI mapServiceI;
-    RoomRepositoryI myRoomRepo;
+    RoomRepositoryI myRoomRepo;//@TODO nur zu Testzwecken, dann entfernen
     DungeonRepositoryI myDungeonRepo;
     GameServiceI myGameService;
 
@@ -117,9 +117,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         currentUser=VaadinSession.getCurrent().getAttribute(User.class);
 
         myMessages = messages;
-        binTitle = new H2("Du bist in der Spieloberfläche!");
-        aboutText = "<div>Du hast auf einen aktiven Dungeon geklickt und kannst hier Teile des Chats und des Parsers" +
-                " testen.<br>Schau dir zuerst die 'Help' an, indem du /help eingibsty.</div>";
+        binTitle = new H2(res.getString("view.game.headline"));
+        aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getCommandSymbol());
         html = new Html(aboutText);
 
         myDungeonChatView = new ChatView(messages);
@@ -130,7 +129,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         mapLayout = new VerticalLayout();
         gridLayout = new HorizontalLayout();
         gridLayoutVert = new VerticalLayout();
-        leftDungeonButt = new Button("Dungeon verlassen");
+        leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leftDungeonButt.getStyle().set("color", "red");
         leftDungeonButt.addClickListener(e->{
            UI.getCurrent().navigate("lobby");
@@ -139,7 +138,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         textField = new TextField();
         textField.setWidthFull();
 
-        confirmButt = new Button("Eingabe");
+        confirmButt = new Button(res.getString("view.game.button.submit"));
         confirmButt.addClickShortcut(Key.ENTER);
         confirmButt.addClickListener(e -> {
             //Parser wird mit Texteingabe aufgerufen
@@ -147,22 +146,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
                 myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
-                switch (um.getKey()){
-                    case "view.game.ctrl.cmd.move.north":
-                        changeRoom(currentRoom.getNorthRoomId());
-                        break;
-                    case "view.game.ctrl.cmd.move.east":
-                        changeRoom(currentRoom.getEastRoomId());
-                        break;
-                    case "view.game.ctrl.cmd.move.south":
-                        changeRoom(currentRoom.getSouthRoomId());
-                        break;
-                    case "view.game.ctrl.cmd.move.west":
-                        changeRoom(currentRoom.getWestRoomId());
-                        break;
-                    default:
-                        break;
-                }
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
                 Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
@@ -231,46 +214,46 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         gridLayoutVert=new VerticalLayout();
 
         // Header
-        title = new H2("Avatarauswahl");
+        title = new H2(res.getString("view.game.headline.avatar.selection"));
         Header header = new Header(title);
 
         avatarGrid = new Grid<>();
         refreshAvatarGrid();
         avatarGrid.setVerticalScrollingEnabled(true);
-        avatarGrid.addColumn(Avatar::getName).setHeader("Avatarname");
+        avatarGrid.addColumn(Avatar::getName).setHeader(res.getString("view.game.grid.avatar"));
         avatarGrid.addColumn(avatar -> {
             if(avatar.getRace()!=null)
                 return avatar.getRace().getRaceName();
             return null;
-        }).setHeader("Rasse");
+        }).setHeader(res.getString("view.game.grid.race"));
         avatarGrid.addColumn(avatar -> {
             if(avatar.getRole()!=null)
                 return avatar.getRole().getRoleName();
             return null;
-        }).setHeader("Rolle");
+        }).setHeader(res.getString("view.game.grid.role"));
         avatarGrid.addColumn(avatar -> {
             if(avatar.getCurrentRoom()!=null)
                 return avatar.getCurrentRoom().getRoomName();
             return null;
-        }).setHeader("letzter Raum");
+        }).setHeader(res.getString("view.game.grid.room"));
         //avatarGrid.setSizeFull();
         //expand(avatarGrid);
         gridLayoutVert.add(avatarGrid);
 
         // Footer
-        Button cancel = new Button("Verlassen", e -> {
+        Button cancel = new Button(res.getString("view.game.grid.button.leave.dungeon.confirm"), e -> {
             myAvatarDialog.close();
             UI.getCurrent().navigate("lobby");
         });
         cancel.getStyle().set("color", "red");
 
-        Button createAvatar = new Button("Neuer Avatar", e -> {
+        Button createAvatar = new Button(res.getString("view.game.grid.button.new.avatar"), e -> {
             createNewAvatarDialog();
         });
         createAvatar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createAvatar.focus();
 
-        Button enterDungeon = new Button("Eintreten", e -> {
+        Button enterDungeon = new Button(res.getString("view.game.grid.button.enter.dungeon"), e -> {
             Set selectedAvatar=avatarGrid.getSelectedItems();
             if(selectedAvatar.size()>0) {
                 //Dungeon betreten
@@ -281,7 +264,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
                 changeRoom(currentRoom.getRoomId());
             }
             else {
-                Notification.show("Wähle zuerst einen Avatar aus!");
+                Notification.show(res.getString("view.game.notification.select.avatar"));
             }
         });
         enterDungeon.addClickShortcut(Key.ENTER);
@@ -309,33 +292,33 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         buttCreateLayout=new HorizontalLayout();
 
         // Header
-        title = new H2("Avatar erstellen");
+        title = new H2(res.getString("view.game.headline.create.avatar"));
         Header header =new Header(title);
-        Text description= new Text("Konfiguriere dir hier deinen Avatar, mit dem du den Dungeon bestreiten willst.");
+        Text description= new Text(res.getString("view.game.text.create.avatar"));
 
         // Avatar Felder
-        TextField avatarNameFiled = new TextField("Avatarname");
+        TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
 
         List<Gender> avatarGenderList = new ArrayList<>();
         avatarGenderList.add(Gender.MALE);
         avatarGenderList.add(Gender.FEMALE);
         avatarGenderList.add(Gender.DIVERSE);
-        ComboBox<Gender> avatarGenderField = new ComboBox<>("Geschlecht");
+        ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
         avatarGenderField.setItems(avatarGenderList);
 
         List<Role> avatarRoleList = myDungeon.getRoles();
-        ComboBox<Role> avatarRoleField = new ComboBox("Rolle");
+        ComboBox<Role> avatarRoleField = new ComboBox(res.getString("view.game.combobox.role"));
         avatarRoleField.setItems(avatarRoleList);
         avatarRoleField.setItemLabelGenerator(Role::getRoleName);
 
         List<Race> avatarRaceList=myDungeon.getRaces();
-        ComboBox<Race> avatarRaceField = new ComboBox("Rasse");
+        ComboBox<Race> avatarRaceField = new ComboBox(res.getString("view.game.combobox.race"));
         avatarRaceField.setItems(avatarRaceList);
         avatarRaceField.setItemLabelGenerator(Race::getRaceName);
 
-        Button cancelButt =new Button("Abbrechen", e->myCreateAvatarDialog.close());
+        Button cancelButt =new Button(res.getString("view.game.button.cancel"), e->myCreateAvatarDialog.close());
         cancelButt.getStyle().set("color", "red");
-        Button createAvatarButt=new Button("Speichern");
+        Button createAvatarButt=new Button(res.getString("view.game.button.save"));
         createAvatarButt.addClickListener(e->{
            //Neuen Avatar speichern
             myGameService.createNewAvatar(myDungeon,currentUser, myDungeon.getStartRoomId(),avatarNameFiled.getValue(),
@@ -394,33 +377,33 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
 
     void createInventory() {
         VerticalLayout inventoryLayout = new VerticalLayout();
-        Text inventoryTitle = new Text("Inventar");
+        Text inventoryTitle = new Text(res.getString("view.game.text.inventory"));
 
         inventoryGrid = new Grid<>();
         inventoryGrid.setVerticalScrollingEnabled(true);
-        inventoryGrid.addColumn(item -> item.getItem().getItemName()).setHeader("Item");
-        inventoryGrid.addColumn(item -> item.getItem().getType().toString()).setHeader("Typ");
-        inventoryGrid.addColumn(item -> item.getItem().getSize().toString()).setHeader("Größe");
+        inventoryGrid.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.game.grid.itemname"));
+        inventoryGrid.addColumn(item -> item.getItem().getType().toString()).setHeader(res.getString("view.game.grid.itemtype"));
+        inventoryGrid.addColumn(item -> item.getItem().getSize().toString()).setHeader(res.getString("view.game.grid.itemsize"));
         inventoryGrid.getStyle().set("background", "grey");
         inventoryGrid.setSizeFull();
         inventoryLayout.add(inventoryTitle, inventoryGrid);
 
         VerticalLayout armorLayout = new VerticalLayout();
-        Text armorTitle = new Text("Rüstung");
+        Text armorTitle = new Text(res.getString("view.game.text.equipment"));
 
         armorGrid = new Grid<>();
         armorGrid.setVerticalScrollingEnabled(true);
-        armorGrid.addColumn(item -> item.getItem().getItemName()).setHeader("Item");
+        armorGrid.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.game.grid.itemname"));
         armorGrid.addColumn(item -> {
             if (item.getItem().getType()!=null)
                 return item.getItem().getType().toString();
             return null;
-        }).setHeader("Typ");
+        }).setHeader(res.getString("view.game.grid.itemtype"));
         armorGrid.addColumn(item -> {
             if(item.getItem().getSize()!=null)
                 return item.getItem().getSize().toString();
             return null;
-        }).setHeader("Größe");
+        }).setHeader(res.getString("view.game.grid.itemsize"));
         armorGrid.getStyle().set("background", "grey");
         armorGrid.setSizeFull();
         armorLayout.add(armorTitle, armorGrid);
@@ -440,10 +423,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
     }
 
     void changeRoom(Long ARoomId) {
-        if (ARoomId == null) {
-            Notification.show("Room null");
-            return;
-        }
         currentRoom = myRoomRepo.findByRoomId(ARoomId);
         //Avatar Fortschritt speichern
         visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
@@ -499,7 +478,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
             action =
                     event.postpone();
             confirmLeaveDialog();
-            Notification.show("Du willst jetzt schon gehen?");
+            Notification.show(res.getString("view.game.notification.already.leaving"));
         }
     }
     private boolean hasChanges() {
@@ -516,11 +495,11 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         myConfirmLeavingDialog.setCloseOnOutsideClick(false);
 
         // Header
-        H4 title = new H4("Willst du das Spiel wirklich verlassen?");
+        H4 title = new H4(res.getString("view.game.headline.already.leaving"));
 
         HorizontalLayout buttLayout=new HorizontalLayout();
 
-        Button leaveButt =new Button("Dungeon verlassen");
+        Button leaveButt =new Button(res.getString("view.game.button.leave.dungeon"));
         leaveButt.getStyle().set("color", "red");
         leaveButt.addClickListener(e->{
             myGameService.removeActivePlayer(myDungeon, currentUser);
@@ -528,7 +507,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
             action.proceed();
         });
 
-        Button stayButt=new Button("Zurück");
+        Button stayButt=new Button(res.getString("view.game.button.back"));
         stayButt.addClickListener(e->myConfirmLeavingDialog.close());
         stayButt.focus();
         stayButt.addClickShortcut(Key.ENTER);
@@ -537,4 +516,9 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         myConfirmLeavingDialog.add(title,buttLayout);
     }
 
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.game.pagetitle");
+    }
 }

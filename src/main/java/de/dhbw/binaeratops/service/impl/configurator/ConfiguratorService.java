@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -239,8 +238,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public int getNumberOfItem(Room ARoom, Item AItem) {
-        int counter = 0;
+    public double getNumberOfItem(Room ARoom, Item AItem) {
+        double counter = 0;
         for (ItemInstance itemInstance : getAllItems(ARoom)) {
             if (itemInstance.getItem().getItemId().equals(AItem.getItemId())) {
                 counter++;
@@ -276,8 +275,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public int getNumberOfNPC(Room ARoom, NPC ANPC) {
-        int counter = 0;
+    public double getNumberOfNPC(Room ARoom, NPC ANPC) {
+        double counter = 0;
         for (NpcInstance npcInstance : getAllNPCs(ARoom)) {
             if (npcInstance.getNpc().getNpcId().equals(ANPC.getNpcId())) {
                 counter++;

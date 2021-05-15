@@ -12,6 +12,8 @@ import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
+import java.util.ResourceBundle;
+
 /**
  * Dialog-Oberfläche für die Komponente "NPC hinzufügen" des Raum-Konfigurators.
  * <p>
@@ -22,6 +24,8 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
 public class NPCDialog extends Dialog {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
 
     ConfiguratorServiceI configuratorService;
 
@@ -42,11 +46,11 @@ public class NPCDialog extends Dialog {
     }
 
     private void init() {
-        currentName = new TextField("Name");
-        currentRace = new ComboBox<>("Rasse");
-        currentDescription = new TextField("Beschreibung");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+        currentName = new TextField(res.getString("view.configurator.dialog.npc.field.name"));
+        currentRace = new ComboBox<>(res.getString("view.configurator.dialog.npc.combobox.race"));
+        currentDescription = new TextField(res.getString("view.configurator.dialog.npc.field.description"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.npc.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.npc.button.cancel"));
 
         currentRace.setItemLabelGenerator(Race::getRaceName);
 
@@ -67,7 +71,7 @@ public class NPCDialog extends Dialog {
                 refreshGrid();
                 this.close();
             } else {
-                Notification.show("Bitte kontrolliere deine Eingabe!");
+                Notification.show(res.getString("view.configurator.dialog.npc.notification.check.input"));
             }
         });
         closeDialog.addClickListener(e -> this.close());

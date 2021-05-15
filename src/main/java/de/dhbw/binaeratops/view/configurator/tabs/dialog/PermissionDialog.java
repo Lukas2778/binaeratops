@@ -16,13 +16,14 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.util.ArrayList;
-import java.util.List;
 
-public class PermissionDialog
-        extends Dialog
-{
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+public class PermissionDialog extends Dialog {
     private TextField currentUserField;
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
 
     private ArrayList<User> userList;
     Grid<User> grid;
@@ -33,15 +34,14 @@ public class PermissionDialog
     VerticalLayout layout = new VerticalLayout();
     HorizontalLayout buttonLayout = new HorizontalLayout();
 
-    public PermissionDialog()
-    {
+    public PermissionDialog() {
     }
+
     public PermissionDialog(ArrayList<User> userList,
 
                             User currentUser,
                             Grid<User> grid,
-                            ConfiguratorServiceI AConfiguratorServiceI)
-    {
+                            ConfiguratorServiceI AConfiguratorServiceI) {
         this.userList = userList;
 
         this.currentUser = currentUser;
@@ -50,13 +50,12 @@ public class PermissionDialog
         init();
     }
 
-    private void init()
-    {
-        currentUserField = new TextField("Welcher Spieler bekommt eine Berechtigung?");
+    private void init() {
+        currentUserField = new TextField(res.getString("view.configurator.dialog.permission.field.question"));
         currentUserField.setWidth("300px");
 
-        Button saveButton = new Button("Speichern");
-        Button closeButton = new Button("Abbrechen");
+        Button saveButton = new Button(res.getString("view.configurator.dialog.permission.button.save"));
+        Button closeButton = new Button(res.getString("view.configurator.dialog.permission.button.cancel"));
 
         buttonLayout.addAndExpand(saveButton, closeButton);
         buttonLayout.setJustifyContentMode(JustifyContentMode.CENTER);
@@ -65,24 +64,17 @@ public class PermissionDialog
         this.add(layout);
 
         saveButton.addClickListener(e -> {
-            if ( currentUserField.getValue() != "" )
-            {
+            if (currentUserField.getValue() != "") {
                 currentUser.setName(currentUserField.getValue());
                 currentUserDB = configuratorServiceI.getUser(currentUser.getName());
 
-                if ( findAllowedUser(currentUser.getName()))
-                {
-                    Notification.show("Eine Spielberechtigung reicht ");
+                if (findAllowedUser(currentUser.getName())) {
+                    Notification.show(res.getString("view.configurator.dialog.permission.notification.duplicate"));
 
-                }
-                else
-                {
-                    if ( matchDungeonMasterId(currentUserField.getValue()) )
-                    {
-                        Notification.show("Du darfst dein eigenes Spiel immer spielen ;)");
-                    }
-                    else if ( currentUserDB != null )
-                    {
+                } else {
+                    if (matchDungeonMasterId(currentUserField.getValue())) {
+                        Notification.show(res.getString("view.configurator.dialog.permission.notification.self"));
+                    } else if (currentUserDB != null) {
                         //Hier wird die Berechtigung erteilt, falls alle Abfagen erfolgreich waren
                         configuratorServiceI.getDungeon().addAllowedUser(currentUserDB);
                         configuratorServiceI.saveUser(currentUserDB);
@@ -90,16 +82,12 @@ public class PermissionDialog
 
                         refreshGrid();
                         this.close();
-                    }
-                    else
-                    {
-                        Notification.show("Dieser Spieler wurde nicht gefunden");
+                    } else {
+                        Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
                     }
                 }
-            }
-            else
-            {
-                Notification.show("Nach nichts zu suchen ist auch kreativ ");
+            } else {
+                Notification.show(res.getString("view.configurator.dialog.permission.notification.no.input"));
 
             }
 
@@ -110,34 +98,29 @@ public class PermissionDialog
                 close());
     }
 
-    private void refreshGrid()
-    {
+    private void refreshGrid() {
         grid.setItems(configuratorServiceI.getDungeon().getAllowedUsers());
     }
 
 
-    private boolean matchDungeonMasterId(String AName)
-    {
+    private boolean matchDungeonMasterId(String AName) {
         boolean result = false;
 
-        if ( configuratorServiceI.getDungeon()
+        if (configuratorServiceI.getDungeon()
                 .getDungeonMasterId() == configuratorServiceI.getUser(AName)
-                .getUserId() )
-        {
+                .getUserId()) {
             result = true;
         }
 
         return result;
     }
-    private boolean findAllowedUser(String AName)
-    {
+
+    private boolean findAllowedUser(String AName) {
         boolean result = false;
-        for ( User user : configuratorServiceI.getDungeon()
-                .getAllowedUsers() )
-        {
-            if ( user.getName()
-                    .equals(AName) )
-            {
+        for (User user : configuratorServiceI.getDungeon()
+                .getAllowedUsers()) {
+            if (user.getName()
+                    .equals(AName)) {
                 result = true;
             }
         }

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Dialog-Oberfläche für die Komponente "Rasse hinzufügen" des Raum-Konfigurators.
@@ -26,9 +27,11 @@ import java.util.ArrayList;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-public class RaceDialog
-        extends Dialog
+public class RaceDialog extends Dialog
 {
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
+
     private TextField currentRaceField;
     private TextField currentDescriptionField;
 
@@ -55,10 +58,10 @@ public class RaceDialog
 
     private void init()
     {
-        currentRaceField = new TextField("Rassenbezeichnung");
-        currentDescriptionField = new TextField("Beschreibung");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+        currentRaceField = new TextField(res.getString("view.configurator.dialog.race.field.name"));
+        currentDescriptionField = new TextField(res.getString("view.configurator.dialog.race.field.description"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.race.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.race.button.cancel"));
 
         this.add(new VerticalLayout(currentRaceField,
                                     currentDescriptionField,
@@ -80,17 +83,17 @@ public class RaceDialog
                 }
                 else
                 {
-                    Notification.show("Warum denn zwei Mal die gleiche Rasse erstellen? Eine reicht ;)");
+                    Notification.show(res.getString("view.configurator.dialog.race.notification.duplicate"));
                 }
 
             }
             else
             {
-                Notification.show("Du hast die Rassenbezeichnung vergessen ;)");
+                Notification.show(res.getString("view.configurator.dialog.race.notification.forgot"));
 
             }
 
-        });
+        }); // TODO entfernen
 //
 //        saveDialog.addClickListener(e -> {
 //            currentRace.setRaceName(currentRaceField.getValue());

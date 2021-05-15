@@ -23,7 +23,7 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -32,6 +32,7 @@ import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 /**
  * Tab-Oberfläche für die Komponente "Charaktereigenschaften" des Konfigurators.
@@ -42,9 +43,11 @@ import java.util.ArrayList;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
-@PageTitle("Charaktereigenschaft")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
-public class CharacterConfigurationTab extends VerticalLayout {
+public class CharacterConfigurationTab extends VerticalLayout implements HasDynamicTitle {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout roleListLayout = new VerticalLayout();
     VerticalLayout raceListLayout = new VerticalLayout();
@@ -52,11 +55,11 @@ public class CharacterConfigurationTab extends VerticalLayout {
     ArrayList<Role> roleArrayList = new ArrayList<>();
     ArrayList<Race> raceArrayList = new ArrayList<>();
 
-    Button addB = new Button("Hinzufügen");
-    Button deleteB = new Button("Löschen");
+    Button addB = new Button(res.getString("view.configurator.character.add"));
+    Button deleteB = new Button(res.getString("view.configurator.character.delete"));
 
-    Button addRaceButton = new Button("Hinzufügen");
-    Button deleteRaceButton = new Button("Löschen");
+    Button addRaceButton = new Button(res.getString("view.configurator.character.add"));
+    Button deleteRaceButton = new Button(res.getString("view.configurator.character.delete"));
 
     Grid<Role> grid = new Grid<>();
     Grid<Race> raceGrid = new Grid<>();
@@ -97,16 +100,13 @@ public class CharacterConfigurationTab extends VerticalLayout {
     }
 
     private void initFeld() {
-        H1 title = new H1("Charaktereigenschaften");
+        H1 title = new H1(res.getString("view.configurator.character.headline"));
 
-        Details hint = new Details("Hinweis",
-                new Text(
-                        "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
-                                + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
-                                + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
+        Details hint = new Details(res.getString("view.configurator.character.details.title"),
+                new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField inventorySize = new NumberField("Größe des Inventars");
+        NumberField inventorySize = new NumberField(res.getString("view.configurator.character.numberfield"));
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
         //inventorySize.setMax(100);
@@ -122,10 +122,11 @@ public class CharacterConfigurationTab extends VerticalLayout {
         });
 
         RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
-        genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
-        genderRadioButton.setItems("Aktivieren", "Deaktivieren");
+        genderRadioButton.setLabel(res.getString("view.configurator.character.radiobutton.label"));
+        genderRadioButton.setItems(res.getString("view.configurator.character.radiobutton.activate.gender"),
+                res.getString("view.configurator.character.radiobutton.deactivate.gender"));
         genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        genderRadioButton.setValue("Aktivieren");
+        genderRadioButton.setValue(res.getString("view.configurator.character.radiobutton.activate.gender"));
 
         initFeldLayout.add(title, hint, inventorySize, genderRadioButton);
 
@@ -134,7 +135,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
     private void roleList() {
         addRoleClickListener();
         deleteRoleClickListener();
-        H2 title = new H2("Rollenliste");
+        H2 title = new H2(res.getString("view.configurator.character.headline.roles"));
 
         if(configuratorService.getDungeon().getRoles() != null){
             grid.setItems(configuratorService.getAllRoles());
@@ -143,9 +144,9 @@ public class CharacterConfigurationTab extends VerticalLayout {
         }
 
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
-                .setHeader("Rollenbezeichnung");
+                .setHeader(res.getString("view.configurator.character.role.grid.name"));
         Column<Role> descriptionColumn = grid.addColumn(Role::getDescription)
-                .setHeader("Beschreibung");
+                .setHeader(res.getString("view.configurator.character.role.grid.description"));
 
 
         TextField roleNameField = new TextField();
@@ -172,7 +173,7 @@ public class CharacterConfigurationTab extends VerticalLayout {
         addRaceClickListener();
         deleteRaceClickListener();
 
-        H2 title = new H2("Rassenliste");
+        H2 title = new H2(res.getString("view.configurator.character.headline.races"));
 
         if(configuratorService.getDungeon().getRaces() != null){
             raceGrid.setItems(configuratorService.getAllRace());
@@ -181,9 +182,9 @@ public class CharacterConfigurationTab extends VerticalLayout {
         }
 
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
-                .setHeader("Rassenbezeichnung");
+                .setHeader(res.getString("view.configurator.character.race.grid.name"));
         Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription)
-                .setHeader("Beschreibung");
+                .setHeader(res.getString("view.configurator.character.race.grid.description"));
 
         TextField raceNameField = new TextField();
         TextField descriptionField = new TextField();
@@ -270,6 +271,10 @@ public class CharacterConfigurationTab extends VerticalLayout {
     }
 
 
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.character.pagetitle");
+    }
 }
 
 

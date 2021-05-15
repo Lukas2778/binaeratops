@@ -10,8 +10,8 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Oberfläche für die Komponente "Konfigurator".
@@ -40,9 +41,10 @@ import java.util.Map;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
-@PageTitle("Konfigurator")
 @CssImport("./views/main/main-view.css")
-public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
+public class ConfiguratorMainView extends Div implements HasDynamicTitle, HasUrlParameter<Long> {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     private Tabs configuratorTabs = new Tabs();
 
@@ -70,7 +72,7 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         configuratorServiceI.setDungeon(dungeonId);
         if (!configuratorServiceI.getDungeon().getUser().getUserId()
                 .equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-            Notification.show("Du hast keine Berechtigung diesen Dungeon zu bearbeiten.\n nice try ;)");
+            Notification.show(res.getString("view.configurator.main.invalid.permission"));
             UI.getCurrent().navigate("logout");
         }
 
@@ -83,11 +85,11 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
 
         //dungeonnameDialog.open();
 
-        Tab dungeonTab = new Tab("Allgemein");
-        Tab characterTab = new Tab("Charaktereigenschaften festlegen");
-        Tab itemsTab = new Tab("Gegenstände erstellen");
-        Tab npcTab = new Tab("NPCs erstellen");
-        Tab roomTab = new Tab("Räume konfigurieren");
+        Tab dungeonTab = new Tab(res.getString("view.configurator.main.tab.general"));
+        Tab characterTab = new Tab(res.getString("view.configurator.main.tab.character.traits"));
+        Tab itemsTab = new Tab(res.getString("view.configurator.main.tab.create.items"));
+        Tab npcTab = new Tab(res.getString("view.configurator.main.tab.create.npcs"));
+        Tab roomTab = new Tab(res.getString("view.configurator.main.tab.room"));
 
         Map<Tab, Component> tabsToPages = new HashMap<>();
         tabsToPages.put(dungeonTab, dungeonsConfigurator);
@@ -118,6 +120,11 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
         this.dungeonId = ALong;
         createMenuItems();
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.main.pagetitle");
     }
 }
 

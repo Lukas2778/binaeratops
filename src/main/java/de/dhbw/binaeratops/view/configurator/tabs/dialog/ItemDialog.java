@@ -7,12 +7,13 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+
+import java.util.ResourceBundle;
 
 /**
  * Dialog-Oberfläche für die Komponente "Item hinzufügen" des Item-Konfigurators.
@@ -25,10 +26,12 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
  */
 public class ItemDialog extends Dialog {
 
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
     ConfiguratorServiceI configuratorServiceI;
 
     private TextField currentName;
-    private IntegerField currentSize;
+    private NumberField currentSize;
     private TextField currentDescription;
     private ComboBox<ItemType> currentType;
 
@@ -45,15 +48,16 @@ public class ItemDialog extends Dialog {
     }
 
     private void init() {
-        currentName = new TextField("Name");
-        currentSize = new IntegerField("Größe");
+        currentName = new TextField(res.getString("view.configurator.dialog.item.field.name"));
+        currentSize = new NumberField(res.getString("view.configurator.dialog.item.numberfield.size"));
         currentSize.setHasControls(true);
         currentSize.setMin(1);
-        currentSize.setValue(1);
-        currentDescription = new TextField("Beschreibung");
-        currentType = new ComboBox<>("Typ");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+        currentSize.setValue(1.0);
+        currentSize.setStep(1.0);
+        currentDescription = new TextField(res.getString("view.configurator.dialog.item.field.description"));
+        currentType = new ComboBox<>(res.getString("view.configurator.dialog.item.combobox.type"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.item.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.item.button.cancel"));
 
         this.add(new VerticalLayout(currentName, currentSize, currentDescription, currentType, new HorizontalLayout(saveDialog, closeDialog)));
 
@@ -73,7 +77,7 @@ public class ItemDialog extends Dialog {
                 refreshGrid();
                 this.close();
             } else {
-                Notification.show("Bitte kontrolliere deine Eingabe!");
+                Notification.show(res.getString("view.configurator.dialog.item.notification.check.input"));
             }
         });
         closeDialog.addClickListener(e -> this.close());
@@ -88,7 +92,7 @@ public class ItemDialog extends Dialog {
 
     public void fillDialog(Item item) {
         currentName.setValue(item.getItemName());
-        currentSize.setValue(item.getSize().intValue());
+        currentSize.setValue(item.getSize().doubleValue());
         currentDescription.setValue(item.getDescription());
         currentType.setValue(item.getType());
     }
@@ -105,11 +109,11 @@ public class ItemDialog extends Dialog {
         this.currentName = currentName;
     }
 
-    public IntegerField getCurrentSize() {
+    public NumberField getCurrentSize() {
         return currentSize;
     }
 
-    public void setCurrentSize(IntegerField currentSize) {
+    public void setCurrentSize(NumberField currentSize) {
         this.currentSize = currentSize;
     }
 

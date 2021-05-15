@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -8,14 +7,14 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.IntegerField;
-import de.dhbw.binaeratops.model.entitys.*;
+import com.vaadin.flow.component.textfield.NumberField;
+import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.NpcInstance;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.text.MessageFormat;
+import java.util.*;
 
 /**
  * Dialog-Oberfläche für die Komponente "NPC Auswahl" des Raum-Konfigurators.
@@ -28,12 +27,15 @@ import java.util.List;
  */
 public class NpcSelectionDialog extends Dialog {
 
+    private final ResourceBundle res = ResourceBundle.getBundle("language");
+
+
     public boolean dialogResult = false;
     List<NPC> selectedNpcs = new ArrayList<NPC>();
 
-    public Button comfirmButton = new Button("Übernehmen");
-    public Button cancelButton = new Button("Abbrechen");
-    HashMap<NPC, IntegerField> npcIntegerFieldHashMap = new HashMap<>();
+    public Button comfirmButton = new Button(res.getString("view.configurator.dialog.npc.select.button.confirm"));
+    public Button cancelButton = new Button(res.getString("view.configurator.dialog.npc.select.button.cancel"));
+    HashMap<NPC, NumberField> npcIntegerFieldHashMap = new HashMap<>();
     private ListBox<NpcInstance> npcList;
     Grid<NPC> npcGrid = new Grid(NPC.class);
     ConfiguratorServiceI configuratorServiceI;
@@ -43,24 +45,25 @@ public class NpcSelectionDialog extends Dialog {
         configuratorServiceI = AConfiguratorService;
         room = ARoom;
         npcList = npcListBox;
-        H1 title = new H1("NPC Liste");
-        H2 headline = new H2("NPCs für ...");
-
-        npcGrid.setWidth(500, Unit.PIXELS);
+        H1 title = new H1(res.getString("view.configurator.dialog.npc.select.headline1"));
+        H2 headline = new H2(MessageFormat.format(res.getString("view.configurator.dialog.npc.select.headline2"), room.getRoomName()));
 
         npcGrid.removeAllColumns();
 
         npcGrid.addComponentColumn(npc -> {
-            IntegerField nf = new IntegerField();
+            NumberField nf = new NumberField();
             npcIntegerFieldHashMap.put(npc, nf);
-
+            nf.setHasControls(true);
+            nf.setMin(0);
+            nf.setStep(1.0);
+            nf.getStyle().set("width", "6.5em");
             nf.setValue(configuratorServiceI.getNumberOfNPC(room, npc));
 
             return nf;
-        }).setHeader("Anzahl");
-        npcGrid.addColumn(NPC::getNpcName).setHeader("Name");
-        npcGrid.addColumn(npc -> npc.getRace().getRaceName()).setHeader("Rasse");
-        npcGrid.addColumn(NPC::getDescription).setHeader("Beschreibung");
+        }).setHeader(res.getString("view.configurator.dialog.npc.select.grid.amount"));
+        npcGrid.addColumn(NPC::getNpcName).setHeader(res.getString("view.configurator.dialog.npc.select.grid.name"));
+        npcGrid.addColumn(npc -> npc.getRace().getRaceName()).setHeader(res.getString("view.configurator.dialog.npc.select.grid.race"));
+        npcGrid.addColumn(NPC::getDescription).setHeader(res.getString("view.configurator.dialog.npc.select.grid.description"));
 
         add(new VerticalLayout(title, headline, npcGrid, comfirmButton, cancelButton));
 
