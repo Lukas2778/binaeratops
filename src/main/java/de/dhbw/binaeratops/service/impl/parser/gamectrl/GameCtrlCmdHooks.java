@@ -128,8 +128,6 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
-            Room currentRoom = avatar.getCurrentRoom();
             return new UserMessage("view.game.ctrl.cmd.info.players", String.valueOf(dungeon.getCurrentUsers().size()),
                     getCurrentUsers(dungeon));
         } else {
@@ -514,6 +512,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Zum Inventar hinzufügen, da erlaubt
                         avatar.getCurrentRoom().getItems().remove(item);
                         avatar.getInventory().add(item);
+                        avatarRepo.save(avatar);
                         return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
                     } else {
                         // Inventar voll.
@@ -538,6 +537,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                 if (item.getItem().getItemName().toLowerCase() == AItem) {
                     avatar.removeInventoryItem(item);
                     avatar.getCurrentRoom().getItems().add(item);
+                    avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
                 }
             }
@@ -584,11 +584,13 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                                     // Ausrüsten
                                     avatar.getEquipment().remove(alreadyEquipped);
                                     avatar.getEquipment().add(item);
+                                    avatarRepo.save(avatar);
                                     return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
                             avatar.getEquipment().add(item);
+                            avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
                     } else {
@@ -613,6 +615,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                 if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
                     // Wenn Item in Equipment
                     avatar.getEquipment().remove(item);
+                    avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                 }
             }
