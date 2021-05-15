@@ -15,4 +15,8 @@ public class CmdScannerInsufficientPermissionException extends CmdScannerExcepti
         super(AInvalidCommand);
         um = new UserMessage("error.parser.cmd.scanner.insufficient.permission", AInvalidCommand);
     }
+
+    public UserMessage getUserMessage() {
+        return um;
+    }
 }

@@ -31,15 +31,13 @@ import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
+import de.dhbw.binaeratops.service.exceptions.parser.*;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
+import de.dhbw.binaeratops.view.TranslationProvider;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -71,6 +69,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
     Dialog myConfirmLeavingDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+    private TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> myMessages;
 
     H2 binTitle;
@@ -156,28 +155,42 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
             //Parser wird mit Texteingabe aufgerufen
             try {
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
-                if (um.getKey() != null) {
-                    switch (um.getKey()) {
-                        case "view.game.ingame.cmd.notify.all":
-                            myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
-                            break;
-                        case "view.game.cmd.help":
-                        case "view.game.cmd.help.cmds":
-                        case "view.game.cmd.help.all":
-                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-                            break;
-                        case "view.game.cmd.help.ctrl":
-                            myDungeonChatView.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
-                            break;
-                        default:
-                            Notification.show("An Error Occured.");
-                            break;
-                    }
-                }
+                String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
+                myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+//                if (um.getKey() != null) {
+//                    switch (um.getKey()) {
+//                        case "view.game.ingame.cmd.notify.all":
+//                            myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
+//                            break;
+//                        case "view.game.cmd.help":
+//                        case "view.game.cmd.help.cmds":
+//                        case "view.game.cmd.help.all":
+//                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
+//                            break;
+//                        case "view.game.cmd.help.ctrl":
+//                            myDungeonChatView.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
+//                            break;
+//                        default:
+//                            Notification.show("An Error Occured.");
+//                            break;
+//                    }
+//                }
+
+            } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
+                Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerInvalidItemTypeException invalidItemType) {
+                Notification.show(transProv.getUserMessage(invalidItemType.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
+            } catch (CmdScannerInvalidParameterException invalidParameter) {
+                Notification.show(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerSyntaxMissingException syntaxMissing) {
-                Notification.show(MessageFormat.format(res.getString(syntaxMissing.getUserMessage().getKey()), syntaxMissing.getUserMessage().getParams().get(0))).setPosition(Notification.Position.BOTTOM_CENTER);
+                Notification.show(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
-                Notification.show(MessageFormat.format(res.getString(syntaxUnexpected.getUserMessage().getKey()), syntaxUnexpected.getUserMessage().getParams().get(0), syntaxUnexpected.getUserMessage().getParams().get(1))).setPosition(Notification.Position.BOTTOM_CENTER);
+                Notification.show(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
             }

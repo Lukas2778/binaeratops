@@ -558,7 +558,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                     avatar.getInventory().remove(item);
                     avatarRepo.save(avatar);
                     userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
-                    return new UserMessage("view.game.ctrl.cmd.consume");
+                    return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
                 }
             }
             // Gegenstand wurde nicht gefunden.
