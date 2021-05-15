@@ -212,7 +212,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     }
 
 
-    private UserMessage scanShow1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanShow1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
             onMissingToken("<INVENTORY | INV | EQUIPMENT | EQUIP>");
@@ -233,7 +233,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     }
 
 
-    private UserMessage scanTake1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanTake1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
             onMissingToken("<ITEM>");
@@ -243,7 +243,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanDrop1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanDrop1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
             onMissingToken("<ITEM>");
