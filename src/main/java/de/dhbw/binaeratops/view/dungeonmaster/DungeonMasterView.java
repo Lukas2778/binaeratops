@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.dungeonmaster;
 
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -245,7 +246,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         splitMapAndRoomWithActions.addToSecondary(userGridAndButtLayoutH);
     }
 
-    private void addClickListeners(Button actionsButton, Button npcsButton, Button authorisationButton, Button pauseButton, Button leaveButton) {
+    private void addClickListeners(Button actionsButton, Button npcsButton, Button authorisationButton,
+                                   Button pauseButton, Button leaveButton) {
         actionsButton.addClickListener(e -> {
             Dialog actionDialog = new Dialog(new Text("Aktionen zur Auswahl"));
             actionDialog.open();
@@ -261,10 +263,20 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         pauseButton.addClickListener(e -> Notification.show("Not Implemented"));
         leaveButton.addClickListener(e -> {
             Dialog leaveDialog = new Dialog();
-            Text leaveOrNewDMText = new Text("Willst du den Dungeon wirklich verlassen? Willst du einen anderen DM auswählen?");
-            Button continueButton = new Button("Weiterspielen :)");
-            Button chooseDMButton = new Button("Neuen DM auswählen");
+            leaveDialog.setCloseOnEsc(false);
+            leaveDialog.setCloseOnOutsideClick(false);
+
+            H3 leaveHeadline=new H3("Dungeon verlassen");
+            String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +
+                    "Ernenne hier einen anderen Spieler zum Dungeon-Master (damit der Laden weiter läuft).<br>" +
+                    "ODER beende den Dungeon komplett.<br>-- Aber sei gewarnt: " +
+                    "Alle Spieler werden aus dem Dungeon gekickt (sende davor lieber eine Benachrichtigung!)</div>";
+
+            Button continueButton = new Button("Zurück");
+            Button chooseDMButton = new Button("Neuer Dungeon-Master");
+            chooseDMButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             Button leaveForSureButton = new Button("Verlassen");
+            leaveForSureButton.getStyle().set("color", "red");
 
             Grid<User> newDMGrid = new Grid<>(User.class);
             newDMGrid.removeAllColumns();
@@ -281,7 +293,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     leaveDialog.close();
                     UI.getCurrent().navigate("myDungeons");
                 } else {
-                    Notification.show("Bitte wähle einen neuen DM aus!");
+                    Notification.show("Bitte wähle einen neuen Dungeon-Master aus!");
                 }
             });
 
@@ -292,9 +304,14 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             });
 
             newDMGrid.setItems(dungeonServiceI.getCurrentUsers(dungeon));
+            newDMGrid.setVerticalScrollingEnabled(true);
+            //newDMGrid.setHeight(50,Unit.PERCENTAGE);
+            VerticalLayout myGridLayoutVert=new VerticalLayout(newDMGrid);
 
-            leaveDialog.add(leaveOrNewDMText, newDMGrid, new HorizontalLayout(continueButton, chooseDMButton, leaveForSureButton));
+            leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), myGridLayoutVert,
+                    new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
             leaveDialog.open();
+            leaveDialog.setHeight(75,Unit.PERCENTAGE);
         });
 
     }
@@ -436,7 +453,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         HorizontalLayout hl = new HorizontalLayout();
 
         roomNameTextField.setReadOnly(true);
+        roomNameTextField.setWidthFull();
         roomDescriptionTextArea.setReadOnly(true);
+        roomDescriptionTextArea.setWidthFull();
 
         itemInRoomGrid.removeAllColumns();
         itemInRoomGrid.addColumn(Item::getItemName).setHeader("Gegenstände");
