@@ -544,12 +544,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onEat(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
-    }
-
-    @Override
-    public UserMessage onDrink(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    public UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
         return null;
     }
 

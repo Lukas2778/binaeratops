@@ -157,24 +157,14 @@ public interface GameCtrlCmdHooksI {
     UserMessage onDrop(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
-     * Callback Befehl "eat".
+     * Callback Befehl "consume".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AItem Gegenstand, der gegessen werden soll.
+     * @param AItem Gegenstand, der konsumiert werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onEat(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
-
-    /**
-     * Callback Befehl "drink".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AItem Gegenstand, der getrunken werden soll.
-     * @return Benutzernachricht.
-     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
-     */
-    UserMessage onDrink(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
+    UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
 
     /**
      * Callback Befehl "equip".

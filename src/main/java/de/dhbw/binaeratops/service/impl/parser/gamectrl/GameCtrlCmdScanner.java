@@ -52,8 +52,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private static final String CMD_SHOW_EQUIPMENT_K = "EQ";
     private static final String CMD_TAKE = "TAKE";
     private static final String CMD_DROP = "DROP";
-    private static final String CMD_EAT = "EAT";
-    private static final String CMD_DRINK = "DRINK";
+    private static final String CMD_CONSUME = "CONSUME";
     private static final String CMD_EQUIP = "EQUIP";
     private static final String CMD_LAY_DOWN = "LAYDOWN";
     private static final String CMD_HEALTH = "HEALTH";
@@ -97,10 +96,8 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
                     return scanTake1(ADungeon, AAvatar, AUser);
                 case CMD_DROP:
                     return scanDrop1(ADungeon, AAvatar, AUser);
-                case CMD_EAT:
-                    return scanEat1(ADungeon, AAvatar, AUser);
-                case CMD_DRINK:
-                    return scanDrink1(ADungeon, AAvatar, AUser);
+                case CMD_CONSUME:
+                    return scanConsume1(ADungeon, AAvatar, AUser);
                 case CMD_EQUIP:
                     return scanEquip1(ADungeon, AAvatar, AUser);
                 case CMD_LAY_DOWN:
@@ -253,23 +250,13 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanEat1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanConsume1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
         String eatableItem = findRestOfInput();
         if (eatableItem == null) {
-            onMissingToken("<EATABLE_ITEM>");
+            onMissingToken("<CONSUMABLE_ITEM>");
             return null;
         } else {
-            return hooks.onEat(ADungeon, eatableItem.toUpperCase(), AAvatar, AUser);
-        }
-    }
-
-    private UserMessage scanDrink1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        String drinkableItem = findRestOfInput();
-        if (drinkableItem == null) {
-            onMissingToken("<DRINKABLE_ITEM>");
-            return null;
-        } else {
-            return hooks.onDrink(ADungeon, drinkableItem.toUpperCase(), AAvatar, AUser);
+            return hooks.onConsume(ADungeon, eatableItem, AAvatar, AUser);
         }
     }
 
@@ -279,7 +266,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
             onMissingToken("<EQUIPABLE_ITEM>");
             return null;
         } else {
-            return hooks.onEquip(ADungeon, AAvatar, AUser, equipableItem.toUpperCase());
+            return hooks.onEquip(ADungeon, AAvatar, AUser, equipableItem);
         }
     }
 
@@ -289,7 +276,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
             onMissingToken("<ITEM>");
             return null;
         } else {
-            return hooks.onLayDown(ADungeon, AAvatar, AUser, item.toUpperCase());
+            return hooks.onLayDown(ADungeon, AAvatar, AUser, item);
         }
     }
 
@@ -299,7 +286,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
             onMissingToken("<NPC_NAME>");
             return null;
         } else {
-            return scanTalk2(ADungeon, AAvatar, AUser, name.toUpperCase());
+            return scanTalk2(ADungeon, AAvatar, AUser, name);
         }
     }
 
