@@ -157,25 +157,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
                 myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
-//                if (um.getKey() != null) {
-//                    switch (um.getKey()) {
-//                        case "view.game.ingame.cmd.notify.all":
-//                            myDungeonChatView.messageList.add(new Paragraph(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0))));
-//                            break;
-//                        case "view.game.cmd.help":
-//                        case "view.game.cmd.help.cmds":
-//                        case "view.game.cmd.help.all":
-//                            myDungeonChatView.messageList.add(new Paragraph(new Html(MessageFormat.format(res.getString(um.getKey()), um.getParams().get(0)))));
-//                            break;
-//                        case "view.game.cmd.help.ctrl":
-//                            myDungeonChatView.messageList.add(new Paragraph(new Html(res.getString(um.getKey()))));
-//                            break;
-//                        default:
-//                            Notification.show("An Error Occured.");
-//                            break;
-//                    }
-//                }
-
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
                 Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
