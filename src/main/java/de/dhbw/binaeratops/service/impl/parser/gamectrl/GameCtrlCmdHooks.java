@@ -609,8 +609,14 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onGetHealth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onGetHealth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            return new UserMessage("view.game.ctrl.cmd.health" /* TODO , avatar.getLifePoints() */);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("HEALTH");
+        }
     }
 
     @Override
