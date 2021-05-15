@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 
+import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
@@ -18,6 +19,7 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
 
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
+
+    @Autowired
+    UnicastProcessor<UserAction> userActionPublisher;
 
     @Override
     public UserMessage onWhereAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
@@ -544,8 +549,23 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            for (ItemInstance item : avatar.getInventory()) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                    avatar.getInventory().remove(item);
+                    avatarRepo.save(avatar);
+                    userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
+                    return new UserMessage("view.game.ctrl.cmd.consume");
+                }
+            }
+            // Gegenstand wurde nicht gefunden.
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("CONSUME");
+        }
     }
 
     @Override

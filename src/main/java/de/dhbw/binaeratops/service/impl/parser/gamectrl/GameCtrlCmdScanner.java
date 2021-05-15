@@ -250,7 +250,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanConsume1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanConsume1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String eatableItem = findRestOfInput();
         if (eatableItem == null) {
             onMissingToken("<CONSUMABLE_ITEM>");
