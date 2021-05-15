@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.chat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +21,13 @@ public class ChatMessage {
     public ChatMessage(String message, List<Long> AUserIdList) {
         this.message = message;
         this.userIdList = AUserIdList;
+    }
+
+    public ChatMessage(String message, Long AUserId) {
+        this.message = message;
+        List<Long> list = new ArrayList<Long>();
+        list.add(AUserId);
+        this.userIdList = list;
     }
 
     /**

@@ -74,6 +74,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private TranslationProvider transProv = new TranslationProvider();
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
+    private final UnicastProcessor<ChatMessage> messagesPublisher;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -92,7 +93,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction) {
+                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
+                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -101,6 +103,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.myParserService = AParserService;
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
+        this.messagesPublisher = AMessagePublisher;
         setId("SomeView");
 
         userActionsIncoming();
