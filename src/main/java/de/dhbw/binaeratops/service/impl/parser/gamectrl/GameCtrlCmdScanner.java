@@ -273,7 +273,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanEquip1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanEquip1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String equipableItem = findRestOfInput();
         if (equipableItem == null) {
             onMissingToken("<EQUIPABLE_ITEM>");
@@ -283,7 +283,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanLayDown1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    private UserMessage scanLayDown1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
             onMissingToken("<ITEM>");
