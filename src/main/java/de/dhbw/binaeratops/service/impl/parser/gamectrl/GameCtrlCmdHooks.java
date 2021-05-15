@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.UnicastProcessor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -558,7 +557,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                     avatar.getInventory().remove(item);
                     avatarRepo.save(avatar);
                     userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
-                    return new UserMessage("view.game.ctrl.cmd.consume");
+                    return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
                 }
             }
             // Gegenstand wurde nicht gefunden.
@@ -643,10 +642,10 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     private String getCurrentUsers(Dungeon ADungeon) {
-        List<Avatar> avatars = new ArrayList<>(); // TODO Produktiv-Liste einsetzen...
+        List<User> avatars = ADungeon.getCurrentUsers();//new ArrayList<>(); // TODO Produktiv-Liste einsetzen...
         StringBuilder s = new StringBuilder();
         s.append("<ol>");
-        for (Avatar tempAvatar : avatars) {
+        for (User tempAvatar : avatars) {
             s.append("<li>").append(tempAvatar.getName()).append("</li>");
         }
         s.append("</ol>");

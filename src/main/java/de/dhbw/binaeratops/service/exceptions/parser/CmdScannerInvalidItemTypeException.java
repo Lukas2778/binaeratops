@@ -15,4 +15,8 @@ public class CmdScannerInvalidItemTypeException extends CmdScannerException {
         super(AInvalidCommand);
         um = new UserMessage("error.parser.cmd.scanner.cmd.equip", AInvalidCommand, AActualType);
     }
+
+    public UserMessage getUserMessage() {
+        return um;
+    }
 }

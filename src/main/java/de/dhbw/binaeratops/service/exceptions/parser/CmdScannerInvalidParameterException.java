@@ -15,4 +15,8 @@ public class CmdScannerInvalidParameterException extends CmdScannerException {
         super(AInvalidCommand);
         um = new UserMessage("error.parser.cmd.scanner.cmd.examine", AInvalidCommand);
     }
+
+    public UserMessage getUserMessage() {
+        return um;
+    }
 }
