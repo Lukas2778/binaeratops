@@ -25,17 +25,20 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
+import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
+import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +53,7 @@ import java.util.Set;
 /**
  * Oberfläche des Tabs 'Über uns'
  */
-@Route(value = "gameView")
+//@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
 @PageTitle("Dungeon - Spiel")
 public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
@@ -60,7 +63,9 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     DungeonRepositoryI myDungeonRepo;
     ConfiguratorServiceI myConfiguratorService;
     DungeonServiceI myDungeonService;
+    GameServiceI myGameService;
 
+    User currentUser;
     Long dungeonId;
     Dungeon myDungeon;
     Image[][] myTiles;
@@ -109,14 +114,17 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
-                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired ConfiguratorServiceI AConfiguratorService, @Autowired DungeonServiceI ADungeonService) {
+                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired ConfiguratorServiceI AConfiguratorService,
+                    @Autowired DungeonServiceI ADungeonService, @Autowired GameServiceI AGameService) {
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;//@TODO remove
         myDungeonRepo = ADungeonRepo;
         myConfiguratorService=AConfiguratorService;
         myDungeonService=ADungeonService;
+        myGameService=AGameService;
 
+        currentUser=VaadinSession.getCurrent().getAttribute(User.class);
 
         myMessages = messages;
         binTitle = new H2("Du bist in der Spieloberfläche!");
@@ -147,7 +155,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         confirmButt.addClickListener(e -> {
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, VaadinSession.getCurrent().getAttribute(User.class));
+                UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 if (um.getKey() != null) {
                     switch (um.getKey()) {
                         case "view.game.ingame.cmd.notify.all":
@@ -248,18 +256,29 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         Header header = new Header(title);
 
         avatarList = new ArrayList<>();
-        User user = VaadinSession.getCurrent().getAttribute(User.class);
-        avatarList.addAll(user.getAvatars());
+        avatarList.addAll(currentUser.getAvatars());
 
         avatarGrid = new Grid<>();
         avatarGrid.setItems(avatarList);
         avatarGrid.setVerticalScrollingEnabled(true);
         avatarGrid.addColumn(Avatar::getName).setHeader("Avatarname");
-        avatarGrid.addColumn(Avatar::getRace).setHeader("Rasse");
-        avatarGrid.addColumn(Avatar::getRole).setHeader("Rolle");
-        avatarGrid.addColumn(Avatar::getCurrentRoom).setHeader("letzter Raum");
+        avatarGrid.addColumn(avatar -> {
+            if(avatar.getRace()!=null)
+                return avatar.getRace().getRaceName();
+            return null;
+        }).setHeader("Rasse");
+        avatarGrid.addColumn(avatar -> {
+            if(avatar.getRole()!=null)
+                return avatar.getRole().getRoleName();
+            return null;
+        }).setHeader("Rolle");
+        avatarGrid.addColumn(avatar -> {
+            if(avatar.getCurrentRoom()!=null)
+                return avatar.getCurrentRoom().getRoomName();
+            return null;
+        }).setHeader("letzter Raum");
         //avatarGrid.setSizeFull();
-        expand(avatarGrid);
+        //expand(avatarGrid);
         gridLayoutVert.add(avatarGrid);
 
         // Footer
@@ -340,13 +359,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         Button createAvatarButt=new Button("Speichern");
         createAvatarButt.addClickListener(e->{
            //Neuen Avatar speichern
-            Avatar myAvatar =new Avatar();
-            myAvatar.setUser(VaadinSession.getCurrent().getAttribute(User.class));
-            myAvatar.setName(avatarNameFiled.getValue());
-            myAvatar.setRole(avatarRoleField.getValue());
-            myAvatar.setRace(avatarRaceField.getValue());
-            myDungeon.addAvatar(myAvatar);
-            myCreateAvatarDialog.close();
+            myGameService.createNewAvatar(myDungeon,currentUser, myDungeon.getStartRoomId() ,avatarNameFiled.getValue(),
+                    avatarGenderField.getValue(),avatarRoleField.getValue(),avatarRaceField.getValue());
         });
         createAvatarButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createAvatarButt.focus();
@@ -399,8 +413,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         inventoryGrid.setItems(inventoryList);
         inventoryGrid.setVerticalScrollingEnabled(true);
         inventoryGrid.addColumn(Item::getItemName).setHeader("Item");
-        inventoryGrid.addColumn(Item::getType).setHeader("Typ");
-        inventoryGrid.addColumn(Item::getSize).setHeader("Größe");
+        inventoryGrid.addColumn(item -> item.getType().toString()).setHeader("Typ");
+        inventoryGrid.addColumn(item -> item.getSize().toString()).setHeader("Größe");
         inventoryGrid.getStyle().set("background", "grey");
         inventoryGrid.setSizeFull();
         inventoryLayout.add(inventoryTitle, inventoryGrid);
@@ -412,8 +426,16 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         armorGrid.setItems(armorList);
         armorGrid.setVerticalScrollingEnabled(true);
         armorGrid.addColumn(Item::getItemName).setHeader("Item");
-        armorGrid.addColumn(Item::getType).setHeader("Typ");
-        armorGrid.addColumn(Item::getSize).setHeader("Größe");
+        armorGrid.addColumn(item -> {
+            if (item.getType()!=null)
+                return item.getType().toString();
+            return null;
+        }).setHeader("Typ");
+        armorGrid.addColumn(item -> {
+            if(item.getSize()!=null)
+                return item.getSize().toString();
+            return null;
+        }).setHeader("Größe");
         armorGrid.getStyle().set("background", "grey");
         armorGrid.setSizeFull();
         armorLayout.add(armorTitle, armorGrid);
