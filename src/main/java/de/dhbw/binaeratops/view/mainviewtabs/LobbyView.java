@@ -73,10 +73,10 @@ public class LobbyView extends VerticalLayout {
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
-            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
-                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
-                dungeonServiceI.saveDungeon(ADungeon);
-            }
+//            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+//                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
+//                dungeonServiceI.saveDungeon(ADungeon);
+//            }
             UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
         });
 
