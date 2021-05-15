@@ -40,6 +40,7 @@ import reactor.core.publisher.UnicastProcessor;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 /**
@@ -53,6 +54,9 @@ import java.util.ResourceBundle;
 @Push
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
     Image[][] tiles;
+
+    HashMap<Avatar,Button> notificationButtons=new HashMap<>();
+    HashMap<Avatar,UserAction> actionMap= new HashMap<>();
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
@@ -105,7 +109,15 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     private void userActionsIncoming(){
         userAction.subscribe(action -> getUI().ifPresent(ui-> ui.access(()->{
-                Notification.show(action.getUserActionMessage(),5000, Notification.Position.TOP_END);
+            if(action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                if(action.getActionType().equals("UPDATE")){
+                    //TODO update der view
+                    return;
+                }
+                Notification.show( "Message:"+ action.getUserActionMessage() +" Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
+                notificationButtons.get(action.getUser()).getStyle().set("background","red");
+                actionMap.put(action.getUser(),action);
+            }
         })));
     }
 
@@ -296,7 +308,46 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             Button requestsButton = new Button("Beantworten");
 
             Dialog requestDialog = new Dialog(new Label("Informationen zur Anfrage von: " + avatar.getName()));
-            requestsButton.addClickListener(e -> requestDialog.open());
+            requestsButton.addClickListener(e -> {
+                if(actionMap.containsKey(avatar)){
+                    UserAction myUserAction=actionMap.get(avatar);
+                    switch (myUserAction.getActionType()) {
+                        case "CONSUME":
+                            Dialog consumedialog = new Dialog();
+                            TextArea consumeActionText = new TextArea();
+                            Label consumeUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button consumeSendActionButton = new Button("Test",evfds ->{
+                                messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
+                                consumedialog.close();
+                            } );
+                            consumedialog.add(new VerticalLayout(consumeUserActionText, consumeActionText, consumeSendActionButton));
+                            consumedialog.open();
+                            break;
+                        case "TALK":
+                            Dialog talkDialog = new Dialog();
+                            TextArea talkActionText = new TextArea();
+                            Label talkUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button talkSendActionButton = new Button("Test",evfds ->{
+                                messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
+                                talkDialog.close();
+                            } );
+                            talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
+                            talkDialog.open();
+                            break;
+                        case"ATTACK":
+                            Dialog attackdialog = new Dialog();
+                            TextArea attackActionText = new TextArea();
+                            Label attackUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button attackSendActionButton = new Button("Test",evfds ->{
+                                messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
+                                attackdialog.close();
+                            } );
+                            attackdialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
+                            attackdialog.open();
+                            break;
+                    }
+                }
+            });
             return requestsButton;
         }).setHeader("Anfragen");
         grid.addComponentColumn(avatar -> {
