@@ -11,6 +11,7 @@ import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInsufficientPermissionException;
+import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInvalidParameterException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -424,8 +425,41 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onExamine(DungeonI ADungeon, String AItemOrNpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        return null;
+    public UserMessage onExamineNpc(DungeonI ADungeon, String AName, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            List<NPC> npcs = avatar.getCurrentRoom().getNpcs();
+            for (NPC npc : npcs) {
+                if (npc.getNpcName().toLowerCase() == AName.toLowerCase()) {
+                    return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpcName(), npc.getDescription());
+                }
+            }
+            // Wurde nicht gefunden in der Liste
+            throw new CmdScannerInvalidParameterException(AName);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("EXAMINE NPC");
+        }
+    }
+
+    @Override
+    public UserMessage onExamineItem(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            List<ItemInstance> items = avatar.getCurrentRoom().getItems();
+            for (ItemInstance item : items) {
+                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                    return new UserMessage("view.game.ctrl.cmd.examine.item", item.getItem().getItemName(), item.getItem().getDescription());
+                }
+            }
+            // Wurde nicht gefunden in der Liste
+            throw new CmdScannerInvalidParameterException(AItem);
+        } else {
+            throw new CmdScannerInsufficientPermissionException("EXAMINE ITEM");
+        }
     }
 
     @Override

@@ -43,6 +43,8 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private static final String CMD_WHOAMI = "WHOAMI";
     private static final String CMD_WHEREAMI = "WHEREAMI";
     private static final String CMD_EXAMINE = "EXAMINE";
+    private static final String CMD_EXAMINE_NPC = "NPC";
+    private static final String CMD_EXAMINE_ITEM = "ITEM";
     private static final String CMD_SHOW = "SHOW";
     private static final String CMD_SHOW_INVENTORY = "INVENTORY";
     private static final String CMD_SHOW_INVENTORY_K = "INV";
@@ -177,13 +179,35 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanExamine1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
-        String name = findRestOfInput();
-        if (name == null) {
-            onMissingToken("<NPC_NAME> | <ITEM_NAME>");
+    private UserMessage scanExamine1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        String token = findNextToken();
+        if (token == null) {
+            onMissingToken("<NPC> | <ITEM>");
             return null;
         } else {
-            return hooks.onExamine(ADungeon, name.toUpperCase(), AAvatar, AUser);
+            switch (token.toUpperCase()) {
+                case CMD_EXAMINE_NPC:
+                    return scanExamine2(ADungeon, AAvatar, AUser, true);
+                case CMD_EXAMINE_ITEM:
+                    return scanExamine2(ADungeon, AAvatar, AUser, false);
+                default:
+                    onUnexpectedToken();
+                    return null;
+            }
+        }
+    }
+
+    private UserMessage scanExamine2(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, boolean ANpcOrItem) throws CmdScannerException, InvalidImplementationException {
+        String name = findRestOfInput();
+        if (name == null) {
+            onMissingToken("<NAME>");
+            return null;
+        } else {
+            if (ANpcOrItem) {
+                return hooks.onExamineNpc(ADungeon, name, AAvatar, AUser);
+            } else {
+                return hooks.onExamineItem(ADungeon, name, AAvatar, AUser);
+            }
         }
     }
 
