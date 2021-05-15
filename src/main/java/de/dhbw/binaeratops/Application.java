@@ -2,6 +2,7 @@ package de.dhbw.binaeratops;
 
 import com.vaadin.flow.server.PWA;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
+import de.dhbw.binaeratops.model.streammessages.UserAction;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
