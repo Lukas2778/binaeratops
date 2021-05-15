@@ -13,10 +13,9 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.RouterLayout;
+import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.InitialPageSettings;
+import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
@@ -54,7 +53,6 @@ import java.util.ResourceBundle;
 @Push
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
     Image[][] tiles;
-    MapView mapView;
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
@@ -124,7 +122,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     void createLayoutBasic() {
-        mapView = new MapView();
         setSizeFull();
         game();
 
@@ -337,7 +334,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         int minX = mapServiceI.getMinXY(ADungeonId).getKey();
         int minY = mapServiceI.getMinXY(ADungeonId).getValue();
 
-        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId);
+        Tile[][] newTiles = mapServiceI.getMapGame(ADungeonId, false);
         tiles = new Image[newTiles.length][newTiles[0].length];
         VerticalLayout columns = new VerticalLayout();
         columns.setSpacing(false);

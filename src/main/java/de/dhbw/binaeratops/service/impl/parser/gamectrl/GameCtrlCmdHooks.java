@@ -434,10 +434,10 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            List<NPC> npcs = avatar.getCurrentRoom().getNpcs();
-            for (NPC npc : npcs) {
-                if (npc.getNpcName().toLowerCase() == AName.toLowerCase()) {
-                    return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpcName(), npc.getDescription());
+            List<NpcInstance> npcs = avatar.getCurrentRoom().getNpcs();
+            for (NpcInstance npc : npcs) {
+                if (npc.getNpc().getNpcName().toLowerCase() == AName.toLowerCase()) {
+                    return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpc().getNpcName(), npc.getNpc().getDescription());
                 }
             }
             // Wurde nicht gefunden in der Liste
@@ -632,8 +632,8 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
 
     private String getNpcs(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
-        for (NPC npc : AAvatar.getCurrentRoom().getNpcs()) {
-            s.append(npc.getNpcName());
+        for (NpcInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
+            s.append(npc.getNpc().getNpcName());
         }
         return s.toString();
     }
