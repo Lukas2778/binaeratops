@@ -27,14 +27,22 @@ import com.vaadin.flow.router.PageTitle;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.util.ResourceBundle;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
+/**
+ * Tab-Oberfläche für die Komponente "Dungeon" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der Dungeoneigenschaften bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
+ */
 @PageTitle("Dungeon-Konfiguration")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
-
 public class DungeonConfigurationTab extends VerticalLayout {
 
     private final ResourceBundle res = ResourceBundle.getBundle("language");

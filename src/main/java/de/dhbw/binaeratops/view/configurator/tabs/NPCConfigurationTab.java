@@ -16,6 +16,15 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NPCDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Tab-Oberfläche für die Komponente "NPC" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der NPCs bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurationTab extends VerticalLayout {

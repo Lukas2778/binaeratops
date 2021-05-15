@@ -16,7 +16,6 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -34,9 +33,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 
+/**
+ * Tab-Oberfläche für die Komponente "Charaktereigenschaften" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der Charaktereigenschaften bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
+ */
 @PageTitle("Charaktereigenschaft")
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
-
 public class CharacterConfigurationTab extends VerticalLayout {
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout roleListLayout = new VerticalLayout();

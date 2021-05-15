@@ -1,4 +1,5 @@
 package de.dhbw.binaeratops.view.chat;
+
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
@@ -8,7 +9,13 @@ import reactor.core.publisher.Flux;
 
 
 /**
- * Chatoberfläche der die Nachrichten für den Benutzer anzeigt.
+ * Oberfläche für die Komponente "Chat".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für den Chat bereit.
+ * <p>
+ * Damit können hier alle Chat-Nachrichten in einer eigenen View dargestellt werden.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
 public class ChatView extends VerticalLayout {
     {
@@ -20,6 +27,7 @@ public class ChatView extends VerticalLayout {
 
     /**
      * Konstruktor des Chats.
+     *
      * @param AMessage Subscriber der die neuen Nachrichten von der Logik holt.
      */
     public ChatView(Flux<ChatMessage> AMessage) {

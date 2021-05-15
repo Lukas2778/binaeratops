@@ -13,12 +13,20 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.ArrayList;
+
+/**
+ * Dialog-Oberfläche für die Komponente "Rolle hinzufügen" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Konfiguration einer Rolle bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class RoleDialog
         extends Dialog
 {

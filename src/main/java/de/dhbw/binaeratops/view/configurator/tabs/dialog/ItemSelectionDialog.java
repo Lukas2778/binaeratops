@@ -18,8 +18,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.UnaryOperator;
 
+/**
+ * Dialog-Oberfläche für die Komponente "Item Auswahl" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Hinzufügen eines Gegenstandes zu einem Raum bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class ItemSelectionDialog extends Dialog {
 
     public boolean dialogResult = false;
