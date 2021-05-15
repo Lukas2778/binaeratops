@@ -6,6 +6,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -28,6 +29,8 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
@@ -42,6 +45,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Oberfläche des Tabs 'Über uns'
@@ -54,11 +58,14 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
     MapServiceI mapServiceI;
     RoomRepositoryI myRoomRepo;//@TODO nur zu Testzwecken, dann entfernen
     DungeonRepositoryI myDungeonRepo;
+    ConfiguratorServiceI myConfiguratorService;
+    DungeonServiceI myDungeonService;
 
     Long dungeonId;
     Dungeon myDungeon;
     Image[][] myTiles;
     Dialog myAvatarDialog;
+    Dialog myCreateAvatarDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private final Flux<ChatMessage> myMessages;
@@ -102,11 +109,14 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
-                    @Autowired DungeonRepositoryI ADungeonRepo) {
+                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired ConfiguratorServiceI AConfiguratorService, @Autowired DungeonServiceI ADungeonService) {
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;//@TODO remove
         myDungeonRepo = ADungeonRepo;
+        myConfiguratorService=AConfiguratorService;
+        myDungeonService=ADungeonService;
+
 
         myMessages = messages;
         binTitle = new H2("Du bist in der Spieloberfläche!");
@@ -124,6 +134,9 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         gridLayoutVert = new VerticalLayout();
         leftDungeonButt = new Button("Dungeon verlassen");
         leftDungeonButt.getStyle().set("color", "red");
+        leftDungeonButt.addClickListener(e->{
+           UI.getCurrent().navigate("lobby");
+        });
 
         textField = new TextField();
         textField.focus();
@@ -256,19 +269,24 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         });
         cancel.getStyle().set("color", "red");
 
-        Button createAvatar = new Button("Neuer Avatar", e -> myAvatarDialog.close());
+        Button createAvatar = new Button("Neuer Avatar", e -> {
+            createNewAvatarDialog();
+        });
         createAvatar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createAvatar.focus();
 
         Button enterDungeon = new Button("Eintreten", e -> {
-            //Dungeon betreten
-            myAvatarDialog.close();
-            Avatar test = new Avatar();//@TODO remove
-            loadAvatarProgress(test);
-            createMap();
-            changeRoom(currentRoom.getRoomId());
+            Set selectedAvatar=avatarGrid.getSelectedItems();
+            if(selectedAvatar.size()>0) {
+                //Dungeon betreten
+                myAvatarDialog.close();
+                loadAvatarProgress(myDungeon.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId()));
+                createMap();
+                changeRoom(currentRoom.getRoomId());
+            }
         });
-        createAvatar.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        enterDungeon.addClickShortcut(Key.ENTER);
+        enterDungeon.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         buttLayout.add(cancel, createAvatar, enterDungeon);
         buttLayout.setWidthFull();
@@ -277,6 +295,59 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long> {
         myAvatarDialog.add(header, gridLayoutVert, buttLayout);
         myAvatarDialog.setHeight("70%");
         myAvatarDialog.setWidth("50%");
+    }
+
+    void createNewAvatarDialog(){
+        VerticalLayout contentLayout;
+        HorizontalLayout buttCreateLayout;
+        H2 title;
+
+        myCreateAvatarDialog=new Dialog();
+        myCreateAvatarDialog.open();
+
+        myCreateAvatarDialog.setCloseOnEsc(false);
+        myCreateAvatarDialog.setCloseOnOutsideClick(false);
+
+        contentLayout=new VerticalLayout();
+        buttCreateLayout=new HorizontalLayout();
+
+        // Header
+        title = new H2("Avatar erstellen");
+        Header header =new Header(title);
+        Text description= new Text("Konfiguriere dir hier deinen Avatar, mit dem du den Dungeon bestreiten willst.");
+
+        // Avatar Felder
+        TextField avatarNameFiled = new TextField("Avatarname");
+
+        //myConfiguratorService.setDungeon(myDungeon.getDungeonId());
+        List<Role> avatarRoleList = myDungeon.getRoles();
+        ComboBox<Role> avatarRoleField = new ComboBox("Rolle");
+        avatarRoleField.setItems(avatarRoleList);
+
+        List<Race> avatarRaceList=myDungeon.getRaces();
+        ComboBox<Race> avatarRaceField = new ComboBox("Rasse");
+        avatarRaceField.setItems(avatarRaceList);
+
+        Button cancelButt =new Button("Abbrechen", e->myCreateAvatarDialog.close());
+        cancelButt.getStyle().set("color", "red");
+        Button createAvatarButt=new Button("Speichern");
+        createAvatarButt.addClickListener(e->{
+           //Neuen Avatar speichern
+            Avatar myAvatar =new Avatar();
+            myAvatar.setUser(VaadinSession.getCurrent().getAttribute(User.class));
+            myAvatar.setName(avatarNameFiled.getValue());
+            myAvatar.setRole(avatarRoleField.getValue());
+            myAvatar.setRace(avatarRaceField.getValue());
+            myDungeon.addAvatar(myAvatar);
+            myCreateAvatarDialog.close();
+        });
+        createAvatarButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        createAvatarButt.focus();
+        createAvatarButt.addClickShortcut(Key.ENTER);
+
+        contentLayout.add(header, description, avatarNameFiled, avatarRoleField, avatarRaceField);
+        buttCreateLayout.add(cancelButt, createAvatarButt);
+        myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
 
     void loadAvatarProgress(Avatar AAvatar) {
