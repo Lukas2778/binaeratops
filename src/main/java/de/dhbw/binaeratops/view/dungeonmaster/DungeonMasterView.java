@@ -17,6 +17,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -35,6 +36,7 @@ import de.dhbw.binaeratops.view.map.MapView;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -69,6 +71,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private Flux<ChatMessage> messages;
     private ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+    private final UnicastProcessor<UserAction> userActionsPublisher;
+    private final Flux<UserAction> userAction;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -88,14 +92,24 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService) {
+                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
         this.dungeonRepositoryI = dungeonRepositoryI;
         this.messages = messages;
         this.myParserService = AParserService;
+        this.userActionsPublisher = userActionsPublisher;
+        this.userAction = userAction;
         setId("SomeView");
+
+        userActionsIncoming();
+    }
+
+    private void userActionsIncoming(){
+        userAction.subscribe(action -> getUI().ifPresent(ui-> ui.access(()->{
+                Notification.show(action.getUserActionMessage(),5000, Notification.Position.TOP_END);
+        })));
     }
 
     @Override
@@ -200,6 +214,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Button authorisationButton = new Button("Spielberechtigungen");
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
+        Button testActionsButton = new Button("Test Aktion");
+        testActionsButton.addClickListener(e -> {
+            //TODO Dies ist nur zum Testen
+            userActionsPublisher.onNext(new UserAction( "Nico trys to hit Timon."));
+        });
         leaveButton.addClickListener(e -> {
             dungeonServiceI.deactivateDungeon(dungeonId);
             UI.getCurrent().navigate("myDungeons");
@@ -209,7 +228,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         HorizontalLayout leaveAndPause=new HorizontalLayout();
         leaveAndPause.add(pauseButton,leaveButton);
         //leaveAndPause.
-        vl.add(actionsButton,  authorisationButton, leaveAndPause);
+        vl.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
         //vl.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
         hl.add(grid, vl);
         splitMapAndRoomWithActions.addToSecondary(hl);
