@@ -59,6 +59,7 @@ public class User implements UserI {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
+
     /**
      * Konstruktor zum Erzeugen eines Benutzers mit allen Eigenschaften.
      *
@@ -186,6 +187,9 @@ public class User implements UserI {
         myDungeons.remove(ADungeon);
         ADungeon.setUser(null);
     }
+
+
+   
 
     @Override
     public boolean equals(Object AOther) {
