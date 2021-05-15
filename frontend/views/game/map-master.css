@@ -23,4 +23,8 @@ cursor: pointer;
     width: 100%;
 }
 
-
+.button-layout{
+width: 200px;
+padding: 0px;
+margin: 0px;
+}

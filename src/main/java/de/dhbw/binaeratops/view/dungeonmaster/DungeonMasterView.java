@@ -53,14 +53,14 @@ import java.util.ResourceBundle;
 public class DungeonMasterView extends Div implements HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
     Image[][] tiles;
 
-    HashMap<Avatar,Button> notificationButtons=new HashMap<>();
-    HashMap<Avatar,UserAction> actionMap= new HashMap<>();
+    HashMap<Avatar, Button> notificationButtons = new HashMap<>();
+    HashMap<Avatar, UserAction> actionMap = new HashMap<>();
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
     private final SplitLayout splitMapWithRoom = new SplitLayout();
 
-    private final Grid<Avatar> grid = new Grid<>(Avatar.class);
+    private final Grid<Avatar> userGrid = new Grid<>(Avatar.class);
 
     private final GameService gameService;
 
@@ -109,16 +109,16 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         userActionsIncoming();
     }
 
-    private void userActionsIncoming(){
-        userAction.subscribe(action -> getUI().ifPresent(ui-> ui.access(()->{
-            if(action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                if(action.getActionType().equals("UPDATE")){
+    private void userActionsIncoming() {
+        userAction.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
+            if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                if (action.getActionType().equals("UPDATE")) {
                     //TODO update der view
                     return;
                 }
-                Notification.show( "Message:"+ action.getUserActionMessage() +" Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
-                notificationButtons.get(action.getUser()).getStyle().set("background","red");
-                actionMap.put(action.getUser(),action);
+                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
+                notificationButtons.get(action.getUser()).getStyle().set("background", "red");
+                actionMap.put(action.getUser(), action);
             }
         })));
     }
@@ -141,14 +141,17 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         splitChatWithRest.setSizeFull();
         splitChatWithRest.addToPrimary(gameLayout);
+        splitChatWithRest.setPrimaryStyle("width", "45%");
         splitChatWithRest.addToSecondary(splitMapAndRoomWithActions);
 
         splitMapAndRoomWithActions.setSizeFull();
         splitMapAndRoomWithActions.setOrientation(SplitLayout.Orientation.VERTICAL);
         splitMapAndRoomWithActions.addToPrimary(splitMapWithRoom);
+        splitMapAndRoomWithActions.setSecondaryStyle("height", "700px");
         createLayoutAction();
 
         splitMapWithRoom.setSizeFull();
+        splitMapWithRoom.setOrientation(SplitLayout.Orientation.HORIZONTAL);
         splitMapWithRoom.addToPrimary(initMap(dungeon.getDungeonId()));
 
         add(splitChatWithRest);
@@ -162,8 +165,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         myDungeonChatView = new ChatView(messages);
 
         textField = new TextField();
+        textField.setWidthFull();
         textField.focus();
+
         confirmButt = new Button("Eingabe");
+        confirmButt.setWidth("120px");
         confirmButt.addClickShortcut(Key.ENTER);
         AvatarI myAvatar = new Avatar();
         myAvatar.setUser(VaadinSession.getCurrent().getAttribute(User.class)); // Sonst Fehler in Parser
@@ -196,9 +202,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         });
         insertInputLayout = new HorizontalLayout();
         insertInputLayout.add(textField, confirmButt);
+        insertInputLayout.setWidthFull();
 
-        gameLayout.setSizeFull();
         gameLayout.add(html, myDungeonChatView, insertInputLayout);
+        gameLayout.setSizeFull();
         gameLayout.expand(myDungeonChatView);
     }
 
@@ -207,28 +214,35 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         createAvatarGrid();
         createCurrentRoom();
 
-        HorizontalLayout hl = new HorizontalLayout();
-        hl.setSizeFull();
-        VerticalLayout vl = new VerticalLayout();
-        vl.setSizeFull();
+        HorizontalLayout userGridAndButtLayoutH = new HorizontalLayout();
+        VerticalLayout buttLayoutV = new VerticalLayout();
+        VerticalLayout userGridLayoutV = new VerticalLayout();
+        buttLayoutV.getStyle().set("width", "200px");
+        buttLayoutV.setClassName("button-layout");
+
+        userGridAndButtLayoutH.setSizeFull();
+        //buttLayoutV.setSizeFull();
         Button actionsButton = new Button("Aktionen");
         Button npcsButton = new Button("NPCs");
         Button authorisationButton = new Button("Spielberechtigungen");
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
+        leaveButton.getStyle().set("color", "red");
         Button testActionsButton = new Button("Test Aktion");
         testActionsButton.addClickListener(e -> {
             //TODO Dies ist nur zum Testen
-            userActionsPublisher.onNext(new UserAction( "Nico trys to hit Timon."));
+            userActionsPublisher.onNext(new UserAction("Nico trys to hit Timon."));
         });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
-        HorizontalLayout leaveAndPause=new HorizontalLayout();
-        leaveAndPause.add(pauseButton,leaveButton);
-        //leaveAndPause.
-        vl.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
-        //vl.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
-        hl.add(grid, vl);
-        splitMapAndRoomWithActions.addToSecondary(hl);
+        VerticalLayout leaveAndPause = new VerticalLayout();
+        leaveAndPause.add(pauseButton, leaveButton);
+        buttLayoutV.add(leaveAndPause);
+        //buttLayoutV.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
+        //buttLayoutV.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
+        userGridLayoutV.add(userGrid);
+        userGridAndButtLayoutH.add(userGridLayoutV, buttLayoutV);
+        userGridAndButtLayoutH.setSpacing(true);
+        splitMapAndRoomWithActions.addToSecondary(userGridAndButtLayoutH);
     }
 
     private void addClickListeners(Button actionsButton, Button npcsButton, Button authorisationButton, Button pauseButton, Button leaveButton) {
@@ -286,56 +300,56 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     private void createAvatarGrid() {
-        grid.setSizeFull();
-        grid.removeAllColumns();
+        userGrid.setSizeFull();
+        userGrid.removeAllColumns();
 
-        grid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
+        userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
 
-        grid.addColumn(Avatar::getName)
+        userGrid.addColumn(Avatar::getName)
                 .setComparator((avater1, avatar2) -> avater1.getName()
                         .compareToIgnoreCase(avatar2.getName()))
                 .setHeader("Name");
-        grid.addColumn(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName())
+        userGrid.addColumn(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName())
                 .setComparator(Comparator.comparing(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName()))
                 .setHeader("Raum");
-        grid.addComponentColumn(avatar -> {
+        userGrid.addComponentColumn(avatar -> {
             Button requestsButton = new Button("Beantworten");
 
             Dialog requestDialog = new Dialog(new Label("Informationen zur Anfrage von: " + avatar.getName()));
             requestsButton.addClickListener(e -> {
-                if(actionMap.containsKey(avatar)){
-                    UserAction myUserAction=actionMap.get(avatar);
+                if (actionMap.containsKey(avatar)) {
+                    UserAction myUserAction = actionMap.get(avatar);
                     switch (myUserAction.getActionType()) {
                         case "CONSUME":
                             Dialog consumedialog = new Dialog();
                             TextArea consumeActionText = new TextArea();
-                            Label consumeUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
-                            Button consumeSendActionButton = new Button("Test",evfds ->{
+                            Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button consumeSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
                                 consumedialog.close();
-                            } );
+                            });
                             consumedialog.add(new VerticalLayout(consumeUserActionText, consumeActionText, consumeSendActionButton));
                             consumedialog.open();
                             break;
                         case "TALK":
                             Dialog talkDialog = new Dialog();
                             TextArea talkActionText = new TextArea();
-                            Label talkUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
-                            Button talkSendActionButton = new Button("Test",evfds ->{
+                            Label talkUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 talkDialog.close();
-                            } );
+                            });
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();
                             break;
-                        case"ATTACK":
+                        case "ATTACK":
                             Dialog attackdialog = new Dialog();
                             TextArea attackActionText = new TextArea();
-                            Label attackUserActionText = new Label("Aktion von "+myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
-                            Button attackSendActionButton = new Button("Test",evfds ->{
+                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
                                 attackdialog.close();
-                            } );
+                            });
                             attackdialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
                             attackdialog.open();
                             break;
@@ -344,12 +358,12 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             });
             return requestsButton;
         }).setHeader("Anfragen");
-        grid.addComponentColumn(avatar -> {
+        userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
             whisperButton.addClickListener(e -> Notification.show("Not Implemented"));
             return whisperButton;
         }).setHeader("Anflüstern");
-        grid.addComponentColumn(avatar -> {
+        userGrid.addComponentColumn(avatar -> {
             Button infoButton = new Button("Infos");
             VerticalLayout lay = new VerticalLayout();
             H4 headline = new H4("Informationen zu: " + avatar.getName());
@@ -366,8 +380,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             inventory.setItems(avatar.getInventory().stream().map(ItemInstance::getItem).toArray(Item[]::new));
 
             Dialog infoDialog = new Dialog();
-            infoDialog.setMinHeight("700px");
-            infoDialog.setMinWidth("1000px");
+            infoDialog.setMinHeight("700px");//@TODO
+            infoDialog.setMinWidth("1000px");//@TODO
             lay.add(headline, user, room, equipment);
             infoDialog.add(lay, inventoryLabel, inventory);
             infoButton.addClickListener(e -> infoDialog.open());
@@ -391,10 +405,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 int finalY = minY + j;
                 tiles[i][j] = new Image("map/" + newTiles[i][j].getPath() + ".png", "Room");
                 tiles[i][j].addClassName("room");
-                tiles[i][j].addClickListener(e->
+                tiles[i][j].addClickListener(e ->
                 {
-                    Room room = dungeonServiceI.getRoomByPosition(dungeon, finalX,finalY);
-                    if(room != null) {
+                    Room room = dungeonServiceI.getRoomByPosition(dungeon, finalX, finalY);
+                    if (room != null) {
                         fillCurrentRoom(room);
                         for (int k = 0; k < newTiles.length; k++) {
                             for (int l = 0; l < newTiles[0].length; l++) {
@@ -426,14 +440,18 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         itemInRoomGrid.removeAllColumns();
         itemInRoomGrid.addColumn(Item::getItemName).setHeader("Gegenstände");
-        itemInRoomGrid.setWidth("250px");
+        itemInRoomGrid.setSizeFull();
+        //itemInRoomGrid.setWidth("250px");
 
         npcInRoomGrid.removeAllColumns();
         npcInRoomGrid.addColumn(NPC::getNpcName).setHeader("NPCs");
-        npcInRoomGrid.setWidth("250px");
+        npcInRoomGrid.setSizeFull();
+        //npcInRoomGrid.setWidth("250px");
 
         hl.add(itemInRoomGrid, npcInRoomGrid);
+        hl.setSizeFull();
         vl.add(roomNameTextField, roomDescriptionTextArea, hl);
+        vl.setSizeFull();
         splitMapWithRoom.addToSecondary(vl);
     }
 

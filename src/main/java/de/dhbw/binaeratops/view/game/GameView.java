@@ -54,10 +54,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
 
     ParserServiceI myParserService;
     MapServiceI mapServiceI;
-    RoomRepositoryI myRoomRepo;//@TODO nur zu Testzwecken, dann entfernen
+    RoomRepositoryI myRoomRepo;
     DungeonRepositoryI myDungeonRepo;
-    ConfiguratorServiceI myConfiguratorService;
-    DungeonServiceI myDungeonService;
     GameServiceI myGameService;
 
     User currentUser;
@@ -92,14 +90,10 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
     List<Avatar> avatarList;
     Grid<Avatar> avatarGrid;
 
-    //@TODO remove test navigation
-    Button northButt;
-    Button eastButt;
-    Button southButt;
-    Button westButt;
-
-    private List<Item> inventoryList;
-    private List<Item> armorList;
+    private List<ItemInstance> inventoryList;
+    Grid<ItemInstance> inventoryGrid;
+    private List<ItemInstance> armorList;
+    Grid<ItemInstance> armorGrid;
 
     private Avatar myAvatar;
     private Room currentRoom;
@@ -113,14 +107,11 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
-                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired ConfiguratorServiceI AConfiguratorService,
-                    @Autowired DungeonServiceI ADungeonService, @Autowired GameServiceI AGameService) {
+                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService) {
         myParserService = AParserService;
         mapServiceI = AMapService;
-        myRoomRepo = ARoomRepo;//@TODO remove
+        myRoomRepo = ARoomRepo;
         myDungeonRepo = ADungeonRepo;
-        myConfiguratorService=AConfiguratorService;
-        myDungeonService=ADungeonService;
         myGameService=AGameService;
 
         currentUser=VaadinSession.getCurrent().getAttribute(User.class);
@@ -146,7 +137,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         });
 
         textField = new TextField();
-        textField.focus();
         textField.setWidthFull();
 
         confirmButt = new Button("Eingabe");
@@ -157,6 +147,22 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
                 myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                switch (um.getKey()){
+                    case "view.game.ctrl.cmd.move.north":
+                        changeRoom(currentRoom.getNorthRoomId());
+                        break;
+                    case "view.game.ctrl.cmd.move.east":
+                        changeRoom(currentRoom.getEastRoomId());
+                        break;
+                    case "view.game.ctrl.cmd.move.south":
+                        changeRoom(currentRoom.getSouthRoomId());
+                        break;
+                    case "view.game.ctrl.cmd.move.west":
+                        changeRoom(currentRoom.getWestRoomId());
+                        break;
+                    default:
+                        break;
+                }
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
                 Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
@@ -192,26 +198,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
 
-        //@TODO remove
-        northButt = new Button("north");
-        northButt.addClickListener(e -> {
-            changeRoom(currentRoom.getNorthRoomId());
-        });
-        eastButt = new Button("east");
-        eastButt.addClickListener(e -> {
-            changeRoom(currentRoom.getEastRoomId());
-        });
-        southButt = new Button("south");
-        southButt.addClickListener(e -> {
-            changeRoom(currentRoom.getSouthRoomId());
-        });
-        westButt = new Button("west");
-        westButt.addClickListener(e -> {
-            changeRoom(currentRoom.getWestRoomId());
-        });
-        //@TODO remove
-
-        gameFirstLayout.add(new HorizontalLayout(northButt, eastButt, southButt, westButt), binTitle, html, myDungeonChatView, insertInputLayout);
+        gameFirstLayout.add(binTitle, html, myDungeonChatView, insertInputLayout);
         gameSecondLayout.add(mapLayout, gridLayoutVert, leftDungeonButt);
         mapLayout.setClassName("map-layout");
         gridLayoutVert.setClassName("grid-layout");
@@ -288,6 +275,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
             if(selectedAvatar.size()>0) {
                 //Dungeon betreten
                 myAvatarDialog.close();
+                textField.focus();
                 loadAvatarProgress(myDungeon.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId()));
                 createMap();
                 changeRoom(currentRoom.getRoomId());
@@ -335,7 +323,6 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         ComboBox<Gender> avatarGenderField = new ComboBox<>("Geschlecht");
         avatarGenderField.setItems(avatarGenderList);
 
-        //myConfiguratorService.setDungeon(myDungeon.getDungeonId());
         List<Role> avatarRoleList = myDungeon.getRoles();
         ComboBox<Role> avatarRoleField = new ComboBox("Rolle");
         avatarRoleField.setItems(avatarRoleList);
@@ -366,8 +353,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
     }
 
     void refreshAvatarGrid(){
-        avatarList = new ArrayList<>();
-        avatarList.addAll(currentUser.getAvatars());
+        avatarList = currentUser.getAvatars();
         avatarGrid.setItems(avatarList);
     }
 
@@ -409,32 +395,30 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
     void createInventory() {
         VerticalLayout inventoryLayout = new VerticalLayout();
         Text inventoryTitle = new Text("Inventar");
-        inventoryList = new ArrayList<>();
-        Grid<Item> inventoryGrid = new Grid<>();
-        inventoryGrid.setItems(inventoryList);
+
+        inventoryGrid = new Grid<>();
         inventoryGrid.setVerticalScrollingEnabled(true);
-        inventoryGrid.addColumn(Item::getItemName).setHeader("Item");
-        inventoryGrid.addColumn(item -> item.getType().toString()).setHeader("Typ");
-        inventoryGrid.addColumn(item -> item.getSize().toString()).setHeader("Größe");
+        inventoryGrid.addColumn(item -> item.getItem().getItemName()).setHeader("Item");
+        inventoryGrid.addColumn(item -> item.getItem().getType().toString()).setHeader("Typ");
+        inventoryGrid.addColumn(item -> item.getItem().getSize().toString()).setHeader("Größe");
         inventoryGrid.getStyle().set("background", "grey");
         inventoryGrid.setSizeFull();
         inventoryLayout.add(inventoryTitle, inventoryGrid);
 
         VerticalLayout armorLayout = new VerticalLayout();
         Text armorTitle = new Text("Rüstung");
-        armorList = new ArrayList<>();
-        Grid<Item> armorGrid = new Grid<>();
-        armorGrid.setItems(armorList);
+
+        armorGrid = new Grid<>();
         armorGrid.setVerticalScrollingEnabled(true);
-        armorGrid.addColumn(Item::getItemName).setHeader("Item");
+        armorGrid.addColumn(item -> item.getItem().getItemName()).setHeader("Item");
         armorGrid.addColumn(item -> {
-            if (item.getType()!=null)
-                return item.getType().toString();
+            if (item.getItem().getType()!=null)
+                return item.getItem().getType().toString();
             return null;
         }).setHeader("Typ");
         armorGrid.addColumn(item -> {
-            if(item.getSize()!=null)
-                return item.getSize().toString();
+            if(item.getItem().getSize()!=null)
+                return item.getItem().getSize().toString();
             return null;
         }).setHeader("Größe");
         armorGrid.getStyle().set("background", "grey");
@@ -444,6 +428,15 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         gridLayout.add(inventoryLayout, armorLayout);
         gridLayout.setSizeFull();
         gridLayoutVert.add(gridLayout);
+        refreshInventory();
+    }
+
+    void refreshInventory(){
+        inventoryList = myAvatar.getInventory();
+        inventoryGrid.setItems(inventoryList);
+
+        armorList = myAvatar.getEquipment();
+        armorGrid.setItems(armorList);
     }
 
     void changeRoom(Long ARoomId) {
@@ -456,6 +449,8 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
+        if(inventoryGrid!=null&&armorGrid!=null)
+            refreshInventory();
     }
 
     void updateMap() {
@@ -541,8 +536,5 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
 
         myConfirmLeavingDialog.add(title,buttLayout);
     }
-
-
-
 
 }
