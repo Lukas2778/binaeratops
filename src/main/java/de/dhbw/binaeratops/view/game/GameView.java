@@ -383,7 +383,7 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
         this.myAvatar = AAvatar;
         this.currentRoom = myAvatar.getCurrentRoom();
         this.visitedRooms = myAvatar.getVisitedRooms();
-        if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId())==null) {
+        if (currentRoom == null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
         myGameService.addActivePlayer(myDungeon,currentUser);
@@ -549,8 +549,5 @@ public class GameView extends VerticalLayout implements HasUrlParameter<Long>, B
 
         myConfirmLeavingDialog.add(title,buttLayout);
     }
-
-
-
 
 }

@@ -67,7 +67,7 @@ public class Dungeon implements DungeonI {
     @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
     private final List<User> currentUsers = new ArrayList<>();
 
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -193,6 +193,7 @@ public class Dungeon implements DungeonI {
 
     public void setPlayerCount(Long APlayerCount) {
         this.playerCount = APlayerCount;
+
     }
 
     public Long getPlayerMaxSize() {
@@ -298,13 +299,15 @@ public class Dungeon implements DungeonI {
     }
 
     public void addCurrentUser(User AUser) {
-        AUser.setCurrentDungeon(this);
         currentUsers.add(AUser);
+        setPlayerCount(Long.valueOf(currentUsers.size()));
+        AUser.setCurrentDungeon(this);
     }
 
     public void removeCurrentUser(User AUser) {
         currentUsers.remove(AUser);
-        AUser.setCurrentDungeon(null);
+        setPlayerCount(Long.valueOf(currentUsers.size()));
+        AUser.setCurrentDungeon(null);//@TODO überprüfen, ob User gelöscht wird
     }
 
     public List<Room> getRooms() {
