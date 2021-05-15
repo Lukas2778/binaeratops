@@ -14,6 +14,15 @@ import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
+/**
+ * Dialog-Oberfläche für die Komponente "Item hinzufügen" des Item-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration eines Gegenstandes bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class ItemDialog extends Dialog {
 
     ConfiguratorServiceI configuratorServiceI;

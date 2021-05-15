@@ -2,7 +2,6 @@ package de.dhbw.binaeratops.view.configurator;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -16,15 +15,30 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
-import de.dhbw.binaeratops.service.impl.map.MapService;
 import de.dhbw.binaeratops.view.configurator.tabs.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Oberfläche für die Komponente "Konfigurator".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration des Dungeons bereit.
+ * <p>
+ * Der Konfigurator unterteilt sich in die Tab-Oberflächen:
+ *     <ul>
+ *         <li>Dungeoneigenschaften</li>
+ *         <li>Charaktereigenschaften</li>
+ *         <li>Gegenstände</li>
+ *         <li>NPCs</li>
+ *         <li>Räume</li>
+ *     </ul>
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
+ */
 @PageTitle("Konfigurator")
 @CssImport("./views/main/main-view.css")
 public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
@@ -43,8 +57,8 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
     private Long dungeonId;
 
     public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
-        configuratorServiceI=AConfiguratorServiceI;
-        mapServiceI=AMapServiceI;
+        configuratorServiceI = AConfiguratorServiceI;
+        mapServiceI = AMapServiceI;
 
         setSizeFull();
     }
@@ -53,8 +67,8 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         //wir setzen dem Service den Dungeon mit der übergebenen ID aus der URL
 
         configuratorServiceI.setDungeon(dungeonId);
-        if(!configuratorServiceI.getDungeon().getUser().getUserId()
-                .equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())){
+        if (!configuratorServiceI.getDungeon().getUser().getUserId()
+                .equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
             Notification.show("Du hast keine Berechtigung diesen Dungeon zu bearbeiten.\n nice try ;)");
             UI.getCurrent().navigate("logout");
         }
@@ -82,7 +96,7 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
         tabsToPages.put(roomTab, roomConfigurator);
 
         configuratorTabs = new Tabs(dungeonTab, characterTab, itemsTab, npcTab, roomTab);
-        Div pages = new Div( dungeonsConfigurator, characterConfigurator, itemsConfigurator, npcConfigurator, roomConfigurator);
+        Div pages = new Div(dungeonsConfigurator, characterConfigurator, itemsConfigurator, npcConfigurator, roomConfigurator);
 
         add(configuratorTabs, pages);
 
@@ -101,7 +115,7 @@ public class ConfiguratorMainView extends Div implements HasUrlParameter<Long> {
 
     @Override
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
-        this.dungeonId=ALong;
+        this.dungeonId = ALong;
         createMenuItems();
     }
 }

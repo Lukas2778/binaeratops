@@ -43,6 +43,9 @@ public class Room implements RoomI {
     @ManyToOne
     private Dungeon dungeon;
 
+    @ManyToOne
+    private Avatar visitedByAvatar;
+
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> items = new ArrayList<>();
 
@@ -149,6 +152,14 @@ public class Room implements RoomI {
 
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
+    }
+
+    public Avatar getVisitedByAvatar() {
+        return visitedByAvatar;
+    }
+
+    public void setVisitedByAvatar(Avatar AVisitedByAvatar) {
+        this.visitedByAvatar = AVisitedByAvatar;
     }
 
     public List<ItemInstance> getItems() {

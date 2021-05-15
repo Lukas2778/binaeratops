@@ -17,6 +17,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Dialog-Oberfläche für die Komponente "NPC Auswahl" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Hinzufügen eines NPCs zu einem Raum bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class NpcSelectionDialog extends Dialog {
 
     public boolean dialogResult = false;

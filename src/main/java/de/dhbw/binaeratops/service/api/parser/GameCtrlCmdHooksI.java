@@ -1,6 +1,9 @@
 package de.dhbw.binaeratops.service.api.parser;
 
+import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
+import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 
@@ -13,7 +16,7 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
  * @author Nicolas Haug, Lukas Göpel
  */
 public interface GameCtrlCmdHooksI {
-
+    // TODO JAVADOC Übergabeparameter ergänzen/hinzufügen
     /**
      * Callback Befehl "whereami".
      *
@@ -21,7 +24,16 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onWhereAmI(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onWhereAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
+
+    /**
+     * Callback Befehl "whoami".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @return Benutzernachricht.
+     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     */
+    UserMessage onWhoAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "info all".
@@ -29,7 +41,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onInfoAll() throws CmdScannerException;
+    UserMessage onInfoAll(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "info room".
@@ -38,7 +50,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onInfoRoom(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onInfoRoom(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "info players".
@@ -47,7 +59,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onInfoPlayers(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onInfoPlayers(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move north" und "move n".
@@ -56,7 +68,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveNorth(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onMoveNorth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move east" und "move e".
@@ -65,7 +77,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveEast(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onMoveEast(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move south" und "move s".
@@ -74,7 +86,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveSouth(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onMoveSouth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "move west" und "move w".
@@ -83,7 +95,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onMoveWest(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onMoveWest(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "look around".
@@ -92,7 +104,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onLookAround(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onLookAround(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "examine".
@@ -102,7 +114,9 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onExamine(DungeonI ADungeon, String AItemOrNpc) throws CmdScannerException;
+    UserMessage onExamineNpc(DungeonI ADungeon, String AItemOrNpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
+
+    UserMessage onExamineItem(DungeonI ADungeon, String AItemOrNpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "show inv".
@@ -111,7 +125,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onShowInventory(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onShowInventory(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "show equip".
@@ -120,7 +134,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onShowEquipment(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onShowEquipment(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "take".
@@ -130,7 +144,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onTake(DungeonI ADungeon, String AItem) throws CmdScannerException;
+    UserMessage onTake(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "drop".
@@ -140,27 +154,17 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onDrop(DungeonI ADungeon, String AItem) throws CmdScannerException;
+    UserMessage onDrop(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
-     * Callback Befehl "eat".
+     * Callback Befehl "consume".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AItem Gegenstand, der gegessen werden soll.
+     * @param AItem Gegenstand, der konsumiert werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onEat(DungeonI ADungeon, String AItem) throws CmdScannerException;
-
-    /**
-     * Callback Befehl "drink".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AItem Gegenstand, der getrunken werden soll.
-     * @return Benutzernachricht.
-     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
-     */
-    UserMessage onDrink(DungeonI ADungeon, String AItem) throws CmdScannerException;
+    UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException;
 
     /**
      * Callback Befehl "equip".
@@ -170,7 +174,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onEquip(DungeonI ADungeon, String AItem) throws CmdScannerException;
+    UserMessage onEquip(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "laydown".
@@ -180,7 +184,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onLayDown(DungeonI ADungeon, String AItem) throws CmdScannerException;
+    UserMessage onLayDown(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "health".
@@ -189,7 +193,7 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onGetHealth(DungeonI ADungeon) throws CmdScannerException;
+    UserMessage onGetHealth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "talk".
@@ -200,5 +204,5 @@ public interface GameCtrlCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onTalk(DungeonI ADungeon, String ANpcName, String AMessage) throws CmdScannerException;
+    UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException;
 }

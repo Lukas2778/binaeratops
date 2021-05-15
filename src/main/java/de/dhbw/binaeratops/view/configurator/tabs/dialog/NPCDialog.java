@@ -12,6 +12,15 @@ import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
+/**
+ * Dialog-Oberfläche für die Komponente "NPC hinzufügen" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Konfiguration eines NPCs bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class NPCDialog extends Dialog {
 
     ConfiguratorServiceI configuratorService;

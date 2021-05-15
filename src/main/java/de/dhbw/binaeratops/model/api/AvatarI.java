@@ -133,6 +133,20 @@ public interface AvatarI {
     void setRole(Role ARole);
 
     /**
+     * Gibt den aktuellen Raum des Avatars zurück.
+     *
+     * @return Aktueller Raum des Avatars.
+     */
+    Room getCurrentRoom();
+
+    /**
+     * Setzt den aktuellen Raum des Avatars.
+     *
+     * @param ACurrentRoom Aktueller Raum, der gesetzt werden soll.
+     */
+    void setCurrentRoom(Room ACurrentRoom);
+
+    /**
      * Gibt das Inventar eines Avatars als Liste von Gegenständen zurück.
      *
      * @return Liste von Gegenständen (Inventar).
@@ -175,4 +189,25 @@ public interface AvatarI {
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeEquipmentItem(ItemInstance AItem);
+
+    /**
+     * Gibt die Liste der besuchten Räume des Avatars zurück.
+     *
+     * @return Liste der besuchten Räume.
+     */
+    List<Room> getVisitedRooms();
+
+    /**
+     * Fügt der Liste der besuchten Räume den übergebenen Raum hinzu.
+     *
+     * @param ARoom Raum, der hinzugefügt werden soll.
+     */
+    void addVisitedRoom(Room ARoom);
+
+    /**
+     * Entfernt der Liste der besuchten Räume den übergebenen Raum.
+     *
+     * @param ARoom Raum, der entfernt werden soll.
+     */
+    void removeVisitedRoom(Room ARoom);
 }

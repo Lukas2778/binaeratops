@@ -50,23 +50,29 @@ public class Avatar implements AvatarI {
     @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> equipment = new ArrayList<>();
 
+    @OneToMany(mappedBy = "visitedByAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Room> visitedRooms = new ArrayList<>();
+
     @OneToOne
     private Race race;
 
     @OneToOne
     private Role role;
 
+    @OneToOne
+    private Room currentRoom;
+
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
-     * @param ARoomId Raum des Avatars, in dem er sich befindet.
+     * @param ARoom Raum des Avatars, in dem er sich befindet.
      * @param AGender Geschlecht des Avatars.
      * @param AName   Name des Avatars.
      * @param ARace   Rasse des Avatars.
      * @param ARole   Rolle des Avatars.
      */
-    public Avatar(Long ARoomId, Gender AGender, String AName, Race ARace, Role ARole) {
-        this.roomId = ARoomId;
+    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole) {
+        this.currentRoom = ARoom;
         this.gender = AGender;
         this.name = AName;
         this.race = ARace;
@@ -160,6 +166,14 @@ public class Avatar implements AvatarI {
         this.role = ARole;
     }
 
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(Room ACurrentRoom) {
+        this.currentRoom = ACurrentRoom;
+    }
+
     public List<ItemInstance> getInventory() {
         return inventory;
     }
@@ -188,17 +202,33 @@ public class Avatar implements AvatarI {
         AItem.setRoom(null);
     }
 
+    public List<Room> getVisitedRooms() {
+        return visitedRooms;
+    }
+
+    public void addVisitedRoom(Room ARoom) {
+        //falls der Raum nicht schon hinzugefügt wurde
+        for (Room visitedR : visitedRooms) {
+            if (ARoom.getRoomId().equals(visitedR.getRoomId())) {
+                return;
+            }
+        }
+        ARoom.setVisitedByAvatar(this);
+        visitedRooms.add(ARoom);
+    }
+
+    public void removeVisitedRoom(Room ARoom) {
+        visitedRooms.remove(ARoom);
+        ARoom.setVisitedByAvatar(null);
+    }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
-
         if (!equals && AOther instanceof Avatar) {
             Avatar other = (Avatar) AOther;
             equals = (avatarId == other.avatarId);
-            // && (name == other.name || (name != null &&
-            //                    name.equalsIgnoreCase(other.name)))
         }
-
         return equals;
     }
 

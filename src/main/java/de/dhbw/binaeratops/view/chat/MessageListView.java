@@ -4,9 +4,13 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.html.Div;
 
 /**
- * TODO JAVADOC Kommentar schreiben.
+ * Vaadin-Komponente für die Komponente "Chat".
+ * <p>
+ * Diese Ansicht stellt die Chat-Ansicht dar.
+ * <p>
+ * Damit können hier alle Chat-Nachrichten in einer eigenen View dargestellt werden.
  *
- * @author Pedro Treuer, Timon Gartung
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
 public class MessageListView extends Div {
 

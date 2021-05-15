@@ -17,6 +17,15 @@ import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
 
+/**
+ * Dialog-Oberfläche für die Komponente "Rasse hinzufügen" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Konfiguration einer Rasse bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class RaceDialog
         extends Dialog
 {
