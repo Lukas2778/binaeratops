@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.view.chat;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Paragraph;
@@ -10,6 +11,8 @@ import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.User;
 import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -31,10 +34,10 @@ public class ChatView extends VerticalLayout {
 
     private final Flux<ChatMessage> messages;
 
-    public MessageListView messageList;
-    public MessageListView allMessagesList;
-    public MessageListView chatMessageslist;
-    public MessageListView actionMessagesList;
+    private MessageListView messageList;
+    private ArrayList<Component> allMessagesList;
+    private ArrayList<Component> chatMessagesList;
+    private ArrayList<Component> actionMessagesList;
 
     private FilterMode filterMode;
 
@@ -55,9 +58,9 @@ public class ChatView extends VerticalLayout {
      */
     private void showChat() {
         messageList = new MessageListView();
-        allMessagesList = new MessageListView();
-        chatMessageslist = new MessageListView();
-        actionMessagesList = new MessageListView();
+        allMessagesList = new ArrayList<Component>();
+        chatMessagesList = new ArrayList<Component>();
+        actionMessagesList = new ArrayList<Component>();
         add(messageList);
         expand(messageList);
 
@@ -69,7 +72,7 @@ public class ChatView extends VerticalLayout {
             //Prüfung ob der Spieler die Nachricht erhalten darf.
             if (message.getUserIdList().contains(currentUser.getUserId())) {
                 if (message.isChatMessage()){
-                    chatMessageslist.add(message.getParagraph());
+                    chatMessagesList.add(message.getParagraph());
                     allMessagesList.add(message.getParagraph());
                     if (filterMode == FilterMode.All || filterMode == FilterMode.CHAT){
                         messageList.add(message.getParagraph());
@@ -94,7 +97,11 @@ public class ChatView extends VerticalLayout {
     public void setFilterModeAll(){
         getUI().ifPresent(ui ->ui.access(()->{
             filterMode = FilterMode.All;
-            messageList = allMessagesList;
+            messageList.delete();
+            messageList.add(toComArray(allMessagesList));
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);
+            ui.push();
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         }));
     }
 
@@ -104,7 +111,11 @@ public class ChatView extends VerticalLayout {
     public void setFilterModeChat(){
         getUI().ifPresent(ui ->ui.access(()->{
             filterMode = FilterMode.CHAT;
-            messageList = chatMessageslist;
+            messageList.delete();
+            messageList.add(toComArray(chatMessagesList));
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);
+            ui.push();
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         }));
     }
 
@@ -114,7 +125,11 @@ public class ChatView extends VerticalLayout {
     public void setFilterModeAction(){
         getUI().ifPresent(ui ->ui.access(()->{
             filterMode = FilterMode.ACTIONS;
-            messageList = actionMessagesList;
+            messageList.delete();
+            messageList.add(toComArray(actionMessagesList));
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);
+            ui.push();
+            UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         }));
     }
 }

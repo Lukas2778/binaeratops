@@ -204,7 +204,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeon.getDungeonId(), myAvatar, VaadinSession.getCurrent().getAttribute(
                         User.class));
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
-                myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                myDungeonChatView.addMessage(new Paragraph(new Html(message)));
             } catch (CmdScannerRecipientOfflineException recipientOffline) {
                 Notification.show(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);

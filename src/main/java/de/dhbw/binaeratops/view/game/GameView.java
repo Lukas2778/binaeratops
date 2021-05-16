@@ -197,7 +197,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             try {
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
-                myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                myDungeonChatView.addMessage(new Paragraph(new Html(message)));
                 if (um.getKey() != null) {
                     switch (um.getKey()) {
                         case "view.game.ctrl.cmd.move.north":
