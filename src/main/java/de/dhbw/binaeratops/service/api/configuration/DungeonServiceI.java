@@ -87,5 +87,7 @@ public interface DungeonServiceI {
     Dungeon getDungeon(Long ADungeonId);
 
     void kickPlayer(Long ADungeonId, Long AUserId);
+
+    Room getRoomById(Long ARoomId);
 }
 

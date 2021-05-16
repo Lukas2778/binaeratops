@@ -75,6 +75,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUser> kickUsersPublisher;
 
+    private Timer timer=new Timer();
     Dungeon dungeon;
     Long dungeonId;
     String aboutText;
@@ -90,6 +91,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     TextArea roomDescriptionTextArea = new TextArea("Beschreibung: ");
     Grid<Item> itemInRoomGrid = new Grid<>(Item.class);
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
+
+    Room currentRoom;
 
     boolean sureToLeave = false;
     boolean loaded = true;
@@ -506,6 +509,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     }
 
     private void fillCurrentRoom(Room ARoom) {
+        currentRoom = ARoom;
         roomNameTextField.setValue(ARoom.getRoomName());
 
         if (ARoom.getDescription() != null)
