@@ -16,6 +16,7 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -27,9 +28,11 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
+import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -210,6 +213,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         buttonView.addAndExpand(addRaceButton, deleteRaceButton);
         //raceListLayout.setSizeFull();
         raceListLayout.add(title, raceGrid, buttonView);
+
     }
 
     private void refreshRoleGrid() {
@@ -248,25 +252,40 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
     private void deleteRoleClickListener() {
         deleteB.addClickListener(e -> {
-            Role[] selectedRole = grid.getSelectedItems()
-                    .toArray(Role[]::new);
-            if (selectedRole.length >= 1) {
-                currentRole = selectedRole[0];
-                roleArrayList.remove(currentRole);
-                refreshRoleGrid();
-                configuratorService.removeRole(currentRole);
+            if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rollen haben zu können ;)");
+            }else{
+                Role[] selectedRole = grid.getSelectedItems()
+                        .toArray(Role[]::new);
+                if (selectedRole.length >= 1) {
+                    currentRole = selectedRole[0];
+                    roleArrayList.remove(currentRole);
+                    refreshRoleGrid();
+                    configuratorService.removeRole(currentRole);
+            }
+
+
+
+
             }
         });
     }
 
     private void deleteRaceClickListener() {
         deleteRaceButton.addClickListener(e -> {
-            Race[] selectedRace = raceGrid.getSelectedItems().toArray(Race[]::new);
-            if (selectedRace.length >= 1) {
-                currentRace = selectedRace[0];
-                raceArrayList.remove(currentRace);
-                refreshRaceGrid();
-                configuratorService.removeRace(currentRace);
+            if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rassen haben zu können ;)");
+            }else
+            {
+                Race[] selectedRace = raceGrid.getSelectedItems()
+                        .toArray(Race[]::new);
+                if ( selectedRace.length >= 1 )
+                {
+                    currentRace = selectedRace[0];
+                    raceArrayList.remove(currentRace);
+                    refreshRaceGrid();
+                    configuratorService.removeRace(currentRace);
+                }
             }
         });
     }
