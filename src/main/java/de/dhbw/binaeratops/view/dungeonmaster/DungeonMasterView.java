@@ -92,6 +92,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
 
     boolean sureToLeave = false;
+    boolean loaded = true;
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
@@ -109,6 +110,25 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         setId("SomeView");
 
         userActionsIncoming();
+        Thread thread = new Thread();
+        thread.start();
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                refreshView();
+            }
+        },0,1000);
+    }
+
+    private void refreshView () {
+        getUI().ifPresent(ui -> ui.access(() -> {
+            userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
+            if(currentRoom != null ) {
+                Room room = dungeonServiceI.getRoomById(currentRoom.getRoomId());
+                fillCurrentRoom(room);
+            }
+        }));
     }
 
     private void userActionsIncoming() {
@@ -509,6 +529,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             e.postpone();
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
+        } else {
+            loaded = false;
         }
     }
 

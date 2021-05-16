@@ -153,4 +153,9 @@ public class DungeonService implements DungeonServiceI {
         dungeon.addBlockedUser(user);
         dungeonRepo.save(dungeon);
     }
+
+    @Override
+    public Room getRoomById(Long ARoomId) {
+        return roomRepo.findByRoomId(ARoomId);
+    }
 }
