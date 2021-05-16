@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Raum.
@@ -55,6 +56,7 @@ public class Room implements RoomI {
     private Integer xcoordinate;
 
     private Integer ycoordinate;
+
 
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.

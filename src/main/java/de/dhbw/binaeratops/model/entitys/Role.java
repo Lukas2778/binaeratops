@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 /**
  * Entity Objekt für eine Rolle.
@@ -22,6 +24,7 @@ import java.util.ResourceBundle;
  * @author Nicolas Haug
  * @see RoleI
  */
+
 @Entity
 public class Role implements RoleI {
 
