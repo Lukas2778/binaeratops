@@ -13,9 +13,9 @@ describe('createDungeon', () => {
 
         $('/html/body/vaadin-vertical-layout/vaadin-button').click();
 
-        browser.pause(500)
-
         $('/html/body/vaadin-app-layout/vaadin-vertical-layout[1]/vaadin-tabs/vaadin-tab[4]/a').click();
+        browser.pause(20)
+        $('/html/body/vaadin-app-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-button[1]').waitForExist();
         $('/html/body/vaadin-app-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-button[1]').click();
     });
 
