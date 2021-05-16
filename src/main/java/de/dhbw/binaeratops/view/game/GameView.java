@@ -14,6 +14,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -26,8 +27,6 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
@@ -37,6 +36,7 @@ import de.dhbw.binaeratops.view.TranslationProvider;
 import de.dhbw.binaeratops.view.chat.ChatView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -46,7 +46,7 @@ import java.util.*;
  */
 //@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
-public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver {
+public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver, AfterNavigationObserver {
     BeforeLeaveEvent.ContinueNavigationAction action;
 
     ParserServiceI myParserService;
@@ -65,7 +65,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
-    private final Flux<ChatMessage> myMessages;
+    private final Flux<ChatMessage> messages;
+    private final UnicastProcessor<ChatMessage> messagesPublisher;
 
     H2 binTitle;
     String aboutText;
@@ -107,8 +108,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
-                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService) {
-        myMessages = messages;
+                    @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
+                    UnicastProcessor<ChatMessage> AMessagePublisher) {
+        this.messages = messages;
+        this.messagesPublisher = AMessagePublisher;
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;
@@ -125,14 +128,17 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         initiateGameView();
         //Avatarauswahl öffnen
         createAvatarDialog();
+
     }
+
+
 
     void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
         aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getCommandSymbol());
         html = new Html(aboutText);
 
-        myDungeonChatView = new ChatView(myMessages);
+        myDungeonChatView = new ChatView(messages);
         gameLayout = new HorizontalLayout();
         gameSplitLayout = new SplitLayout();
         gameFirstLayout = new VerticalLayout();
@@ -219,6 +225,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         add(gameLayout);
 
         setSizeFull();
+
+
     }
 
     void createAvatarDialog() {
@@ -536,5 +544,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     @Override
     public String getPageTitle() {
         return res.getString("view.game.pagetitle");
+    }
+
+    @Override
+    public void afterNavigation(AfterNavigationEvent event) {
+        messagesPublisher.onNext(new ChatMessage("Hallo" + VaadinSession.getCurrent().getAttribute(User.class).getName() + ", viel Spaß beim Chatten und Spielen!"  , VaadinSession.getCurrent().getAttribute(User.class).getUserId()));
+        confirmButt.clickInClient();
     }
 }
