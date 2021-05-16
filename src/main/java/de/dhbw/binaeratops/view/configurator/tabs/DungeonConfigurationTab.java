@@ -128,16 +128,16 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                             configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
                             configuratorService.saveDungeon();
                         }else{
-                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            Notification.show(res.getString("view.configurator.dungeon.notification.select.startroom"));
                             viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                         }
                     }else{
-                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        Notification.show(res.getString("view.configurator.dungeon.notification.need.role"));
                         viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                     }
 
                 }else{
-                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    Notification.show(res.getString("view.configurator.dungeon.notification.need.race"));
                     viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                 }
 
@@ -151,23 +151,22 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                             configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
                             configuratorService.saveDungeon();
                         }else{
-                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            Notification.show(res.getString("view.configurator.dungeon.notification.select.startroom"));
                             viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                         }
                     }else{
-                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        Notification.show(res.getString("view.configurator.dungeon.notification.need.role"));
                         viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                     }
 
                 }else{
-                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    Notification.show(res.getString("view.configurator.dungeon.notification.need.race"));
                     viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                 }
 
             } else{
                 configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
                 configuratorService.saveDungeon();
-                System.out.println("In Conf  wurde gewählt");
             }
         });
 

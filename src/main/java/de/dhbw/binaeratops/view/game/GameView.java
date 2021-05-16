@@ -143,7 +143,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
                 myAvatar = null;
-                Notification.show("You were kicked" + message.getUser().getName());
+                Notification.show(res.getString("view.game.notification.kicked"));
                 UI.getCurrent().navigate("aboutUs");
             }
         })));
@@ -177,25 +177,27 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         confirmButt.addClickListener(e -> {
             //Parser wird mit Texteingabe aufgerufen
             try {
-                UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
-                String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
-                myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
-                if (um.getKey() != null) {
-                    switch (um.getKey()) {
-                        case "view.game.ctrl.cmd.move.north":
-                            changeRoom(currentRoom.getNorthRoomId());
-                            break;
-                        case "view.game.ctrl.cmd.move.east":
-                            changeRoom(currentRoom.getEastRoomId());
-                            break;
-                        case "view.game.ctrl.cmd.move.south":
-                            changeRoom(currentRoom.getSouthRoomId());
-                            break;
-                        case "view.game.ctrl.cmd.move.west":
-                            changeRoom(currentRoom.getWestRoomId());
-                            break;
-                        default:
-                            break;
+                if (textField.getValue() != "") {
+                    UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
+                    String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
+                    myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                    if (um.getKey() != null) {
+                        switch (um.getKey()) {
+                            case "view.game.ctrl.cmd.move.north":
+                                changeRoom(currentRoom.getNorthRoomId());
+                                break;
+                            case "view.game.ctrl.cmd.move.east":
+                                changeRoom(currentRoom.getEastRoomId());
+                                break;
+                            case "view.game.ctrl.cmd.move.south":
+                                changeRoom(currentRoom.getSouthRoomId());
+                                break;
+                            case "view.game.ctrl.cmd.move.west":
+                                changeRoom(currentRoom.getWestRoomId());
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
             } catch (CmdScannerAlreadyRequestedException alreadyRequested) {
@@ -291,7 +293,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 return avatar.getCurrentRoom().getRoomName();
             return null;
         }).setHeader(res.getString("view.game.grid.room"));
-        avatarGrid.addComponentColumn(item -> createDeleteAvatarButton(item)).setHeader("Löschen");
+        avatarGrid.addComponentColumn(item -> createDeleteAvatarButton(item)).setHeader(res.getString("view.game.grid.button.delete"));
         //expand(avatarGrid);
         gridLayoutVert.add(avatarGrid);
 
@@ -336,10 +338,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button deleteAvatarButt = new Button("", clickEvent -> {
 
             Dialog confirmDeleteDialog = new Dialog();
-            H4 title = new H4("Avatar löschen");
-            Text text = new Text("Willst du deinen Avatar '" + AAvatar.getName() + "' wirklich löschen? " +
-                    "Beachte: Es wird dein kompletter Fortschritt im Dungeon gelöscht!");
-            Button deleteAnywayButt = new Button("Avatar löschen");
+            H4 title = new H4(res.getString("view.game.headline.delete.avatar"));
+            Text text = new Text(MessageFormat.format(res.getString("view.game.text.delete.avatar"), AAvatar.getName()));
+            Button deleteAnywayButt = new Button(res.getString("view.game.button.delete.avatar"));
             deleteAnywayButt.getStyle().set("color", "red");
             deleteAnywayButt.addClickListener(e -> {
                 myGameService.deleteAvatar(myDungeon, currentUser, AAvatar);
@@ -347,7 +348,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 confirmDeleteDialog.close();
             });
 
-            Button cancelButt = new Button("Abbrechen");
+            Button cancelButt = new Button(res.getString("view.game.button.cancel"));
             cancelButt.addClickShortcut(Key.ENTER);
             cancelButt.addClickListener(e -> {
                 confirmDeleteDialog.close();
@@ -412,20 +413,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.addClickListener(e -> {
             if (!myGameService.avatarNameIsValid(myDungeon, avatarNameFiled.getValue())) {
                 avatarNameFiled.setInvalid(true);
-                Notification.show("Entweder hast du den Namen vergessen einzugeben, oder der eingegebene" +
-                        "Avatarname existiert bereits für diesen Dungeon. Versuche einen anderen!");
+                Notification.show(res.getString("view.game.notification.forgot.name"));
             } else {
                 if (!myGameService.avatarGenderIsValid(avatarGenderField.getValue())) {
                     avatarGenderField.setInvalid(true);
-                    Notification.show("Du musst ein Geschlecht wählen!");
+                    Notification.show(res.getString("view.game.notification.forgot.gender"));
                 } else {
                     if (!myGameService.avatarRoleIsValid(avatarRoleField.getValue())) {
                         avatarRoleField.setInvalid(true);
-                        Notification.show("Du musst eine Rolle wählen!");
+                        Notification.show(res.getString("view.game.notification.forgot.role"));
                     } else {
                         if (!myGameService.avatarRaceIsValid(avatarRaceField.getValue())) {
                             avatarRaceField.setInvalid(true);
-                            Notification.show("Du musst eine Rasse wählen!");
+                            Notification.show(res.getString("view.game.notification.forgot.race"));
                         } else {
                             Avatar currentAvatar = new Avatar();
                             //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
@@ -438,7 +438,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                                     currentAvatar.getLifepoints());
                             refreshAvatarGrid();
                             myCreateAvatarDialog.close();
-                            Notification.show("Avatar gespeichert!");
+                            Notification.show(res.getString("view.game.notification.avatar.saved"));
                         }
                     }
                 }
@@ -463,7 +463,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     avatarList.add(canAddAvatar);
                 }
             } catch (Exception e) {
-                System.out.println("Jetzt error!");
             }
         }
         avatarGrid.setItems(avatarList);
@@ -657,10 +656,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      */
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        String greetingMessage = "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
-        Label greetingLabel = new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
-        greetingLabel.addClassName("boldtext");
-        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage), greetingMessage, currentUser.getUserId()));
+        String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), currentUser.getName());
+        messagesPublisher.onNext(new ChatMessage(new Paragraph(new Html(greetingMessage)), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
     }
 }
