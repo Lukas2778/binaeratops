@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.impl.configurator;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
+import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
@@ -34,6 +35,9 @@ public class DungeonService implements DungeonServiceI {
 
     @Autowired
     RoomRepositoryI roomRepo;
+
+    @Autowired
+    AvatarRepositoryI avatarRepo;
 
     @Override
     public List<Dungeon> getAllDungeonsFromUser(User AUser) {
@@ -136,13 +140,16 @@ public class DungeonService implements DungeonServiceI {
 
     @Override
     public Dungeon getDungeon(Long ADungeonId){
-        return  dungeonRepo.findByDungeonId(ADungeonId);
+        return dungeonRepo.findByDungeonId(ADungeonId);
     }
 
     @Override
     public void kickPlayer(Long ADungeonId, Long AUserId){
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
         User user = userRepo.findByUserId(AUserId);
+        Avatar avatar = avatarRepo.findByUserAndActive(user, true).get(0);
+        avatar.setActive(false);
+        avatarRepo.save(avatar);
         dungeon.addBlockedUser(user);
         dungeonRepo.save(dungeon);
     }

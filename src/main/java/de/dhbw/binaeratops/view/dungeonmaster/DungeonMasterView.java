@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
-import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
@@ -335,7 +334,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             Button whisperButton = new Button("Whisper");
             whisperButton.addClickListener(e -> {
                 Notification.show("Not Implemented");
-                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
             });
             return whisperButton;
         }).setHeader("Anflüstern");
@@ -365,7 +363,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }).setHeader("Informationen");
         userGrid.addComponentColumn(avatar -> {
             Button kickButton = new Button("Spieler kicken");
-            /*Dialog confirmKickDialog = new Dialog();
+            Dialog confirmKickDialog = new Dialog();
             Label confirmLabel = new Label("Bist du dir sicher, dass du den Spieler kicken möchtest?");
             Button confirmButton = new Button("Kicken!");
             Button cancelButton = new Button("Abbrechen");
@@ -377,13 +375,13 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickerPublisher.onNext(new KickUser(avatar.getUser(), dungeon));
+                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
                 confirmKickDialog.close();
             });
 
             cancelButton.addClickListener(e -> {
                 confirmKickDialog.close();
-            });*/
+            });
             return kickButton;
         }).setHeader("Kicken");
     }

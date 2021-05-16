@@ -15,11 +15,9 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.KickUser;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -135,13 +133,17 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         initiateGameView();
         //Avatarauswahl öffnen
         createAvatarDialog();
-        test();
+        initializeKickSubscriber();
 
     }
 
-    private void test(){
+    private void initializeKickSubscriber(){
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
-            Notification.show("Kick me pls: " + message.getUser().getName());
+            if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                myAvatar = null;
+                Notification.show("You were kicked" + message.getUser().getName());
+                UI.getCurrent().navigate("aboutUs");
+            }
         })));
     }
 

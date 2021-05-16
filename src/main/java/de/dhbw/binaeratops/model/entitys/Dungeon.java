@@ -288,8 +288,10 @@ public class Dungeon implements DungeonI {
     }
 
     public void addBlockedUser(User AUser) {
-        AUser.setBlockedDungeon(this);
-        blockedUsers.add(AUser);
+        if (!blockedUsers.contains(AUser)) {
+            AUser.setBlockedDungeon(this);
+            blockedUsers.add(AUser);
+        }
     }
 
     public void removeBlockedUser(User AUser) {
