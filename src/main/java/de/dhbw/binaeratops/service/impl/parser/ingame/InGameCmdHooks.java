@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.impl.parser.ingame;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
@@ -70,8 +71,15 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     }
 
     @Override
-    public UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException {
-        return null;
+    public UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException {
+        Avatar avatar = Avatar.check(AAvatar);
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        if (avatar == null) {
+            return new UserMessage("view.game.ingame.cmd.whisper.master.failure"); // TODO: EXCEPTION
+        }
+        User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
+        myChatService.whisper(AMessage, dungeonMaster, avatar);
+        return new UserMessage("view.game.ingame.cmd.whisper.master", AMessage);
     }
 
     @Override

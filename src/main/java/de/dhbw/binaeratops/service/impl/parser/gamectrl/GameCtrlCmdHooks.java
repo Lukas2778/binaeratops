@@ -558,6 +558,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             for (ItemInstance item : avatar.getInventory()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     avatar.removeInventoryItem(item);
+                    itemInstanceRepo.save(item);
                     avatarRepo.save(avatar);
                     userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
                     return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
