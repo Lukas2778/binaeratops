@@ -367,7 +367,13 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     }
 
     void refreshAvatarGrid() {
-        avatarList = currentUser.getAvatars();
+        avatarList=new ArrayList<>();
+        List<Avatar> tempAvatarList=currentUser.getAvatars();
+        for (Avatar canAddAvatar:tempAvatarList){
+            if(canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())){
+                avatarList.add(canAddAvatar);
+            }
+        }
         avatarGrid.setItems(avatarList);
     }
 
