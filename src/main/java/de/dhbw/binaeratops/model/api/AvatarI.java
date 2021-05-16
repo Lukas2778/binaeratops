@@ -216,4 +216,12 @@ public interface AvatarI {
     void setLifepoints(Long ALifepoints);
 
     void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB);
+
+    boolean isActive();
+
+    void setActive(boolean AActive);
+
+    boolean hasRequested();
+
+    void setRequested(boolean ARequested);
 }

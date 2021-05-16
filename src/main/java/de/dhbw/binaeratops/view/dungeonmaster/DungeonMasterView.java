@@ -322,6 +322,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Button consumeSendActionButton = new Button("Senden", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
+                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
                                 notificationButtons.get(avatar).getStyle().clear();
                                 consumeDialog.close();
                             });
@@ -335,6 +336,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
+                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
                                 notificationButtons.get(avatar).getStyle().clear();
                                 talkDialog.close();
                             });
@@ -348,6 +350,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
+                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
                                 notificationButtons.get(avatar).getStyle().clear();
                                 attackDialog.close();
                             });

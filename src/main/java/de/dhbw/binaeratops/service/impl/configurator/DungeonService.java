@@ -158,4 +158,10 @@ public class DungeonService implements DungeonServiceI {
     public Room getRoomById(Long ARoomId) {
         return roomRepo.findByRoomId(ARoomId);
     }
+
+    public void setAvatarNotRequested(Long AAvatarId) {
+        Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
+        avatar.setRequested(false);
+        avatarRepo.save(avatar);
+    }
 }

@@ -89,5 +89,7 @@ public interface DungeonServiceI {
     void kickPlayer(Long ADungeonId, Long AUserId);
 
     Room getRoomById(Long ARoomId);
+
+    void setAvatarNotRequested(Long AAvatarId);
 }
 

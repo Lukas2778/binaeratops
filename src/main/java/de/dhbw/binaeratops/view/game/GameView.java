@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
-import javax.swing.*;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -199,6 +198,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                             break;
                     }
                 }
+            } catch (CmdScannerAlreadyRequestedException alreadyRequested) {
+                Notification.show(transProv.getUserMessage(alreadyRequested.getUserMessage(), VaadinSession.getCurrent().getLocale()))
+                        .setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerRecipientOfflineException recipientOffline) {
                 Notification.show(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);

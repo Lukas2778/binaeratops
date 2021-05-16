@@ -11,10 +11,7 @@ import de.dhbw.binaeratops.model.repository.ItemInstanceRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
 import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInsufficientPermissionException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInvalidItemTypeException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerInvalidParameterException;
+import de.dhbw.binaeratops.service.exceptions.parser.*;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -70,7 +67,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             Race race = avatar.getRace();
             Role role = avatar.getRole();
-            return new UserMessage("view.game.ctrl.cmd.whoami", avatar.getName(), race.getRaceName(), race.getDescription(), role.getRoleName(), role.getDescription() /*, TODO Lebenspunkte hinzufügen*/);
+            return new UserMessage("view.game.ctrl.cmd.whoami", avatar.getName(), race.getRaceName(), race.getDescription(), role.getRoleName(), role.getDescription(), String.valueOf(avatar.getLifepoints()));
         } else {
             throw new CmdScannerInsufficientPermissionException("WHOAMI");
         }
@@ -139,17 +136,20 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onMoveNorth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            // Bewegen nach Norden, sofern Raum existent ist.
-            Long northNeighboor = avatar.getCurrentRoom().getNorthRoomId();
-            if (northNeighboor != null) {
-                Room north = roomRepo.findByRoomId(northNeighboor);
-                avatar.setCurrentRoom(north);
-                avatarRepo.save(avatar);
-                return new UserMessage("view.game.ctrl.cmd.move.north");
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                // Bewegen nach Norden, sofern Raum existent ist.
+                Long northNeighboor = avatar.getCurrentRoom().getNorthRoomId();
+                if (northNeighboor != null) {
+                    Room north = roomRepo.findByRoomId(northNeighboor);
+                    avatar.setCurrentRoom(north);
+                    avatarRepo.save(avatar);
+                    return new UserMessage("view.game.ctrl.cmd.move.north");
+                } else {
+                    return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                }
             } else {
-                return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                 throw new CmdScannerAlreadyRequestedException();
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("MOVE NORTH");
@@ -160,17 +160,20 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onMoveEast(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            // Bewegen nach Norden, sofern Raum existent ist.
-            Long eastNeighboorId = avatar.getCurrentRoom().getEastRoomId();
-            if (eastNeighboorId != null) {
-                Room east = roomRepo.findByRoomId(eastNeighboorId);
-                avatar.setCurrentRoom(east);
-                avatarRepo.save(avatar);
-                return new UserMessage("view.game.ctrl.cmd.move.east");
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                // Bewegen nach Osten, sofern Raum existent ist.
+                Long eastNeighboorId = avatar.getCurrentRoom().getEastRoomId();
+                if (eastNeighboorId != null) {
+                    Room east = roomRepo.findByRoomId(eastNeighboorId);
+                    avatar.setCurrentRoom(east);
+                    avatarRepo.save(avatar);
+                    return new UserMessage("view.game.ctrl.cmd.move.east");
+                } else {
+                    return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                }
             } else {
-                return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                throw new CmdScannerAlreadyRequestedException();
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("MOVE EAST");
@@ -181,17 +184,20 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onMoveSouth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            // Bewegen nach Norden, sofern Raum existent ist.
-            Long southNeighboorId = avatar.getCurrentRoom().getSouthRoomId();
-            if (southNeighboorId != null) {
-                Room south = roomRepo.findByRoomId(southNeighboorId);
-                avatar.setCurrentRoom(south);
-                avatarRepo.save(avatar);
-                return new UserMessage("view.game.ctrl.cmd.move.south");
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                // Bewegen nach Süden, sofern Raum existent ist.
+                Long southNeighboorId = avatar.getCurrentRoom().getSouthRoomId();
+                if (southNeighboorId != null) {
+                    Room south = roomRepo.findByRoomId(southNeighboorId);
+                    avatar.setCurrentRoom(south);
+                    avatarRepo.save(avatar);
+                    return new UserMessage("view.game.ctrl.cmd.move.south");
+                } else {
+                    return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                }
             } else {
-                return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                throw new CmdScannerAlreadyRequestedException();
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("MOVE SOUTH");
@@ -202,17 +208,20 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onMoveWest(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
-        // TODO Prüfen, das nicht bereits eine Request abgeschickt wurde.
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            // Bewegen nach Norden, sofern Raum existent ist.
-            Long westNeighboorId = avatar.getCurrentRoom().getWestRoomId();
-            if (westNeighboorId != null) {
-                Room west = roomRepo.findByRoomId(westNeighboorId);
-                avatar.setCurrentRoom(west);
-                avatarRepo.save(avatar);
-                return new UserMessage("view.game.ctrl.cmd.move.west");
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                // Bewegen nach Norden, sofern Raum existent ist.
+                Long westNeighboorId = avatar.getCurrentRoom().getWestRoomId();
+                if (westNeighboorId != null) {
+                    Room west = roomRepo.findByRoomId(westNeighboorId);
+                    avatar.setCurrentRoom(west);
+                    avatarRepo.save(avatar);
+                    return new UserMessage("view.game.ctrl.cmd.move.west");
+                } else {
+                    return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                }
             } else {
-                return new UserMessage("view.game.ctrl.cmd.move.invalid");
+                throw new CmdScannerAlreadyRequestedException();
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("MOVE WEST");
@@ -505,25 +514,29 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            for (ItemInstance item : avatar.getCurrentRoom().getItems()) {
-                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    Item i = item.getItem();
-                    if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
-                        // Zum Inventar hinzufügen, da erlaubt
-                        avatar.getCurrentRoom().removeItem(item);
-                        avatar.addInventoryItem(item);
-                        itemInstanceRepo.save(item);
-                        avatarRepo.save(avatar);
-                        return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
-                    } else {
-                        // Inventar voll.
-                        return new UserMessage("view.game.ctrl.cmd.take.failure", String.valueOf(getInventorySize(avatar)),
-                                String.valueOf(dungeon.getDefaultInventoryCapacity()), String.valueOf(item.getItem().getSize()));
+            if (!avatar.hasRequested()) {
+                for (ItemInstance item : avatar.getCurrentRoom().getItems()) {
+                    if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        Item i = item.getItem();
+                        if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
+                            // Zum Inventar hinzufügen, da erlaubt
+                            avatar.getCurrentRoom().removeItem(item);
+                            avatar.addInventoryItem(item);
+                            itemInstanceRepo.save(item);
+                            avatarRepo.save(avatar);
+                            return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
+                        } else {
+                            // Inventar voll.
+                            return new UserMessage("view.game.ctrl.cmd.take.failure", String.valueOf(getInventorySize(avatar)),
+                                    String.valueOf(dungeon.getDefaultInventoryCapacity()), String.valueOf(item.getItem().getSize()));
+                        }
                     }
                 }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(AItem);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
             }
-            // Gegenstand wurde nicht gefunden.
-            throw new CmdScannerInvalidParameterException(AItem);
         } else {
             throw new CmdScannerInsufficientPermissionException("TAKE");
         }
@@ -534,18 +547,22 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            for (ItemInstance item : avatar.getInventory()) {
-                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    avatar.removeInventoryItem(item);
-                    avatar.getCurrentRoom().addItem(item);
-                    itemInstanceRepo.save(item);
-                    roomRepo.save(avatar.getCurrentRoom());
-                    avatarRepo.save(avatar);
-                    return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                for (ItemInstance item : avatar.getInventory()) {
+                    if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        avatar.removeInventoryItem(item);
+                        avatar.getCurrentRoom().addItem(item);
+                        itemInstanceRepo.save(item);
+                        roomRepo.save(avatar.getCurrentRoom());
+                        avatarRepo.save(avatar);
+                        return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
+                    }
                 }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(AItem);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
             }
-            // Gegenstand wurde nicht gefunden.
-            throw new CmdScannerInvalidParameterException(AItem);
         } else {
             throw new CmdScannerInsufficientPermissionException("DROP");
         }
@@ -556,17 +573,22 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = avatarRepo.findByAvatarId(AAvatar.getAvatarId());
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            for (ItemInstance item : avatar.getInventory()) {
-                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    avatar.removeInventoryItem(item);
-                    itemInstanceRepo.save(item);
-                    avatarRepo.save(avatar);
-                    userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
-                    return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                for (ItemInstance item : avatar.getInventory()) {
+                    if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        avatar.removeInventoryItem(item);
+                        avatar.setRequested(true);
+                        itemInstanceRepo.save(item);
+                        avatarRepo.save(avatar);
+                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
+                        return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
+                    }
                 }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(AItem);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
             }
-            // Gegenstand wurde nicht gefunden.
-            throw new CmdScannerInvalidParameterException(AItem);
         } else {
             throw new CmdScannerInsufficientPermissionException("CONSUME");
         }
@@ -596,6 +618,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
                             avatar.addEquipmentItem(item);
+                            avatar.setRequested(true);
                             itemInstanceRepo.save(item);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
@@ -618,17 +641,21 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            for (ItemInstance item : avatar.getEquipment()) {
-                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    // Wenn Item in Equipment
-                    avatar.removeEquipmentItem(item);
-                    itemInstanceRepo.save(item);
-                    avatarRepo.save(avatar);
-                    return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                for (ItemInstance item : avatar.getEquipment()) {
+                    if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        // Wenn Item in Equipment
+                        avatar.removeEquipmentItem(item);
+                        itemInstanceRepo.save(item);
+                        avatarRepo.save(avatar);
+                        return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
+                    }
                 }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(AItem);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
             }
-            // Gegenstand wurde nicht gefunden.
-            throw new CmdScannerInvalidParameterException(AItem);
         } else {
             throw new CmdScannerInsufficientPermissionException("LAYDOWN");
         }
@@ -639,7 +666,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            return new UserMessage("view.game.ctrl.cmd.health" /* TODO , avatar.getLifePoints() */);
+            return new UserMessage("view.game.ctrl.cmd.health", String.valueOf(avatar.getLifepoints()));
         } else {
             throw new CmdScannerInsufficientPermissionException("HEALTH");
         }
@@ -651,7 +678,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     private String getCurrentUsers(Dungeon ADungeon) {
-        List<User> avatars = ADungeon.getCurrentUsers();//new ArrayList<>(); // TODO Produktiv-Liste einsetzen...
+        List<User> avatars = ADungeon.getCurrentUsers();
         StringBuilder s = new StringBuilder();
         s.append("<ol>");
         for (User tempAvatar : avatars) {

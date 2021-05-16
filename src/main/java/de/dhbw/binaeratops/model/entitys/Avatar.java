@@ -40,6 +40,8 @@ public class Avatar implements AvatarI {
 
     private boolean active;
 
+    private boolean requested = false;
+
     @ManyToOne
     private User user;
 
@@ -137,6 +139,14 @@ public class Avatar implements AvatarI {
         active = AActive;
     }
 
+    public boolean hasRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean ARequested) {
+        requested = ARequested;
+    }
+
     public User getUser() {
         return user;
     }
@@ -188,7 +198,7 @@ public class Avatar implements AvatarI {
 
     public void removeInventoryItem(ItemInstance AItem) {
         inventory.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setInventoryAvatar(null);
     }
 
     public List<ItemInstance> getEquipment() {
@@ -202,7 +212,7 @@ public class Avatar implements AvatarI {
 
     public void removeEquipmentItem(ItemInstance AItem) {
         equipment.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setEquipmentAvatar(null);
     }
 
     public List<Room> getVisitedRooms() {
