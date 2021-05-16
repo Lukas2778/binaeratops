@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
@@ -73,7 +74,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
-    private final UnicastProcessor<KickUser> kickerPublisher;
+    private final UnicastProcessor<KickUser> kickUsersPublisher;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -96,7 +97,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
-                             UnicastProcessor<KickUser> kickerPublisher) {
+                             UnicastProcessor<KickUser> AKickUsersPublisher) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -105,7 +106,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
-        this.kickerPublisher = kickerPublisher;
+        this.kickUsersPublisher = AKickUsersPublisher;
         setId("SomeView");
 
         userActionsIncoming();
@@ -332,7 +333,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }).setHeader("Anfragen");
         userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
-            whisperButton.addClickListener(e -> Notification.show("Not Implemented"));
+            whisperButton.addClickListener(e -> {
+                Notification.show("Not Implemented");
+                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
+            });
             return whisperButton;
         }).setHeader("Anflüstern");
         userGrid.addComponentColumn(avatar -> {
@@ -361,7 +365,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }).setHeader("Informationen");
         userGrid.addComponentColumn(avatar -> {
             Button kickButton = new Button("Spieler kicken");
-            Dialog confirmKickDialog = new Dialog();
+            /*Dialog confirmKickDialog = new Dialog();
             Label confirmLabel = new Label("Bist du dir sicher, dass du den Spieler kicken möchtest?");
             Button confirmButton = new Button("Kicken!");
             Button cancelButton = new Button("Abbrechen");
@@ -379,7 +383,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             cancelButton.addClickListener(e -> {
                 confirmKickDialog.close();
-            });
+            });*/
             return kickButton;
         }).setHeader("Kicken");
     }

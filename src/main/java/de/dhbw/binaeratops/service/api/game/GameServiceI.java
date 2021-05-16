@@ -71,4 +71,6 @@ public interface GameServiceI {
      */
     void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
+    Long getStandardAvatarLifepoints(Dungeon ADungeon);
+
 }

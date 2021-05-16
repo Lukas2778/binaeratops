@@ -124,4 +124,5 @@ public interface NPCI {
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeItem(ItemInstance AItem);
+
 }

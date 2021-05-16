@@ -54,4 +54,16 @@ public interface RoleI {
      * @param ADescription Zu setzende Beschreibung der Rolle.
      */
     void setDescription(String ADescription);
+
+    /**
+     * TODO
+     * @return
+     */
+    Long getLifepointsBonus();
+
+    /**
+     * TODO
+     * @param ALifepointBonus
+     */
+    void setLifepointsBonus(Long ALifepointBonus);
 }

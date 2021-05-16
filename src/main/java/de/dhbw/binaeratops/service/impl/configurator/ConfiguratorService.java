@@ -171,8 +171,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void createRole(String AName, String ADescription) {
-        Role newRole = new Role(AName, ADescription);
+    public void createRole(String AName, String ADescription, Long ALifepointsBonus) {
+        Role newRole = new Role(AName, ADescription, ALifepointsBonus);
         dungeon.addRole(newRole);
         roleRepo.save(newRole);
         //dungeonRepo.save(dungeon);
@@ -191,8 +191,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void createRace(String AName, String ADescription) {
-        Race newRace = new Race(AName, ADescription);
+    public void createRace(String AName, String ADescription, Long ALifepointsBonus) {
+        Race newRace = new Race(AName, ADescription,ALifepointsBonus);
         dungeon.addRace(newRace);
         raceRepo.save(newRace);
         //dungeonRepo.save(dungeon);

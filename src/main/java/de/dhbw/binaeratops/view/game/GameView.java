@@ -19,6 +19,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.KickUser;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -68,6 +69,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> messages;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
+    private final Flux<KickUser> kickUsers;
 
     H2 binTitle;
     String aboutText;
@@ -94,8 +96,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private List<ItemInstance> armorList;
     Grid<ItemInstance> armorGrid;
 
-    private Flux<KickUser> kicker;
-
     private Avatar myAvatar;
     private Room currentRoom;
     private List<Room> visitedRooms;
@@ -110,20 +110,21 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
      * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
+     * @param kickUsers
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> AKicker) {
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> kickUsers) {
         this.messages = messages;
         this.messagesPublisher = AMessagePublisher;
-        this.kicker = AKicker;
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;
         myDungeonRepo = ADungeonRepo;
         myGameService = AGameService;
-        gettingKicked();
+        this.kickUsers = kickUsers;
+
         currentUser = VaadinSession.getCurrent().getAttribute(User.class);
     }
 
@@ -134,6 +135,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         initiateGameView();
         //Avatarauswahl öffnen
         createAvatarDialog();
+        test();
+
+    }
+
+    private void test(){
+        kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
+            Notification.show("Kick me pls: " + message.getUser().getName());
+        })));
     }
 
     void initiateGameView() {
@@ -331,9 +340,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
 
-        NumberField lifepointsField = new NumberField(res.getString("view.game.numberfield.lifepoints"));
-        lifepointsField.setHasControls(true);
-        lifepointsField.setValue(20.0);
 
         List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
         ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
@@ -352,10 +358,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button cancelButt = new Button(res.getString("view.game.button.cancel"), e -> myCreateAvatarDialog.close());
         cancelButt.getStyle().set("color", "red");
         Button createAvatarButt = new Button(res.getString("view.game.button.save"));
+
         createAvatarButt.addClickListener(e -> {
+            Avatar currentAvatar = new Avatar();
+            //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
+            currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(),avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
             //Neuen Avatar speichern
             myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(), avatarNameFiled.getValue(),
-                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue(), lifepointsField.getValue().longValue());
+                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue(),  currentAvatar.getLifepoints());
             refreshAvatarGrid();
             myCreateAvatarDialog.close();
         });
@@ -363,7 +373,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.focus();
         createAvatarButt.addClickShortcut(Key.ENTER);
 
-        contentLayout.add(header, description, avatarNameFiled, lifepointsField, avatarGenderField, avatarRoleField, avatarRaceField);
+        contentLayout.add(header, description, avatarNameFiled, avatarGenderField, avatarRoleField, avatarRaceField);
         buttCreateLayout.add(cancelButt, createAvatarButt);
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
@@ -519,16 +529,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             confirmLeaveDialog();
             Notification.show(res.getString("view.game.notification.already.leaving"));
         }
-    }
-
-    private void gettingKicked() {
-        kicker.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
-            if (action.getUser() == VaadinSession.getCurrent().getAttribute(User.class)) {
-                this.myAvatar = null;
-                Notification.show("YOU WERE KICKED FOR CRIMES AGAINST BINAERATOPS GMBH BY OUR LEADER LUKAS THE TYRANT");
-                UI.getCurrent().navigate("lobby");
-            }
-        })));
     }
 
     private boolean hasChanges() {

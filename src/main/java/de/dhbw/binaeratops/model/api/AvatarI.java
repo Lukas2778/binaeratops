@@ -214,4 +214,6 @@ public interface AvatarI {
     Long getLifepoints();
 
     void setLifepoints(Long ALifepoints);
+
+    void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB);
 }

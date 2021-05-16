@@ -42,10 +42,14 @@ public class Application extends SpringBootServletInitializer {
     }
 
     @Bean
-    UnicastProcessor<KickUser> kickerPublisher() {return UnicastProcessor.create();}
+    UnicastProcessor<KickUser> kickUserPublisher(){
+        return UnicastProcessor.create();
+    }
 
     @Bean
-    Flux<KickUser> kickUser(UnicastProcessor<KickUser> publisher) { return publisher.replay(30).autoConnect(); }
+    Flux<KickUser> kickUsers(UnicastProcessor<KickUser> publisher) {
+        return publisher.replay(30).autoConnect();
+    }
 
     /**
      * Main-Methode der Applikation.

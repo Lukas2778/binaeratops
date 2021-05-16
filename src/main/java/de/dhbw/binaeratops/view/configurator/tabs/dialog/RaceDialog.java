@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Race;
@@ -61,12 +62,15 @@ public class RaceDialog extends Dialog
     {
         currentRaceField = new TextField(res.getString("view.configurator.dialog.race.field.name"));
         currentDescriptionField = new TextField(res.getString("view.configurator.dialog.race.field.description"));
+        NumberField lifepointsBonusField = new NumberField(res.getString("view.configurator.dialog.race.field.lifepointsBonus"));
+        lifepointsBonusField.setHasControls(true);
+        lifepointsBonusField.setMin(-50);
+        lifepointsBonusField.setValue(0.0);
+
         Button saveDialog = new Button(res.getString("view.configurator.dialog.race.button.save"));
         Button closeDialog = new Button(res.getString("view.configurator.dialog.race.button.cancel"));
 
-        this.add(new VerticalLayout(currentRaceField,
-                                    currentDescriptionField,
-                                    new HorizontalLayout(saveDialog, closeDialog)));
+        this.add(new VerticalLayout(currentRaceField, currentDescriptionField, lifepointsBonusField ,new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
             if ( currentRaceField.getValue() != "" )
@@ -74,11 +78,12 @@ public class RaceDialog extends Dialog
 
                 currentRace.setRaceName(currentRaceField.getValue());
                 currentRace.setDescription(currentDescriptionField.getValue());
+                currentRace.setLifepointsBonus(lifepointsBonusField.getValue().longValue());
 
 
                 if ( !findRace(currentRace.getRaceName(), currentRace.getDescription()) )
                 {
-                    configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription());
+                    configuratorServiceI.createRace(currentRace.getRaceName(), currentRace.getDescription(), currentRace.getLifepointsBonus());
                     refreshGrid();
                     this.close();
                 }

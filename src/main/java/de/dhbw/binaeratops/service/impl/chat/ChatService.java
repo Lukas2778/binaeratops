@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl.chat;
 
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
@@ -54,7 +55,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void notifyAll(String AMessage, List<User> AReceiverList, User ADungeonMaster) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName());
+        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName()+":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
@@ -62,7 +63,7 @@ public class ChatService implements ChatServiceI {
 
     @Override
     public void whisperDungeonMaster(String AMessage, User AReceiver, User ADungeonMaster) {
-        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName());
+        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName()+":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
@@ -70,7 +71,7 @@ public class ChatService implements ChatServiceI {
 
     @Override
     public void whisper(String AMessage, User AReceiver, Avatar AAvatar) {
-        Label sender = new Label(AAvatar.getName());
+        Label sender = new Label(AAvatar.getName()+":");
         sender.addClassName("playernamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
@@ -79,7 +80,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void sendRoomMessage(String AMessage, List<User> AReceiverList, Avatar AAvatar, Room ARoom) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName());
+        Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName()+":");
         sender.addClassName("roomnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
@@ -93,7 +94,8 @@ public class ChatService implements ChatServiceI {
      * @return Fertiger Paragraph.
      */
     private Paragraph buildParagraph(Label ASender, String AMessage) {
-        return new Paragraph(ASender, new Label(": " + AMessage));
+        Html message = new Html("<div>" + AMessage + "</div>");
+        return new Paragraph(ASender, message);
     }
 
     /**

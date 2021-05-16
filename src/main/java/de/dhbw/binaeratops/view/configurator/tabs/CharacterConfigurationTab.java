@@ -110,6 +110,23 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                 new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
+        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.liefpoint"));
+        lifepointsField.setHasControls(true);
+        lifepointsField.setMin(1);
+
+        if(configuratorService.getDungeon().getStandardAvatarLifepoints() != null)
+            lifepointsField.setValue((double) configuratorService.getDungeon().getStandardAvatarLifepoints());
+        else{
+            lifepointsField.setValue(20.0);
+            configuratorService.getDungeon().setStandardAvatarLifepoints(lifepointsField.getValue().longValue());
+        }
+
+
+        lifepointsField.addValueChangeListener(e-> {
+            configuratorService.getDungeon().setStandardAvatarLifepoints(lifepointsField.getValue().longValue());
+            configuratorService.saveDungeon();
+        });
+
         NumberField inventorySize = new NumberField(res.getString("view.configurator.character.numberfield"));
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
@@ -117,8 +134,11 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
         if(configuratorService.getDungeon().getDefaultInventoryCapacity() != null)
             inventorySize.setValue((double) configuratorService.getDungeon().getDefaultInventoryCapacity());
-        else
+        else{
             inventorySize.setValue(50.0);
+            configuratorService.getDungeon().setDefaultInventoryCapacity(inventorySize.getValue().longValue());
+        }
+
 
         inventorySize.addValueChangeListener(e-> {
             configuratorService.getDungeon().setDefaultInventoryCapacity(inventorySize.getValue().longValue());
@@ -132,7 +152,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
         genderRadioButton.setValue(res.getString("view.configurator.character.radiobutton.activate.gender"));
 
-        initFeldLayout.add(title, hint, inventorySize, genderRadioButton);
+        initFeldLayout.add(title, hint,lifepointsField ,inventorySize, genderRadioButton);
 
     }
 
@@ -147,10 +167,12 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
             grid.setItems(roleArrayList);
         }
 
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
-                .setHeader(res.getString("view.configurator.character.role.grid.name"));
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription)
-                .setHeader(res.getString("view.configurator.character.role.grid.description"));
+        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader(res.getString("view.configurator.character.role.grid.name"));
+
+        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader(res.getString("view.configurator.character.role.grid.description"));
+
+        Column<Role> lifepointsBonusColumn = grid.addColumn(Role::getLifepointsBonus).setHeader(res.getString("view.configurator.character.role.grid.lifepointsbonus"));
+
 
 
         TextField roleNameField = new TextField();
@@ -187,8 +209,9 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
                 .setHeader(res.getString("view.configurator.character.race.grid.name"));
-        Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription)
-                .setHeader(res.getString("view.configurator.character.race.grid.description"));
+        Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription).setHeader(res.getString("view.configurator.character.race.grid.description"));
+
+        Column<Race> lifepointsBonusColumn = raceGrid.addColumn(Race::getLifepointsBonus).setHeader(res.getString("view.configurator.character.role.grid.lifepointsbonus"));
 
         TextField raceNameField = new TextField();
         TextField descriptionField = new TextField();

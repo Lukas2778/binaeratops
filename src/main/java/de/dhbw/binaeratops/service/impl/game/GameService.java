@@ -108,5 +108,8 @@ public class GameService implements GameServiceI {
             userRepositoryI.save(AUser);
         }
     }
+    public Long getStandardAvatarLifepoints(Dungeon ADungeon){
+        return ADungeon.getStandardAvatarLifepoints();
+    }
 
 }
