@@ -163,9 +163,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     action.getAvatar();
                     return;
                 }
-                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
-                notificationButtons.get(action.getUser()).getStyle().set("background", "red");
-                actionMap.put(action.getUser(), action);
+                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
+                notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
+                actionMap.put(action.getAvatar(), action);
             }
         })));
     }
@@ -338,7 +338,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "CONSUME":
                             Dialog consumeDialog = new Dialog();
                             TextArea consumeActionText = new TextArea();
-                            Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label consumeUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
 
                             HorizontalLayout randomLayout = makeDice();
                             Button consumeSendActionButton = new Button("Senden", evfds -> {
@@ -354,7 +354,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "TALK":
                             Dialog talkDialog = new Dialog();
                             TextArea talkActionText = new TextArea();
-                            Label talkUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label talkUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
@@ -368,7 +368,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "ATTACK":
                             Dialog attackDialog = new Dialog();
                             TextArea attackActionText = new TextArea();
-                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
                             Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
@@ -384,13 +384,15 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             });
             return requestsButton;
         }).setHeader("Anfragen");
-        userGrid.addComponentColumn(avatar -> {
+        /*userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
             whisperButton.addClickListener(e -> {
                 Notification.show("Not Implemented");
             });
             return whisperButton;
         }).setHeader("Anflüstern");
+
+         */
         userGrid.addComponentColumn(avatar -> {
             Button infoButton = new Button("Infos");
             VerticalLayout lay = new VerticalLayout();

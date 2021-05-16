@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.KickUser;
+import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -117,7 +118,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> kickUsers) {
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> kickUsers,
+                    UnicastProcessor<UserAction> userActionpublisher) {
+        this.userActionpublisher = userActionpublisher;
         this.messages = messages;
         this.messagesPublisher = AMessagePublisher;
         myParserService = AParserService;
@@ -144,9 +147,18 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private void initializeKickSubscriber(){
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                myAvatar = null;
-                Notification.show(res.getString("view.game.notification.kicked"));
-                UI.getCurrent().navigate("aboutUs");
+                if(message.getKick()){
+                    myAvatar = null;
+                    Notification.show(res.getString("view.game.notification.kicked"));
+                    myAvatarDialog.close();
+                    UI.getCurrent().navigate("aboutUs");
+                }else{
+                    myAvatarDialog.close();
+                    textField.focus();
+                    loadAvatarProgress(selectedInDialogAvatar);
+                    createMap();
+                    changeRoom(currentRoom.getRoomId());
+                }
             }
         })));
     }

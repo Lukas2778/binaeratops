@@ -2,7 +2,6 @@ package de.dhbw.binaeratops.model;
 
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.service.api.chat.ChatServiceI;
 
 /**
  * Transportkklasse für die UserAction
@@ -11,20 +10,20 @@ import de.dhbw.binaeratops.service.api.chat.ChatServiceI;
  */
 public class UserAction {
     private Dungeon dungeon;
-    private Avatar user;
+    private Avatar avatar;
     private String actionType;
     private String userActionMessage;
 
     /**
      *
      * @param dungeon Dungeon.
-     * @param user Spiler.
+     * @param avatar Spiler.
      * @param actionType AKtionstyp.
      * @param userActionMessage Spe
      */
-    public UserAction(Dungeon dungeon, Avatar user, String actionType, String userActionMessage) {
+    public UserAction(Dungeon dungeon, Avatar avatar, String actionType, String userActionMessage) {
         this.dungeon = dungeon;
-        this.user = user;
+        this.avatar = avatar;
         this.actionType = actionType;
         this.userActionMessage = userActionMessage;
     }
@@ -43,8 +42,8 @@ public class UserAction {
         return dungeon;
     }
 
-    public Avatar getUser() {
-        return user;
+    public Avatar getAvatar() {
+        return avatar;
     }
 
     public String getActionType() {
