@@ -15,6 +15,9 @@ public class Logger {
     private static final StringBuilder builder = new StringBuilder();
     @AfterClass
     public static void afterClass() throws IOException {
+        if (!Files.exists(Path.of("target/JUnit"))){
+            Files.createDirectories(Path.of("target/JUnit"));
+        }
         if (Files.exists(Path.of("target/JUnit"))) {
             PrintWriter logFile = new PrintWriter("target/JUnit/ " + java.time.LocalDate.now() + "-log.txt", StandardCharsets.UTF_8);
             logFile.write(builder.toString());

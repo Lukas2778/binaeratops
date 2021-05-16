@@ -209,6 +209,13 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                             case "view.game.ctrl.cmd.move.west":
                                 changeRoom(currentRoom.getWestRoomId());
                                 break;
+                            case "view.game.ctrl.cmd.take":
+                            case "view.game.ctrl.cmd.drop":
+                            case "view.game.ctrl.cmd.consume":
+                            case "view.game.ctrl.cmd.equip.already.equipped":
+                            case "view.game.ctrl.cmd.equip":
+                            case "view.game.ctrl.cmd.laydown":
+                                refreshInventory();
                             default:
                                 break;
                         }
