@@ -161,16 +161,6 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
 
     private void permissionList() {
 
-        //Beispieldaten // TODO ENTFERNEN
-        User testUser = new User();
-        testUser.setName("DungeonDestroyer");
-
-        User testUser2 = new User();
-        testUser2.setName("DungeonKiller");
-
-        userList.add(testUser);
-        userList.add(testUser2);
-
         H2 title = new H2(res.getString("view.configurator.dungeon.h1.titlepermission"));
         Text permissionText = new Text(res.getString("view.configurator.dungeon.text.permission"));
 

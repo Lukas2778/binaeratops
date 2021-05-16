@@ -262,56 +262,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         });
         pauseButton.addClickListener(e -> Notification.show("Not Implemented"));
         leaveButton.addClickListener(e -> {
-            Dialog leaveDialog = new Dialog();
-            leaveDialog.setCloseOnEsc(false);
-            leaveDialog.setCloseOnOutsideClick(false);
-
-            H3 leaveHeadline=new H3("Dungeon verlassen");
-            String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +
-                    "Ernenne hier einen anderen Spieler zum Dungeon-Master (damit der Laden weiter läuft).<br>" +
-                    "ODER beende den Dungeon komplett.<br>-- Aber sei gewarnt: " +
-                    "Alle Spieler werden aus dem Dungeon gekickt (sende davor lieber eine Benachrichtigung!)</div>";
-
-            Button continueButton = new Button("Zurück");
-            Button chooseDMButton = new Button("Neuer Dungeon-Master");
-            chooseDMButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            Button leaveForSureButton = new Button("Verlassen");
-            leaveForSureButton.getStyle().set("color", "red");
-
-            Grid<User> newDMGrid = new Grid<>(User.class);
-            newDMGrid.removeAllColumns();
-            newDMGrid.addColumn(User::getName).setHeader("Name");
-            newDMGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
-
-            continueButton.addClickListener(event -> leaveDialog.close());
-
-            chooseDMButton.addClickListener(event -> {
-                if (newDMGrid.getSelectedItems().size() > 0) {
-                    User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
-                    dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
-                    dungeonServiceI.deactivateDungeon(dungeonId);
-                    leaveDialog.close();
-                    UI.getCurrent().navigate("myDungeons");
-                } else {
-                    Notification.show("Bitte wähle einen neuen Dungeon-Master aus!");
-                }
-            });
-
-            leaveForSureButton.addClickListener(event -> {
-                dungeonServiceI.deactivateDungeon(dungeonId);
-                leaveDialog.close();
-                UI.getCurrent().navigate("myDungeons");
-            });
-
-            newDMGrid.setItems(dungeonServiceI.getCurrentUsers(dungeon));
-            newDMGrid.setVerticalScrollingEnabled(true);
-            //newDMGrid.setHeight(50,Unit.PERCENTAGE);
-            VerticalLayout myGridLayoutVert=new VerticalLayout(newDMGrid);
-
-            leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), myGridLayoutVert,
-                    new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
+            Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
-            leaveDialog.setHeight(75,Unit.PERCENTAGE);
         });
 
     }
@@ -332,7 +284,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         userGrid.addComponentColumn(avatar -> {
             Button requestsButton = new Button("Beantworten");
 
-            Dialog requestDialog = new Dialog(new Label("Informationen zur Anfrage von: " + avatar.getName()));
             requestsButton.addClickListener(e -> {
                 if (actionMap.containsKey(avatar)) {
                     UserAction myUserAction = actionMap.get(avatar);
@@ -492,14 +443,65 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         settings.addInlineWithContents(InitialPageSettings.Position.PREPEND, script, InitialPageSettings.WrapMode.JAVASCRIPT);
     }
 
-    @ClientCallable
-    public void browserIsLeaving() {
-        System.out.println("Called browserIsLeavingDM");
-    }
-
     @Override
     public void beforeLeave(BeforeLeaveEvent e) {
-        browserIsLeaving();
+        e.postpone();
+        Dialog leaveDialog = createLeaveDialog();
+        leaveDialog.open();
     }
 
+    private Dialog createLeaveDialog () {
+        Dialog leaveDialog = new Dialog();
+        leaveDialog.setCloseOnEsc(false);
+        leaveDialog.setCloseOnOutsideClick(false);
+        leaveDialog.setHeight(75,Unit.PERCENTAGE);
+
+        H3 leaveHeadline=new H3("Dungeon verlassen");
+        String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +
+                "Ernenne hier einen anderen Spieler zum Dungeon-Master (damit der Laden weiter läuft).<br>" +
+                "ODER beende den Dungeon komplett.<br>-- Aber sei gewarnt: " +
+                "Alle Spieler werden aus dem Dungeon gekickt (sende davor lieber eine Benachrichtigung!)</div>";
+
+        Button continueButton = new Button("Weiterspielen");
+        Button chooseDMButton = new Button("Neuer Dungeon-Master");
+        chooseDMButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        Button leaveForSureButton = new Button("Verlassen");
+        leaveForSureButton.getStyle().set("color", "red");
+
+        Grid<User> newDMGrid = new Grid<>(User.class);
+        newDMGrid.removeAllColumns();
+        newDMGrid.addColumn(User::getName).setHeader("Name");
+        newDMGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
+
+        continueButton.addClickListener(event -> {
+            leaveDialog.close();
+        });
+
+        chooseDMButton.addClickListener(event -> {
+            if (newDMGrid.getSelectedItems().size() > 0) {
+                User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
+                dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
+                dungeonServiceI.deactivateDungeon(dungeonId);
+                leaveDialog.close();
+                UI.getCurrent().navigate("myDungeons");
+            } else {
+                Notification.show("Bitte wähle einen neuen Dungeon-Master aus!");
+            }
+        });
+
+        leaveForSureButton.addClickListener(event -> {
+            dungeonServiceI.deactivateDungeon(dungeonId);
+            leaveDialog.close();
+            UI.getCurrent().navigate("myDungeons");
+        });
+
+        newDMGrid.setItems(dungeonServiceI.getCurrentUsers(dungeon));
+        newDMGrid.setVerticalScrollingEnabled(true);
+        VerticalLayout myGridLayoutVert=new VerticalLayout(newDMGrid);
+
+        leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), myGridLayoutVert,
+                new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
+
+        return leaveDialog;
+    }
 }
