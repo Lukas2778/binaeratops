@@ -58,11 +58,13 @@ public class DungeonService implements DungeonServiceI {
                             && myDungeon.getDungeonStatus() != null
                             && myDungeon.getDungeonStatus().equals(Status.ACTIVE)
                             && !myDungeon.getDungeonMasterId().equals(AUser.getUserId())
-                            && (myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
-                            || (myDungeon.getDungeonVisibility().equals(Visibility.IN_CONFIGURATION)
-                            && myDungeon.getAllowedUsers().contains(AUser)
-                            && !myDungeon.getBlockedUsers().contains(AUser)
-                    )
+                            && (
+                                    myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
+                            || (
+                                    myDungeon.getDungeonVisibility().equals(Visibility.PRIVATE)
+                                    && myDungeon.getAllowedUsers().contains(AUser)
+                                    && !myDungeon.getBlockedUsers().contains(AUser)
+                                )
                     )
             ) {
                 userDungeons.add(myDungeon);
