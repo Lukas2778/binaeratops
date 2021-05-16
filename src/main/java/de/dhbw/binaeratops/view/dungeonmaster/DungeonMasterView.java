@@ -19,6 +19,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.KickUser;
 import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -72,6 +73,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
+    private final UnicastProcessor<KickUser> kickerPublisher;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -93,7 +95,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
-                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher) {
+                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
+                             UnicastProcessor<KickUser> kickerPublisher) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -102,6 +105,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
+        this.kickerPublisher = kickerPublisher;
         setId("SomeView");
 
         userActionsIncoming();
