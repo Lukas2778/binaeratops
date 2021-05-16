@@ -71,7 +71,12 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
         List<Room> roomList = configuratorServiceI.getDungeon().getRooms();
         startRoomBox = new ComboBox<>(res.getString("view.configurator.room.startroom"));
         startRoomBox.setItems(roomList);
-        startRoomBox.setValue(configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId()));
+
+        if(configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId())!= null)
+        {
+            startRoomBox.setValue(configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId()));
+        }
+
         startRoomBox.addValueChangeListener(e->{
             configuratorServiceI.setStartRoom(e.getValue());
         });

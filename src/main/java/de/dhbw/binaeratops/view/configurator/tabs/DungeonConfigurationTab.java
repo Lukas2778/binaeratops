@@ -10,6 +10,7 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -114,13 +115,63 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                 res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
         viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
 
+        //Zuerst wird überprüft, ob min. eine Rasse erstellt wurde, dann ob min. eine Rolle erstellt wurde und dann ob der Startraum festgelegt wurde.
         viewRadioButton.addValueChangeListener(e -> {
-            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
-            configuratorService.saveDungeon();
+            if(viewRadioButton.getValue() == res.getString("view.configurator.dungeon.radiobutton.public")){
+
+                if(configuratorService.getDungeon().getRaces().size() >0){
+
+                    if(configuratorService.getDungeon().getRoles().size()>0){
+
+                        if(configuratorService.getRoom(configuratorService.getDungeon().getStartRoomId())!= null){
+                            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                            configuratorService.saveDungeon();
+                        }else{
+                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                        }
+                    }else{
+                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                    }
+
+                }else{
+                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                }
+
+            }else if( viewRadioButton.getValue() == res.getString("view.configurator.dungeon.radiobutton.private")){
+
+                if(configuratorService.getDungeon().getRaces().size() >0){
+
+                    if(configuratorService.getDungeon().getRoles().size()>0){
+
+                        if(configuratorService.getRoom(configuratorService.getDungeon().getStartRoomId())!= null){
+                            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                            configuratorService.saveDungeon();
+                        }else{
+                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                        }
+                    }else{
+                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                    }
+
+                }else{
+                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                }
+
+            } else{
+                configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                configuratorService.saveDungeon();
+                System.out.println("In Conf  wurde gewählt");
+            }
         });
 
         if (configuratorService.getDungeon().getDungeonVisibility() == null)
-            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.public"));
+            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
         else
             viewRadioButton.setValue(getVisibility(configuratorService.getDungeon().getDungeonVisibility()));
 
