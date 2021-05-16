@@ -231,11 +231,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Button pauseButton = new Button("Dungeon pausieren");
         Button leaveButton = new Button("Dungeon verlassen");
         leaveButton.getStyle().set("color", "red");
-        Button testActionsButton = new Button("Test Aktion");
-        testActionsButton.addClickListener(e -> {
-            //TODO Dies ist nur zum Testen
-            userActionsPublisher.onNext(new UserAction("Nico trys to hit Timon."));
-        });
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         VerticalLayout leaveAndPause = new VerticalLayout();
         leaveAndPause.add(pauseButton, leaveButton);
@@ -291,15 +286,15 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     UserAction myUserAction = actionMap.get(avatar);
                     switch (myUserAction.getActionType()) {
                         case "CONSUME":
-                            Dialog consumedialog = new Dialog();
+                            Dialog consumeDialog = new Dialog();
                             TextArea consumeActionText = new TextArea();
                             Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
                             Button consumeSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
-                                consumedialog.close();
+                                consumeDialog.close();
                             });
-                            consumedialog.add(new VerticalLayout(consumeUserActionText, consumeActionText, consumeSendActionButton));
-                            consumedialog.open();
+                            consumeDialog.add(new VerticalLayout(consumeUserActionText, consumeActionText, consumeSendActionButton));
+                            consumeDialog.open();
                             break;
                         case "TALK":
                             Dialog talkDialog = new Dialog();
@@ -315,15 +310,15 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             talkDialog.open();
                             break;
                         case "ATTACK":
-                            Dialog attackdialog = new Dialog();
+                            Dialog attackDialog = new Dialog();
                             TextArea attackActionText = new TextArea();
                             Label attackUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
                             Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
-                                attackdialog.close();
+                                attackDialog.close();
                             });
-                            attackdialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
-                            attackdialog.open();
+                            attackDialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
+                            attackDialog.open();
                             break;
                     }
                 }
