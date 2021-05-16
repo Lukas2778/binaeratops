@@ -83,18 +83,21 @@ public class GameService implements GameServiceI {
         return AAvatar.getVisitedRooms();
     }
 
-    public void addActivePlayer(Dungeon ADungeon, User AUser){
+    public void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar){
         if(!ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.addCurrentUser(AUser);
+            AAvatar.setActive(true);
+            avatarRepositoryI.save(AAvatar);
             AUser.setCurrentDungeon(ADungeon);
             dungeonRepositoryI.save(ADungeon);
             userRepositoryI.save(AUser);
         }
     }
 
-    public void removeActivePlayer(Dungeon ADungeon, User AUser){
+    public void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar){
         if(ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.removeCurrentUser(AUser);
+            avatarRepositoryI.save(AAvatar);
             AUser.removeCurrentDungeon();
             dungeonRepositoryI.save(ADungeon);
             userRepositoryI.save(AUser);
