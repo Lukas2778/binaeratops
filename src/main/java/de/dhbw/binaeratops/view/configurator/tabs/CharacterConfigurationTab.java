@@ -112,7 +112,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                 new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepointspoint"));
+        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepoints"));
         lifepointsField.setHasControls(true);
         lifepointsField.setMin(1);
 
