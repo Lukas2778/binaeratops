@@ -21,7 +21,7 @@ public class TranslationProvider implements I18NProvider {
         return locales;
     }
 
-    private final ResourceBundle res = ResourceBundle.getBundle(BUNDLE_PREFIX);
+    private ResourceBundle res;
 
     @Override
     public String getTranslation(String key, Locale locale, Object... params) {
@@ -47,6 +47,8 @@ public class TranslationProvider implements I18NProvider {
         if (AUserMessage.getKey() == null) {
             return "<div>TranslationError</div>";
         }
+
+        res = ResourceBundle.getBundle(BUNDLE_PREFIX, ALocale);
 
         if (AUserMessage.getParams().size() == 0) {
             return res.getString(AUserMessage.getKey());
