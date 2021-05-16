@@ -1,6 +1,5 @@
 package de.dhbw.binaeratops.model.entitys;
 
-import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
@@ -19,7 +18,7 @@ import java.util.ResourceBundle;
  * <p>
  *
  * @author Nicolas Haug
- * @see NPCI
+ * @see de.dhbw.binaeratops.model.api.NPCI
  */
 @Entity
 public class NPC  {

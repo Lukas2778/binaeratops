@@ -432,18 +432,18 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onExamineNpc(DungeonI ADungeon, String AName, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+    public UserMessage onExamineNpc(DungeonI ADungeon, String ANpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             List<NpcInstance> npcs = avatar.getCurrentRoom().getNpcs();
             for (NpcInstance npc : npcs) {
-                if (npc.getNpc().getNpcName().toLowerCase() == AName.toLowerCase()) {
+                if (npc.getNpc().getNpcName().toLowerCase() == ANpc.toLowerCase()) {
                     return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpc().getNpcName(), npc.getNpc().getDescription());
                 }
             }
             // Wurde nicht gefunden in der Liste
-            throw new CmdScannerInvalidParameterException(AName);
+            throw new CmdScannerInvalidParameterException(ANpc);
         } else {
             throw new CmdScannerInsufficientPermissionException("EXAMINE NPC");
         }

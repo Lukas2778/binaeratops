@@ -14,7 +14,7 @@ public class CmdScannerInsufficientPermissionException extends CmdScannerExcepti
 
     /**
      * Standard-Exception für den Fall, dass die Berechtigung nicht ausreicht.
-     * @param AInvalidCommand
+     * @param AInvalidCommand Ungültiger Befehl.
      */
     public CmdScannerInsufficientPermissionException(String AInvalidCommand) {
         super(AInvalidCommand);

@@ -14,7 +14,6 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -105,6 +104,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param ARoomRepo Wird für das Auffinden von Räumen benötigt.
      * @param ADungeonRepo Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
      * @param AGameService Wird für die Interaktion mit der Datenbank benötigt.
+     * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,

@@ -21,8 +21,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "whereami".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onWhereAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -30,16 +33,23 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "whoami".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onWhoAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "info all".
      *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onInfoAll(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -47,8 +57,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "info room".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onInfoRoom(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -56,8 +69,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "info players".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onInfoPlayers(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -65,8 +81,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "move north" und "move n".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onMoveNorth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -74,8 +93,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "move east" und "move e".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onMoveEast(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -83,8 +105,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "move south" und "move s".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onMoveSouth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -92,8 +117,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "move west" und "move w".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onMoveWest(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -101,29 +129,49 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "look around".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onLookAround(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
-     * Callback Befehl "examine".
+     * Callback Befehl "examine npc".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AItemOrNpc Gegenstand oder NPC der untersucht werden soll.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
+     * @param ANpc NPC der untersucht werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
-    UserMessage onExamineNpc(DungeonI ADungeon, String AItemOrNpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
+    UserMessage onExamineNpc(DungeonI ADungeon, String ANpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
-    UserMessage onExamineItem(DungeonI ADungeon, String AItemOrNpc, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
+    /**
+     * Callback Befehl "examine item".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
+     * @param AItem Gegenstand der untersucht werden soll.
+     * @return Benutzernachricht.
+     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
+     */
+    UserMessage onExamineItem(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "show inv".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onShowInventory(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -131,8 +179,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "show equip".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onShowEquipment(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -140,9 +191,12 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "take".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AItem Gegenstand der aufgenommen werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onTake(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -150,9 +204,12 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "drop".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AItem Gegenstand, der fallen gelassen werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onDrop(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -160,9 +217,12 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "consume".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AItem Gegenstand, der konsumiert werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -170,9 +230,12 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "equip".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AItem Gegenstand, der ausgerüstet werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onEquip(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException;
 
@@ -180,9 +243,12 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "laydown".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param AItem Gegenstand, der hingelegt werden soll.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onLayDown(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String AItem) throws CmdScannerException, InvalidImplementationException;
 
@@ -190,8 +256,11 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "health".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onGetHealth(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -199,10 +268,13 @@ public interface GameCtrlCmdHooksI {
      * Callback Befehl "talk".
      *
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
      * @param ANpcName Name des NPCs.
      * @param AMessage Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException;
 }
