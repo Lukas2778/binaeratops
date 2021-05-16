@@ -108,6 +108,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService) {
+        myMessages = messages;
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;
@@ -115,13 +116,23 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myGameService=AGameService;
 
         currentUser=VaadinSession.getCurrent().getAttribute(User.class);
+    }
 
-        myMessages = messages;
+    @Override
+    public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
+        dungeonId = ALong;
+        myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
+        initiateGameView();
+        //Avatarauswahl öffnen
+        createAvatarDialog();
+    }
+
+    void initiateGameView(){
         binTitle = new H2(res.getString("view.game.headline"));
         aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getCommandSymbol());
         html = new Html(aboutText);
 
-        myDungeonChatView = new ChatView(messages);
+        myDungeonChatView = new ChatView(myMessages);
         gameLayout = new HorizontalLayout();
         gameSplitLayout = new SplitLayout();
         gameFirstLayout = new VerticalLayout();
@@ -132,7 +143,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leftDungeonButt.getStyle().set("color", "red");
         leftDungeonButt.addClickListener(e->{
-           UI.getCurrent().navigate("lobby");
+            UI.getCurrent().navigate("lobby");
         });
 
         textField = new TextField();
@@ -190,14 +201,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         add(gameLayout);
 
         setSizeFull();
-    }
-
-    @Override
-    public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
-        dungeonId = ALong;
-        myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
-        //Avatarauswahl öffnen
-        createAvatarDialog();
     }
 
     void createAvatarDialog() {
