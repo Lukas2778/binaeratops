@@ -33,6 +33,8 @@ public class Role implements RoleI {
 
     private String description;
 
+    private Long lifepointsBonus;
+
     @ManyToOne
     private Dungeon dungeon;
 
@@ -42,9 +44,10 @@ public class Role implements RoleI {
      * @param ARoleName    Name der Rolle.
      * @param ADescription Beschreibung der Rolle.
      */
-    public Role(String ARoleName, String ADescription) {
+    public Role(String ARoleName, String ADescription, Long ALifepointsBonus) {
         this.roleName = ARoleName;
         this.description = ADescription;
+        this.lifepointsBonus = ALifepointsBonus;
     }
 
     /**
@@ -86,6 +89,10 @@ public class Role implements RoleI {
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
     }
+
+    public Long getLifepointsBonus(){return lifepointsBonus; }
+
+    public void setLifepointsBonus(Long ALifepointBonus){this.lifepointsBonus = ALifepointBonus; }
 
     @Override
     public boolean equals(Object AOther) {

@@ -169,7 +169,7 @@ public interface ConfiguratorServiceI {
      * @param AName        Rollenname.
      * @param ADescription Rollenbeschreibung.
      */
-    void createRole(String AName, String ADescription);
+    void createRole(String AName, String ADescription, Long ALifepointsBonus);
 
     /**
      * Rolle wird aus den Dungeon entfernt und gelöscht.
@@ -191,7 +191,7 @@ public interface ConfiguratorServiceI {
      * @param AName        Rassename.
      * @param ADescription Rassebeschreibung.
      */
-    void createRace(String AName, String ADescription);
+    void createRace(String AName, String ADescription, Long ALifepointsBonus);
 
     /**
      * Rasse wird aus den Dungeon entfernt und gelöscht.

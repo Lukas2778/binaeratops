@@ -387,4 +387,8 @@ public interface DungeonI {
      */
     void removeRace(Race ARace);
 
+    Long getStandardAvatarLifepoints();
+
+    void setStandardAvatarLifepoints(Long AStandardAvatarLifepoints);
+
 }

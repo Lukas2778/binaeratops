@@ -229,6 +229,8 @@ public class Avatar implements AvatarI {
 
     public void setLifepoints(Long ALifepoints){ this.lifepoints = ALifepoints; }
 
+    public void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB){ this.lifepoints = ALifepoints + ALifepointsBonus + ALifepointsBonusB; }
+
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
