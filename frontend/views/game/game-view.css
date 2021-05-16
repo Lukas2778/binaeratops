@@ -42,3 +42,22 @@ height: 45%;
 .mymargins.v-margin-left{
 padding-left:   10px;
 }
+
+.dmnamecolor{
+    color: darkred;
+    font-weight: bold;
+}
+
+.playernamecolor{
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.roomnamecolor{
+    color: #83639d;
+    font-weight: bold;
+}
+
+.boldtext{
+    font-weight: bold;
+}

@@ -1,8 +1,14 @@
 package de.dhbw.binaeratops.service.impl.chat;
 
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Paragraph;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
+import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.chat.ChatServiceI;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.UnicastProcessor;
 
@@ -10,11 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Service
 /**
  * Komponente "ChatService".
  * <p>
- * Dieser Service stellt alle Funktionalitäten zum Versenden von Chatnachrichten bereit.
+ * Dieser Service stellt alle Funktionalitäten zum Erstellen und Versenden von Chatnachrichten bereit.
  * </p>
  * <p>
  * Für Schnittstelle dieser Komponente siehe @{@link ChatServiceI}.
@@ -22,27 +27,93 @@ import java.util.List;
  *
  * @author Timon Gartung, Pedro Treuer
  */
-public class ChatService implements ChatServiceI
-{
-    private final UnicastProcessor publisher;
+@Service
+@CssImport("./views/game/game-view.css")
+public class ChatService implements ChatServiceI {
+
+    @Autowired
+    private UnicastProcessor publisher;
 
     /**
-     * Konstruktor zum Erzeugen eines ChatService.
-     * @param publisher Publisher.
+     * Sendet eine Nachricht ohne Absender an alle angegebenen Benutzern.
+     *
+     * @param AMessage      Nachricht.
+     * @param AReceiverList Liste von Empfängern der Nachricht.
      */
-    public ChatService(UnicastProcessor publisher) {
-        this.publisher = publisher;
+    @Override
+    public void sendMessage(String AMessage, List<User> AReceiverList) {
+        List<Long> receiverList = convertToUserIDList(AReceiverList);
+        sendChatMessage(new ChatMessage(AMessage, receiverList));
     }
 
-    public void sendMessage(String AMessage, User AReceiver){
-        List<Long> receiverList = new ArrayList<>();
-        receiverList.add(AReceiver.getUserId());
-        publisher.onNext(new ChatMessage(AMessage, receiverList));
+    @Override
+    public void sendActionMessage(String AMessage, User AReceiver) {
+        sendChatMessage(new ChatMessage(AMessage, AReceiver.getUserId()));
     }
 
-    public void sendMessage(String AMessage, List<User> AReceiverList){
-        List<Long> receiverList = new ArrayList<>();
-        AReceiverList.forEach(user -> receiverList.add(user.getUserId()));
-        publisher.onNext(new ChatMessage(AMessage, receiverList));
+    @Override
+    public void notifyAll(String AMessage, List<User> AReceiverList, User ADungeonMaster) {
+        List<Long> receiverList = convertToUserIDList(AReceiverList);
+        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName());
+        sender.addClassName("dmnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
     }
+
+    @Override
+    public void whisperDungeonMaster(String AMessage, User AReceiver, User ADungeonMaster) {
+        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName());
+        sender.addClassName("dmnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
+    }
+
+    @Override
+    public void whisper(String AMessage, User AReceiver, Avatar AAvatar) {
+        Label sender = new Label(AAvatar.getName());
+        sender.addClassName("playernamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
+    }
+
+    @Override
+    public void sendRoomMessage(String AMessage, List<User> AReceiverList, Avatar AAvatar, Room ARoom) {
+        List<Long> receiverList = convertToUserIDList(AReceiverList);
+        Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName());
+        sender.addClassName("roomnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
+    }
+
+    /**
+     * Builds the Paragraph for the Chat.
+     *
+     * @param ASender  Absender der Nachricht als Label.
+     * @param AMessage Nachricht.
+     * @return Fertiger Paragraph.
+     */
+    private Paragraph buildParagraph(Label ASender, String AMessage) {
+        return new Paragraph(ASender, new Label(": " + AMessage));
+    }
+
+    /**
+     * Konvertiert eine Liste von Benutzern zu einer Liste mit IDs.
+     *
+     * @param AList Liste mit Benutzern.
+     * @return Liste mit IDs.
+     */
+    private List<Long> convertToUserIDList(List<User> AList) {
+        List<Long> list = new ArrayList<>();
+        AList.forEach(user -> list.add(user.getUserId()));
+        return list;
+    }
+
+    /**
+     * Verschickt die Nachricht an alle Benutzer, die einen Chat offen haben.
+     * @param message Nachricht.
+     */
+    private void sendChatMessage(ChatMessage message) {
+        publisher.onNext(message);
+    }
+
 }

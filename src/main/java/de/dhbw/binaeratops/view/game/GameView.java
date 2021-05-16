@@ -552,9 +552,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         return res.getString("view.game.pagetitle");
     }
 
+    /**
+     * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
+     * @param event event.
+     */
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        messagesPublisher.onNext(new ChatMessage("Hallo" + VaadinSession.getCurrent().getAttribute(User.class).getName() + ", viel Spaß beim Chatten und Spielen!"  , VaadinSession.getCurrent().getAttribute(User.class).getUserId()));
+        String greetingMessage= "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
+        Label greetingLabel= new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
+        greetingLabel.addClassName("boldtext");
+        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage),greetingMessage , currentUser.getUserId()));
         confirmButt.clickInClient();
     }
 }
