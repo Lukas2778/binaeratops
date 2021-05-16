@@ -94,32 +94,36 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private List<ItemInstance> armorList;
     Grid<ItemInstance> armorGrid;
 
+    private Flux<KickUser> kicker;
+
     private Avatar myAvatar;
     private Room currentRoom;
     private List<Room> visitedRooms;
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     * @param messages Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
-     * @param AParserService Wird für die Interaktion mit dem Dungeon benötigt.
-     * @param AMapService Wird zur Erstellung der Karte benötigt.
-     * @param ARoomRepo Wird für das Auffinden von Räumen benötigt.
-     * @param ADungeonRepo Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
-     * @param AGameService Wird für die Interaktion mit der Datenbank benötigt.
+     *
+     * @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     * @param AParserService    Wird für die Interaktion mit dem Dungeon benötigt.
+     * @param AMapService       Wird zur Erstellung der Karte benötigt.
+     * @param ARoomRepo         Wird für das Auffinden von Räumen benötigt.
+     * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
+     * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher) {
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> AKicker) {
         this.messages = messages;
         this.messagesPublisher = AMessagePublisher;
+        this.kicker = AKicker;
         myParserService = AParserService;
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;
         myDungeonRepo = ADungeonRepo;
         myGameService = AGameService;
-
+        gettingKicked();
         currentUser = VaadinSession.getCurrent().getAttribute(User.class);
     }
 
@@ -132,7 +136,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarDialog();
 
     }
-
 
 
     void initiateGameView() {
@@ -362,16 +365,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.focus();
         createAvatarButt.addClickShortcut(Key.ENTER);
 
-        contentLayout.add(header, description, avatarNameFiled, lifepointsField , avatarGenderField, avatarRoleField, avatarRaceField);
+        contentLayout.add(header, description, avatarNameFiled, lifepointsField, avatarGenderField, avatarRoleField, avatarRaceField);
         buttCreateLayout.add(cancelButt, createAvatarButt);
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
 
     void refreshAvatarGrid() {
-        avatarList=new ArrayList<>();
-        List<Avatar> tempAvatarList=currentUser.getAvatars();
-        for (Avatar canAddAvatar:tempAvatarList){
-            if(canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())){
+        avatarList = new ArrayList<>();
+        List<Avatar> tempAvatarList = currentUser.getAvatars();
+        for (Avatar canAddAvatar : tempAvatarList) {
+            if (canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())) {
                 avatarList.add(canAddAvatar);
             }
         }
@@ -520,6 +523,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         }
     }
 
+    private void gettingKicked() {
+        kicker.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
+            if (action.getUser() == VaadinSession.getCurrent().getAttribute(User.class)) {
+                this.myAvatar = null;
+                Notification.show("YOU WERE KICKED FOR CRIMES AGAINST BINAERATOPS GMBH BY OUR LEADER LUKAS THE TYRANT");
+                UI.getCurrent().navigate("lobby");
+            }
+        })));
+    }
+
     private boolean hasChanges() {
         return myAvatar != null;
     }
@@ -561,14 +574,15 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
+     *
      * @param event event.
      */
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        String greetingMessage= "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
-        Label greetingLabel= new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
+        String greetingMessage = "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
+        Label greetingLabel = new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
         greetingLabel.addClassName("boldtext");
-        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage),greetingMessage , currentUser.getUserId()));
+        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
     }
 }

@@ -318,6 +318,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Label attackUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
                             Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
+                                actionMap.remove(avatar);
+                                notificationButtons.get(avatar).getStyle().clear();
                                 attackDialog.close();
                             });
                             attackDialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
@@ -357,6 +359,29 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             infoButton.addClickListener(e -> infoDialog.open());
             return infoButton;
         }).setHeader("Informationen");
+        userGrid.addComponentColumn(avatar -> {
+            Button kickButton = new Button("Spieler kicken");
+            Dialog confirmKickDialog = new Dialog();
+            Label confirmLabel = new Label("Bist du dir sicher, dass du den Spieler kicken möchtest?");
+            Button confirmButton = new Button("Kicken!");
+            Button cancelButton = new Button("Abbrechen");
+            confirmKickDialog.add(new VerticalLayout(confirmLabel, new HorizontalLayout(confirmButton, cancelButton)));
+
+            kickButton.addClickListener(e -> {
+                confirmKickDialog.open();
+            });
+
+            confirmButton.addClickListener(e -> {
+                dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
+                kickerPublisher.onNext(new KickUser(avatar.getUser(), dungeon));
+                confirmKickDialog.close();
+            });
+
+            cancelButton.addClickListener(e -> {
+                confirmKickDialog.close();
+            });
+            return kickButton;
+        }).setHeader("Kicken");
     }
 
 

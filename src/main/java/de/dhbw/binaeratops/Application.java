@@ -41,6 +41,12 @@ public class Application extends SpringBootServletInitializer {
         return publisher.replay(30).autoConnect();
     }
 
+    @Bean
+    UnicastProcessor<KickUser> kickerPublisher() {return UnicastProcessor.create();}
+
+    @Bean
+    Flux<KickUser> kickUser(UnicastProcessor<KickUser> publisher) { return publisher.replay(30).autoConnect(); }
+
     /**
      * Main-Methode der Applikation.
      * @param args Argumente zum Starten der Anwendung.
