@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.NpcInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
@@ -27,7 +28,7 @@ import java.util.*;
  */
 public class NpcSelectionDialog extends Dialog {
 
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
 
     public boolean dialogResult = false;

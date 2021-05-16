@@ -14,6 +14,7 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
@@ -23,7 +24,7 @@ import java.util.ResourceBundle;
 public class PermissionDialog extends Dialog {
     private TextField currentUserField;
 
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     private ArrayList<User> userList;
     Grid<User> grid;

@@ -7,14 +7,21 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.contextmenu.MenuItem;
+import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.menubar.MenuBar;
+import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.component.tabs.Tabs;
 import com.vaadin.flow.component.tabs.TabsVariant;
@@ -26,6 +33,8 @@ import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
 import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 
+import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -39,7 +48,7 @@ public class MainView extends AppLayout {
 
     private final Tabs menu;
     private H1 viewTitle;
-    //private Select<Locale> languageSelect;
+    private Select<Locale> languageSelect;
     private HorizontalLayout menuLayout;
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
@@ -58,25 +67,35 @@ public class MainView extends AppLayout {
 
         // --- SPRACHE HINZUFÜGEN IN MENÜ --- NICHT ENTFERNEN!!! ---
 
-//        languageSelect = new Select<>();
-//        languageSelect.setPlaceholder(res.getString("view.main.select"));
-//        List<Locale> locales = transProv.getProvidedLocales();
-//
-//        languageSelect.setItemLabelGenerator(Locale::getDisplayLanguage);
-//        languageSelect.setItems(locales);
-//        languageSelect.setValue(VaadinSession.getCurrent().getLocale());
-//
-//        languageSelect.addValueChangeListener(e -> {
-//            if (VaadinSession.getCurrent().getLocale() == Locale.US) {
-//                VaadinSession.getCurrent().setLocale(Locale.GERMANY);
-//            } else if (VaadinSession.getCurrent().getLocale() == Locale.GERMANY) {
-//                VaadinSession.getCurrent().setLocale(Locale.US);
-//            }
-//            res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-//            UI.getCurrent().getPage().reload();
-//        });
+        languageSelect = new Select<>();
+        languageSelect.setPlaceholder(res.getString("view.main.select"));
+        List<Locale> locales = transProv.getProvidedLocales();
+
+        languageSelect.setItemLabelGenerator(Locale::getDisplayLanguage);
+        languageSelect.setItems(locales);
+        languageSelect.setValue(VaadinSession.getCurrent().getLocale());
+
+        languageSelect.addValueChangeListener(e -> {
+            if (VaadinSession.getCurrent().getLocale() == Locale.US) {
+                VaadinSession.getCurrent().setLocale(Locale.GERMANY);
+            } else if (VaadinSession.getCurrent().getLocale() == Locale.GERMANY) {
+                VaadinSession.getCurrent().setLocale(Locale.US);
+            }
+            res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+            UI.getCurrent().getPage().reload();
+        });
+        Icon icon = new Icon(VaadinIcon.GLOBE);
+        MenuBar menuBar = new MenuBar();
+        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
+        menuBar.setOpenOnHover(true);
+        MenuItem menuItem = menuBar.addItem(icon);
+        SubMenu subMenu = menuItem.getSubMenu();
+        subMenu.addItem(languageSelect);
+
+
         menuLayout.addClassName("menuRight");
-        menuLayout.add(/*languageSelect,*/ avatar);
+
+        menuLayout.add(menuBar, avatar);
 
         /* OLD - Menubar Example */
 //        menuBar = new MenuBar();

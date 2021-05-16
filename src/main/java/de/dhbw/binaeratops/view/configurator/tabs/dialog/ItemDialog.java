@@ -9,6 +9,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -26,7 +27,7 @@ import java.util.ResourceBundle;
  */
 public class ItemDialog extends Dialog {
 
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     ConfiguratorServiceI configuratorServiceI;
 

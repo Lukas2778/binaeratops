@@ -24,6 +24,7 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -46,7 +47,7 @@ import java.util.ResourceBundle;
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 public class CharacterConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout roleListLayout = new VerticalLayout();

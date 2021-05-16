@@ -20,6 +20,7 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -41,7 +42,7 @@ import java.util.ResourceBundle;
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
 public class DungeonConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
