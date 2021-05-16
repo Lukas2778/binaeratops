@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.UnicastProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -88,7 +89,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             }
             if (alldiscorved) {
                 return new UserMessage("view.game.ctrl.cmd.info.all", dungeon.getDungeonName(), dungeonMaster.getName(),
-                        String.valueOf(dungeon.getCurrentUsers().size()), getCurrentUsers(dungeon), currentRoom.getRoomName(),
+                        String.valueOf(dungeon.getCurrentUsers().size()), getCurrentAvatars(dungeon), currentRoom.getRoomName(),
                         currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), String.valueOf(dungeon.getRooms().size()));
             } else {
                 return new UserMessage("view.game.ctrl.cmd.info.all", dungeon.getDungeonName(), dungeonMaster.getName(),
@@ -738,5 +739,21 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             }
         }
         return res;
+    }
+
+    private String getCurrentAvatars(Dungeon ADungeon) {
+        List<Avatar> avatars = new ArrayList<>();
+        ADungeon.getAvatars().forEach(avatar -> {
+            if (avatar.isActive()) {
+                avatars.add(avatar);
+            }
+        });
+        StringBuilder s = new StringBuilder();
+        s.append("<ol>");
+        for (Avatar tempAvatar : avatars) {
+            s.append("<li>").append(tempAvatar.getName()).append("</li>");
+        }
+        s.append("</ol>");
+        return s.toString();
     }
 }

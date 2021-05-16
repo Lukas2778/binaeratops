@@ -51,7 +51,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException;
+    UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "whisper master".
@@ -73,7 +73,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException;
+    UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "notify room".
@@ -85,7 +85,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException;
+    UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "notify all".
@@ -96,7 +96,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
      */
-    UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException;
+    UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
     /**
      * Callback Befehl "withdraw role".

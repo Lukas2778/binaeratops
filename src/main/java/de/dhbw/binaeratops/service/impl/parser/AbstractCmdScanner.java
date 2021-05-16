@@ -117,13 +117,17 @@ public abstract class AbstractCmdScanner {
         startPos = APos;
     }
 
+    protected String findParenthesesToken() {
+        return findInput(false, true);
+    }
+
     /**
      * Liefert aus dem restlichen zu parsenden String das erste Wort.
      *
      * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
      */
     protected String findNextToken() {
-        return findInput(false);
+        return findInput(false, false);
     }
 
     /**
@@ -133,7 +137,7 @@ public abstract class AbstractCmdScanner {
      * Token keine Eingabe vorhanden ist.
      */
     protected String findRestOfInput() {
-        return findInput(true);
+        return findInput(true, false);
     }
 
     /**
@@ -142,7 +146,7 @@ public abstract class AbstractCmdScanner {
      * @param AUpToLineEnd Wahrheitswert, ob bis zum Stringende eingelesen werden soll.
      * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
      */
-    private String findInput(boolean AUpToLineEnd) {
+    private String findInput(boolean AUpToLineEnd, boolean AParentheses) {
         // Nur suchen, wenn wir noch nicht am Ende sind
         if (currentTokenPos < input.length()) {
             int n;
@@ -167,13 +171,38 @@ public abstract class AbstractCmdScanner {
             } else {
                 // Tokenanfang gefunden, Ende suchen
                 currentTokenPos = n;
+
+                int flagPos = n;
+                boolean flag = false;
+                if (AParentheses) {
+                    if (input.charAt(n) == '"') {
+                        n++;
+                        currentTokenPos = n;
+                    }
+                }
                 if (AUpToLineEnd) {
                     n = input.length();
                 } else {
-                    for (; n < input.length() && input.charAt(n) != ' '; n++) {
+                    if (AParentheses) {
+                        for (; n < input.length() && input.charAt(n) != '"';n++) {
+                            flagPos++;
+                        }
+                        if (input.charAt(n) == '"') {
+                            flag = true;
+                        }
+                    } else {
+                        for (; n < input.length() && input.charAt(n) != ' '; n++) {
+                        }
                     }
                 }
                 currentToken = input.substring(currentTokenPos, n);
+                if (AParentheses) {
+                    if (!flag) {
+                        currentToken = null;
+                    } else {
+                        currentTokenPos++;
+                    }
+                }
             }
         }
         return currentToken;
