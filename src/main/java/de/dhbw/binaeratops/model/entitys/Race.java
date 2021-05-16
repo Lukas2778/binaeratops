@@ -33,6 +33,8 @@ public class Race implements RaceI {
 
     private String description;
 
+    private Long lifepointsBonus;
+
     @ManyToOne
     private Dungeon dungeon;
 
@@ -42,9 +44,10 @@ public class Race implements RaceI {
      * @param ARaceName    Name der Rasse.
      * @param ADescription Beschreibung der Rasse.
      */
-    public Race(String ARaceName, String ADescription) {
+    public Race(String ARaceName, String ADescription, Long ALifePointsBonus) {
         this.raceName = ARaceName;
         this.description = ADescription;
+        this.lifepointsBonus = ALifePointsBonus;
     }
 
     /**
@@ -85,6 +88,10 @@ public class Race implements RaceI {
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
     }
+
+    public Long getLifepointsBonus(){return lifepointsBonus; }
+
+    public void setLifepointsBonus(Long ALifepointBonus){this.lifepointsBonus = ALifepointBonus; }
 
     @Override
     public boolean equals(Object AOther) {

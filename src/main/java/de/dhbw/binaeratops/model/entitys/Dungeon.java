@@ -55,6 +55,8 @@ public class Dungeon implements DungeonI {
 
     private Character commandSymbol;
 
+    private Long standardAvatarLifepoints;
+
     @ManyToOne
     private User user; //Ersteller des Dungeons
 
@@ -96,13 +98,14 @@ public class Dungeon implements DungeonI {
      * @param ACommandSymbol            Befehlszeichen des Dungeons.
      */
     public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize,
-                   Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol) {
+                   Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol, Long AStandardAvatarLifepoints) {
         this.dungeonName = ADungeonName;
         this.dungeonMasterId = ADungeonMaster;
         this.playerMaxSize = APlayerMaxSize;
         this.startRoomId = AStartRoomId;
         this.defaultInventoryCapacity = ADefaultInventoryCapacity;
         this.commandSymbol = ACommandSymbol;
+        this.standardAvatarLifepoints = AStandardAvatarLifepoints;
     }
 
     /**
@@ -378,6 +381,14 @@ public class Dungeon implements DungeonI {
     public void removeRace(Race ARace) {
         races.remove(ARace);
         ARace.setDungeon(null);
+    }
+
+    public Long getStandardAvatarLifepoints(){
+        return this.standardAvatarLifepoints;
+    }
+
+    public void setStandardAvatarLifepoints(Long AStandardAvatarLifepoints){
+        this.standardAvatarLifepoints = AStandardAvatarLifepoints;
     }
 
     @Override

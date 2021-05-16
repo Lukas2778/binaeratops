@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Role;
@@ -58,22 +59,25 @@ public class RoleDialog extends Dialog {
     private void init() {
         currentRoleField = new TextField(res.getString("view.configurator.dialog.role.field.name"));
         currentDescriptionField = new TextField(res.getString("view.configurator.dialog.role.field.description"));
+        NumberField lifepointsBonusField = new NumberField(res.getString("view.configurator.dialog.race.field.lifepointsBonus"));
+        lifepointsBonusField.setHasControls(true);
+        lifepointsBonusField.setMin(-50);
+        lifepointsBonusField.setValue(0.0);
         Button saveDialog = new Button(res.getString("view.configurator.dialog.role.button.save"));
         Button closeDialog = new Button(res.getString("view.configurator.dialog.role.button.cancel"));
 
-        this.add(new VerticalLayout(currentRoleField,
-                currentDescriptionField,
-                new HorizontalLayout(saveDialog, closeDialog)));
+        this.add(new VerticalLayout(currentRoleField, currentDescriptionField, lifepointsBonusField ,new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
             if (currentRoleField.getValue() != "") {
 
                 currentRole.setRoleName(currentRoleField.getValue());
                 currentRole.setDescription(currentDescriptionField.getValue());
+                currentRole.setLifepointsBonus(lifepointsBonusField.getValue().longValue());
 
 
                 if (!findRole(currentRole.getRoleName(), currentRole.getDescription())) {
-                    configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription());
+                    configuratorServiceI.createRole(currentRole.getRoleName(), currentRole.getDescription(), currentRole.getLifepointsBonus());
                     refreshGrid();
                     this.close();
                 } else {
