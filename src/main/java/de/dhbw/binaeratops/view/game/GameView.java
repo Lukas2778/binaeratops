@@ -19,6 +19,8 @@ import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.communication.PushMode;
+import de.dhbw.binaeratops.model.KickUser;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -67,6 +69,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> messages;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
+    private final Flux<KickUser> kickUsers;
 
     H2 binTitle;
     String aboutText;
@@ -106,11 +109,12 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param ADungeonRepo Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
      * @param AGameService Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
+     * @param kickUsers
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher) {
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> kickUsers) {
         this.messages = messages;
         this.messagesPublisher = AMessagePublisher;
         myParserService = AParserService;
@@ -118,6 +122,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myRoomRepo = ARoomRepo;
         myDungeonRepo = ADungeonRepo;
         myGameService = AGameService;
+        this.kickUsers = kickUsers;
 
         currentUser = VaadinSession.getCurrent().getAttribute(User.class);
     }
@@ -129,7 +134,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         initiateGameView();
         //Avatarauswahl öffnen
         createAvatarDialog();
+        test();
 
+    }
+
+    private void test(){
+        kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
+            Notification.show("Kick me pls: " + message.getUser().getName());
+        })));
     }
 
 

@@ -19,6 +19,7 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.KickUser;
 import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -37,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
+import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
 
 /**
@@ -72,6 +74,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
+    private final UnicastProcessor<KickUser> kickUsersPublisher;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -93,7 +96,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
-                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher) {
+                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
+                             UnicastProcessor<KickUser> AKickUsersPublisher) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -102,6 +106,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
+        this.kickUsersPublisher = AKickUsersPublisher;
         setId("SomeView");
 
         userActionsIncoming();
@@ -326,7 +331,10 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }).setHeader("Anfragen");
         userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
-            whisperButton.addClickListener(e -> Notification.show("Not Implemented"));
+            whisperButton.addClickListener(e -> {
+                Notification.show("Not Implemented");
+                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
+            });
             return whisperButton;
         }).setHeader("Anflüstern");
         userGrid.addComponentColumn(avatar -> {
