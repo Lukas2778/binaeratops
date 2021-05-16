@@ -86,6 +86,15 @@ public class ChatService implements ChatServiceI {
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
     }
 
+    @Override
+    public void sendRoomMessage(String AMessage, List<User> AReceiverList, User ADungeonMaster, Room ARoom) {
+        List<Long> receiverList = convertToUserIDList(AReceiverList);
+        Label sender = new Label(ARoom.getRoomName() + "~" + "Dungeon-Master~" + ADungeonMaster.getName()+":");
+        sender.addClassName("roomnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
+    }
+
     /**
      * Builds the Paragraph for the Chat.
      *
