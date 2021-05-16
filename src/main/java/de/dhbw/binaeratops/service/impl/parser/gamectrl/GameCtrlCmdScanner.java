@@ -233,17 +233,17 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanTake1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
-            return hooks.onTake(ADungeon, item.toUpperCase(), AAvatar, AUser);
+            return hooks.onTake(ADungeon, item, AAvatar, AUser);
         }
     }
 
     private UserMessage scanDrop1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
             return hooks.onDrop(ADungeon, item, AAvatar, AUser);
@@ -273,7 +273,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private UserMessage scanLayDown1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
             return hooks.onLayDown(ADungeon, AAvatar, AUser, item);

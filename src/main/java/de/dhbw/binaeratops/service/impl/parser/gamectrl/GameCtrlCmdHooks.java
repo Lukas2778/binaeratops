@@ -655,7 +655,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     private String getNpcs(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         for (NpcInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
-            s.append(npc.getNpc().getNpcName());
+            s.append(npc.getNpc().getNpcName()).append(", ");
         }
         return s.toString();
     }
@@ -663,7 +663,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     private String getItems(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
-            s.append(item.getItem().getItemName());
+            s.append(item.getItem().getItemName()).append(", ");
         }
         return s.toString();
     }
