@@ -138,6 +138,23 @@ public interface UserI {
     void setBlockedDungeon(Dungeon ABlockedDungeons);
 
     /**
+     * Dungeon, indem sich der Benutzer zurzeit aufhält.
+     * @return Aktueller Dungeon.
+     */
+    Dungeon getCurrentDungeon();
+
+    /**
+     * Aktuellen Dunegon setzen.
+     * @param ACurrentDungeon
+     */
+    void setCurrentDungeon(Dungeon ACurrentDungeon);
+
+    /**
+     * Aktuellen Dungeon zurücksetzen.
+     */
+    void removeCurrentDungeon();
+
+    /**
      * Gibt die Liste der Spieleravatare zurück.
      *
      * @return Avatarliste.

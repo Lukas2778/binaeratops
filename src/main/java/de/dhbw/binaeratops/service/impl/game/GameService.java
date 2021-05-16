@@ -7,6 +7,7 @@ import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
+import de.dhbw.binaeratops.model.repository.UserRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
@@ -37,6 +38,9 @@ public class GameService implements GameServiceI {
 
     @Autowired
     DungeonRepositoryI dungeonRepositoryI;
+
+    @Autowired
+    UserRepositoryI userRepositoryI;
 
     @Autowired
     RoomRepositoryI roomRepositoryI;
@@ -82,6 +86,9 @@ public class GameService implements GameServiceI {
     public void addActivePlayer(Dungeon ADungeon, User AUser){
         if(!ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.addCurrentUser(AUser);
+            AUser.setCurrentDungeon(ADungeon);
+            dungeonRepositoryI.save(ADungeon);
+            userRepositoryI.save(AUser);
             //dungeonServiceI.saveDungeon(ADungeon); //@TODO wieder einkommentieren wenn der User nicht mehr dadurch gelöscht wird
         }
     }
@@ -89,6 +96,9 @@ public class GameService implements GameServiceI {
     public void removeActivePlayer(Dungeon ADungeon, User AUser){
         if(ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.removeCurrentUser(AUser);
+            AUser.removeCurrentDungeon();
+            dungeonRepositoryI.save(ADungeon);
+            userRepositoryI.save(AUser);
             //dungeonServiceI.saveDungeon(ADungeon); //@TODO wieder einkommentieren wenn der User nicht mehr dadurch gelöscht wird
         }
     }
