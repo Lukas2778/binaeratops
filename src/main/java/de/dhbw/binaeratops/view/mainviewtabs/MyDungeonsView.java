@@ -17,6 +17,7 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Status;
+import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +78,9 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addComponentColumn(dungeon -> {
             Button button = new Button(res.getString("view.my.dungeons.grid.button.start"));
             button.addClickListener(e -> {
+                if(dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION)
+                    Notification.show("Der Dungeon muss auf Public oder Private gesetzt werden");
+                else
                 UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
                 dungeonServiceI.activateDungeon(dungeon.getDungeonId());
             });
