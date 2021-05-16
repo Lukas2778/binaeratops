@@ -1,12 +1,16 @@
 package de.dhbw.binaeratops.view.chat;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.User;
 import reactor.core.publisher.Flux;
+
 
 
 /**
@@ -18,6 +22,7 @@ import reactor.core.publisher.Flux;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
+@CssImport("./views/game/game-view.css")
 public class ChatView extends VerticalLayout {
     {
         addClassName("chat-component");
@@ -54,7 +59,7 @@ public class ChatView extends VerticalLayout {
                 if (message.IsParagraph()){
                     messageList.add(message.getParagraph());
                 }else {
-                    messageList.add(message.getText());
+                    messageList.add(new Paragraph(message.getText()));
                 }
                 UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);
                 ui.push();
