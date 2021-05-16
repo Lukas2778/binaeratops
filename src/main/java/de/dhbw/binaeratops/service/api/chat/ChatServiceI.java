@@ -71,4 +71,13 @@ public interface ChatServiceI {
      */
     public void sendRoomMessage(String AMessage, List<User> AReceiverList, Avatar AAvatar, Room ARoom);
 
+    /**
+     * Nachricht vom Dungeon-Master für den Raumchat wird erstellt und verschickt.
+     * @param AMessage Nachricht.
+     * @param AReceiverList Liste von Benutzern, die die Nachricht erhalten sollen.
+     * @param ADungeonMaster Dungeon-Master, der die Nachricht abschickt.
+     * @param ARoom Raum an dem die Nachricht geschickt wird.
+     */
+    public void sendRoomMessage(String AMessage, List<User> AReceiverList, User ADungeonMaster, Room ARoom);
+
 }
