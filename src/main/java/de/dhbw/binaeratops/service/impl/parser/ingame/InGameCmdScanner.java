@@ -107,7 +107,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
+    private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String avatarname = findNextToken();
         if (avatarname == null) {
             onMissingToken("<Avatarname>");
@@ -132,7 +132,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         return null;
     }
 
-    private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
+    private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");

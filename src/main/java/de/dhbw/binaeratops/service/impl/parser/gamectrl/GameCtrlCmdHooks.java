@@ -438,7 +438,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             List<NpcInstance> npcs = avatar.getCurrentRoom().getNpcs();
             for (NpcInstance npc : npcs) {
-                if (npc.getNpc().getNpcName().toLowerCase() == ANpc.toLowerCase()) {
+                if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpc)) {
                     return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpc().getNpcName(), npc.getNpc().getDescription());
                 }
             }
@@ -456,7 +456,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             List<ItemInstance> items = avatar.getCurrentRoom().getItems();
             for (ItemInstance item : items) {
-                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     return new UserMessage("view.game.ctrl.cmd.examine.item", item.getItem().getItemName(), item.getItem().getDescription());
                 }
             }
@@ -505,12 +505,13 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getCurrentRoom().getItems()) {
-                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     Item i = item.getItem();
                     if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
                         // Zum Inventar hinzufügen, da erlaubt
-                        avatar.getCurrentRoom().getItems().remove(item);
-                        avatar.getInventory().add(item);
+                        avatar.getCurrentRoom().removeItem(item);
+                        avatar.addInventoryItem(item);
+                        itemInstanceRepo.save(item);
                         avatarRepo.save(avatar);
                         return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
                     } else {
@@ -533,9 +534,11 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getInventory()) {
-                if (item.getItem().getItemName().toLowerCase() == AItem) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     avatar.removeInventoryItem(item);
-                    avatar.getCurrentRoom().getItems().add(item);
+                    avatar.getCurrentRoom().addItem(item);
+                    itemInstanceRepo.save(item);
+                    roomRepo.save(avatar.getCurrentRoom());
                     avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
                 }
@@ -554,7 +557,8 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getInventory()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    avatar.getInventory().remove(item);
+                    avatar.removeInventoryItem(item);
+                    itemInstanceRepo.save(item);
                     avatarRepo.save(avatar);
                     userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
                     return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
@@ -573,7 +577,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getInventory()) {
-                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     if (checkIfItemHasCorrectType(item)) {
                         // Wenn ItemTyp equipped werden darf.
                         if (checkIfItemTypeAlreadyInEquip(avatar, item)) {
@@ -581,14 +585,17 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             for (ItemInstance alreadyEquipped : avatar.getEquipment()) {
                                 if (alreadyEquipped.getItem().getType().equals(item.getItem().getType())) {
                                     // Ausrüsten
-                                    avatar.getEquipment().remove(alreadyEquipped);
-                                    avatar.getEquipment().add(item);
+                                    avatar.removeEquipmentItem(alreadyEquipped);
+                                    avatar.addEquipmentItem(item);
+                                    itemInstanceRepo.save(alreadyEquipped);
+                                    itemInstanceRepo.save(item);
                                     avatarRepo.save(avatar);
                                     return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
-                            avatar.getEquipment().add(item);
+                            avatar.addEquipmentItem(item);
+                            itemInstanceRepo.save(item);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
@@ -611,9 +618,10 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getEquipment()) {
-                if (item.getItem().getItemName().toLowerCase() == AItem.toLowerCase()) {
+                if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     // Wenn Item in Equipment
-                    avatar.getEquipment().remove(item);
+                    avatar.removeEquipmentItem(item);
+                    itemInstanceRepo.save(item);
                     avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                 }
@@ -654,18 +662,24 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
 
     private String getNpcs(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
+        int i = 0;
         for (NpcInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
             s.append(npc.getNpc().getNpcName()).append(", ");
+            i += npc.getNpc().getNpcName().length()+2;
         }
-        return s.toString();
+        String s2 = s.toString();
+        return s2.substring(0, i-2);
     }
 
     private String getItems(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
+        int i = 0;
         for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
             s.append(item.getItem().getItemName()).append(", ");
+            i += item.getItem().getItemName().length()+2;
         }
-        return s.toString();
+        String s2 = s.toString(); //s.substring(0, i-2);
+        return s2.substring(0, i-2);
     }
 
     private String getInventory(Avatar AAvatar) {

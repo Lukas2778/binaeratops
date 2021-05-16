@@ -43,7 +43,7 @@ public interface GameServiceI {
      * @param AAvatarRole Rolle des Avatars.
      * @param AAvatarRace Rasse des Avatars.
      */
-    void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace);
+    void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints);
 
     Avatar getAvatarById(Long AAvatarId);
 
