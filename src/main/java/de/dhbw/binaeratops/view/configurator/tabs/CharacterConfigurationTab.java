@@ -32,9 +32,6 @@ import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
-import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
-import java.sql.SQLIntegrityConstraintViolationException;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -112,7 +109,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                 new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepointspoint"));
+        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepoints"));
         lifepointsField.setHasControls(true);
         lifepointsField.setMin(1);
 
