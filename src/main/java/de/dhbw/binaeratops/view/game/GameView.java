@@ -70,6 +70,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private final Flux<ChatMessage> messages;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final Flux<KickUser> kickUsers;
+    private final UnicastProcessor<UserAction> userActionpublisher;
 
     H2 binTitle;
     String aboutText;
@@ -99,11 +100,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private Avatar myAvatar;
     private Room currentRoom;
     private List<Room> visitedRooms;
+    private Avatar selectedInDialogAvatar;
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     *
-     * @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     *  @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
      * @param AParserService    Wird für die Interaktion mit dem Dungeon benötigt.
      * @param AMapService       Wird zur Erstellung der Karte benötigt.
      * @param ARoomRepo         Wird für das Auffinden von Räumen benötigt.
@@ -111,6 +112,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
      * @param kickUsers
+     * @param userActionpublisher
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
@@ -314,12 +316,21 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Set selectedAvatar = avatarGrid.getSelectedItems();
             if (selectedAvatar.size() > 0) {
                 //Dungeon betreten
-                Avatar avatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
-                myAvatarDialog.close();
-                textField.focus();
-                loadAvatarProgress(avatar);
-                createMap();
-                changeRoom(currentRoom.getRoomId());
+                selectedInDialogAvatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
+                if (selectedInDialogAvatar.getDungeon().getBlockedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+                    myAvatar = null;
+                    myAvatarDialog.close();
+                    UI.getCurrent().navigate("lobby");
+                    return;
+                } else if (selectedInDialogAvatar.getDungeon().getAllowedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+                    myAvatarDialog.close();
+                    textField.focus();
+                    loadAvatarProgress(selectedInDialogAvatar);
+                    createMap();
+                    changeRoom(currentRoom.getRoomId());
+                    return;
+                }
+                userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar,"REQUEST","null"));
             } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }

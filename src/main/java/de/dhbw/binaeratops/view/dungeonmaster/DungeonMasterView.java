@@ -127,6 +127,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private void refreshView () {
         getUI().ifPresent(ui -> ui.access(() -> {
             userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
+            for (Avatar avatar : actionMap.keySet()) { //TODO Farbe wird zurückgesetzt
+                notificationButtons.get(avatar).getStyle().set("background", "red");
+            }
             if(currentRoom != null ) {
                 Room room = dungeonServiceI.getRoomById(currentRoom.getRoomId());
                 fillCurrentRoom(room);
@@ -139,6 +142,25 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
                 if (action.getActionType().equals("UPDATE")) {
                     //TODO update der view
+                    return;
+                } else if (action.getActionType().equals("REQUEST")) {
+                    Dialog acceptanceDialog = new Dialog();
+                    Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
+                    Button acceptButton = new Button("Annehmen", e -> {
+                        kickUsersPublisher.onNext(new KickUser(action.getAvatar().getUser(), false));
+                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
+                        acceptanceDialog.close();
+                    });
+                    Button declineButton = new Button("Ablehnen", e -> {
+                        dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
+                        kickUsersPublisher.onNext(new KickUser(action.getAvatar().getUser(), true));
+                        acceptanceDialog.close();
+                    });
+
+                    acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
+                    acceptanceDialog.open();
+                    //TODO den user einlassen
+                    action.getAvatar();
                     return;
                 }
                 Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
@@ -407,7 +429,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
+                kickUsersPublisher.onNext(new KickUser(avatar.getUser(), true));
                 confirmKickDialog.close();
             });
 

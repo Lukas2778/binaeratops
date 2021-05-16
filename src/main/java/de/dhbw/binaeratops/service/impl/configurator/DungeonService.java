@@ -147,9 +147,12 @@ public class DungeonService implements DungeonServiceI {
     public void kickPlayer(Long ADungeonId, Long AUserId){
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
         User user = userRepo.findByUserId(AUserId);
-        Avatar avatar = avatarRepo.findByUserAndActive(user, true).get(0);
-        avatar.setActive(false);
-        avatarRepo.save(avatar);
+        List<Avatar> avatars = avatarRepo.findByUserAndActive(user, true);
+        if (avatars.size() > 0) {
+            Avatar avatar = avatars.get(0);
+            avatar.setActive(false);
+            avatarRepo.save(avatar);
+        }
         dungeon.addBlockedUser(user);
         dungeonRepo.save(dungeon);
     }
@@ -163,5 +166,14 @@ public class DungeonService implements DungeonServiceI {
         Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
         avatar.setRequested(false);
         avatarRepo.save(avatar);
+    }
+
+    @Override
+    public void allowUser(Long ADungeonId, Long AUserId) {
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        User user = userRepo.findByUserId(AUserId);
+        dungeon.addAllowedUser(user);
+        userRepo.save(user);
+        dungeonRepo.save(dungeon);
     }
 }

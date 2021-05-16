@@ -90,6 +90,8 @@ public interface DungeonServiceI {
 
     Room getRoomById(Long ARoomId);
 
+    void allowUser(Long ADungeonId, Long AUserId);
+
     void setAvatarNotRequested(Long AAvatarId);
 }
 
