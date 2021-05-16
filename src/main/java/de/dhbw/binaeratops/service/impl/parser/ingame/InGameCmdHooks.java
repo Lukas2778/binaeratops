@@ -59,7 +59,13 @@ public class InGameCmdHooks implements InGameCmdHooksI {
 
     @Override
     public UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException {
-        // TODO
+//        if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
+//            myChatService.notifyAll(AMessage,ADungeon.getCurrentUsers(), ADungeon.getUser());
+//            System.out.println("Anzahl aktuelle User: "+ ADungeon.getCurrentUsers().size());
+//            return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
+//        } else {
+//            throw new CmdScannerInsufficientPermissionException("NOTIFY ALL");
+//        }
         return null;
     }
 
@@ -80,7 +86,6 @@ public class InGameCmdHooks implements InGameCmdHooksI {
 
     @Override
     public UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException {
-        //myChatService.sendMessage(AMessage,ADungeon.getCurrentUsers());
         if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
             myChatService.notifyAll(AMessage,ADungeon.getCurrentUsers(), ADungeon.getUser());
             System.out.println("Anzahl aktuelle User: "+ ADungeon.getCurrentUsers().size());

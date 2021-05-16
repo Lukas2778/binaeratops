@@ -509,8 +509,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                     Item i = item.getItem();
                     if (getInventorySize(avatar) + i.getSize() <= dungeon.getDefaultInventoryCapacity()) {
                         // Zum Inventar hinzufügen, da erlaubt
-                        avatar.getCurrentRoom().getItems().remove(item);
-                        avatar.getInventory().add(item);
+                        avatar.getCurrentRoom().removeItem(item);
+                        avatar.addInventoryItem(item);
+                        itemInstanceRepo.save(item);
                         avatarRepo.save(avatar);
                         return new UserMessage("view.game.ctrl.cmd.take", item.getItem().getItemName());
                     } else {
@@ -535,7 +536,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             for (ItemInstance item : avatar.getInventory()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     avatar.removeInventoryItem(item);
-                    avatar.getCurrentRoom().getItems().add(item);
+                    avatar.getCurrentRoom().addItem(item);
+                    itemInstanceRepo.save(item);
+                    roomRepo.save(avatar.getCurrentRoom());
                     avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.drop", item.getItem().getItemName());
                 }
@@ -554,7 +557,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getInventory()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
-                    avatar.getInventory().remove(item);
+                    avatar.removeInventoryItem(item);
                     avatarRepo.save(avatar);
                     userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
                     return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
@@ -581,14 +584,17 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             for (ItemInstance alreadyEquipped : avatar.getEquipment()) {
                                 if (alreadyEquipped.getItem().getType().equals(item.getItem().getType())) {
                                     // Ausrüsten
-                                    avatar.getEquipment().remove(alreadyEquipped);
-                                    avatar.getEquipment().add(item);
+                                    avatar.removeEquipmentItem(alreadyEquipped);
+                                    avatar.addEquipmentItem(item);
+                                    itemInstanceRepo.save(alreadyEquipped);
+                                    itemInstanceRepo.save(item);
                                     avatarRepo.save(avatar);
                                     return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
-                            avatar.getEquipment().add(item);
+                            avatar.addEquipmentItem(item);
+                            itemInstanceRepo.save(item);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
@@ -613,7 +619,8 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             for (ItemInstance item : avatar.getEquipment()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                     // Wenn Item in Equipment
-                    avatar.getEquipment().remove(item);
+                    avatar.removeEquipmentItem(item);
+                    itemInstanceRepo.save(item);
                     avatarRepo.save(avatar);
                     return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                 }
