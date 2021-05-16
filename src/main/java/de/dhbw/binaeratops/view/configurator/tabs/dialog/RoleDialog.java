@@ -45,7 +45,7 @@ public class RoleDialog extends Dialog {
     public RoleDialog() {
     }
 
-    public RoleDialog(ArrayList<Role> roleList,
+    public RoleDialog(
                       Role currentRole,
                       Grid<Role> grid,
                       ConfiguratorServiceI AConfiguratorServiceI) {

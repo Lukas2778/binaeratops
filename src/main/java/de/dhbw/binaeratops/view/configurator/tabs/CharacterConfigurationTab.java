@@ -33,6 +33,8 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
+import java.sql.SQLIntegrityConstraintViolationException;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -110,7 +112,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                 new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.liefpoint"));
+        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepointspoint"));
         lifepointsField.setHasControls(true);
         lifepointsField.setMin(1);
 
@@ -161,11 +163,9 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         deleteRoleClickListener();
         H2 title = new H2(res.getString("view.configurator.character.headline.roles"));
 
-        if(configuratorService.getDungeon().getRoles() != null){
+        if(configuratorService.getDungeon().getRoles() != null)
             grid.setItems(configuratorService.getAllRoles());
-        }else{
-            grid.setItems(roleArrayList);
-        }
+
 
         Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader(res.getString("view.configurator.character.role.grid.name"));
 
@@ -201,11 +201,9 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
         H2 title = new H2(res.getString("view.configurator.character.headline.races"));
 
-        if(configuratorService.getDungeon().getRaces() != null){
+        if(configuratorService.getDungeon().getRaces() != null)
             raceGrid.setItems(configuratorService.getAllRace());
-        }else{
-            raceGrid.setItems(raceArrayList);
-        }
+
 
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
                 .setHeader(res.getString("view.configurator.character.race.grid.name"));
@@ -240,20 +238,20 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
     }
 
     private void refreshRoleGrid() {
-        grid.setItems(roleArrayList);
+        grid.setItems(configuratorService.getAllRoles());
     }
 
     private void refreshRaceGrid() {
-        raceGrid.setItems(raceArrayList);
+        raceGrid.setItems(configuratorService.getAllRace());
     }
 
     private RoleDialog createRoleDialog() {
-        roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorService);
+        roleDialog = new RoleDialog(currentRole, grid, configuratorService);
         return roleDialog;
     }
 
     private RaceDialog createRaceDialog() {
-        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorService);
+        raceDialog = new RaceDialog(currentRace, raceGrid, configuratorService);
         return raceDialog;
     }
 
@@ -275,41 +273,50 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
     private void deleteRoleClickListener() {
         deleteB.addClickListener(e -> {
-            if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rollen haben zu können ;)");
-            }else{
-                Role[] selectedRole = grid.getSelectedItems()
-                        .toArray(Role[]::new);
-                if (selectedRole.length >= 1) {
-                    currentRole = selectedRole[0];
-                    roleArrayList.remove(currentRole);
-                    refreshRoleGrid();
-                    configuratorService.removeRole(currentRole);
+            try{
+                if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rollen haben zu können ;)");
+                }else{
+                    Role[] selectedRole = grid.getSelectedItems()
+                            .toArray(Role[]::new);
+                    if (selectedRole.length >= 1) {
+                        currentRole = selectedRole[0];
+                        configuratorService.removeRole(currentRole);
+                        refreshRoleGrid();
+                    }
+
+                }
+            }catch(Exception es){
+                Notification.show("Die Rolle kann nicht gelöscht werden, vielleicht wird die Rolle von einem Avatar verwendet");
             }
 
 
 
 
-            }
         });
     }
 
     private void deleteRaceClickListener() {
         deleteRaceButton.addClickListener(e -> {
-            if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rassen haben zu können ;)");
-            }else
-            {
-                Race[] selectedRace = raceGrid.getSelectedItems()
-                        .toArray(Race[]::new);
-                if ( selectedRace.length >= 1 )
+            try{
+                if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rassen haben zu können ;)");
+                }else
                 {
-                    currentRace = selectedRace[0];
-                    raceArrayList.remove(currentRace);
-                    refreshRaceGrid();
-                    configuratorService.removeRace(currentRace);
+                    Race[] selectedRace = raceGrid.getSelectedItems()
+                            .toArray(Race[]::new);
+                    if ( selectedRace.length >= 1 )
+                    {
+                        currentRace = selectedRace[0];
+                        configuratorService.removeRace(currentRace);
+                        refreshRaceGrid();
+
+                    }
                 }
+            }catch(Exception es){
+                Notification.show("Die Rasse kann nicht gelöscht werden, vielleicht wird die Rasse von einem Avatar verwendet");
             }
+
         });
     }
 

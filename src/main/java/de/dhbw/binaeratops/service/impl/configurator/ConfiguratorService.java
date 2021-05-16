@@ -180,6 +180,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void removeRole(Role ARole) {
+
         dungeon.removeRole(ARole);
         roleRepo.delete(ARole);
         //dungeonRepo.save(dungeon);

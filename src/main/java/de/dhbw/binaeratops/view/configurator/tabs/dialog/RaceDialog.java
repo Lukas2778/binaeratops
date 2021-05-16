@@ -38,7 +38,6 @@ public class RaceDialog extends Dialog
     private TextField currentDescriptionField;
 
     private Race currentRace;
-    private ArrayList<Race> raceList;
     Grid<Race> grid;
     ConfiguratorServiceI configuratorServiceI;
 
@@ -46,12 +45,12 @@ public class RaceDialog extends Dialog
     {
     }
 
-    public RaceDialog(ArrayList<Race> raceList,
+    public RaceDialog(
                       Race currentRace,
                       Grid<Race> grid,
                       ConfiguratorServiceI AConfiguratorServiceI)
     {
-        this.raceList = raceList;
+
         this.currentRace = currentRace;
         this.grid = grid;
         this.configuratorServiceI = AConfiguratorServiceI;
