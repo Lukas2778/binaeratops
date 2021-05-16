@@ -134,9 +134,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         initiateGameView();
         //Avatarauswahl öffnen
         createAvatarDialog();
-
     }
-
 
     void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
