@@ -306,6 +306,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 talkDialog.close();
+                                actionMap.remove(avatar);
+                                notificationButtons.get(avatar).getStyle().clear();
                             });
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();

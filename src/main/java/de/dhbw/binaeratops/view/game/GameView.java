@@ -108,9 +108,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         mapServiceI = AMapService;
         myRoomRepo = ARoomRepo;
         myDungeonRepo = ADungeonRepo;
-        myGameService=AGameService;
+        myGameService = AGameService;
 
-        currentUser=VaadinSession.getCurrent().getAttribute(User.class);
+        currentUser = VaadinSession.getCurrent().getAttribute(User.class);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         gridLayoutVert = new VerticalLayout();
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leftDungeonButt.getStyle().set("color", "red");
-        leftDungeonButt.addClickListener(e->{
+        leftDungeonButt.addClickListener(e -> {
             UI.getCurrent().navigate("lobby");
         });
 
@@ -203,13 +203,13 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         VerticalLayout gridLayoutVert;
         H2 title;
 
-        myAvatarDialog= new Dialog();
+        myAvatarDialog = new Dialog();
         myAvatarDialog.open();
 
         myAvatarDialog.setCloseOnEsc(false);
         myAvatarDialog.setCloseOnOutsideClick(false);
         buttLayout = new HorizontalLayout();
-        gridLayoutVert=new VerticalLayout();
+        gridLayoutVert = new VerticalLayout();
 
         // Header
         title = new H2(res.getString("view.game.headline.avatar.selection"));
@@ -220,17 +220,17 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         avatarGrid.setVerticalScrollingEnabled(true);
         avatarGrid.addColumn(Avatar::getName).setHeader(res.getString("view.game.grid.avatar"));
         avatarGrid.addColumn(avatar -> {
-            if(avatar.getRace()!=null)
+            if (avatar.getRace() != null)
                 return avatar.getRace().getRaceName();
             return null;
         }).setHeader(res.getString("view.game.grid.race"));
         avatarGrid.addColumn(avatar -> {
-            if(avatar.getRole()!=null)
+            if (avatar.getRole() != null)
                 return avatar.getRole().getRoleName();
             return null;
         }).setHeader(res.getString("view.game.grid.role"));
         avatarGrid.addColumn(avatar -> {
-            if(avatar.getCurrentRoom()!=null)
+            if (avatar.getCurrentRoom() != null)
                 return avatar.getCurrentRoom().getRoomName();
             return null;
         }).setHeader(res.getString("view.game.grid.room"));
@@ -252,16 +252,15 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatar.focus();
 
         Button enterDungeon = new Button(res.getString("view.game.grid.button.enter.dungeon"), e -> {
-            Set selectedAvatar=avatarGrid.getSelectedItems();
-            if(selectedAvatar.size()>0) {
+            Set selectedAvatar = avatarGrid.getSelectedItems();
+            if (selectedAvatar.size() > 0) {
                 //Dungeon betreten
                 myAvatarDialog.close();
                 textField.focus();
                 loadAvatarProgress(myDungeon.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId()));
                 createMap();
                 changeRoom(currentRoom.getRoomId());
-            }
-            else {
+            } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }
         });
@@ -275,24 +274,24 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myAvatarDialog.setWidth("50%");
     }
 
-    void createNewAvatarDialog(){
+    void createNewAvatarDialog() {
         VerticalLayout contentLayout;
         HorizontalLayout buttCreateLayout;
         H2 title;
 
-        myCreateAvatarDialog=new Dialog();
+        myCreateAvatarDialog = new Dialog();
         myCreateAvatarDialog.open();
 
         myCreateAvatarDialog.setCloseOnEsc(false);
         myCreateAvatarDialog.setCloseOnOutsideClick(false);
 
-        contentLayout=new VerticalLayout();
-        buttCreateLayout=new HorizontalLayout();
+        contentLayout = new VerticalLayout();
+        buttCreateLayout = new HorizontalLayout();
 
         // Header
         title = new H2(res.getString("view.game.headline.create.avatar"));
-        Header header =new Header(title);
-        Text description= new Text(res.getString("view.game.text.create.avatar"));
+        Header header = new Header(title);
+        Text description = new Text(res.getString("view.game.text.create.avatar"));
 
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
@@ -306,18 +305,18 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         avatarRoleField.setItems(avatarRoleList);
         avatarRoleField.setItemLabelGenerator(Role::getRoleName);
 
-        List<Race> avatarRaceList=myDungeon.getRaces();
+        List<Race> avatarRaceList = myDungeon.getRaces();
         ComboBox<Race> avatarRaceField = new ComboBox(res.getString("view.game.combobox.race"));
         avatarRaceField.setItems(avatarRaceList);
         avatarRaceField.setItemLabelGenerator(Race::getRaceName);
 
-        Button cancelButt =new Button(res.getString("view.game.button.cancel"), e->myCreateAvatarDialog.close());
+        Button cancelButt = new Button(res.getString("view.game.button.cancel"), e -> myCreateAvatarDialog.close());
         cancelButt.getStyle().set("color", "red");
-        Button createAvatarButt=new Button(res.getString("view.game.button.save"));
-        createAvatarButt.addClickListener(e->{
-           //Neuen Avatar speichern
-            myGameService.createNewAvatar(myDungeon,currentUser, myDungeon.getStartRoomId(),avatarNameFiled.getValue(),
-                    avatarGenderField.getValue(),avatarRoleField.getValue(),avatarRaceField.getValue());
+        Button createAvatarButt = new Button(res.getString("view.game.button.save"));
+        createAvatarButt.addClickListener(e -> {
+            //Neuen Avatar speichern
+            myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(), avatarNameFiled.getValue(),
+                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue());
             refreshAvatarGrid();
             myCreateAvatarDialog.close();
         });
@@ -330,7 +329,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
 
-    void refreshAvatarGrid(){
+    void refreshAvatarGrid() {
         avatarList = currentUser.getAvatars();
         avatarGrid.setItems(avatarList);
     }
@@ -339,10 +338,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         this.myAvatar = AAvatar;
         this.currentRoom = myAvatar.getCurrentRoom();
         this.visitedRooms = myAvatar.getVisitedRooms();
-        if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId())==null) {
+        if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId()) == null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
-        myGameService.addActivePlayer(myDungeon,currentUser);
+        myGameService.addActivePlayer(myDungeon, currentUser);
     }
 
     void createMap() {
@@ -390,12 +389,12 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         armorGrid.setVerticalScrollingEnabled(true);
         armorGrid.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.game.grid.itemname"));
         armorGrid.addColumn(item -> {
-            if (item.getItem().getType()!=null)
+            if (item.getItem().getType() != null)
                 return item.getItem().getType().toString();
             return null;
         }).setHeader(res.getString("view.game.grid.itemtype"));
         armorGrid.addColumn(item -> {
-            if(item.getItem().getSize()!=null)
+            if (item.getItem().getSize() != null)
                 return item.getItem().getSize().toString();
             return null;
         }).setHeader(res.getString("view.game.grid.itemsize"));
@@ -409,7 +408,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         refreshInventory();
     }
 
-    void refreshInventory(){
+    void refreshInventory() {
         inventoryList = myAvatar.getInventory();
         inventoryGrid.setItems(inventoryList);
 
@@ -423,7 +422,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
-        if(inventoryGrid!=null&&armorGrid!=null)
+        if (inventoryGrid != null && armorGrid != null)
             refreshInventory();
     }
 
@@ -476,14 +475,13 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Notification.show(res.getString("view.game.notification.already.leaving"));
         }
     }
+
     private boolean hasChanges() {
-        if (myAvatar!=null)
-            return true;
-        return false;
+        return myAvatar != null;
     }
 
-    void confirmLeaveDialog(){
-        myConfirmLeavingDialog=new Dialog();
+    void confirmLeaveDialog() {
+        myConfirmLeavingDialog = new Dialog();
         myConfirmLeavingDialog.open();
 
         myConfirmLeavingDialog.setCloseOnEsc(false);
@@ -492,23 +490,23 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         // Header
         H4 title = new H4(res.getString("view.game.headline.already.leaving"));
 
-        HorizontalLayout buttLayout=new HorizontalLayout();
+        HorizontalLayout buttLayout = new HorizontalLayout();
 
-        Button leaveButt =new Button(res.getString("view.game.button.leave.dungeon"));
+        Button leaveButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leaveButt.getStyle().set("color", "red");
-        leaveButt.addClickListener(e->{
+        leaveButt.addClickListener(e -> {
             myGameService.removeActivePlayer(myDungeon, currentUser);
             myConfirmLeavingDialog.close();
             action.proceed();
         });
 
-        Button stayButt=new Button(res.getString("view.game.button.back"));
-        stayButt.addClickListener(e->myConfirmLeavingDialog.close());
+        Button stayButt = new Button(res.getString("view.game.button.back"));
+        stayButt.addClickListener(e -> myConfirmLeavingDialog.close());
         stayButt.focus();
         stayButt.addClickShortcut(Key.ENTER);
         buttLayout.add(leaveButt, stayButt);
 
-        myConfirmLeavingDialog.add(title,buttLayout);
+        myConfirmLeavingDialog.add(title, buttLayout);
     }
 
 
