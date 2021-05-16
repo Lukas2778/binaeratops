@@ -16,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
@@ -327,6 +328,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
 
+        NumberField lifepointsField = new NumberField(res.getString("view.game.numberfield.lifepoints"));
+        lifepointsField.setHasControls(true);
+        lifepointsField.setValue(20.0);
+
         List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
         ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
         avatarGenderField.setItems(avatarGenderList);
@@ -347,7 +352,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.addClickListener(e -> {
             //Neuen Avatar speichern
             myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(), avatarNameFiled.getValue(),
-                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue());
+                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue(), lifepointsField.getValue().longValue());
             refreshAvatarGrid();
             myCreateAvatarDialog.close();
         });
@@ -355,7 +360,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.focus();
         createAvatarButt.addClickShortcut(Key.ENTER);
 
-        contentLayout.add(header, description, avatarNameFiled, avatarGenderField, avatarRoleField, avatarRaceField);
+        contentLayout.add(header, description, avatarNameFiled, lifepointsField , avatarGenderField, avatarRoleField, avatarRaceField);
         buttCreateLayout.add(cancelButt, createAvatarButt);
         myCreateAvatarDialog.add(contentLayout, buttCreateLayout);
     }
