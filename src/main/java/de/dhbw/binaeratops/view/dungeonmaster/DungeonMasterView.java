@@ -25,7 +25,6 @@ import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
-import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
@@ -66,7 +65,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final MapServiceI mapServiceI;
 
     private final DungeonServiceI dungeonServiceI;
-    private final DungeonRepositoryI dungeonRepositoryI;
     private final Flux<ChatMessage> messages;
     private final ParserServiceI myParserService;
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
@@ -94,12 +92,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     boolean sureToLeave = false;
 
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
+                             Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
-        this.dungeonRepositoryI = dungeonRepositoryI;
         this.messages = messages;
         this.myParserService = AParserService;
         this.userActionsPublisher = userActionsPublisher;
@@ -131,7 +128,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
-        dungeon = dungeonRepositoryI.findByDungeonId(ALong);
+        dungeon = dungeonServiceI.getDungeon(ALong);
         dungeonId = ALong;
         createLayoutBasic();
     }
@@ -287,7 +284,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Dialog consumeDialog = new Dialog();
                             TextArea consumeActionText = new TextArea();
                             Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
-                            Button consumeSendActionButton = new Button("Test", evfds -> {
+
+                            HorizontalLayout randomLayout = makeDice();
+                            Button consumeSendActionButton = new Button("Senden", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
                                 notificationButtons.get(avatar).getStyle().clear();
@@ -302,9 +301,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Label talkUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
-                                talkDialog.close();
                                 actionMap.remove(avatar);
                                 notificationButtons.get(avatar).getStyle().clear();
+                                talkDialog.close();
                             });
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();
@@ -354,6 +353,31 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             infoButton.addClickListener(e -> infoDialog.open());
             return infoButton;
         }).setHeader("Informationen");
+    }
+
+
+    HorizontalLayout makeDice() {
+        TextField resultLabel = new TextField();
+        IntegerField boundField = new IntegerField();
+        boundField.setMin(1);
+        boundField.setMax(40);
+        boundField.setValue(20);
+
+        resultLabel.setReadOnly(true);
+        resultLabel.setMaxLength(3);
+        resultLabel.setWidth("60px");
+        resultLabel.getStyle().set("padding", "0px");
+
+        boundField.setWidth("60px");
+        boundField.getStyle().set("padding", "0px");
+
+        Button roll = new Button("Würfeln D:", e -> {
+            if(!boundField.isInvalid()) {
+                Random r = new Random();
+                resultLabel.setValue(String.valueOf(r.nextInt(boundField.getValue()) + 1));
+            }
+        });
+        return new HorizontalLayout(roll, boundField, resultLabel);
     }
 
     VerticalLayout initMap(Long ADungeonId) {
@@ -451,13 +475,13 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         }
     }
 
-    private Dialog createLeaveDialog () {
+    private Dialog createLeaveDialog() {
         Dialog leaveDialog = new Dialog();
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
-        leaveDialog.setHeight(75,Unit.PERCENTAGE);
+        leaveDialog.setHeight(75, Unit.PERCENTAGE);
 
-        H3 leaveHeadline=new H3("Dungeon verlassen");
+        H3 leaveHeadline = new H3("Dungeon verlassen");
         String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +
                 "Ernenne hier einen anderen Spieler zum Dungeon-Master (damit der Laden weiter läuft).<br>" +
                 "ODER beende den Dungeon komplett.<br>-- Aber sei gewarnt: " +
@@ -499,7 +523,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         newDMGrid.setItems(dungeonServiceI.getCurrentUsers(dungeon));
         newDMGrid.setVerticalScrollingEnabled(true);
-        VerticalLayout myGridLayoutVert=new VerticalLayout(newDMGrid);
+        VerticalLayout myGridLayoutVert = new VerticalLayout(newDMGrid);
 
         leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), myGridLayoutVert,
                 new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));

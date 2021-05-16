@@ -131,4 +131,9 @@ public class DungeonService implements DungeonServiceI {
     public List<User> getCurrentUsers(Dungeon ADungeon) {
         return ADungeon.getCurrentUsers();
     }
+
+    @Override
+    public Dungeon getDungeon(Long ADungeonId){
+        return  dungeonRepo.findByDungeonId(ADungeonId);
+    }
 }

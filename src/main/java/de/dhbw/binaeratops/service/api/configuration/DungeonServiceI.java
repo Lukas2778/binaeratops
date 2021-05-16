@@ -83,5 +83,7 @@ public interface DungeonServiceI {
     void setDungeonMaster(Dungeon ADungeon, Long AUserId);
 
     List<User> getCurrentUsers(Dungeon ADungeon);
+
+    Dungeon getDungeon(Long ADungeonId);
 }
 
