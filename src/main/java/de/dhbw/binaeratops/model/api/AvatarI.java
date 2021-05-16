@@ -210,4 +210,8 @@ public interface AvatarI {
      * @param ARoom Raum, der entfernt werden soll.
      */
     void removeVisitedRoom(Room ARoom);
+
+    Long getLifepoints();
+
+    void setLifepoints(Long ALifepoints);
 }

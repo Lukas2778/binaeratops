@@ -36,6 +36,8 @@ public class Avatar implements AvatarI {
 
     private String name;
 
+    private Long lifepoints;
+
     private boolean active;
 
     @ManyToOne
@@ -71,12 +73,13 @@ public class Avatar implements AvatarI {
      * @param ARace   Rasse des Avatars.
      * @param ARole   Rolle des Avatars.
      */
-    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole) {
+    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole, Long ALebenspunkte) {
         this.currentRoom = ARoom;
         this.gender = AGender;
         this.name = AName;
         this.race = ARace;
         this.role = ARole;
+        this.lifepoints = ALebenspunkte;
     }
 
     /**
@@ -221,6 +224,10 @@ public class Avatar implements AvatarI {
         visitedRooms.remove(ARoom);
         ARoom.setVisitedByAvatar(null);
     }
+
+    public Long getLifepoints(){ return lifepoints;}
+
+    public void setLifepoints(Long ALifepoints){ this.lifepoints = ALifepoints; }
 
     @Override
     public boolean equals(Object AOther) {

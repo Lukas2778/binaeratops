@@ -66,8 +66,9 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace){
-        Avatar createAvatar= new Avatar(roomRepositoryI.findByRoomId(ACurrentRoomId), AAvatarGender, AAvatarName, AAvatarRace, AAvatarRole);
+    public void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints){
+        Avatar createAvatar= new Avatar(roomRepositoryI.findByRoomId(ACurrentRoomId), AAvatarGender, AAvatarName, AAvatarRace, AAvatarRole,
+                                        ALifepoints);
         createAvatar.setDungeon(ADungeon);
         createAvatar.setUser(AUser);
         //createAvatar.setCurrentRoom(ACurrentRoom);
