@@ -1,8 +1,9 @@
 package de.dhbw.binaeratops.model.api;
 
-import de.dhbw.binaeratops.model.entitys.Item;
+import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPC;
+import de.dhbw.binaeratops.model.entitys.NpcInstance;
 
 import java.util.List;
 
@@ -126,12 +127,14 @@ public interface RoomI {
 
     /**
      * Fügt einem Raum einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addItem(ItemInstance AItem);
 
     /**
      * Entfernt den übergebenen Gegenstand dem Raum.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeItem(ItemInstance AItem);
@@ -141,41 +144,61 @@ public interface RoomI {
      *
      * @return Liste von NPCs im Raum.
      */
-    List<NPC> getNpcs();
+    List<NpcInstance> getNpcs();
 
     /**
      * Fügt dem Raum den NPC hinzu.
+     *
      * @param ANpc NPC, der hinzugefügt werden soll.
      */
-    void addNpc(NPC ANpc);
+    void addNpc(NpcInstance ANpc);
 
     /**
      * Entfernt dem Raum den NPC.
+     *
      * @param ANpc NPC, der entfernt werden soll.
      */
-    void removeNPC(NPC ANpc);
+    void removeNPC(NpcInstance ANpc);
 
     /**
      * Gibt die X-Koordinate des Raumes zurück.
+     *
      * @return X-Koordinate.
      */
-    Integer getXCoordinate();
+    Integer getXcoordinate();
 
     /**
      * Setzt die X-Koordinate des Raumes.
+     *
      * @param AXCoordinate Zu setzende X-Koordinate des Raumes.
      */
-    void setXCoordinate(Integer AXCoordinate);
+    void setXcoordinate(Integer AXCoordinate);
 
     /**
      * Gibt die Y-Koordinate des Raumes zurück.
+     *
      * @return Y-Koordinate des Raumes.
      */
-    Integer getYCoordinate();
+    Integer getYcoordinate();
 
     /**
      * Setzt die Y-Koordinate des Raumes.
+     *
      * @param AYCoordinate Zu setzende Y-Koordinate des Raumes.
      */
-    void setYCoordinate(Integer AYCoordinate);
+    void setYcoordinate(Integer AYCoordinate);
+
+    /**
+     * Setzt den Avatar, der diesen Raum besucht hat.
+     *
+     * @param AVisitedByAvatar Avatar, der diesen Raum besucht hat.
+     */
+    void setVisitedByAvatar(Avatar AVisitedByAvatar);
+
+    /**
+     * Gibt den Avatar zurück, der diesen Raum besucht hat.
+     *
+     * @return Avatar, der diesen Raum besucht hat.
+     */
+    Avatar getVisitedByAvatar();
 }

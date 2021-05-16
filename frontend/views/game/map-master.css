@@ -14,3 +14,17 @@ border: none;
 cursor: pointer;
 }
 
+.chat-component{
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.chat-component p {
+    width: 100%;
+}
+
+.button-layout{
+width: 200px;
+padding: 0px;
+margin: 0px;
+}

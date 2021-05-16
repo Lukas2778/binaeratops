@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Raum.
@@ -17,9 +18,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Raum Schnittstelle.
  * <p>
- * @see RoomI
  *
  * @author Nicolas Haug
+ * @see RoomI
  */
 @Entity
 public class Room implements RoomI {
@@ -43,20 +44,24 @@ public class Room implements RoomI {
     @ManyToOne
     private Dungeon dungeon;
 
+    @ManyToOne
+    private Avatar visitedByAvatar;
+
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<NPC> npcs = new ArrayList<>();
+    private final List<NpcInstance> npcs = new ArrayList<>();
 
-    private Integer xCoordinate;
+    private Integer xcoordinate;
 
-    private Integer yCoordinate;
+    private Integer ycoordinate;
+
 
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
      *
-     * @param ARoomName Name des Raumes.
+     * @param ARoomName    Name des Raumes.
      * @param ADescription Beschreibung des Raumes.
      */
     public Room(String ARoomName, String ADescription) {
@@ -71,14 +76,13 @@ public class Room implements RoomI {
     /**
      * Konstruktor zum Erzeugen eines Raumes mit allen Eigenschaften.
      *
-
      * @param AXCoordinate Positon des Raums.
      * @param AYCoordinate Positon des Raums.
      */
-    public Room( int AXCoordinate, int AYCoordinate) {
+    public Room(int AXCoordinate, int AYCoordinate) {
 
-        this.xCoordinate=AXCoordinate;
-        this.yCoordinate=AYCoordinate;
+        this.xcoordinate = AXCoordinate;
+        this.ycoordinate = AYCoordinate;
     }
 
     /**
@@ -152,6 +156,14 @@ public class Room implements RoomI {
         this.dungeon = dungeon;
     }
 
+    public Avatar getVisitedByAvatar() {
+        return visitedByAvatar;
+    }
+
+    public void setVisitedByAvatar(Avatar AVisitedByAvatar) {
+        this.visitedByAvatar = AVisitedByAvatar;
+    }
+
     public List<ItemInstance> getItems() {
         return items;
     }
@@ -166,34 +178,35 @@ public class Room implements RoomI {
         AItem.setRoom(null);
     }
 
-    public List<NPC> getNpcs() {
+    public List<NpcInstance> getNpcs() {
         return npcs;
     }
 
-    public void addNpc(NPC ANpc) {
+    public void addNpc(NpcInstance ANpc) {
         ANpc.setRoom(this);
         npcs.add(ANpc);
     }
 
-    public void removeNPC(NPC ANpc) {
+    public void removeNPC(NpcInstance ANpc) {
         npcs.remove(ANpc);
         ANpc.setRoom(null);
     }
 
-    public Integer getXCoordinate() {
-        return xCoordinate;
+
+    public Integer getXcoordinate() {
+        return xcoordinate;
     }
 
-    public void setXCoordinate(Integer AXCoordinate) {
-        this.xCoordinate = AXCoordinate;
+    public void setXcoordinate(Integer xcoordinate) {
+        this.xcoordinate = xcoordinate;
     }
 
-    public Integer getYCoordinate() {
-        return yCoordinate;
+    public Integer getYcoordinate() {
+        return ycoordinate;
     }
 
-    public void setYCoordinate(Integer AYCoordinate) {
-        this.yCoordinate = AYCoordinate;
+    public void setYcoordinate(Integer ycoordinate) {
+        this.ycoordinate = ycoordinate;
     }
 
     @Override

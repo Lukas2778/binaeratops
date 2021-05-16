@@ -1,22 +1,20 @@
 package de.dhbw.binaeratops.view.mainviewtabs;
 
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
+
+import java.util.ResourceBundle;
 
 /**
  * Oberfläche des Tabs 'Über uns'
  */
 //@Route(value = "aboutUs",layout = MainView.class)
-@PageTitle("Über Uns")
-public class AboutUsView extends VerticalLayout {
+public class AboutUsView extends VerticalLayout implements HasDynamicTitle {
+
+    private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     H1 binTitle;
     String aboutText;
@@ -26,16 +24,16 @@ public class AboutUsView extends VerticalLayout {
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      */
     public AboutUsView() {
-        binTitle=new H1("Willkommen bei Binäratops");
-        aboutText= "<div>Du hast dich bei unserem Binäratops Multi-User-Dungeon (MUD) registriert. Das Ziel" +
-                " dieses Projekts ist es, eine Plattform zum Erstellen und Spielen personalisierter" +
-                " MUDs zu schaffen. Du kannst deinen eigenen" +
-                " Dungeon erstellen und mit anderen teilen.<br>Während des Spiels kannst du dich im Chat mit anderen" +
-                " Dungeon-Enthusiasten unterhalten, die dir über den Weg laufen.<br>" +
-                "Wir wünschen dir viel Spaß!</div>";
-        html=new Html(aboutText);
+        binTitle = new H1(res.getString("view.about.us.headline"));
+        aboutText = res.getString("view.about.us.text");
+        html = new Html(aboutText);
 
         setSizeFull();
-        add(binTitle,html);
+        add(binTitle, html);
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.main.tab.about.us");
     }
 }

@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für eine Rasse.
@@ -18,9 +19,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Rasse Schnittstelle.
  * <p>
- * @see RaceI
  *
  * @author Nicolas Haug
+ * @see RaceI
  */
 @Entity
 public class Race implements RaceI {
@@ -33,18 +34,21 @@ public class Race implements RaceI {
 
     private String description;
 
+    private Long lifepointsBonus;
+
     @ManyToOne
     private Dungeon dungeon;
 
     /**
      * Konstruktor zum Erzeugen einer Rasse mit allen Eigenschaften.
      *
-     * @param ARaceName Name der Rasse.
+     * @param ARaceName    Name der Rasse.
      * @param ADescription Beschreibung der Rasse.
      */
-    public Race(String ARaceName, String ADescription) {
+    public Race(String ARaceName, String ADescription, Long ALifePointsBonus) {
         this.raceName = ARaceName;
         this.description = ADescription;
+        this.lifepointsBonus = ALifePointsBonus;
     }
 
     /**
@@ -85,6 +89,10 @@ public class Race implements RaceI {
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
     }
+
+    public Long getLifepointsBonus(){return lifepointsBonus; }
+
+    public void setLifepointsBonus(Long ALifepointBonus){this.lifepointsBonus = ALifepointBonus; }
 
     @Override
     public boolean equals(Object AOther) {

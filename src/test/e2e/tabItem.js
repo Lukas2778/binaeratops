@@ -24,7 +24,7 @@ describe('Dungeon - Configure Item', () => {
     it('should add a Item', () => {
         const addItem = $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[3]/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
         const nameField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[1]');
-        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-number-field');
+        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-integer-field');
         const descriptionField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[2]');
         const typeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-combo-box');
         const saveRole = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
@@ -50,7 +50,7 @@ describe('Dungeon - Configure Item', () => {
 
         const addItem = $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[3]/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
         const nameField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[1]');
-        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-number-field');
+        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-integer-field');
         const descriptionField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[2]');
         const typeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-combo-box');
         const saveRole = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
@@ -153,7 +153,7 @@ describe('Dungeon - Configure Item', () => {
 
         const addItem = $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[3]/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
         const nameField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[1]');
-        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-number-field');
+        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-integer-field');
         const descriptionField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[2]');
         const typeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-combo-box');
         const saveRole = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');

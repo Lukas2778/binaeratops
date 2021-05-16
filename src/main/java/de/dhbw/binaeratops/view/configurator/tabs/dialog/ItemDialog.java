@@ -9,11 +9,25 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.model.enums.ItemType;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
+import java.util.ResourceBundle;
+
+/**
+ * Dialog-Oberfläche für die Komponente "Item hinzufügen" des Item-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration eines Gegenstandes bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class ItemDialog extends Dialog {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     ConfiguratorServiceI configuratorServiceI;
 
@@ -35,12 +49,16 @@ public class ItemDialog extends Dialog {
     }
 
     private void init() {
-        currentName = new TextField("Name");
-        currentSize = new NumberField("Größe");
-        currentDescription = new TextField("Beschreibung");
-        currentType = new ComboBox<>("Typ");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+        currentName = new TextField(res.getString("view.configurator.dialog.item.field.name"));
+        currentSize = new NumberField(res.getString("view.configurator.dialog.item.numberfield.size"));
+        currentSize.setHasControls(true);
+        currentSize.setMin(1);
+        currentSize.setValue(1.0);
+        currentSize.setStep(1.0);
+        currentDescription = new TextField(res.getString("view.configurator.dialog.item.field.description"));
+        currentType = new ComboBox<>(res.getString("view.configurator.dialog.item.combobox.type"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.item.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.item.button.cancel"));
 
         this.add(new VerticalLayout(currentName, currentSize, currentDescription, currentType, new HorizontalLayout(saveDialog, closeDialog)));
 
@@ -60,7 +78,7 @@ public class ItemDialog extends Dialog {
                 refreshGrid();
                 this.close();
             } else {
-                Notification.show("Bitte kontrolliere deine Eingabe!");
+                Notification.show(res.getString("view.configurator.dialog.item.notification.check.input"));
             }
         });
         closeDialog.addClickListener(e -> this.close());

@@ -1,0 +1,63 @@
+.avatar-dialog{
+height: 200px;
+width: 50px;
+}
+
+.game-view h1 {
+    margin: 0;
+    padding: 16px;
+    width: 100%;
+}
+
+.game-room{
+z-index: 1;
+width: 100px;
+height: 100px;
+margin-bottom: 0px;
+background: none;
+border-radius: 0px;
+border: 1px solid;
+}
+
+.map-layout{
+overflow:hidden;
+overflow-x: scroll;
+overflow-y: scroll;
+}
+
+.grid-layout{
+height: 45%;
+}
+
+.chat-component{
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.chat-component p {
+    width: 100%;
+
+}
+
+.mymargins.v-margin-left{
+padding-left:   10px;
+}
+
+.dmnamecolor{
+    color: darkred;
+    font-weight: bold;
+}
+
+.playernamecolor{
+    color: darkgreen;
+    font-weight: bold;
+}
+
+.roomnamecolor{
+    color: #83639d;
+    font-weight: bold;
+}
+
+.boldtext{
+    font-weight: bold;
+}

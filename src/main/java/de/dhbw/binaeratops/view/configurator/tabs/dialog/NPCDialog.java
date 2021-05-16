@@ -7,18 +7,34 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
+import java.util.ResourceBundle;
+
+/**
+ * Dialog-Oberfläche für die Komponente "NPC hinzufügen" des Raum-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Konfiguration eines NPCs bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class NPCDialog extends Dialog {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     ConfiguratorServiceI configuratorService;
 
     private TextField currentName;
     private ComboBox<Race> currentRace;
     private TextField currentDescription;
+
 
     private NPC currentNPC;
     Grid<NPC> grid;
@@ -33,11 +49,11 @@ public class NPCDialog extends Dialog {
     }
 
     private void init() {
-        currentName = new TextField("Name");
-        currentRace = new ComboBox<>("Rasse");
-        currentDescription = new TextField("Beschreibung");
-        Button saveDialog = new Button("Speichern");
-        Button closeDialog = new Button("Abbrechen");
+        currentName = new TextField(res.getString("view.configurator.dialog.npc.field.name"));
+        currentRace = new ComboBox<>(res.getString("view.configurator.dialog.npc.combobox.race"));
+        currentDescription = new TextField(res.getString("view.configurator.dialog.npc.field.description"));
+        Button saveDialog = new Button(res.getString("view.configurator.dialog.npc.button.save"));
+        Button closeDialog = new Button(res.getString("view.configurator.dialog.npc.button.cancel"));
 
         currentRace.setItemLabelGenerator(Race::getRaceName);
 
@@ -58,7 +74,7 @@ public class NPCDialog extends Dialog {
                 refreshGrid();
                 this.close();
             } else {
-                Notification.show("Bitte kontrolliere deine Eingabe!");
+                Notification.show(res.getString("view.configurator.dialog.npc.notification.check.input"));
             }
         });
         closeDialog.addClickListener(e -> this.close());

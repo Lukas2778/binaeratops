@@ -50,7 +50,6 @@ public interface AvatarI {
      * Gibt das Geschlecht des Avatars zurück.
      *
      * @return Gechlecht des Avatars.
-     *
      * @see Gender
      */
     Gender getGender();
@@ -59,7 +58,6 @@ public interface AvatarI {
      * Setzt das Geschlecht des Avatars.
      *
      * @param AGender Geschlecht des Avatars.
-     *
      * @see Gender
      */
     void setGender(Gender AGender);
@@ -80,24 +78,28 @@ public interface AvatarI {
 
     /**
      * Gibt den Benutzer des Avatars zurück.
+     *
      * @return Benutzer des Avatars.
      */
     User getUser();
 
     /**
      * Setzt den Benutzer des Avatars.
+     *
      * @param AUser Benutzer des Avatars.
      */
     void setUser(User AUser);
 
     /**
      * Gibt den Dungeon des Avatars zurück.
+     *
      * @return Dungeon des Avatars.
      */
     Dungeon getDungeon();
 
     /**
      * Setzt den Dungeon des Avatars.
+     *
      * @param ADungeon Dungeon des Avatars.
      */
     void setDungeon(Dungeon ADungeon);
@@ -131,6 +133,20 @@ public interface AvatarI {
     void setRole(Role ARole);
 
     /**
+     * Gibt den aktuellen Raum des Avatars zurück.
+     *
+     * @return Aktueller Raum des Avatars.
+     */
+    Room getCurrentRoom();
+
+    /**
+     * Setzt den aktuellen Raum des Avatars.
+     *
+     * @param ACurrentRoom Aktueller Raum, der gesetzt werden soll.
+     */
+    void setCurrentRoom(Room ACurrentRoom);
+
+    /**
      * Gibt das Inventar eines Avatars als Liste von Gegenständen zurück.
      *
      * @return Liste von Gegenständen (Inventar).
@@ -139,12 +155,14 @@ public interface AvatarI {
 
     /**
      * Fügt dem Inventar des Avatars einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addInventoryItem(ItemInstance AItem);
 
     /**
      * Entfernt dem Inventar des Avatars einen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeInventoryItem(ItemInstance AItem);
@@ -153,19 +171,57 @@ public interface AvatarI {
      * Gibt das ausgerüstete Equipment eines Avatars als Liste von Gegenständen zurück.
      * <p>
      * WICHTIG: Diese Liste darf jeden Gegenstandstyp nur 1x beinhalten.
+     *
      * @return Liste von Gegenständen (Equipment)
      */
     List<ItemInstance> getEquipment();
 
     /**
      * Fügt der Ausrüstung des Avatars einen Gegenstand hinzu.
+     *
      * @param AItem Gegenstand, der hinzugefügt werden soll.
      */
     void addEquipmentItem(ItemInstance AItem);
 
     /**
      * Entfernt der Ausrüstung des Avatars einen Gegenstand.
+     *
      * @param AItem Gegenstand, der entfernt werden soll.
      */
     void removeEquipmentItem(ItemInstance AItem);
+
+    /**
+     * Gibt die Liste der besuchten Räume des Avatars zurück.
+     *
+     * @return Liste der besuchten Räume.
+     */
+    List<Room> getVisitedRooms();
+
+    /**
+     * Fügt der Liste der besuchten Räume den übergebenen Raum hinzu.
+     *
+     * @param ARoom Raum, der hinzugefügt werden soll.
+     */
+    void addVisitedRoom(Room ARoom);
+
+    /**
+     * Entfernt der Liste der besuchten Räume den übergebenen Raum.
+     *
+     * @param ARoom Raum, der entfernt werden soll.
+     */
+    void removeVisitedRoom(Room ARoom);
+
+    Long getLifepoints();
+
+    void setLifepoints(Long ALifepoints);
+
+    void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB);
+
+    boolean isActive();
+
+    void setActive(boolean AActive);
+
+    boolean hasRequested();
+
+    void setRequested(boolean ARequested);
 }

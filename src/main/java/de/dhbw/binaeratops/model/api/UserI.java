@@ -22,7 +22,6 @@ public interface UserI {
      * Überprüft, ob das eingegebene Passwort gehast dem des Benutzers entspricht.
      *
      * @param APassword Passwort, das zu überpüfen ist.
-     *
      * @return Wahrheitswert, ob Passwort übereinstimmt.
      */
     boolean checkPassword(String APassword);
@@ -57,6 +56,7 @@ public interface UserI {
 
     /**
      * Gibt die E-Mail des Benutzers zurück.
+     *
      * @return E-Mail des Benutzers.
      */
     String getEmail();
@@ -118,54 +118,80 @@ public interface UserI {
 
     /**
      * Setzt den erlaubten Dungeon.
+     *
      * @param AAllowedDungeons Zu setzender erlaubter Dungeon.
      */
     void setAllowedDungeon(Dungeon AAllowedDungeons);
 
     /**
      * Gibt den blockierten Dungeon zurück.
+     *
      * @return Blockierter Dungeon.
      */
     Dungeon getBlockedDungeon();
 
     /**
      * Setzt den blockierten Dungeon.
+     *
      * @param ABlockedDungeons Zu setzender blockierter Dungeon.
      */
     void setBlockedDungeon(Dungeon ABlockedDungeons);
 
     /**
+     * Dungeon, indem sich der Benutzer zurzeit aufhält.
+     * @return Aktueller Dungeon.
+     */
+    Dungeon getCurrentDungeon();
+
+    /**
+     * Aktuellen Dunegon setzen.
+     * @param ACurrentDungeon Aktuellen Dungeon der gesetzt werden soll.
+     */
+    void setCurrentDungeon(Dungeon ACurrentDungeon);
+
+    /**
+     * Aktuellen Dungeon zurücksetzen.
+     */
+    void removeCurrentDungeon();
+
+    /**
      * Gibt die Liste der Spieleravatare zurück.
+     *
      * @return Avatarliste.
      */
     List<Avatar> getAvatars();
 
     /**
      * Fügt einen Avatar dem Benutzer hinzu.
+     *
      * @param AAvatar Avatar, der hinzugefügt werden soll.
      */
     void addAvatar(Avatar AAvatar);
 
     /**
      * Entfernt einen Avatar des Benutzers.
+     *
      * @param AAvatar Avatar, der entfernt werden soll.
      */
     void removeAvatar(Avatar AAvatar);
 
     /**
      * Gibt die Liste der eigenen Dungeons zurück.
+     *
      * @return Dungeonliste.
      */
     List<Dungeon> getMyDungeons();
 
     /**
      * Fügt dem Benutzer einen Dungeon hinzu.
+     *
      * @param ADungeon Dungeon, der hinzugefügt werden soll.
      */
     void addDungeon(Dungeon ADungeon);
 
     /**
      * Entfernt den Dungeon des Benutzers.
+     *
      * @param ADungeon Dungeon des Benutzers.
      */
     void removeDungeon(Dungeon ADungeon);

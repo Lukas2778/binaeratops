@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 /**
  * Entity Objekt für eine Rolle.
@@ -18,10 +20,11 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Rolle Schnittstelle.
  * <p>
- * @see RoleI
  *
  * @author Nicolas Haug
+ * @see RoleI
  */
+
 @Entity
 public class Role implements RoleI {
 
@@ -33,18 +36,21 @@ public class Role implements RoleI {
 
     private String description;
 
+    private Long lifepointsBonus;
+
     @ManyToOne
     private Dungeon dungeon;
 
     /**
      * Konstruktor zum Erzeugen einer Rolle mit allen Eigenschaften.
      *
-     * @param ARoleName Name der Rolle.
+     * @param ARoleName    Name der Rolle.
      * @param ADescription Beschreibung der Rolle.
      */
-    public Role(String ARoleName, String ADescription) {
+    public Role(String ARoleName, String ADescription, Long ALifepointsBonus) {
         this.roleName = ARoleName;
         this.description = ADescription;
+        this.lifepointsBonus = ALifepointsBonus;
     }
 
     /**
@@ -86,6 +92,10 @@ public class Role implements RoleI {
     public void setDungeon(Dungeon dungeon) {
         this.dungeon = dungeon;
     }
+
+    public Long getLifepointsBonus(){return lifepointsBonus; }
+
+    public void setLifepointsBonus(Long ALifepointBonus){this.lifepointsBonus = ALifepointBonus; }
 
     @Override
     public boolean equals(Object AOther) {

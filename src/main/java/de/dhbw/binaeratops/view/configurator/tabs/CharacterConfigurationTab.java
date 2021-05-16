@@ -24,20 +24,33 @@ import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.model.entitys.Role;
+import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RaceDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.RoleDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-@PageTitle("Charaktereigenschaft")
+/**
+ * Tab-Oberfläche für die Komponente "Charaktereigenschaften" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der Charaktereigenschaften bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
+ */
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
+public class CharacterConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
-public class CharacterConfigurationTab extends VerticalLayout {
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+
     VerticalLayout initFeldLayout = new VerticalLayout();
     VerticalLayout roleListLayout = new VerticalLayout();
     VerticalLayout raceListLayout = new VerticalLayout();
@@ -45,11 +58,11 @@ public class CharacterConfigurationTab extends VerticalLayout {
     ArrayList<Role> roleArrayList = new ArrayList<>();
     ArrayList<Race> raceArrayList = new ArrayList<>();
 
-    Button addB = new Button("Hinzufügen");
-    Button deleteB = new Button("Löschen");
+    Button addB = new Button(res.getString("view.configurator.character.add"));
+    Button deleteB = new Button(res.getString("view.configurator.character.delete"));
 
-    Button addRaceButton = new Button("Hinzufügen");
-    Button deleteRaceButton = new Button("Löschen");
+    Button addRaceButton = new Button(res.getString("view.configurator.character.add"));
+    Button deleteRaceButton = new Button(res.getString("view.configurator.character.delete"));
 
     Grid<Role> grid = new Grid<>();
     Grid<Race> raceGrid = new Grid<>();
@@ -90,41 +103,74 @@ public class CharacterConfigurationTab extends VerticalLayout {
     }
 
     private void initFeld() {
-        H1 title = new H1("Charaktereigenschaften");
+        H1 title = new H1(res.getString("view.configurator.character.headline"));
 
-        Details hint = new Details("Hinweis",
-                new Text(
-                        "Hier Kann man Rollen und Rassen hinzufügen, die der Avatar des Spielers "
-                                + "oder NPCs sein können. Auch die Inventargröße des Spielers ist hier zu bestimmen. "
-                                + "Man kann dem Spieler auch die Möglichkeit geben ein Geschlecht auszuwählen."));
+        Details hint = new Details(res.getString("view.configurator.character.details.title"),
+                new Text(res.getString("view.configurator.character.details.info")));
         //hint.addOpenedChangeListener(e -> Notification.show(e.isOpened() ? "Opened" : "Closed"));
 
-        NumberField inventorySize = new NumberField("Größe des Inventars");
+        NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepoints"));
+        lifepointsField.setHasControls(true);
+        lifepointsField.setMin(1);
+
+        if(configuratorService.getDungeon().getStandardAvatarLifepoints() != null)
+            lifepointsField.setValue((double) configuratorService.getDungeon().getStandardAvatarLifepoints());
+        else{
+            lifepointsField.setValue(20.0);
+            configuratorService.getDungeon().setStandardAvatarLifepoints(lifepointsField.getValue().longValue());
+        }
+
+
+        lifepointsField.addValueChangeListener(e-> {
+            configuratorService.getDungeon().setStandardAvatarLifepoints(lifepointsField.getValue().longValue());
+            configuratorService.saveDungeon();
+        });
+
+        NumberField inventorySize = new NumberField(res.getString("view.configurator.character.numberfield"));
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
         //inventorySize.setMax(100);
-        inventorySize.setValue(50.0);
+
+        if(configuratorService.getDungeon().getDefaultInventoryCapacity() != null)
+            inventorySize.setValue((double) configuratorService.getDungeon().getDefaultInventoryCapacity());
+        else{
+            inventorySize.setValue(50.0);
+            configuratorService.getDungeon().setDefaultInventoryCapacity(inventorySize.getValue().longValue());
+        }
+
+
+        inventorySize.addValueChangeListener(e-> {
+            configuratorService.getDungeon().setDefaultInventoryCapacity(inventorySize.getValue().longValue());
+            configuratorService.saveDungeon();
+        });
 
         RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
-        genderRadioButton.setLabel("Soll der Spieler ein Geschlecht wählen können?");
-        genderRadioButton.setItems("Aktivieren", "Deaktivieren");
+        genderRadioButton.setLabel(res.getString("view.configurator.character.radiobutton.label"));
+        genderRadioButton.setItems(res.getString("view.configurator.character.radiobutton.activate.gender"),
+                res.getString("view.configurator.character.radiobutton.deactivate.gender"));
         genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        genderRadioButton.setValue("Aktivieren");
+        genderRadioButton.setValue(res.getString("view.configurator.character.radiobutton.activate.gender"));
 
-        initFeldLayout.add(title, hint, inventorySize, genderRadioButton);
+        initFeldLayout.add(title, hint,lifepointsField ,inventorySize, genderRadioButton);
 
     }
 
     private void roleList() {
         addRoleClickListener();
         deleteRoleClickListener();
-        H2 title = new H2("Rollenliste");
-        grid.setItems(roleArrayList);
+        H2 title = new H2(res.getString("view.configurator.character.headline.roles"));
 
-        Column<Role> nameColumn = grid.addColumn(Role::getRoleName)
-                .setHeader("Rollenbezeichnung");
-        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription)
-                .setHeader("Beschreibung");
+        if(configuratorService.getDungeon().getRoles() != null)
+            grid.setItems(configuratorService.getAllRoles());
+
+
+        Column<Role> nameColumn = grid.addColumn(Role::getRoleName).setHeader(res.getString("view.configurator.character.role.grid.name"));
+
+        Column<Role> descriptionColumn = grid.addColumn(Role::getDescription).setHeader(res.getString("view.configurator.character.role.grid.description"));
+
+        Column<Role> lifepointsBonusColumn = grid.addColumn(Role::getLifepointsBonus).setHeader(res.getString("view.configurator.character.role.grid.lifepointsbonus"));
+
+
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
@@ -150,13 +196,17 @@ public class CharacterConfigurationTab extends VerticalLayout {
         addRaceClickListener();
         deleteRaceClickListener();
 
-        H2 title = new H2("Rassenliste");
+        H2 title = new H2(res.getString("view.configurator.character.headline.races"));
 
-        raceGrid.setItems(raceArrayList);
+        if(configuratorService.getDungeon().getRaces() != null)
+            raceGrid.setItems(configuratorService.getAllRace());
+
+
         Column<Race> nameColumn = raceGrid.addColumn(Race::getRaceName)
-                .setHeader("Rassenbezeichnung");
-        Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription)
-                .setHeader("Beschreibung");
+                .setHeader(res.getString("view.configurator.character.race.grid.name"));
+        Column<Race> descriptionColumn = raceGrid.addColumn(Race::getDescription).setHeader(res.getString("view.configurator.character.race.grid.description"));
+
+        Column<Race> lifepointsBonusColumn = raceGrid.addColumn(Race::getLifepointsBonus).setHeader(res.getString("view.configurator.character.role.grid.lifepointsbonus"));
 
         TextField raceNameField = new TextField();
         TextField descriptionField = new TextField();
@@ -181,23 +231,24 @@ public class CharacterConfigurationTab extends VerticalLayout {
         buttonView.addAndExpand(addRaceButton, deleteRaceButton);
         //raceListLayout.setSizeFull();
         raceListLayout.add(title, raceGrid, buttonView);
+
     }
 
     private void refreshRoleGrid() {
-        grid.setItems(roleArrayList);
+        grid.setItems(configuratorService.getAllRoles());
     }
 
     private void refreshRaceGrid() {
-        raceGrid.setItems(raceArrayList);
+        raceGrid.setItems(configuratorService.getAllRace());
     }
 
     private RoleDialog createRoleDialog() {
-        roleDialog = new RoleDialog(roleArrayList, currentRole, grid, configuratorService);
+        roleDialog = new RoleDialog(currentRole, grid, configuratorService);
         return roleDialog;
     }
 
     private RaceDialog createRaceDialog() {
-        raceDialog = new RaceDialog(raceArrayList, currentRace, raceGrid, configuratorService);
+        raceDialog = new RaceDialog(currentRace, raceGrid, configuratorService);
         return raceDialog;
     }
 
@@ -219,30 +270,58 @@ public class CharacterConfigurationTab extends VerticalLayout {
 
     private void deleteRoleClickListener() {
         deleteB.addClickListener(e -> {
-            Role[] selectedRole = grid.getSelectedItems()
-                    .toArray(Role[]::new);
-            if (selectedRole.length >= 1) {
-                currentRole = selectedRole[0];
-                roleArrayList.remove(currentRole);
-                refreshRoleGrid();
-                configuratorService.removeRole(currentRole);
+            try{
+                if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rollen haben zu können ;)");
+                }else{
+                    Role[] selectedRole = grid.getSelectedItems()
+                            .toArray(Role[]::new);
+                    if (selectedRole.length >= 1) {
+                        currentRole = selectedRole[0];
+                        configuratorService.removeRole(currentRole);
+                        refreshRoleGrid();
+                    }
+
+                }
+            }catch(Exception es){
+                Notification.show("Die Rolle kann nicht gelöscht werden, vielleicht wird die Rolle von einem Avatar verwendet");
             }
+
+
+
+
         });
     }
 
     private void deleteRaceClickListener() {
         deleteRaceButton.addClickListener(e -> {
-            Race[] selectedRace = raceGrid.getSelectedItems().toArray(Race[]::new);
-            if (selectedRace.length >= 1) {
-                currentRace = selectedRace[0];
-                raceArrayList.remove(currentRace);
-                refreshRaceGrid();
-                configuratorService.removeRace(currentRace);
+            try{
+                if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
+                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rassen haben zu können ;)");
+                }else
+                {
+                    Race[] selectedRace = raceGrid.getSelectedItems()
+                            .toArray(Race[]::new);
+                    if ( selectedRace.length >= 1 )
+                    {
+                        currentRace = selectedRace[0];
+                        configuratorService.removeRace(currentRace);
+                        refreshRaceGrid();
+
+                    }
+                }
+            }catch(Exception es){
+                Notification.show("Die Rasse kann nicht gelöscht werden, vielleicht wird die Rasse von einem Avatar verwendet");
             }
+
         });
     }
 
 
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.character.pagetitle");
+    }
 }
 
 

@@ -10,24 +10,37 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.ItemDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@PageTitle("Raum")
+import java.util.ResourceBundle;
+
+/**
+ * Tab-Oberfläche für die Komponente "Gegenstände" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der Gegenstände bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class ItemConfigurationTab extends VerticalLayout {
+public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTitle {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     ConfiguratorServiceI configuratorServiceI;
 
     VerticalLayout items = new VerticalLayout();
 
     Grid<Item> grid = new Grid<>(Item.class);
-    Button addItemButton = new Button("Gegenstand hinzufügen");
-    Button editItemButton = new Button("Gegenstand bearbeiten");
-    Button deleteItemButton = new Button("Gegenstand entfernen");
+    Button addItemButton = new Button(res.getString("view.configurator.item.button.add.item"));
+    Button editItemButton = new Button(res.getString("view.configurator.item.button.edit.item"));
+    Button deleteItemButton = new Button(res.getString("view.configurator.item.button.remove.item"));
 
     ItemDialog itemDialog;
 
@@ -37,7 +50,7 @@ public class ItemConfigurationTab extends VerticalLayout {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1("Liste der Gegenstände"), items);
+        add(new H1(res.getString("view.configurator.item.headline")), items);
     }
 
     private void initRoom() {
@@ -61,7 +74,7 @@ public class ItemConfigurationTab extends VerticalLayout {
                 itemDialog.fillDialog(currentItem);
                 itemDialog.open();
             } else {
-                Notification.show("Bitte wähle einen Gegenstand aus!");
+                Notification.show(res.getString("view.configurator.item.notification.select.item"));
             }
         });
 
@@ -71,6 +84,8 @@ public class ItemConfigurationTab extends VerticalLayout {
                 currentItem = selectedItems[0];
                 configuratorServiceI.deleteItem(currentItem);
                 refreshGrid();
+            } else {
+                Notification.show(res.getString("view.configurator.item.notification.select.item"));
             }
         });
     }
@@ -85,48 +100,10 @@ public class ItemConfigurationTab extends VerticalLayout {
         grid.setItems(configuratorServiceI.getAllItems());
 
         grid.removeAllColumns();
-        Grid.Column<Item> nameColumn = grid.addColumn(Item::getItemName).setHeader("Name");
-        Grid.Column<Item> sizeColumn = grid.addColumn(Item::getSize).setHeader("Größe");
-        Grid.Column<Item> descriptionColumn = grid.addColumn(Item::getDescription).setHeader("Beschreibung");
-        Grid.Column<Item> typeColumn = grid.addColumn(Item::getType).setHeader("Typ");
-
-        HeaderRow filterRow = grid.appendHeaderRow();
-
-        TextField nameField = new TextField();
-        TextField sizeField = new TextField();
-        TextField descriptionField = new TextField();
-        TextField typeField = new TextField();
-
-        nameField.addValueChangeListener(e -> {
-            //TODO: Service.findByName
-        });
-        sizeField.addValueChangeListener(e -> {
-            //TODO: Service.findBySize
-        });
-        descriptionField.addValueChangeListener(e -> {
-            //TODO: Service.findByDescription
-        });
-        typeField.addValueChangeListener(e -> {
-            //TODO: Service.findByType
-        });
-
-        filterRow.getCell(nameColumn).setComponent(nameField);
-        filterRow.getCell(sizeColumn).setComponent(sizeField);
-        filterRow.getCell(descriptionColumn).setComponent(descriptionField);
-        filterRow.getCell(typeColumn).setComponent(typeField);
-
-        nameField.setSizeFull();
-        nameField.setPlaceholder("Filter");
-        nameField.getElement().setAttribute("focus-target", "");
-        sizeField.setSizeFull();
-        sizeField.setPlaceholder("Filter");
-        sizeField.getElement().setAttribute("focus-target", "");
-        descriptionField.setSizeFull();
-        descriptionField.setPlaceholder("Filter");
-        descriptionField.getElement().setAttribute("focus-target", "");
-        typeField.setSizeFull();
-        typeField.setPlaceholder("Filter");
-        typeField.getElement().setAttribute("focus-target", "");
+        grid.addColumn(Item::getItemName).setHeader(res.getString("view.configurator.item.grid.itemname"));
+        grid.addColumn(Item::getSize).setHeader(res.getString("view.configurator.item.grid.size"));
+        grid.addColumn(Item::getDescription).setHeader(res.getString("view.configurator.item.grid.description"));
+        grid.addColumn(Item::getType).setHeader(res.getString("view.configurator.item.grid.type"));
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
@@ -138,5 +115,10 @@ public class ItemConfigurationTab extends VerticalLayout {
 
     private void refreshGrid() {
         grid.setItems(configuratorServiceI.getAllItems());
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.item.pagetitle");
     }
 }

@@ -18,9 +18,9 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Avatar Schnittstelle.
  * <p>
- * @see AvatarI
  *
  * @author Nicolas Haug
+ * @see AvatarI
  */
 @Entity
 public class Avatar implements AvatarI {
@@ -36,6 +36,12 @@ public class Avatar implements AvatarI {
 
     private String name;
 
+    private Long lifepoints;
+
+    private boolean active;
+
+    private boolean requested = false;
+
     @ManyToOne
     private User user;
 
@@ -48,27 +54,34 @@ public class Avatar implements AvatarI {
     @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> equipment = new ArrayList<>();
 
+    @OneToMany(mappedBy = "visitedByAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Room> visitedRooms = new ArrayList<>();
+
     @OneToOne
     private Race race;
 
     @OneToOne
     private Role role;
 
+    @OneToOne
+    private Room currentRoom;
+
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
-     * @param ARoomId Raum des Avatars, in dem er sich befindet.
+     * @param ARoom Raum des Avatars, in dem er sich befindet.
      * @param AGender Geschlecht des Avatars.
-     * @param AName Name des Avatars.
-     * @param ARace Rasse des Avatars.
-     * @param ARole Rolle des Avatars.
+     * @param AName   Name des Avatars.
+     * @param ARace   Rasse des Avatars.
+     * @param ARole   Rolle des Avatars.
      */
-    public Avatar(Long ARoomId, Gender AGender, String AName, Race ARace, Role ARole) {
-        this.roomId = ARoomId;
+    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole, Long ALebenspunkte) {
+        this.currentRoom = ARoom;
         this.gender = AGender;
         this.name = AName;
         this.race = ARace;
         this.role = ARole;
+        this.lifepoints = ALebenspunkte;
     }
 
     /**
@@ -118,6 +131,22 @@ public class Avatar implements AvatarI {
         name = AName;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean AActive) {
+        active = AActive;
+    }
+
+    public boolean hasRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean ARequested) {
+        requested = ARequested;
+    }
+
     public User getUser() {
         return user;
     }
@@ -150,6 +179,14 @@ public class Avatar implements AvatarI {
         this.role = ARole;
     }
 
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+
+    public void setCurrentRoom(Room ACurrentRoom) {
+        this.currentRoom = ACurrentRoom;
+    }
+
     public List<ItemInstance> getInventory() {
         return inventory;
     }
@@ -161,7 +198,7 @@ public class Avatar implements AvatarI {
 
     public void removeInventoryItem(ItemInstance AItem) {
         inventory.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setInventoryAvatar(null);
     }
 
     public List<ItemInstance> getEquipment() {
@@ -175,20 +212,42 @@ public class Avatar implements AvatarI {
 
     public void removeEquipmentItem(ItemInstance AItem) {
         equipment.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setEquipmentAvatar(null);
     }
+
+    public List<Room> getVisitedRooms() {
+        return visitedRooms;
+    }
+
+    public void addVisitedRoom(Room ARoom) {
+        //falls der Raum nicht schon hinzugefügt wurde
+        for (Room visitedR : visitedRooms) {
+            if (ARoom.getRoomId().equals(visitedR.getRoomId())) {
+                return;
+            }
+        }
+        ARoom.setVisitedByAvatar(this);
+        visitedRooms.add(ARoom);
+    }
+
+    public void removeVisitedRoom(Room ARoom) {
+        visitedRooms.remove(ARoom);
+        ARoom.setVisitedByAvatar(null);
+    }
+
+    public Long getLifepoints(){ return lifepoints;}
+
+    public void setLifepoints(Long ALifepoints){ this.lifepoints = ALifepoints; }
+
+    public void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB){ this.lifepoints = ALifepoints + ALifepointsBonus + ALifepointsBonusB; }
 
     @Override
     public boolean equals(Object AOther) {
         boolean equals = this == AOther;
-
         if (!equals && AOther instanceof Avatar) {
             Avatar other = (Avatar) AOther;
             equals = (avatarId == other.avatarId);
-            // && (name == other.name || (name != null &&
-            //                    name.equalsIgnoreCase(other.name)))
         }
-
         return equals;
     }
 

@@ -10,22 +10,38 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.NPCDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ResourceBundle;
+
+/**
+ * Tab-Oberfläche für die Komponente "NPC" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der NPCs bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 @PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
-public class NPCConfigurationTab extends VerticalLayout {
+public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTitle {
+
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+
     ConfiguratorServiceI configuratorService;
     VerticalLayout items = new VerticalLayout();
 
     Grid<NPC> grid = new Grid<>(NPC.class);
-    Button addNPCButton = new Button("NPC hinzufügen");
-    Button editNPCButton = new Button("NPC anpassen");
-    Button deleteNPCButton = new Button("NPC entfernen");
+    Button addNPCButton = new Button(res.getString("view.configurator.npc.button.add.npc"));
+    Button editNPCButton = new Button(res.getString("view.configurator.npc.button.edit.npc"));
+    Button deleteNPCButton = new Button(res.getString("view.configurator.npc.button.remove.npc"));
 
     NPCDialog npcDialog;
     private NPC currentNPC;
@@ -34,7 +50,7 @@ public class NPCConfigurationTab extends VerticalLayout {
         configuratorService = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1("NPCs"), items);
+        add(new H1(res.getString("view.configurator.npc.headline")), items);
     }
 
     private void initRoom() {
@@ -58,7 +74,7 @@ public class NPCConfigurationTab extends VerticalLayout {
                 npcDialog.fillDialog(currentNPC);
                 npcDialog.open();
             } else {
-                Notification.show("Bitte wähle einen Gegenstand aus!");
+                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
             }
         });
 
@@ -69,7 +85,7 @@ public class NPCConfigurationTab extends VerticalLayout {
                 configuratorService.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
-                Notification.show("Bitte wähle einen Gegenstand aus!");
+                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
             }
         });
     }
@@ -84,48 +100,18 @@ public class NPCConfigurationTab extends VerticalLayout {
         grid.setItems(configuratorService.getAllNPCs());
 
         grid.removeAllColumns();
-        Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName)
+        grid.addColumn(NPC::getNpcName)
                 .setComparator((npc1, npc2) -> npc1.getNpcName()
                         .compareToIgnoreCase(npc2.getNpcName()))
-                .setHeader("Name");
-        Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName())
+                .setHeader(res.getString("view.configurator.npc.grid.npcname"));
+        grid.addColumn(npc -> npc.getRace().getRaceName())
                 .setComparator((npc1, npc2) -> npc1.getRace().getRaceName()
                         .compareToIgnoreCase(npc2.getRace().getRaceName()))
-                .setHeader("Rasse");
-        Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription)
+                .setHeader(res.getString("view.configurator.npc.grid.race"));
+        grid.addColumn(NPC::getDescription)
                 .setComparator((npc1, npc2) -> npc1.getDescription()
                         .compareToIgnoreCase(npc2.getDescription()))
-                .setHeader("Beschreibung");
-
-        HeaderRow filterRow = grid.appendHeaderRow();
-
-        TextField nameField = new TextField();
-        TextField raceField = new TextField();
-        TextField descriptionField = new TextField();
-
-        nameField.addValueChangeListener(e -> {
-            //TODO: Service.findByName
-        });
-        raceField.addValueChangeListener(e -> {
-            //TODO: Service.findByRace
-        });
-        descriptionField.addValueChangeListener(e -> {
-            //TODO: Service.findByDescription
-        });
-
-        filterRow.getCell(nameColumn).setComponent(nameField);
-        filterRow.getCell(descriptionColumn).setComponent(raceField);
-        filterRow.getCell(raceColumn).setComponent(descriptionField);
-
-        nameField.setSizeFull();
-        nameField.setPlaceholder("Filter");
-        nameField.getElement().setAttribute("focus-target", "");
-        raceField.setSizeFull();
-        raceField.setPlaceholder("Filter");
-        raceField.getElement().setAttribute("focus-target", "");
-        descriptionField.setSizeFull();
-        descriptionField.setPlaceholder("Filter");
-        descriptionField.getElement().setAttribute("focus-target", "");
+                .setHeader(res.getString("view.configurator.npc.grid.description"));
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
@@ -137,5 +123,10 @@ public class NPCConfigurationTab extends VerticalLayout {
 
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllNPCs());
+    }
+
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.npc.pagetitle");
     }
 }

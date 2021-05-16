@@ -11,9 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Komponente "ConfiguratorService".
+ * <p>
+ * Dieser Service stellt alle Funktionalitäten zum Konfigurieren eines Dungeons bereit.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link ConfiguratorServiceI}.
+ * </p>
+ *
+ * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
+ */
 @Scope(value = "session")
 @Service
 public class ConfiguratorService implements ConfiguratorServiceI {
@@ -34,12 +44,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemRepositoryI itemRepo;
     @Autowired
+    UserRepositoryI userRepo;
+    @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
-
-    public void init(DungeonRepositoryI ADungeonRepo) {
-        dungeonRepo = ADungeonRepo;
-    }
-
+    @Autowired
+    NpcInstanceRepositoryI npcInstanceRepositoryI;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -82,7 +91,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void setStartRoom(Room ARoom) {
-
+        dungeon.setStartRoomId(ARoom.getRoomId());
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -106,7 +116,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<Room> getAllDungeonRooms() {
-        return null;
+        return dungeon.getRooms();
     }
 
     @Override
@@ -161,8 +171,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void createRole(String AName, String ADescription) {
-        Role newRole = new Role(AName, ADescription);
+    public void createRole(String AName, String ADescription, Long ALifepointsBonus) {
+        Role newRole = new Role(AName, ADescription, ALifepointsBonus);
         dungeon.addRole(newRole);
         roleRepo.save(newRole);
         //dungeonRepo.save(dungeon);
@@ -170,6 +180,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void removeRole(Role ARole) {
+
         dungeon.removeRole(ARole);
         roleRepo.delete(ARole);
         //dungeonRepo.save(dungeon);
@@ -181,8 +192,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void createRace(String AName, String ADescription) {
-        Race newRace = new Race(AName, ADescription);
+    public void createRace(String AName, String ADescription, Long ALifepointsBonus) {
+        Race newRace = new Race(AName, ADescription,ALifepointsBonus);
         dungeon.addRace(newRace);
         raceRepo.save(newRace);
         //dungeonRepo.save(dungeon);
@@ -228,9 +239,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public int getNumberOfItem (Room ARoom, Item AItem) {
-        int counter = 0;
-        for (ItemInstance itemInstance: getAllItems(ARoom)) {
+    public double getNumberOfItem(Room ARoom, Item AItem) {
+        double counter = 0;
+        for (ItemInstance itemInstance : getAllItems(ARoom)) {
             if (itemInstance.getItem().getItemId().equals(AItem.getItemId())) {
                 counter++;
             }
@@ -242,10 +253,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void setItemInstances(Room ARoom, List<ItemInstance> AItemList) {
         ARoom.getItems()
                 .clear();
-        for (ItemInstance myItem: itemInstanceRepo.findByRoom(ARoom)) {
+        for (ItemInstance myItem : itemInstanceRepo.findByRoom(ARoom)) {
             itemInstanceRepo.delete(myItem);
         }
-        for (ItemInstance myItem: AItemList) {
+        for (ItemInstance myItem : AItemList) {
             myItem.setRoom(ARoom);
             itemInstanceRepo.save(myItem);
         }
@@ -255,7 +266,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
             roomRepo.save(ARoom);
         } catch (Exception e) {
 
-            for (ItemInstance myItem: AItemList) {
+            for (ItemInstance myItem : AItemList) {
                 myItem.setRoom(ARoom);
                 itemInstanceRepo.save(myItem);
             }
@@ -265,15 +276,40 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setNPCs(Room ARoom, List<NPC> ANPCList) {
-        for (NPC myNpc : ANPCList) {
+    public double getNumberOfNPC(Room ARoom, NPC ANPC) {
+        double counter = 0;
+        for (NpcInstance npcInstance : getAllNPCs(ARoom)) {
+            if (npcInstance.getNpc().getNpcId().equals(ANPC.getNpcId())) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+    @Override
+    public void setNpcInstances(Room ARoom, List<NpcInstance> ANPCList) {
+        ARoom.getItems()
+                .clear();
+        for (NpcInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
+            npcInstanceRepositoryI.delete(myNpc);
+        }
+        for (NpcInstance myNpc : ANPCList) {
             myNpc.setRoom(ARoom);
-            npcRepo.save(myNpc);
+            npcInstanceRepositoryI.save(myNpc);
         }
         ARoom.getNpcs()
-                .clear();
-        ARoom.getNpcs()
                 .addAll(ANPCList);
+        try {
+            roomRepo.save(ARoom);
+        } catch (Exception e) {
+
+            for (NpcInstance myNpc : ANPCList) {
+                myNpc.setRoom(ARoom);
+                npcInstanceRepositoryI.save(myNpc);
+            }
+            System.out.println("FALSCH");
+            //Notification.show("Hier findet er den Entity nicht!");
+        }
     }
 
     @Override
@@ -281,8 +317,9 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
         return dungeon.getItems();
     }
+
     @Override
-    public List<ItemInstance> getAllItems(Room ARoom){
+    public List<ItemInstance> getAllItems(Room ARoom) {
         return itemInstanceRepo.findByRoom(ARoom);
     }
 
@@ -292,16 +329,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<NPC> getAllNPCs(Room ARoom){
-        List<NPC> npcs = new ArrayList<>();
-        for (NPC myNpc: dungeon.getNpcs()) {
-            if(myNpc.getRoom() != null){
-                if (myNpc.getRoom().getRoomId() == ARoom.getRoomId()){
-                    npcs.add(myNpc);
-                }
-            }
-        }
-        return npcs;
+    public List<NpcInstance> getAllNPCs(Room ARoom){
+        return npcInstanceRepositoryI.findByRoom(ARoom);
     }
 
     @Override
@@ -314,6 +343,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public Room getRoom(Long ARoomID) {
+        for (Room r : dungeon.getRooms()) {
+            if(r.getRoomId().equals(ARoomID)){
+                return r;
+            }
+        }
         return null;
     }
 
@@ -336,4 +370,25 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void addItemInstance(ItemInstance AInstance) {
         itemInstanceRepo.save(AInstance);
     }
+
+    @Override
+    public List<User> getAllUsers()
+    {
+
+        return userRepo.findAll();
+    }
+
+    @Override
+    public User getUser(String AName)
+    {
+
+       return userRepo.findByName(AName);
+    }
+
+
+    public void saveUser(User AUser) {
+        userRepo.save(AUser);
+    }
+
+
 }

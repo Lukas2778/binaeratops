@@ -2,7 +2,11 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "scripts": {
-    "test": "mvn test",
+    "test": "mvn clean test",
+    "testImpl": "mvn clean test -Dgroups=\"de.dhbw.binaeratops.groups.ImplGroup\"",
+    "testRepository": "mvn clean test -Dgroups=\"de.dhbw.binaeratops.groups.RepositoryGroup\"",
+    "testUser": "mvn clean test -Dgroups=\"de.dhbw.binaeratops.groups.UserGroup\"",
+    "testGit": "npm run testImpl && npm run testUser",
     "e2e": "npx wdio run ./wdio.conf.js",
     "allure": "allure generate -c ./target/webdriver/allure-results && allure open"
   },

@@ -1,9 +1,3 @@
-/*
- *
- *  * (c) 2015 - 2021 ENisco GmbH & Co. KG
- *
- */
-
 package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
@@ -12,50 +6,63 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.sql.SQLOutput;
-import java.util.ResourceBundle;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.PermissionDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-@PageTitle("Dungeon-Konfiguration")
+/**
+ * Tab-Oberfläche für die Komponente "General" des Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Konfiguration der Dungeoneigenschaften bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Nicolas Haug
+ */
 @CssImport("./views/mainviewtabs/configurator/charStats-view.css")
+public class DungeonConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
-public class DungeonConfigurationTab extends VerticalLayout {
-
-    private final ResourceBundle res = ResourceBundle.getBundle("language");
+    private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
-    ArrayList<User> users;
+    ArrayList<User> userList;
     TextField titleField;
     TextField playerCountField;
     Visibility visibility;
     String visibilityValue;
+    User currentUser;
 
-    private ConfiguratorServiceI configuratorServiceI;
+    Grid<User> grid = new Grid<>();
+
+    private ConfiguratorServiceI configuratorService;
 
     public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
-        this.configuratorServiceI = AConfiguratorServiceI;
+        this.configuratorService = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
-        users = new ArrayList<>();
-        titleField = new TextField("Name des Dungeons");
-        playerCountField = new TextField("Maximale Anzahl Spieler");
+        userList = new ArrayList<>();
+        titleField = new TextField(res.getString("view.configurator.dungeon.field.dungeonname"));
 
         initField();
         permissionList();
@@ -72,106 +79,152 @@ public class DungeonConfigurationTab extends VerticalLayout {
     }
 
     private void initField() {
-        H1 title = new H1("Dungeon-Konfiguration");
+        H1 title = new H1(res.getString("view.configurator.dungeon.h1.titledungeon"));
 
-        if(configuratorServiceI.getDungeon().getDungeonName() == null)
-            titleField.setValue("Neuer Dungeon");
+        if (configuratorService.getDungeon().getDungeonName() == null)
+            titleField.setValue(res.getString("view.configurator.dungeon.field.valuenew.dungeonname"));
         else
-            titleField.setValue(configuratorServiceI.getDungeon().getDungeonName());
+            titleField.setValue(configuratorService.getDungeon().getDungeonName());
 
-        titleField.addValueChangeListener(e->{
-            configuratorServiceI.getDungeon().setDungeonName(titleField.getValue());
-            configuratorServiceI.saveDungeon();
+        titleField.addValueChangeListener(e -> {
+            configuratorService.getDungeon().setDungeonName(titleField.getValue());
+            configuratorService.saveDungeon();
         });
 
         titleField.setWidth("400px");
-        //titleField.setValue(titleField.getValue());
 
-        playerCountField.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setPlayerMaxSize(Long.parseLong(playerCountField.getValue()));
-            configuratorServiceI.saveDungeon();
+        NumberField playerCountField = new NumberField(res.getString("view.configurator.dungeon.field.maxplayercount"));
+        playerCountField.setHasControls(true);
+        playerCountField.setMin(2);
+
+        playerCountField.addValueChangeListener(e -> {
+            configuratorService.getDungeon().setPlayerMaxSize(playerCountField.getValue().longValue());
+            configuratorService.saveDungeon();
         });
 
-        playerCountField.setWidth("170px");
+        playerCountField.setWidth("150px");
 
-        if(configuratorServiceI.getDungeon().getPlayerMaxSize() == null)
-            playerCountField.setValue("30");
+        if (configuratorService.getDungeon().getPlayerMaxSize() == null)
+            playerCountField.setValue(30.0);
         else
-            playerCountField.setValue(String.valueOf(configuratorServiceI.getDungeon().getPlayerMaxSize()));
+            playerCountField.setValue((double) configuratorService.getDungeon().getPlayerMaxSize());
 
         RadioButtonGroup<String> viewRadioButton = new RadioButtonGroup<>();
-        viewRadioButton.setLabel("Sichtbarkeit");
-        viewRadioButton.setItems("Öffentlich", "Privat", "In Konfiguration");
+        viewRadioButton.setLabel(res.getString("view.configurator.dungeon.radiobutton.visibility"));
+        viewRadioButton.setItems(res.getString("view.configurator.dungeon.radiobutton.public"),
+                res.getString("view.configurator.dungeon.radiobutton.private"),
+                res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
         viewRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
 
-        viewRadioButton.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
-            configuratorServiceI.saveDungeon();
+        //Zuerst wird überprüft, ob min. eine Rasse erstellt wurde, dann ob min. eine Rolle erstellt wurde und dann ob der Startraum festgelegt wurde.
+        viewRadioButton.addValueChangeListener(e -> {
+            if(viewRadioButton.getValue() == res.getString("view.configurator.dungeon.radiobutton.public")){
+
+                if(configuratorService.getDungeon().getRaces().size() >0){
+
+                    if(configuratorService.getDungeon().getRoles().size()>0){
+
+                        if(configuratorService.getRoom(configuratorService.getDungeon().getStartRoomId())!= null){
+                            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                            configuratorService.saveDungeon();
+                        }else{
+                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                        }
+                    }else{
+                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                    }
+
+                }else{
+                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                }
+
+            }else if( viewRadioButton.getValue() == res.getString("view.configurator.dungeon.radiobutton.private")){
+
+                if(configuratorService.getDungeon().getRaces().size() >0){
+
+                    if(configuratorService.getDungeon().getRoles().size()>0){
+
+                        if(configuratorService.getRoom(configuratorService.getDungeon().getStartRoomId())!= null){
+                            configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                            configuratorService.saveDungeon();
+                        }else{
+                            Notification.show("Du musst noch den Startraum festlegen, wo beginnt die Reise?");
+                            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                        }
+                    }else{
+                        Notification.show("Dein Dungeon braucht mindestens eine Rolle");
+                        viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                    }
+
+                }else{
+                    Notification.show("Dein Dungeon braucht mindestens eine Rasse");
+                    viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+                }
+
+            } else{
+                configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
+                configuratorService.saveDungeon();
+                System.out.println("In Conf  wurde gewählt");
+            }
         });
 
-        Details commandSymbolDefinition = new Details("Was sind Befehlszeichen",
-                new Text("Um Befehle im Dungeon ausführen zu können muss man vor diese ein bestimmtes Zeichen setzen, " +
-                        "das sogenannte Befehlszeichen. Falls dir das / nicht gefällt kannst du es hier anpassen. " +
-                        "Es ist ein beliebiges Zeichen erlaubt, aber Buchstaben und Zahlen sind nicht zu empfehlen."));
+        if (configuratorService.getDungeon().getDungeonVisibility() == null)
+            viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
+        else
+            viewRadioButton.setValue(getVisibility(configuratorService.getDungeon().getDungeonVisibility()));
 
-        TextField commandSymbolField = new TextField("Befehlszeichen");
+        Details commandSymbolDefinition = new Details(res.getString("view.configurator.dungeon.details.cmdsymbol.title"),
+                new Text(res.getString("view.configurator.dungeon.details.cmdsymbol.info")));
+
+        TextField commandSymbolField = new TextField(res.getString("view.configurator.dungeon.field.cmdsymbol"));
         commandSymbolField.setMinLength(1);
         commandSymbolField.setMaxLength(1);
         commandSymbolField.setWidth("100px");
 
         commandSymbolField.addValueChangeListener(e -> {
             if (!commandSymbolField.isInvalid()) {
-                configuratorServiceI.setCommandSymbol(commandSymbolField.getValue().charAt(0));
+                configuratorService.setCommandSymbol(commandSymbolField.getValue().charAt(0));
             }
         });
-        commandSymbolField.setValue(String.valueOf(configuratorServiceI.getCommandSymbol()));
+        commandSymbolField.setValue(String.valueOf(configuratorService.getCommandSymbol()));
 
-        if(configuratorServiceI.getDungeon().getDungeonVisibility() == null)
-            viewRadioButton.setValue("Öffentlich");
-        else
-            viewRadioButton.setValue(getVisibility(configuratorServiceI.getDungeon().getDungeonVisibility()) );
 
-        Details hint = new Details("Info",
-                                   new Text("Eine gute Dungeonbeschreibung hilft den Spielern sich für dein\n"
-                                                    + "Dungeon zu entscheiden. Die Dungeonbeschreibung ist oft der\n"
-                                                    + "erste Eindruck!"));
+        Details hint = new Details(res.getString("view.configurator.dungeon.details.info.description.title"),
+                new Text(res.getString("view.configurator.dungeon.details.info.description.info")));
 
-        TextArea dungeonDescription = new TextArea("Dungeonbeschreibung");
+        TextArea dungeonDescription = new TextArea(res.getString("view.configurator.dungeon.area.dungeondescription"));
         dungeonDescription.setWidth("500px");
 
-        if(configuratorServiceI.getDungeon().getDescription() != null)
-        dungeonDescription.setValue(configuratorServiceI.getDungeon().getDescription());
-
-        dungeonDescription.addValueChangeListener(e-> {
-            configuratorServiceI.getDungeon().setDescription(dungeonDescription.getValue());
-            configuratorServiceI.saveDungeon();
+        dungeonDescription.addValueChangeListener(e -> {
+            configuratorService.getDungeon().setDescription(dungeonDescription.getValue());
+            configuratorService.saveDungeon();
 
         });
+
+        if (configuratorService.getDungeon().getDescription() != null)
+            dungeonDescription.setValue(configuratorService.getDungeon().getDescription());
+
         initFieldLayout.add(title, titleField, playerCountField, viewRadioButton, commandSymbolDefinition, commandSymbolField, hint, dungeonDescription);
 
     }
 
     private void permissionList() {
 
-        //Beispieldaten
-        User testUser = new User();
-        testUser.setName("DungeonDestroyer");
-
-        User testUser2 = new User();
-        testUser2.setName("DungeonKiller");
-
-        users.add(testUser);
-        users.add(testUser2);
-
-        H2 title = new H2("Spielberechtigung");
-        Text permissionText = new Text("Hier kannst du schon im Voraus Spielern eine Berechtigung geben, deinen Dungeon zu spielen.");
+        H2 title = new H2(res.getString("view.configurator.dungeon.h1.titlepermission"));
+        Text permissionText = new Text(res.getString("view.configurator.dungeon.text.permission"));
 
         Grid<User> grid = new Grid<>();
 
-        grid.setItems(users);
+        grid.setItems(userList);
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
+
+        Column<User> nameColumn = grid.addColumn(User::getName)
+                .setHeader(res.getString("view.configurator.dungeon.grid.column.approved.players"));
 
         roleNameField.getElement()
                 .setAttribute("focus-target", "");
@@ -183,11 +236,34 @@ public class DungeonConfigurationTab extends VerticalLayout {
         HorizontalLayout buttonView = new HorizontalLayout();
         buttonView.setVerticalComponentAlignment(Alignment.END);
 
-        Button addB = new Button("Hinzufügen");
-        Button deleteB = new Button("Löschen");
+        Button addB = new Button(res.getString("view.configurator.dungeon.button.addpermission"));
+        Button deleteB = new Button(res.getString("view.configurator.dungeon.button.deletepermission"));
 
         addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        addB.addClickListener(e -> {
+            currentUser = new User();
+            PermissionDialog dialog = new PermissionDialog(userList, currentUser, grid, configuratorService);
+            dialog.open();
+        });
+
+        deleteB.addClickListener(e -> {
+            User[] selectedUser = grid.getSelectedItems()
+                    .toArray(User[]::new);
+            if (selectedUser.length >= 1) {
+                currentUser = selectedUser[0];
+                configuratorService.getDungeon()
+                        .removeAllowedUser(currentUser);
+                // configuratorService.getDungeon().removePermission(configuratorService.getDungeon().getPermission(configuratorService.getDungeon(), currentUser));
+                configuratorService.saveUser(currentUser);
+                configuratorService.saveDungeon();
+
+                refreshGrid();
+
+            }
+        });
+
         buttonView.addAndExpand(addB, deleteB);
         permissionLayout.setSizeFull();
         permissionLayout.add(title, permissionText, grid, buttonView);
@@ -195,9 +271,9 @@ public class DungeonConfigurationTab extends VerticalLayout {
     }
 
     private Visibility getVisibility(String value) {
-        if (value.equals("Öffentlich")) {
+        if (value.equals(res.getString("view.configurator.dungeon.radiobutton.public"))) {
             visibility = Visibility.PUBLIC;
-        } else if (value.equals("Privat")) {
+        } else if (value.equals(res.getString("view.configurator.dungeon.radiobutton.private"))) {
             visibility = Visibility.PRIVATE;
         } else {
             visibility = Visibility.IN_CONFIGURATION;
@@ -208,20 +284,23 @@ public class DungeonConfigurationTab extends VerticalLayout {
 
     private String getVisibility(Visibility vis) {
         if (vis == Visibility.PUBLIC) {
-            visibilityValue = "Öffentlich";
+            visibilityValue = res.getString("view.configurator.dungeon.radiobutton.public");
         } else if (vis == Visibility.PRIVATE) {
-            visibilityValue = "Privat";
+            visibilityValue = res.getString("view.configurator.dungeon.radiobutton.private");
         } else {
-            visibilityValue = "In Konfiguration";
+            visibilityValue = res.getString("view.configurator.dungeon.radiobutton.in.configuration");
         }
 
         return visibilityValue;
     }
 
+    private void refreshGrid() {
+        grid.setItems(configuratorService.getDungeon()
+                .getAllowedUsers());
+    }
 
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.configurator.dungeon.pagetitle");
+    }
 }
-
-
-
-
-

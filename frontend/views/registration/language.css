@@ -1,0 +1,33 @@
+.language-login {
+    padding-top: 0%;
+    padding-left: 95%;
+    padding-block-end: 10%;
+}
+
+.language-register {
+    padding-top: 0%;
+    padding-left: 95%;
+    padding-block-end: 3.5%;
+}
+
+.language-validate {
+    padding-top: 0%;
+    padding-left: 95%;
+    padding-block-end: 7%;
+}
+
+.language-newpassword {
+    padding-top: 0%;
+    padding-left: 95%;
+    padding-block-end: 5%;
+}
+
+.language-forgotpassword {
+    padding-top: 0%;
+    padding-left: 95%;
+    padding-block-end: 10%;
+}
+
+.view {
+    padding-block-end: 5%;
+}

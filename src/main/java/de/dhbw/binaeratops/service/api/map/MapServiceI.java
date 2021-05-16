@@ -1,13 +1,22 @@
 package de.dhbw.binaeratops.service.api.map;
 
 import de.dhbw.binaeratops.model.entitys.Room;
+import de.dhbw.binaeratops.model.map.Tuple;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.model.map.Tile;
 
 import java.util.ArrayList;
 
 /**
+ * Interface für die Komponente "MapService".
+ * <p>
  * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
+ * </p>
+ * <p>
+ * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.map.MapService}.
+ * </p>
+ *
+ * @author Lukas Göpel, Matthias Rall, Lars Rösel
  */
 public interface MapServiceI {
     /**
@@ -19,14 +28,28 @@ public interface MapServiceI {
     ArrayList<Tile> initConfigure(ConfiguratorServiceI AConfiguratorService);
 
     /**
+     * Gibt die Karte für den übergebenen Dungeon zurück.
      *
-     * @param ADungeonId id vom Dungeon.
+     * @param ADungeonId ID des Dungeons.
      * @return Kacheln der Map.
      */
-    Tile[][] getMapGame(long ADungeonId);
-
 
     /**
+     * Auslesen der Karte aus der Datenbank für den übergebenen Dungeon.
+     * @param ADungeonId ID des Dungeons.
+     * @param AGameView Wenn die Karte für die Spieleransicht erzeugt werden soll, muss hier True gesetzt werden.
+     * @return Kacheln der Map.
+     */
+    Tile[][] getMapGame(long ADungeonId, boolean AGameView);
+
+    /**
+     *
+     * @param ADungeonID ID.
+     * @return so n zeug.
+     */
+    Tuple<Integer> getMinXY(long ADungeonID);
+
+                                   /**
      * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.
      *
      * @param ALocationX X Koordinate.
@@ -75,8 +98,8 @@ public interface MapServiceI {
     /**
      * Überprüfen, ob die Wand an den übergebenen Koordinaten geändet werden kann.
      *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
+     * @param ALocationX  X Koordinate.
+     * @param ALocationY  Y Koordinate.
      * @param AHorizontal Eingabe, ob es sich um eine horizontale Wand handelt.
      * @return Rückgabe, ob die Wand gesetzt werden kann oder nicht.
      */
@@ -85,12 +108,19 @@ public interface MapServiceI {
     /**
      * Wand an den übergebenen Koordinaten setzen.
      *
-     * @param ALocationX X Koordinate.
-     * @param ALocationY Y Koordinate.
+     * @param ALocationX  X Koordinate.
+     * @param ALocationY  Y Koordinate.
      * @param AHorizontal Eingabe, ob es sich um eine horizontale Wand handelt.
      * @return ArrayList.
      */
     ArrayList<Tile> toggleWall(int ALocationX, int ALocationY, boolean AHorizontal);
 
+    /**
+     * Gibt den Raum mit den übergebenen Koordinaten zurück.
+     *
+     * @param ALocationX X-Koordinate des Raumes.
+     * @param ALocationY Y-Koordinate des Raumes.
+     * @return Raum an den übergebenen Koordinaten.
+     */
     Room getRoomByCoordinate(int ALocationX, int ALocationY);
 }

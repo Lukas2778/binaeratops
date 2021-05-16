@@ -12,7 +12,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
+/**
+ * Komponente "MapService".
+ * <p>
+ * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
+ * </p>
+ * <p>
+ * Für Schnittstelle dieser Komponente siehe @{@link MapServiceI}.
+ * </p>
+ *
+ * @author Lukas Göpel, Matthias Rall, Lars Rösel
+ */
 @Scope(value = "session")
 @Service
 public class MapService implements MapServiceI {
@@ -34,29 +44,56 @@ public class MapService implements MapServiceI {
 
         for (Room r :
                 configuratorServiceI.getDungeon().getRooms()) {
-            rooms.put(new Tuple<>(r.getXCoordinate(), r.getYCoordinate()), r);
-            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
+            rooms.put(new Tuple<>(r.getXcoordinate(), r.getYcoordinate()), r);
+            tiles.add(new Tile(r.getXcoordinate(), r.getYcoordinate(), tileName(r)));
         }
         return tiles;
     }
 
     @Override
-    public Tile[][] getMapGame(long ADungeonID) {
+    public Tuple<Integer> getMinXY(long ADungeonID){
+        int minX = 8;
+        int minY = 8;
+        int maxX = 0;
+        int maxY = 0;
+        for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
+            if (r.getXcoordinate() < minX)
+                minX = r.getXcoordinate();
+            if (r.getYcoordinate() < minY)
+                minY = r.getYcoordinate();
+            if (r.getXcoordinate() > maxX)
+                maxX = r.getXcoordinate();
+            if (r.getYcoordinate() > maxY)
+                maxY = r.getYcoordinate();
+        }
+        return new Tuple<>(minX,minY);
+    }
+
+    @Override
+    public Tile[][] getMapGame(long ADungeonID, boolean AGameView) {
         ArrayList<Tile> tiles = new ArrayList<>();
         int minX = 8;
         int minY = 8;
         int maxX = 0;
         int maxY = 0;
         for (Room r : dungeonRepositoryI.findByDungeonId(ADungeonID).getRooms()) {
-            tiles.add(new Tile(r.getXCoordinate(), r.getYCoordinate(), tileName(r)));
-            if (r.getXCoordinate() < minX)
-                minX = r.getXCoordinate();
-            if (r.getYCoordinate() < minY)
-                minY = r.getYCoordinate();
-            if (r.getXCoordinate() > maxX)
-                maxX = r.getXCoordinate();
-            if (r.getYCoordinate() > maxY)
-                maxY = r.getYCoordinate();
+            tiles.add(new Tile(r.getXcoordinate(), r.getYcoordinate(), tileName(r)));
+            if (!AGameView) {
+                if (r.getXcoordinate() < minX)
+                    minX = r.getXcoordinate();
+                if (r.getYcoordinate() < minY)
+                    minY = r.getYcoordinate();
+                if (r.getXcoordinate() > maxX)
+                    maxX = r.getXcoordinate();
+                if (r.getYcoordinate() > maxY)
+                    maxY = r.getYcoordinate();
+            }
+            else {
+                minX=0;
+                minY=0;
+                maxX=8;
+                maxY=8;
+            }
         }
         if (tiles.size() == 0){
             Tile[][] a= new Tile[1][1];

@@ -51,10 +51,13 @@ public abstract class AbstractCmdScanner {
      * Kann für eine Scanner-Instanz mehrfach aufgerufen werden,
      * der Zustand des Scanners wird jeweils zurückgesetzt.
      *
-     * @param AInput Zu parsende Eingabe.
-     *
-     * @throws CmdScannerException Fehlermeldung oder
-     *         Signalisierung von Zustandswechseln.
+     * @param AInput   Zu parsende Eingabe.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     * @throws CmdScannerException            Fehlermeldung oder Signalisierung von Zustandswechseln.
+     * @throws InvalidImplementationException Übergebenes Objekt ungültig.
      */
     public UserMessage scan(String AInput, DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         input = AInput;
@@ -75,6 +78,7 @@ public abstract class AbstractCmdScanner {
      * Callback bei einem Syntaxfehler (unerwartetes Befehlsende, fehlendes Schlüsselwort).
      *
      * @param AExpected Erwartetes Schlüsselwort.
+     * @throws CmdScannerException Fehlermeldung oder Signalisierung von Zustandswechseln.
      */
     protected void onMissingToken(String AExpected) throws CmdScannerException {
         throw new CmdScannerSyntaxMissingException(AExpected);
@@ -85,8 +89,11 @@ public abstract class AbstractCmdScanner {
      * <p>
      * Muss in einer konkreten Klasse überschrieben werden.
      *
-     * @throws CmdScannerException Fehlermeldung oder
-     *         Signalisierung von Zustandswechseln.
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @throws CmdScannerException            Fehlermeldung oder Signalisierung von Zustandswechseln.
+     * @throws InvalidImplementationException Übergebenes Objekt ungültig.
      */
     protected abstract UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException;
 
@@ -110,31 +117,36 @@ public abstract class AbstractCmdScanner {
         startPos = APos;
     }
 
+    protected String findParenthesesToken() {
+        return findInput(false, true);
+    }
+
     /**
      * Liefert aus dem restlichen zu parsenden String das erste Wort.
      *
      * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
      */
     protected String findNextToken() {
-        return findInput(false);
+        return findInput(false, false);
     }
 
     /**
      * Liefert die gesamte restliche Eingabe hinter dem aktuellen Token.
      *
      * @return Restliche Eingabe. {@code null}, wenn hinter dem aktuellen
-     *         Token keine Eingabe vorhanden ist.
+     * Token keine Eingabe vorhanden ist.
      */
     protected String findRestOfInput() {
-        return findInput(true);
+        return findInput(true, false);
     }
 
     /**
      * Liefert aus dem restlichen zu parsenden String das erste Wort.
      *
+     * @param AUpToLineEnd Wahrheitswert, ob bis zum Stringende eingelesen werden soll.
      * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
      */
-    private String findInput(boolean AUpToLineEnd) {
+    private String findInput(boolean AUpToLineEnd, boolean AParentheses) {
         // Nur suchen, wenn wir noch nicht am Ende sind
         if (currentTokenPos < input.length()) {
             int n;
@@ -159,13 +171,38 @@ public abstract class AbstractCmdScanner {
             } else {
                 // Tokenanfang gefunden, Ende suchen
                 currentTokenPos = n;
+
+                int flagPos = n;
+                boolean flag = false;
+                if (AParentheses) {
+                    if (input.charAt(n) == '"') {
+                        n++;
+                        currentTokenPos = n;
+                    }
+                }
                 if (AUpToLineEnd) {
                     n = input.length();
                 } else {
-                    for (; n < input.length() && input.charAt(n) != ' '; n++) {
+                    if (AParentheses) {
+                        for (; n < input.length() && input.charAt(n) != '"';n++) {
+                            flagPos++;
+                        }
+                        if (input.charAt(n) == '"') {
+                            flag = true;
+                        }
+                    } else {
+                        for (; n < input.length() && input.charAt(n) != ' '; n++) {
+                        }
                     }
                 }
                 currentToken = input.substring(currentTokenPos, n);
+                if (AParentheses) {
+                    if (!flag) {
+                        currentToken = null;
+                    } else {
+                        currentTokenPos++;
+                    }
+                }
             }
         }
         return currentToken;

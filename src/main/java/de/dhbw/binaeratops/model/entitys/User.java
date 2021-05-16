@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Benutzer.
@@ -21,9 +22,8 @@ import java.util.ResourceBundle;
  * <p>
  * Es implementiert dazu alle Funktionalitäten der Benutzer Schnittstelle.
  *
- * @see UserI
- *
  * @author Matthias Rall, Nicolas Haug
+ * @see UserI
  */
 @Entity
 public class User implements UserI {
@@ -60,6 +60,7 @@ public class User implements UserI {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Dungeon> myDungeons = new ArrayList<>();
 
+
     /**
      * Konstruktor zum Erzeugen eines Benutzers mit allen Eigenschaften.
      *
@@ -84,109 +85,142 @@ public class User implements UserI {
 
     }
 
+    @Override
     public boolean checkPassword(String APassword) {
         return DigestUtils.sha1Hex(APassword).equals(passwordHash);
     }
 
+    @Override
     public Long getUserId() {
         return userId;
     }
 
+    @Override
     public void setUserId(Long AId) {
         this.userId = AId;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String AUsername) {
         this.name = AUsername;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
 
+    @Override
     public void setEmail(String AEmail) {
         this.email = AEmail;
     }
 
+    @Override
     public String getPasswordHash() {
         return passwordHash;
     }
 
+    @Override
     public void setPassword(String APassword) {
         this.passwordHash = DigestUtils.sha1Hex(APassword);
     }
 
+    @Override
     public Integer getCode() {
         return code;
     }
 
+    @Override
     public void setCode(Integer ACode) {
         this.code = ACode;
     }
 
+    @Override
     public Boolean isVerified() {
         return isVerified;
     }
 
+    @Override
     public void setVerified(Boolean AIsVerified) {
         this.isVerified = AIsVerified;
     }
 
+    @Override
     public Dungeon getAllowedDungeon() {
         return allowedDungeons;
     }
 
+    @Override
     public void setAllowedDungeon(Dungeon AAllowedDungeons) {
         this.allowedDungeons = AAllowedDungeons;
     }
 
+    @Override
     public Dungeon getBlockedDungeon() {
         return blockedDungeons;
     }
 
+    @Override
     public void setBlockedDungeon(Dungeon ABlockedDungeons) {
         this.blockedDungeons = ABlockedDungeons;
     }
 
+    @Override
     public Dungeon getCurrentDungeon() {
         return currentDungeon;
     }
 
+    @Override
     public void setCurrentDungeon(Dungeon ACurrentDungeon) {
         this.currentDungeon = ACurrentDungeon;
     }
 
+    @Override
+    public void removeCurrentDungeon(){
+        this.currentDungeon=null;
+    }
+
+    @Override
     public List<Avatar> getAvatars() {
         return myAvatars;
     }
 
+    @Override
     public void addAvatar(Avatar AAvatar) {
         AAvatar.setUser(this);
         myAvatars.add(AAvatar);
     }
 
+    @Override
     public void removeAvatar(Avatar AAvatar) {
         myAvatars.remove(AAvatar);
         AAvatar.setUser(null);
     }
 
+    @Override
     public List<Dungeon> getMyDungeons() {
         return myDungeons;
     }
 
+    @Override
     public void addDungeon(Dungeon ADungeon) {
         ADungeon.setUser(this);
         myDungeons.add(ADungeon);
     }
 
+    @Override
     public void removeDungeon(Dungeon ADungeon) {
         myDungeons.remove(ADungeon);
         ADungeon.setUser(null);
     }
+
+
+   
 
     @Override
     public boolean equals(Object AOther) {

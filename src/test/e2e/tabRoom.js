@@ -6,8 +6,8 @@ function createRoom(a, b) {
 function deleteRoom(a, b) {
     $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').click();
     expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']')).toBeExisting();
-    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-button').click();
-    browser.pause(250);
+    $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-button').click();
+    browser.pause(450);
     expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[' + (2 * a - 1) + ']/img[' + b + ']').getAttribute('src')).toEqual('https://localhost:8443/map/KarteBack.png');
 }
 
@@ -64,7 +64,7 @@ describe('Dungeon - Configure Room', () => {
         $('/html/body/vaadin-app-layout/div/vaadin-tabs/vaadin-tab[3]').click();
         const addItem = $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[3]/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
         const nameField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[1]');
-        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-number-field');
+        const sizeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-integer-field');
         const descriptionField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-text-field[2]');
         const typeField = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-combo-box');
         const saveRole = $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-button[1]');
@@ -101,25 +101,19 @@ describe('Dungeon - Configure Room', () => {
 
     it('set Name for a Room', () => {
         createRoom(2,2);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-field[2]').click();
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-text-field').click();
         browser.keys('Test');
     });
 
     it('set Description for a Room', () => {
         createRoom(2,2);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-area').click();
-        browser.keys('Test');
-    });
-
-    it('set Description for a Room', () => {
-        createRoom(2,2);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-text-area').click();
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-text-area').click();
         browser.keys('Test');
     });
 
     it('set Item for a Room', () => {
         createRoom(2,2);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[1]/vaadin-button').click();
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-vertical-layout[1]/vaadin-button').click();
         $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-grid/vaadin-grid-cell-content[1]').click();
         $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-button[1]').click();
         //expect('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[1]/vaadin-list-box//div').toBeExisting();
@@ -127,7 +121,7 @@ describe('Dungeon - Configure Room', () => {
 
     it('set NPC for a Room', () => {
         createRoom(2,2);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[2]/vaadin-button').click();
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-horizontal-layout/vaadin-vertical-layout[2]/vaadin-button').click();
         $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-grid/vaadin-grid-cell-content[1]').click();
         $('//*[@id="overlay"]/flow-component-renderer/div/vaadin-vertical-layout/vaadin-button[1]').click();
         //expect('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-horizontal-layout/vaadin-vertical-layout[2]/vaadin-list-box//div').toBeExisting();
@@ -135,7 +129,7 @@ describe('Dungeon - Configure Room', () => {
 
     it('delete a Room', () => {
         createRoom(1,1);
-        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-button').click();
+        $('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[2]/vaadin-vertical-layout/vaadin-vertical-layout/vaadin-button').click();
         browser.pause(100);
         expect($('/html/body/vaadin-app-layout/div/div/vaadin-vertical-layout[5]/vaadin-split-layout/vaadin-vertical-layout[1]/vaadin-vertical-layout/vaadin-horizontal-layout[1]/img[1]').getAttribute('src')).toEqual('https://localhost:8443/map/KarteBack.png');
     });

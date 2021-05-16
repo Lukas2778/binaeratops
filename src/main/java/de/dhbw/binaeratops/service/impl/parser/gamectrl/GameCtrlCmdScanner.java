@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
+import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
 import de.dhbw.binaeratops.service.impl.parser.AbstractCmdScanner;
@@ -42,6 +43,8 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private static final String CMD_WHOAMI = "WHOAMI";
     private static final String CMD_WHEREAMI = "WHEREAMI";
     private static final String CMD_EXAMINE = "EXAMINE";
+    private static final String CMD_EXAMINE_NPC = "NPC";
+    private static final String CMD_EXAMINE_ITEM = "ITEM";
     private static final String CMD_SHOW = "SHOW";
     private static final String CMD_SHOW_INVENTORY = "INVENTORY";
     private static final String CMD_SHOW_INVENTORY_K = "INV";
@@ -49,8 +52,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private static final String CMD_SHOW_EQUIPMENT_K = "EQ";
     private static final String CMD_TAKE = "TAKE";
     private static final String CMD_DROP = "DROP";
-    private static final String CMD_EAT = "EAT";
-    private static final String CMD_DRINK = "DRINK";
+    private static final String CMD_CONSUME = "CONSUME";
     private static final String CMD_EQUIP = "EQUIP";
     private static final String CMD_LAY_DOWN = "LAYDOWN";
     private static final String CMD_HEALTH = "HEALTH";
@@ -69,43 +71,41 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
      * Scanner im Zustand "Start".
      */
     @Override
-    protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
+    protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
-            onMissingToken("<Control>");
+            onMissingToken("<CONTROL>");
             return null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_INFO:
-                    return scanInfo1(ADungeon);
+                    return scanInfo1(ADungeon, AAvatar, AUser);
                 case CMD_MOVE:
-                    return scanMove1(ADungeon);
+                    return scanMove1(ADungeon, AAvatar, AUser);
                 case CMD_LOOK:
-                    return scanLook1(ADungeon);
+                    return scanLook1(ADungeon, AAvatar, AUser);
                 case CMD_WHOAMI:
-                    return new UserMessage("Du bist "+AAvatar.getName());
+                    return hooks.onWhoAmI(ADungeon, AAvatar, AUser);
                 case CMD_WHEREAMI:
-                    return new UserMessage("Du befindest dich hier: "+hooks.onWhereAmI(ADungeon));
+                    return hooks.onWhereAmI(ADungeon, AAvatar, AUser);
                 case CMD_EXAMINE:
-                    return scanExamine1(ADungeon);
+                    return scanExamine1(ADungeon, AAvatar, AUser);
                 case CMD_SHOW:
-                    return scanShow1(ADungeon);
+                    return scanShow1(ADungeon, AAvatar, AUser);
                 case CMD_TAKE:
-                    return scanTake1(ADungeon);
+                    return scanTake1(ADungeon, AAvatar, AUser);
                 case CMD_DROP:
-                    return scanDrop1(ADungeon);
-                case CMD_EAT:
-                    return scanEat1(ADungeon);
-                case CMD_DRINK:
-                    return scanDrink1(ADungeon);
+                    return scanDrop1(ADungeon, AAvatar, AUser);
+                case CMD_CONSUME:
+                    return scanConsume1(ADungeon, AAvatar, AUser);
                 case CMD_EQUIP:
-                    return scanEquip1(ADungeon);
+                    return scanEquip1(ADungeon, AAvatar, AUser);
                 case CMD_LAY_DOWN:
-                    return scanLayDown1(ADungeon);
+                    return scanLayDown1(ADungeon, AAvatar, AUser);
                 case CMD_HEALTH:
-                    return hooks.onGetHealth(ADungeon);
+                    return hooks.onGetHealth(ADungeon, AAvatar, AUser);
                 case CMD_TALK:
-                    return scanTalk1(ADungeon);
+                    return scanTalk1(ADungeon, AAvatar, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -114,19 +114,19 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     }
 
 
-    private UserMessage scanInfo1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanInfo1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
-            onMissingToken("<Schlüsselwort>");
+            onMissingToken("<ALL | ROOM | PLAYERS>");
             return null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_INFO_ALL:
-                    return hooks.onInfoAll();
+                    return hooks.onInfoAll(ADungeon, AAvatar, AUser);
                 case CMD_INFO_ROOM:
-                    return hooks.onInfoRoom(ADungeon);
+                    return hooks.onInfoRoom(ADungeon, AAvatar, AUser);
                 case CMD_INFO_PLAYERS:
-                    return hooks.onInfoPlayers(ADungeon);
+                    return hooks.onInfoPlayers(ADungeon, AAvatar, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -134,25 +134,25 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanMove1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanMove1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String direction = findRestOfInput();
         if (direction == null) {
-            onMissingToken("<Richtung>");
+            onMissingToken("<DIRECTION>");
             return null;
         } else {
             switch (direction.toUpperCase()) {
                 case CMD_MOVE_NORTH:
                 case CMD_MOVE_NORTH_K:
-                    return hooks.onMoveNorth(ADungeon);
+                    return hooks.onMoveNorth(ADungeon, AAvatar, AUser);
                 case CMD_MOVE_EAST:
                 case CMD_MOVE_EAST_K:
-                    return hooks.onMoveEast(ADungeon);
+                    return hooks.onMoveEast(ADungeon, AAvatar, AUser);
                     case CMD_MOVE_SOUTH:
                 case CMD_MOVE_SOUTH_K:
-                    return hooks.onMoveSouth(ADungeon);
+                    return hooks.onMoveSouth(ADungeon, AAvatar, AUser);
                 case CMD_MOVE_WEST:
                 case CMD_MOVE_WEST_K:
-                    return hooks.onMoveWest(ADungeon);
+                    return hooks.onMoveWest(ADungeon, AAvatar, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -160,15 +160,15 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanLook1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanLook1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
-            onMissingToken("<Schlüsselwort>");
+            onMissingToken("<AROUND>");
             return null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_LOOK_AROUND:
-                    return hooks.onLookAround(ADungeon);
+                    return hooks.onLookAround(ADungeon, AAvatar, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -176,30 +176,52 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanExamine1(DungeonI ADungeon) throws CmdScannerException {
-        String name = findRestOfInput();
-        if (name == null) {
-            onMissingToken("<NPC_NAME> | <ITEM_NAME>");
+    private UserMessage scanExamine1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        String token = findNextToken();
+        if (token == null) {
+            onMissingToken("<NPC> | <ITEM>");
             return null;
         } else {
-            return hooks.onExamine(ADungeon, name.toUpperCase());
+            switch (token.toUpperCase()) {
+                case CMD_EXAMINE_NPC:
+                    return scanExamine2(ADungeon, AAvatar, AUser, true);
+                case CMD_EXAMINE_ITEM:
+                    return scanExamine2(ADungeon, AAvatar, AUser, false);
+                default:
+                    onUnexpectedToken();
+                    return null;
+            }
+        }
+    }
+
+    private UserMessage scanExamine2(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, boolean ANpcOrItem) throws CmdScannerException, InvalidImplementationException {
+        String name = findRestOfInput();
+        if (name == null) {
+            onMissingToken("<NAME>");
+            return null;
+        } else {
+            if (ANpcOrItem) {
+                return hooks.onExamineNpc(ADungeon, name, AAvatar, AUser);
+            } else {
+                return hooks.onExamineItem(ADungeon, name, AAvatar, AUser);
+            }
         }
     }
 
 
-    private UserMessage scanShow1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanShow1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
-            onMissingToken("<Schlüsselwort>");
+            onMissingToken("<INVENTORY | INV | EQUIPMENT | EQUIP>");
             return null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_SHOW_INVENTORY:
                 case CMD_SHOW_INVENTORY_K:
-                    return hooks.onShowInventory(ADungeon);
+                    return hooks.onShowInventory(ADungeon, AAvatar, AUser);
                 case CMD_SHOW_EQUIPMENT:
                 case CMD_SHOW_EQUIPMENT_K:
-                    return hooks.onShowEquipment(ADungeon);
+                    return hooks.onShowEquipment(ADungeon, AAvatar, AUser);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -208,83 +230,73 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     }
 
 
-    private UserMessage scanTake1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanTake1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
-            return hooks.onTake(ADungeon, item.toUpperCase());
+            return hooks.onTake(ADungeon, item, AAvatar, AUser);
         }
     }
 
-    private UserMessage scanDrop1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanDrop1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
-            return hooks.onDrop(ADungeon, item);
+            return hooks.onDrop(ADungeon, item, AAvatar, AUser);
         }
     }
 
-    private UserMessage scanEat1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanConsume1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String eatableItem = findRestOfInput();
         if (eatableItem == null) {
-            onMissingToken("<EATABLE_ITEM>");
+            onMissingToken("<CONSUMABLE_ITEM>");
             return null;
         } else {
-            return hooks.onEat(ADungeon, eatableItem.toUpperCase());
+            return hooks.onConsume(ADungeon, eatableItem, AAvatar, AUser);
         }
     }
 
-    private UserMessage scanDrink1(DungeonI ADungeon) throws CmdScannerException {
-        String drinkableItem = findRestOfInput();
-        if (drinkableItem == null) {
-            onMissingToken("<DRINKABLE_ITEM>");
-            return null;
-        } else {
-            return hooks.onDrink(ADungeon, drinkableItem.toUpperCase());
-        }
-    }
-
-    private UserMessage scanEquip1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanEquip1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String equipableItem = findRestOfInput();
         if (equipableItem == null) {
             onMissingToken("<EQUIPABLE_ITEM>");
             return null;
         } else {
-            return hooks.onEquip(ADungeon, equipableItem.toUpperCase());
+            return hooks.onEquip(ADungeon, AAvatar, AUser, equipableItem);
         }
     }
 
-    private UserMessage scanLayDown1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanLayDown1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
-            onMissingToken("<ITEM>");
+            onMissingToken("<ITEM_NAME>");
             return null;
         } else {
-            return hooks.onLayDown(ADungeon, item.toUpperCase());
+            return hooks.onLayDown(ADungeon, AAvatar, AUser, item);
         }
     }
 
-    private UserMessage scanTalk1(DungeonI ADungeon) throws CmdScannerException {
+    private UserMessage scanTalk1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException {
         String name = findNextToken();
         if (name == null) {
             onMissingToken("<NPC_NAME>");
             return null;
         } else {
-            return scanTalk2(ADungeon, name.toUpperCase());
+            return scanTalk2(ADungeon, AAvatar, AUser, name);
         }
     }
 
-    private UserMessage scanTalk2(DungeonI ADungeon, String ANpcName) throws CmdScannerException {
+    private UserMessage scanTalk2(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName) throws CmdScannerException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<MESSAGE>");
             return null;
         } else {
-            return hooks.onTalk(ADungeon, ANpcName, message);
+            return hooks.onTalk(ADungeon, AAvatar, AUser, ANpcName, message);
         }
     }
 }

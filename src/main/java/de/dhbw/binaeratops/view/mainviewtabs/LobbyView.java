@@ -8,7 +8,7 @@ import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
@@ -18,12 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 /**
  * Oberfläche des Tabs 'Lobby'
  */
-@PageTitle("Lobby")
-public class LobbyView extends VerticalLayout {
+public class LobbyView extends VerticalLayout implements HasDynamicTitle {
+
+    private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
+
     H1 titleText;
     String explanationText;
     Html html;
@@ -38,15 +41,15 @@ public class LobbyView extends VerticalLayout {
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
+     * @param ADungeonService DungeonService.
+     * @param AGameService GameService.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService gameService){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService){
         dungeonServiceI=ADungeonService;
-        this.gameService = gameService;
+        this.gameService = AGameService;
 
-        titleText=new H1("Dungeon spielen");
-        explanationText=new String("<div>Du kannst hier aus einer Liste der für dich spielbaren Dungeons" +
-                " auswählen.<br>Es werden dir hier alle aktiven Dungeons angezeigt, die entweder öffentlich zugänglich sind, " +
-                "oder zu denen du eine Berechtigung besitzt.<br>Viel Spaß ;)</div>");
+        titleText=new H1(res.getString("view.lobby.headline"));
+        explanationText=new String(res.getString("view.lobby.text"));
         html=new Html(explanationText);
         dungeonList = new ArrayList<>();
 
@@ -56,12 +59,12 @@ public class LobbyView extends VerticalLayout {
         dungeonGrid=new Grid<>();
         dungeonGrid.setItems(dungeonList);
         dungeonGrid.setVerticalScrollingEnabled(true);
-        dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader("Name");
-        dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader("Dungeon ID");
-        dungeonGrid.addColumn(Dungeon::getDescription).setHeader("Beschreibung");
-        dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader("Sichtbarkeit");
-        dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader("Status");
-        dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader("Aktion");
+        dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader(res.getString("view.lobby.grid.dungeonname"));
+        dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader(res.getString("view.lobby.grid.dungeonid"));
+        dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
+        dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
+        dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
+        dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader(res.getString("view.lobby.grid.action"));
 
         add(titleText, html, dungeonGrid);
 
@@ -71,10 +74,10 @@ public class LobbyView extends VerticalLayout {
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
-            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
-                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
-                dungeonServiceI.saveDungeon(ADungeon);
-            }
+//            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
+//                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
+//                dungeonServiceI.saveDungeon(ADungeon);
+//            }
             UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
         });
 
@@ -86,4 +89,8 @@ public class LobbyView extends VerticalLayout {
     }
 
 
+    @Override
+    public String getPageTitle() {
+        return res.getString("view.main.tab.lobby");
+    }
 }

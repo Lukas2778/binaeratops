@@ -54,4 +54,17 @@ public interface RaceI {
      * @param ADescription Zu setzender Beschreibung der Rasse.
      */
     void setDescription(String ADescription);
+
+    /**
+     * TODO
+     * @return
+     */
+    Long getLifepointsBonus();
+
+    /**
+     * TODO
+     * @param ALifepointBonus
+     */
+    void setLifepointsBonus(Long ALifepointBonus);
+
 }

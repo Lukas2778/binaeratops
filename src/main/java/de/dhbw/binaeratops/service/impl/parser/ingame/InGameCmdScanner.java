@@ -107,7 +107,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
+    private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String avatarname = findNextToken();
         if (avatarname == null) {
             onMissingToken("<Avatarname>");
@@ -122,7 +122,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanWhisperAvatarName(DungeonI ADungeon, AvatarI AAvatar, String ARecipent) throws CmdScannerException {
+    private UserMessage scanWhisperAvatarName(DungeonI ADungeon, AvatarI AAvatar, String ARecipent) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
@@ -132,7 +132,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         return null;
     }
 
-    private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
+    private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
@@ -142,7 +142,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanSpeak(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException {
+    private UserMessage scanSpeak(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
@@ -152,7 +152,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanNotify(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
+    private UserMessage scanNotify(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
             onMissingToken("<ALL|ROOM>");
@@ -170,17 +170,17 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanNotifyRoom(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
-        String roomName = findNextToken();
+    private UserMessage scanNotifyRoom(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
+        String roomName = findParenthesesToken();
         if (roomName == null) {
-            onMissingToken("<Raumname>");
+            onMissingToken("\"<Raumname>\"");
             return null;
         } else {
             return scanNotifyRoomMessage(ADungeon, AUser, roomName);
         }
     }
 
-    private UserMessage scanNotifyRoomMessage(DungeonI ADungeon, UserI AUser, String ARoomName) throws CmdScannerException {
+    private UserMessage scanNotifyRoomMessage(DungeonI ADungeon, UserI AUser, String ARoomName) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
             onMissingToken("<Nachricht>");
@@ -190,7 +190,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    private UserMessage scanNotifyAll(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
+    private UserMessage scanNotifyAll(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if(message == null) {
             onMissingToken("<Nachricht>");

@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.view;
 
 import com.vaadin.flow.i18n.I18NProvider;
+import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -20,6 +21,8 @@ public class TranslationProvider implements I18NProvider {
         return locales;
     }
 
+    private ResourceBundle res;
+
     @Override
     public String getTranslation(String key, Locale locale, Object... params) {
         if (key == null) {
@@ -38,5 +41,56 @@ public class TranslationProvider implements I18NProvider {
             value = MessageFormat.format(value, params);
         }
         return value;
+    }
+
+    public String getUserMessage(UserMessage AUserMessage, Locale ALocale) {
+        if (AUserMessage.getKey() == null) {
+            return "<div>TranslationError</div>";
+        }
+
+        res = ResourceBundle.getBundle(BUNDLE_PREFIX, ALocale);
+
+        if (AUserMessage.getParams().size() == 0) {
+            return res.getString(AUserMessage.getKey());
+        } else if (AUserMessage.getParams().size() == 1) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0));
+        } else if (AUserMessage.getParams().size() == 2) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1));
+        } else if (AUserMessage.getParams().size() == 3) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2));
+        } else if (AUserMessage.getParams().size() == 4) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3));
+        } else if (AUserMessage.getParams().size() == 5) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4));
+        } else if (AUserMessage.getParams().size() == 6) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4), AUserMessage.getParams().get(5));
+        } else if (AUserMessage.getParams().size() == 7) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4), AUserMessage.getParams().get(5), AUserMessage.getParams().get(6));
+        } else if (AUserMessage.getParams().size() == 8) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4), AUserMessage.getParams().get(5), AUserMessage.getParams().get(6),
+                    AUserMessage.getParams().get(7));
+        } else if (AUserMessage.getParams().size() == 9) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4), AUserMessage.getParams().get(5), AUserMessage.getParams().get(6),
+                    AUserMessage.getParams().get(7), AUserMessage.getParams().get(8));
+        } else if (AUserMessage.getParams().size() == 10) {
+            return MessageFormat.format(res.getString(AUserMessage.getKey()), AUserMessage.getParams().get(0),
+                    AUserMessage.getParams().get(1), AUserMessage.getParams().get(2), AUserMessage.getParams().get(3),
+                    AUserMessage.getParams().get(4), AUserMessage.getParams().get(5), AUserMessage.getParams().get(6),
+                    AUserMessage.getParams().get(7), AUserMessage.getParams().get(8), AUserMessage.getParams().get(9));
+        }
+        return "<div>TranslationError</div>";
     }
 }

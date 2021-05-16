@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.service.impl;
 
+import de.dhbw.binaeratops.groups.ImplGroup;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
@@ -16,8 +17,10 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.springframework.test.context.ActiveProfiles;
 
+@Category({ImplGroup.class})
 @ActiveProfiles("test")
 public class ParserServiceTest extends Logger {
 
