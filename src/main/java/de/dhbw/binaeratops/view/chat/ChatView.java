@@ -1,9 +1,7 @@
 package de.dhbw.binaeratops.view.chat;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -53,7 +51,11 @@ public class ChatView extends VerticalLayout {
             User currentUser = VaadinSession.getCurrent().getAttribute(User.class);
             //Prüfung ob der Spieler die Nachricht erhalten darf.
             if (message.getUserIdList().contains(currentUser.getUserId())) {
-                messageList.add(new Paragraph(message.getMessage()));
+                if (message.IsParagraph()){
+                    messageList.add(message.getParagraph());
+                }else {
+                    messageList.add(message.getText());
+                }
                 UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);
                 ui.push();
                 UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
