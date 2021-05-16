@@ -26,8 +26,6 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
@@ -39,10 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Oberfläche des Tabs 'Über uns'
@@ -67,7 +62,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     Dialog myConfirmLeavingDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-    private TranslationProvider transProv = new TranslationProvider();
+    private final TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> myMessages;
 
     H2 binTitle;
@@ -302,10 +297,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
 
-        List<Gender> avatarGenderList = new ArrayList<>();
-        avatarGenderList.add(Gender.MALE);
-        avatarGenderList.add(Gender.FEMALE);
-        avatarGenderList.add(Gender.DIVERSE);
+        List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
         ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
         avatarGenderField.setItems(avatarGenderList);
 
