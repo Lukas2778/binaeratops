@@ -364,7 +364,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId()) == null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
-        myGameService.addActivePlayer(myDungeon, currentUser);
+        myGameService.addActivePlayer(myDungeon, currentUser, myAvatar);
     }
 
     void createMap() {
@@ -518,7 +518,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button leaveButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leaveButt.getStyle().set("color", "red");
         leaveButt.addClickListener(e -> {
-            myGameService.removeActivePlayer(myDungeon, currentUser);
+            myGameService.removeActivePlayer(myDungeon, currentUser, myAvatar);
             myConfirmLeavingDialog.close();
             action.proceed();
         });

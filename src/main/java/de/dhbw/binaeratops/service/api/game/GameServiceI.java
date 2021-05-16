@@ -57,14 +57,16 @@ public interface GameServiceI {
      * Spieler den aktiven Spielern hinzufügen.
      * @param ADungeon Dungeon dem der Spieler beitritt.
      * @param AUser Benutzer, der den Dungeon betritt.
+     * @param AAvatar Avatar, der auf active gesetzt werden soll.
      */
-    void addActivePlayer(Dungeon ADungeon, User AUser);
+    void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
     /**
      * Spieler von der Liste der aktiven Spieler löschen.
      * @param ADungeon Dungeon der verlassen wird.
      * @param AUser Benutzer, der den Dungeon verlässt.
+     * @param AAvatar Avatar, der auf active gesetzt werden soll.
      */
-    void removeActivePlayer(Dungeon ADungeon, User AUser);
+    void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
 }
