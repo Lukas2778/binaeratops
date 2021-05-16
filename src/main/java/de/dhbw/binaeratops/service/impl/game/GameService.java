@@ -89,7 +89,6 @@ public class GameService implements GameServiceI {
             AUser.setCurrentDungeon(ADungeon);
             dungeonRepositoryI.save(ADungeon);
             userRepositoryI.save(AUser);
-            //dungeonServiceI.saveDungeon(ADungeon); //@TODO wieder einkommentieren wenn der User nicht mehr dadurch gelöscht wird
         }
     }
 
@@ -99,7 +98,6 @@ public class GameService implements GameServiceI {
             AUser.removeCurrentDungeon();
             dungeonRepositoryI.save(ADungeon);
             userRepositoryI.save(AUser);
-            //dungeonServiceI.saveDungeon(ADungeon); //@TODO wieder einkommentieren wenn der User nicht mehr dadurch gelöscht wird
         }
     }
 

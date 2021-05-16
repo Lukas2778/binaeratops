@@ -26,6 +26,8 @@ import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
 import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
 import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import de.dhbw.binaeratops.service.api.parser.ParserServiceI;
@@ -62,7 +64,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     Dialog myConfirmLeavingDialog;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-    private final TranslationProvider transProv = new TranslationProvider();
+    private TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> myMessages;
 
     H2 binTitle;
@@ -122,7 +124,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarDialog();
     }
 
-    void initiateGameView(){
+    void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
         aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getCommandSymbol());
         html = new Html(aboutText);
@@ -152,6 +154,24 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
                 myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                if (um.getKey() != null) {
+                    switch (um.getKey()) {
+                        case "view.game.ctrl.cmd.move.north":
+                            changeRoom(currentRoom.getNorthRoomId());
+                            break;
+                        case "view.game.ctrl.cmd.move.east":
+                            changeRoom(currentRoom.getEastRoomId());
+                            break;
+                        case "view.game.ctrl.cmd.move.south":
+                            changeRoom(currentRoom.getSouthRoomId());
+                            break;
+                        case "view.game.ctrl.cmd.move.west":
+                            changeRoom(currentRoom.getWestRoomId());
+                            break;
+                        default:
+                            break;
+                    }
+                }
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
                 Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
