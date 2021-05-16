@@ -11,6 +11,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -38,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
+import javax.swing.*;
 import java.text.MessageFormat;
 import java.util.*;
 
@@ -146,6 +149,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             }
         })));
     }
+
 
     void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
@@ -279,7 +283,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 return avatar.getCurrentRoom().getRoomName();
             return null;
         }).setHeader(res.getString("view.game.grid.room"));
-        //avatarGrid.setSizeFull();
+        avatarGrid.addComponentColumn(item -> createDeleteAvatarButton(item)).setHeader("Löschen");
         //expand(avatarGrid);
         gridLayoutVert.add(avatarGrid);
 
@@ -320,6 +324,38 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myAvatarDialog.setWidth("50%");
     }
 
+    private Button createDeleteAvatarButton(Avatar AAvatar) {
+        Button deleteAvatarButt = new Button("", clickEvent -> {
+
+            Dialog confirmDeleteDialog = new Dialog();
+            H4 title = new H4("Avatar löschen");
+            Text text = new Text("Willst du deinen Avatar '" + AAvatar.getName() + "' wirklich löschen? " +
+                    "Beachte: Es wird dein kompletter Fortschritt im Dungeon gelöscht!");
+            Button deleteAnywayButt = new Button("Avatar löschen");
+            deleteAnywayButt.getStyle().set("color", "red");
+            deleteAnywayButt.addClickListener(e -> {
+                myGameService.deleteAvatar(myDungeon, currentUser, AAvatar);
+                refreshAvatarGrid();
+                confirmDeleteDialog.close();
+            });
+
+            Button cancelButt = new Button("Abbrechen");
+            cancelButt.addClickShortcut(Key.ENTER);
+            cancelButt.addClickListener(e -> {
+                confirmDeleteDialog.close();
+            });
+
+            confirmDeleteDialog.add(title, text, new HorizontalLayout(deleteAnywayButt, cancelButt));
+            confirmDeleteDialog.open();
+        });
+
+        Icon iconDeleteAvatarButton = new Icon(VaadinIcon.CLOSE_BIG);
+        deleteAvatarButt.setIcon(iconDeleteAvatarButton);
+        deleteAvatarButt.getStyle().set("color", "red");
+
+        return deleteAvatarButt;
+    }
+
     void createNewAvatarDialog() {
         VerticalLayout contentLayout;
         HorizontalLayout buttCreateLayout;
@@ -341,35 +377,65 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
+        avatarNameFiled.addValueChangeListener(e -> avatarNameFiled.setInvalid(false));
 
 
         List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
         ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
         avatarGenderField.setItems(avatarGenderList);
+        avatarGenderField.addValueChangeListener(e -> avatarGenderField.setInvalid(false));
 
         List<Role> avatarRoleList = myDungeon.getRoles();
         ComboBox<Role> avatarRoleField = new ComboBox(res.getString("view.game.combobox.role"));
         avatarRoleField.setItems(avatarRoleList);
         avatarRoleField.setItemLabelGenerator(Role::getRoleName);
+        avatarRoleField.addValueChangeListener(e -> avatarRoleField.setInvalid(false));
 
         List<Race> avatarRaceList = myDungeon.getRaces();
         ComboBox<Race> avatarRaceField = new ComboBox(res.getString("view.game.combobox.race"));
         avatarRaceField.setItems(avatarRaceList);
         avatarRaceField.setItemLabelGenerator(Race::getRaceName);
+        avatarRaceField.addValueChangeListener(e -> avatarRaceField.setInvalid(false));
 
         Button cancelButt = new Button(res.getString("view.game.button.cancel"), e -> myCreateAvatarDialog.close());
         cancelButt.getStyle().set("color", "red");
         Button createAvatarButt = new Button(res.getString("view.game.button.save"));
 
         createAvatarButt.addClickListener(e -> {
-            Avatar currentAvatar = new Avatar();
-            //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
-            currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(),avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
-            //Neuen Avatar speichern
-            myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(), avatarNameFiled.getValue(),
-                    avatarGenderField.getValue(), avatarRoleField.getValue(), avatarRaceField.getValue(),  currentAvatar.getLifepoints());
+            if (!myGameService.avatarNameIsValid(myDungeon, avatarNameFiled.getValue())) {
+                avatarNameFiled.setInvalid(true);
+                Notification.show("Entweder hast du den Namen vergessen einzugeben, oder der eingegebene" +
+                        "Avatarname existiert bereits für diesen Dungeon. Versuche einen anderen!");
+            } else {
+                if (!myGameService.avatarGenderIsValid(avatarGenderField.getValue())) {
+                    avatarGenderField.setInvalid(true);
+                    Notification.show("Du musst ein Geschlecht wählen!");
+                } else {
+                    if (!myGameService.avatarRoleIsValid(avatarRoleField.getValue())) {
+                        avatarRoleField.setInvalid(true);
+                        Notification.show("Du musst eine Rolle wählen!");
+                    } else {
+                        if (!myGameService.avatarRaceIsValid(avatarRaceField.getValue())) {
+                            avatarRaceField.setInvalid(true);
+                            Notification.show("Du musst eine Rasse wählen!");
+                        } else {
+                            Avatar currentAvatar = new Avatar();
+                            //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
+                            currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(),avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
+
+                            //Neuen Avatar speichern
+                            myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(),
+                                    avatarNameFiled.getValue(), avatarGenderField.getValue(),
+                                    avatarRoleField.getValue(), avatarRaceField.getValue(),
+                                    currentAvatar.getLifepoints());
+                            refreshAvatarGrid();
+                            myCreateAvatarDialog.close();
+                            Notification.show("Avatar gespeichert!");
+                        }
+                    }
+                }
+            }
             refreshAvatarGrid();
-            myCreateAvatarDialog.close();
         });
         createAvatarButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         createAvatarButt.focus();
@@ -384,8 +450,12 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         avatarList = new ArrayList<>();
         List<Avatar> tempAvatarList = currentUser.getAvatars();
         for (Avatar canAddAvatar : tempAvatarList) {
-            if (canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())) {
-                avatarList.add(canAddAvatar);
+            try {
+                if (canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())) {
+                    avatarList.add(canAddAvatar);
+                }
+            } catch (Exception e) {
+                System.out.println("Jetzt error!");
             }
         }
         avatarGrid.setItems(avatarList);

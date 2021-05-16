@@ -45,6 +45,8 @@ public interface GameServiceI {
      */
     void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints);
 
+    void deleteAvatar(Dungeon ADungeon, User AUser, Avatar AAvatar);
+
     Avatar getAvatarById(Long AAvatarId);
 
     /**
@@ -72,5 +74,13 @@ public interface GameServiceI {
     void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
     Long getStandardAvatarLifepoints(Dungeon ADungeon);
+
+    boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName);
+
+    boolean avatarGenderIsValid(Gender AAvatarGender);
+
+    boolean avatarRoleIsValid(Role AAvatarRole);
+
+    boolean avatarRaceIsValid(Race AAvatarRace);
 
 }

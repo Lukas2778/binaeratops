@@ -77,6 +77,32 @@ public class GameService implements GameServiceI {
         AUser.addAvatar(createAvatar);
     }
 
+    @Override
+    public void deleteAvatar(Dungeon ADungeon, User AUser, Avatar AAvatar){
+//        if(avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId())!=null){
+//            for (Room lol:ADungeon.getRooms()){
+//                if(lol.getVisitedByAvatar()==AAvatar){
+//                    lol.setVisitedByAvatar(null);
+//                    roomRepositoryI.save(lol);
+//                }
+//            }
+//            AAvatar.setCurrentRoom(null);
+//            AAvatar.setDungeon(null);
+//            AAvatar.setRace(null);
+//            AAvatar.setRole(null);
+//            AAvatar.setUser(null);
+//            //ADungeon.removeAvatar(AAvatar);
+//            //AUser.removeAvatar(AAvatar);
+//            //userRepositoryI.save(AUser);
+//            //dungeonRepositoryI.save(ADungeon);
+//            avatarRepositoryI.save(AAvatar);
+//            avatarRepositoryI.delete(AAvatar);
+//            //AUser.removeAvatar(AAvatar);
+//            //userRepositoryI.save(AUser);
+//        }
+    }
+
+    @Override
     public List<Room> saveAvatarProgress(Avatar AAvatar, Room ACurrentRoom){
         AAvatar.addVisitedRoom(ACurrentRoom);
         AAvatar.setCurrentRoom(ACurrentRoom);
@@ -84,6 +110,7 @@ public class GameService implements GameServiceI {
         return AAvatar.getVisitedRooms();
     }
 
+    @Override
     public void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar){
         if(!ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.addCurrentUser(AUser);
@@ -95,10 +122,12 @@ public class GameService implements GameServiceI {
         }
     }
 
+    @Override
     public Avatar getAvatarById(Long AAvatarId) {
         return avatarRepositoryI.findByAvatarId(AAvatarId);
     }
 
+    @Override
     public void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar){
         if(ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.removeCurrentUser(AUser);
@@ -110,6 +139,32 @@ public class GameService implements GameServiceI {
     }
     public Long getStandardAvatarLifepoints(Dungeon ADungeon){
         return ADungeon.getStandardAvatarLifepoints();
+    }
+
+    @Override
+    public boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName){
+        if(AAvatarName.isEmpty())
+            return false;
+        for (Avatar myAvatar: ADungeon.getAvatars()){
+            if(myAvatar.getName().equals(AAvatarName))
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean avatarGenderIsValid(Gender AAvatarGender){
+        return AAvatarGender!=null;
+    }
+
+    @Override
+    public boolean avatarRoleIsValid(Role AAvatarRole){
+        return AAvatarRole!=null;
+    }
+
+    @Override
+    public boolean avatarRaceIsValid(Race AAvatarRace){
+        return AAvatarRace!=null;
     }
 
 }
