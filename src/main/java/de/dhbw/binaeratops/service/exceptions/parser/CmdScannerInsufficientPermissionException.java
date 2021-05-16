@@ -6,10 +6,10 @@ public class CmdScannerInsufficientPermissionException extends CmdScannerExcepti
     private static final long serialVersionUID = 1L;
 
     private UserMessage um;
+
     /**
      * Standard-Exception für den Fall, das die Berechtigung nicht ausreicht.
-     * <p>
-     *
+     * @param AInvalidCommand
      */
     public CmdScannerInsufficientPermissionException(String AInvalidCommand) {
         super(AInvalidCommand);

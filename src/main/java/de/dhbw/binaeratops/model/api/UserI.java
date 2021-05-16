@@ -145,7 +145,7 @@ public interface UserI {
 
     /**
      * Aktuellen Dunegon setzen.
-     * @param ACurrentDungeon
+     * @param ACurrentDungeon Aktuellen Dungeon der gesetzt werden soll.
      */
     void setCurrentDungeon(Dungeon ACurrentDungeon);
 

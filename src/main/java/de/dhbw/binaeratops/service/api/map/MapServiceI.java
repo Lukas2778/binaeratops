@@ -30,7 +30,14 @@ public interface MapServiceI {
     /**
      * Gibt die Karte für den übergebenen Dungeon zurück.
      *
-     * @param ADungeonId id vom Dungeon.
+     * @param ADungeonId ID des Dungeons.
+     * @return Kacheln der Map.
+     */
+
+    /**
+     * Auslesen der Karte aus der Datenbank für den übergebenen Dungeon.
+     * @param ADungeonId ID des Dungeons.
+     * @param AGameView Wenn die Karte für die Spieleransicht erzeugt werden soll, muss hier True gesetzt werden.
      * @return Kacheln der Map.
      */
     Tile[][] getMapGame(long ADungeonId, boolean AGameView);

@@ -6,10 +6,10 @@ public class CmdScannerInvalidParameterException extends CmdScannerException {
     private static final long serialVersionUID = 1L;
 
     private UserMessage um;
+
     /**
      * Standard-Exception für den Fall, das der übergebene Parameter nicht ausgewertet werden konnte.
-     * <p>
-     *
+     * @param AInvalidCommand Falsches Kommando das eingegeben wurde.
      */
     public CmdScannerInvalidParameterException(String AInvalidCommand) {
         super(AInvalidCommand);

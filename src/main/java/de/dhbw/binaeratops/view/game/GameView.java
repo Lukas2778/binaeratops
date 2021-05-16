@@ -98,9 +98,12 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     *
-     * @param messages       Nachrichten.
-     * @param AParserService ParserService.
+     * @param messages Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     * @param AParserService Wird für die Interaktion mit dem Dungeon benötigt.
+     * @param AMapService Wird zur Erstellung der Karte benötigt.
+     * @param ARoomRepo Wird für das Auffinden von Räumen benötigt.
+     * @param ADungeonRepo Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
+     * @param AGameService Wird für die Interaktion mit der Datenbank benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,

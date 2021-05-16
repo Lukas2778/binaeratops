@@ -200,7 +200,7 @@ public interface DungeonI {
 
     /**
      * Gibt den Avatar zurück der über die übergebene ID gefunden wurde.
-     * @param AAvatarId
+     * @param AAvatarId Avatar ID.
      * @return Gefundener Avatar oder null falls nicht gefunden.
      */
     Avatar getAvatarById(Long AAvatarId);
