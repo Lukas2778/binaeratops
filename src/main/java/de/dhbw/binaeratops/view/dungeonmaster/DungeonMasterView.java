@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -37,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * @author Mathias Rall
@@ -280,7 +278,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 .setHeader("Raum");
         userGrid.addComponentColumn(avatar -> {
             Button requestsButton = new Button("Beantworten");
-
+            notificationButtons.put(avatar, requestsButton);
             requestsButton.addClickListener(e -> {
                 if (actionMap.containsKey(avatar)) {
                     UserAction myUserAction = actionMap.get(avatar);
@@ -291,9 +289,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
                             Button consumeSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(consumeActionText.getValue(), avatar.getUser().getUserId()));
+                                actionMap.remove(avatar);
+                                notificationButtons.get(avatar).getStyle().clear();
                                 consumeDialog.close();
                             });
-                            consumeDialog.add(new VerticalLayout(consumeUserActionText, consumeActionText, consumeSendActionButton));
+                            consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
                             consumeDialog.open();
                             break;
                         case "TALK":

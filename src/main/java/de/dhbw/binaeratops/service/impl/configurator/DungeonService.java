@@ -99,7 +99,7 @@ public class DungeonService implements DungeonServiceI {
 
     @Override
     public Room getRoomOfAvatar(Avatar AAvatar) {
-        return roomRepo.findByRoomId(AAvatar.getRoomId());
+        return roomRepo.findByRoomId(AAvatar.getCurrentRoom().getRoomId());
     }
 
     @Override

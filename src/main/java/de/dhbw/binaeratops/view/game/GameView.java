@@ -286,9 +286,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Set selectedAvatar = avatarGrid.getSelectedItems();
             if (selectedAvatar.size() > 0) {
                 //Dungeon betreten
+                Avatar avatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
                 myAvatarDialog.close();
                 textField.focus();
-                loadAvatarProgress(myDungeon.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId()));
+                loadAvatarProgress(avatar);
                 createMap();
                 changeRoom(currentRoom.getRoomId());
             } else {

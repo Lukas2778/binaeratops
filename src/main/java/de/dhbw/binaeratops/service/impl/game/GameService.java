@@ -94,6 +94,10 @@ public class GameService implements GameServiceI {
         }
     }
 
+    public Avatar getAvatarById(Long AAvatarId) {
+        return avatarRepositoryI.findByAvatarId(AAvatarId);
+    }
+
     public void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar){
         if(ADungeon.getCurrentUsers().contains(AUser)){
             ADungeon.removeCurrentUser(AUser);

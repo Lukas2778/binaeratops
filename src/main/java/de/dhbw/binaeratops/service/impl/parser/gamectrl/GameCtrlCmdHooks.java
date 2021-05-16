@@ -550,7 +550,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     @Override
     public UserMessage onConsume(DungeonI ADungeon, String AItem, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
-        Avatar avatar = Avatar.check(AAvatar);
+        Avatar avatar = avatarRepo.findByAvatarId(AAvatar.getAvatarId());
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             for (ItemInstance item : avatar.getInventory()) {
                 if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {

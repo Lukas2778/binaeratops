@@ -45,6 +45,8 @@ public interface GameServiceI {
      */
     void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace);
 
+    Avatar getAvatarById(Long AAvatarId);
+
     /**
      * Avatarfortschritt im Dungeon speichern.
      * @param AAvatar Avatar der aktualisiert werden soll.
