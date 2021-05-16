@@ -102,12 +102,13 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     * @param messages Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
-     * @param AParserService Wird für die Interaktion mit dem Dungeon benötigt.
-     * @param AMapService Wird zur Erstellung der Karte benötigt.
-     * @param ARoomRepo Wird für das Auffinden von Räumen benötigt.
-     * @param ADungeonRepo Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
-     * @param AGameService Wird für die Interaktion mit der Datenbank benötigt.
+     *
+     * @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     * @param AParserService    Wird für die Interaktion mit dem Dungeon benötigt.
+     * @param AMapService       Wird zur Erstellung der Karte benötigt.
+     * @param ARoomRepo         Wird für das Auffinden von Räumen benötigt.
+     * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
+     * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
      * @param kickUsers
      */
@@ -143,8 +144,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Notification.show("Kick me pls: " + message.getUser().getName());
         })));
     }
-
-
 
     void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
@@ -380,10 +379,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     }
 
     void refreshAvatarGrid() {
-        avatarList=new ArrayList<>();
-        List<Avatar> tempAvatarList=currentUser.getAvatars();
-        for (Avatar canAddAvatar:tempAvatarList){
-            if(canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())){
+        avatarList = new ArrayList<>();
+        List<Avatar> tempAvatarList = currentUser.getAvatars();
+        for (Avatar canAddAvatar : tempAvatarList) {
+            if (canAddAvatar.getDungeon().getDungeonId().equals(myDungeon.getDungeonId())) {
                 avatarList.add(canAddAvatar);
             }
         }
@@ -573,14 +572,15 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
+     *
      * @param event event.
      */
     @Override
     public void afterNavigation(AfterNavigationEvent event) {
-        String greetingMessage= "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
-        Label greetingLabel= new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
+        String greetingMessage = "Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!";
+        Label greetingLabel = new Label("Hallo " + currentUser.getName() + ", viel Spaß beim Chatten und Spielen!");
         greetingLabel.addClassName("boldtext");
-        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage),greetingMessage , currentUser.getUserId()));
+        messagesPublisher.onNext(new ChatMessage(new Paragraph(greetingMessage), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
     }
 }

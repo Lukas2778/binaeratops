@@ -85,5 +85,7 @@ public interface DungeonServiceI {
     List<User> getCurrentUsers(Dungeon ADungeon);
 
     Dungeon getDungeon(Long ADungeonId);
+
+    void kickPlayer(Long ADungeonId, Long AUserId);
 }
 

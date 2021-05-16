@@ -138,4 +138,12 @@ public class DungeonService implements DungeonServiceI {
     public Dungeon getDungeon(Long ADungeonId){
         return  dungeonRepo.findByDungeonId(ADungeonId);
     }
+
+    @Override
+    public void kickPlayer(Long ADungeonId, Long AUserId){
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        User user = userRepo.findByUserId(AUserId);
+        dungeon.addBlockedUser(user);
+        dungeonRepo.save(dungeon);
+    }
 }
