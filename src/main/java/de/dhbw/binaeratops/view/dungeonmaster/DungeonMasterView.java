@@ -93,6 +93,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     Grid<Item> itemInRoomGrid = new Grid<>(Item.class);
     Grid<NPC> npcInRoomGrid = new Grid<>(NPC.class);
 
+    boolean sureToLeave = false;
+
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              @Autowired DungeonRepositoryI dungeonRepositoryI, Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher) {
@@ -306,6 +308,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 talkDialog.close();
+                                actionMap.remove(avatar);
+                                notificationButtons.get(avatar).getStyle().clear();
                             });
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();
@@ -445,9 +449,11 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     @Override
     public void beforeLeave(BeforeLeaveEvent e) {
-        e.postpone();
-        Dialog leaveDialog = createLeaveDialog();
-        leaveDialog.open();
+        if (!sureToLeave) {
+            e.postpone();
+            Dialog leaveDialog = createLeaveDialog();
+            leaveDialog.open();
+        }
     }
 
     private Dialog createLeaveDialog () {
@@ -490,6 +496,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         });
 
         leaveForSureButton.addClickListener(event -> {
+            sureToLeave = true;
             dungeonServiceI.deactivateDungeon(dungeonId);
             leaveDialog.close();
             UI.getCurrent().navigate("myDungeons");
