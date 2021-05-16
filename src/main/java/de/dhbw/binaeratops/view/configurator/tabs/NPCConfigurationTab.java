@@ -100,48 +100,18 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
         grid.setItems(configuratorService.getAllNPCs());
 
         grid.removeAllColumns();
-        Grid.Column<NPC> nameColumn = grid.addColumn(NPC::getNpcName)
+        grid.addColumn(NPC::getNpcName)
                 .setComparator((npc1, npc2) -> npc1.getNpcName()
                         .compareToIgnoreCase(npc2.getNpcName()))
                 .setHeader(res.getString("view.configurator.npc.grid.npcname"));
-        Grid.Column<NPC> raceColumn = grid.addColumn(npc -> npc.getRace().getRaceName())
+        grid.addColumn(npc -> npc.getRace().getRaceName())
                 .setComparator((npc1, npc2) -> npc1.getRace().getRaceName()
                         .compareToIgnoreCase(npc2.getRace().getRaceName()))
                 .setHeader(res.getString("view.configurator.npc.grid.race"));
-        Grid.Column<NPC> descriptionColumn = grid.addColumn(NPC::getDescription)
+        grid.addColumn(NPC::getDescription)
                 .setComparator((npc1, npc2) -> npc1.getDescription()
                         .compareToIgnoreCase(npc2.getDescription()))
                 .setHeader(res.getString("view.configurator.npc.grid.description"));
-
-        HeaderRow filterRow = grid.appendHeaderRow();
-
-        TextField nameField = new TextField();
-        TextField raceField = new TextField();
-        TextField descriptionField = new TextField();
-
-        nameField.addValueChangeListener(e -> {
-            //TODO: Service.findByName
-        });
-        raceField.addValueChangeListener(e -> {
-            //TODO: Service.findByRace
-        });
-        descriptionField.addValueChangeListener(e -> {
-            //TODO: Service.findByDescription
-        });
-
-        filterRow.getCell(nameColumn).setComponent(nameField);
-        filterRow.getCell(descriptionColumn).setComponent(raceField);
-        nameField.setSizeFull();
-        filterRow.getCell(raceColumn).setComponent(descriptionField);
-
-        nameField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
-        nameField.getElement().setAttribute("focus-target", "");
-        raceField.setSizeFull();
-        raceField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
-        raceField.getElement().setAttribute("focus-target", "");
-        descriptionField.setSizeFull();
-        descriptionField.setPlaceholder(res.getString("view.configurator.npc.grid.filter.placehold"));
-        descriptionField.getElement().setAttribute("focus-target", "");
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 

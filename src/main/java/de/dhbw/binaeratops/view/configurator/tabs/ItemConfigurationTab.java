@@ -100,48 +100,10 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
         grid.setItems(configuratorServiceI.getAllItems());
 
         grid.removeAllColumns();
-        Grid.Column<Item> nameColumn = grid.addColumn(Item::getItemName).setHeader(res.getString("view.configurator.item.grid.itemname"));
-        Grid.Column<Item> sizeColumn = grid.addColumn(Item::getSize).setHeader(res.getString("view.configurator.item.grid.size"));
-        Grid.Column<Item> descriptionColumn = grid.addColumn(Item::getDescription).setHeader(res.getString("view.configurator.item.grid.description"));
-        Grid.Column<Item> typeColumn = grid.addColumn(Item::getType).setHeader(res.getString("view.configurator.item.grid.type"));
-
-        HeaderRow filterRow = grid.appendHeaderRow();
-
-        TextField nameField = new TextField();
-        TextField sizeField = new TextField();
-        TextField descriptionField = new TextField();
-        TextField typeField = new TextField();
-
-        nameField.addValueChangeListener(e -> {
-            //TODO: Service.findByName
-        });
-        sizeField.addValueChangeListener(e -> {
-            //TODO: Service.findBySize
-        });
-        descriptionField.addValueChangeListener(e -> {
-            //TODO: Service.findByDescription
-        });
-        typeField.addValueChangeListener(e -> {
-            //TODO: Service.findByType
-        });
-
-        filterRow.getCell(nameColumn).setComponent(nameField);
-        filterRow.getCell(sizeColumn).setComponent(sizeField);
-        filterRow.getCell(descriptionColumn).setComponent(descriptionField);
-        filterRow.getCell(typeColumn).setComponent(typeField);
-
-        nameField.setSizeFull();
-        nameField.setPlaceholder(res.getString("view.configurator.item.filter.placehold"));
-        nameField.getElement().setAttribute("focus-target", "");
-        sizeField.setSizeFull();
-        sizeField.setPlaceholder(res.getString("view.configurator.item.filter.placehold"));
-        sizeField.getElement().setAttribute("focus-target", "");
-        descriptionField.setSizeFull();
-        descriptionField.setPlaceholder(res.getString("view.configurator.item.filter.placehold"));
-        descriptionField.getElement().setAttribute("focus-target", "");
-        typeField.setSizeFull();
-        typeField.setPlaceholder(res.getString("view.configurator.item.filter.placehold"));
-        typeField.getElement().setAttribute("focus-target", "");
+        grid.addColumn(Item::getItemName).setHeader(res.getString("view.configurator.item.grid.itemname"));
+        grid.addColumn(Item::getSize).setHeader(res.getString("view.configurator.item.grid.size"));
+        grid.addColumn(Item::getDescription).setHeader(res.getString("view.configurator.item.grid.description"));
+        grid.addColumn(Item::getType).setHeader(res.getString("view.configurator.item.grid.type"));
 
         grid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
 
