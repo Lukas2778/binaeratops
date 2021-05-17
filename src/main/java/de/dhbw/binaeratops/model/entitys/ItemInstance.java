@@ -61,8 +61,6 @@ public class ItemInstance implements ItemInstanceI {
 
     }
 
-    // TODO GETTER + SETTER in Interface auslagern + Kommentare
-
     public Long getItemInstanceId() {
         return itemInstanceId;
     }

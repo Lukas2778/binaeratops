@@ -227,7 +227,6 @@ public class Room implements RoomI {
         return Objects.hash(roomId);
     }
 
-    //TODO position hinzufügen
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder();
@@ -237,6 +236,10 @@ public class Room implements RoomI {
                 .append(roomName)
                 .append(" | Beschreibung = ")
                 .append(description)
+                .append(" | X-Koordinate = ")
+                .append(xcoordinate)
+                .append(" | Y-Koordinate = ")
+                .append(ycoordinate)
                 .append("]\n");
         return s.toString();
     }
