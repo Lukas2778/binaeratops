@@ -108,6 +108,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private List<Room> visitedRooms;
     private Avatar selectedInDialogAvatar;
 
+    private Timer myTimer;
+
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      *
@@ -137,6 +139,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         this.kickUsers = kickUsers;
 
         currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+
+        //Timer
+        myTimer=new Timer();
     }
 
     @Override
@@ -577,6 +582,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         gridLayout.setSizeFull();
         gridLayoutVert.add(gridLayout);
         refreshInventory();
+
+        //Timer setzen
+        myTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                refreshView();
+            }
+        },0,2000);//eine Sekunde delay
     }
 
     void refreshInventory() {
@@ -694,5 +707,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), currentUser.getName());
         messagesPublisher.onNext(new ChatMessage(new Paragraph(new Html(greetingMessage)), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
+    }
+
+    void refreshView(){
+        //wird dem Timer nach aufgerufen, sodass der DungeonMaster das Inventar des Spielers aktualisieren kann
+        try {
+            if(myAvatar!=null) {
+                getUI().ifPresent(ui->ui.access(()->
+                        {
+                            refreshInventory();
+                            Notification.show("timer");
+                        }
+                        ));
+            }
+        }catch (Exception e){}
     }
 }
