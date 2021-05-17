@@ -12,7 +12,7 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
  * Dieser Service stellt alle Funktionalitäten zum Parsen der Spielereingabe bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.parser.ParserService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.parser.ParserService}.
  * </p>
  *
  * @author Nicolas Haug, Lukas Göpel

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Callbacks des Scanners für die Spielsteuerungs-Befehle.
  * <p>
- * Für Schnittstelle siehe @{@link GameCtrlCmdHooksI}.
+ * Für Schnittstelle siehe {@link GameCtrlCmdHooksI}.
  * </p>
  *
  * @author Nicolas Haug, Lukas Göpel

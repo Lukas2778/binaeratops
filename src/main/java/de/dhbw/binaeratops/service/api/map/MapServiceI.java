@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.map.MapService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.map.MapService}.
  * </p>
  *
  * @author Lukas Göpel, Matthias Rall, Lars Rösel

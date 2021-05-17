@@ -28,7 +28,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Oberfläche des Tabs 'Eigene Dungeons'
+ * Tab-Oberfläche für die Komponente "Eigene Dungeons" des Hauptmenüs.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Eigenen Dungeons eines Benutzers bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
 public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 

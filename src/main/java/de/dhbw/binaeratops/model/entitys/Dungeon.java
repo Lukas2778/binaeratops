@@ -4,6 +4,7 @@ import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Dungeon.
@@ -30,83 +30,83 @@ public class Dungeon implements DungeonI {
 
     @Id
     @GeneratedValue
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long dungeonId;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @NotNull
     private String dungeonName;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @Enumerated(EnumType.STRING)
     private Visibility dungeonVisibility;
 
     //@Column(columnDefinition = "varchar(255) default 'INACTIVE'")
     @Enumerated(EnumType.STRING)
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Status dungeonStatus;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long dungeonMasterId;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long playerCount;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long playerMaxSize;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long startRoomId;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long defaultInventoryCapacity;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private String description;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Character commandSymbol;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     private Long standardAvatarLifepoints;
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @ManyToOne
     private User user; //Ersteller des Dungeons
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Avatar> avatars = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "allowedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
     private final List<User> allowedUsers = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<User> blockedUsers = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
     private final List<User> currentUsers = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Room> rooms = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<NPC> npcs = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Item> items = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Role> roles = new ArrayList<>();
 
-    @Cascade({ org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "dungeon", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Race> races = new ArrayList<>();
 
@@ -119,6 +119,7 @@ public class Dungeon implements DungeonI {
      * @param AStartRoomId              ID des Startraumes.
      * @param ADefaultInventoryCapacity Standardinventarkapazität des Dungeons.
      * @param ACommandSymbol            Befehlszeichen des Dungeons.
+     * @param AStandardAvatarLifepoints Standardavatarlebenspunkte des Dungeons.
      */
     public Dungeon(String ADungeonName, Long ADungeonMaster, Long APlayerMaxSize,
                    Long AStartRoomId, Long ADefaultInventoryCapacity, Character ACommandSymbol, Long AStandardAvatarLifepoints) {
@@ -274,9 +275,9 @@ public class Dungeon implements DungeonI {
         return avatars;
     }
 
-    public Avatar getAvatarById(Long AAvatarId){
-        for(Avatar a:getAvatars()){
-            if(a.getAvatarId().equals(AAvatarId))
+    public Avatar getAvatarById(Long AAvatarId) {
+        for (Avatar a : getAvatars()) {
+            if (a.getAvatarId().equals(AAvatarId))
                 return a;
         }
         return null;
@@ -408,11 +409,11 @@ public class Dungeon implements DungeonI {
         ARace.setDungeon(null);
     }
 
-    public Long getStandardAvatarLifepoints(){
+    public Long getStandardAvatarLifepoints() {
         return this.standardAvatarLifepoints;
     }
 
-    public void setStandardAvatarLifepoints(Long AStandardAvatarLifepoints){
+    public void setStandardAvatarLifepoints(Long AStandardAvatarLifepoints) {
         this.standardAvatarLifepoints = AStandardAvatarLifepoints;
     }
 

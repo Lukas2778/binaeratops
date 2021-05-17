@@ -20,7 +20,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten für das Spiel bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link de.dhbw.binaeratops.service.api.game.GameServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link de.dhbw.binaeratops.service.api.game.GameServiceI}.
  * </p>
  *
  * @author Timon Gartung, Lukas Göpel, Matthias Rall, Lars Rösel

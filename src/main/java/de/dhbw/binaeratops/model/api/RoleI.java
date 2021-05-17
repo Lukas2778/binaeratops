@@ -56,14 +56,16 @@ public interface RoleI {
     void setDescription(String ADescription);
 
     /**
-     * TODO
-     * @return
+     * Gibt den Lebenspunkte-Bonus der Rolle zurück.
+     *
+     * @return Lebenspunkte-Bonus der Rolle.
      */
     Long getLifepointsBonus();
 
     /**
-     * TODO
-     * @param ALifepointBonus
+     * Setzt den Lebenspunkte-Bonus der Rolle.
+     *
+     * @param ALifepointBonus Zu setzender Lebenspunkte-Bonus der Rolle.
      */
     void setLifepointsBonus(Long ALifepointBonus);
 }

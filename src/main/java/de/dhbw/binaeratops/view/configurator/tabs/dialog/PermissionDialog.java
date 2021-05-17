@@ -21,6 +21,15 @@ import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+/**
+ * Dialog-Oberfläche für die Komponente "Spielberechtigung" des Dungeoneigenschaften-Konfigurators.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Hinzufügen einer Berechtigung zu einem Dungeon bereit.
+ * <p>
+ * Dafür sendet sie die Benutzereingaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ */
 public class PermissionDialog extends Dialog {
     private TextField currentUserField;
 

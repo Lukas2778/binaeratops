@@ -32,7 +32,7 @@ import java.util.Random;
  * Dieser Service stellt die Schnittstelle zwischen der User-Authentifizierung und der Benutzeroberfläche dar.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link AuthServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link AuthServiceI}.
  * </p>
  *
  * @author Lukas Göpel, Matthias Rall

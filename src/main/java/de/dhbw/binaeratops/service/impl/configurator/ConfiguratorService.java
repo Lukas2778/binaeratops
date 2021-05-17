@@ -19,7 +19,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Konfigurieren eines Dungeons bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link ConfiguratorServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link ConfiguratorServiceI}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel

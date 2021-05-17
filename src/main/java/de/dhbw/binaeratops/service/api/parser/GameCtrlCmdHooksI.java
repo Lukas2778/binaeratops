@@ -10,7 +10,7 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 /**
  * Schnittstelle für die Callbacks des Scanners für die Spielsteuerungs-Befehle.
  * <p>
- * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdHooks}.
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdHooks}.
  * </p>
  *
  * @author Nicolas Haug, Lukas Göpel

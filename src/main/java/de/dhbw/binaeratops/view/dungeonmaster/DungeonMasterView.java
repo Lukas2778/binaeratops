@@ -41,11 +41,14 @@ import reactor.core.publisher.UnicastProcessor;
 import java.util.*;
 
 /**
- * @author Mathias Rall
- * Date: 07.05.2021
- * Time: 16:20
+ * Oberfläche für die Komponente "Dungeon-Master Ansicht".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Verwaltung des Dungeons bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Matthias Rall, Lars Rösel
  */
-
 @CssImport("./views/game/map-master.css")
 @PageTitle("Title")
 @Push

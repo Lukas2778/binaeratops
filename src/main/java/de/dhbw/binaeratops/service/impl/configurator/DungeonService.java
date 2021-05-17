@@ -20,7 +20,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Umgang mit einem Dungen bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link DungeonServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link DungeonServiceI}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel

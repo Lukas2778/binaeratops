@@ -6,6 +6,13 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import java.text.MessageFormat;
 import java.util.*;
 
+/**
+ * Komponente für die Bereitstellung der Übersetzungen.
+ * <p>
+ * Diese Komponente stellt alle Funktionalitäten für die Übersetzung auf allen Seiten bereit.
+ *
+ * @author Nicolas Haug
+ */
 public class TranslationProvider implements I18NProvider {
 
     public static final String BUNDLE_PREFIX = "language";
@@ -43,6 +50,13 @@ public class TranslationProvider implements I18NProvider {
         return value;
     }
 
+    /**
+     * Wandelt die übergebene Benutzernachricht in eine Zeichenkette um und setzt dabei die möglichen Parameter ein.
+     *
+     * @param AUserMessage Benutzernachricht, die umgewandelt werden soll.
+     * @param ALocale      Aktuelle Sprache.
+     * @return Benutzernachricht als Zeichenkette.
+     */
     public String getUserMessage(UserMessage AUserMessage, Locale ALocale) {
         if (AUserMessage.getKey() == null) {
             return "<div>TranslationError</div>";

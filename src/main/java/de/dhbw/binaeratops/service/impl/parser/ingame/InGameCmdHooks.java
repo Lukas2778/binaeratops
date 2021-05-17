@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Callbacks des Scanners für die "In-Game"-Befehle.
  * <p>
- * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.ingame.InGameCmdHooks}.
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.service.impl.parser.ingame.InGameCmdHooks}.
  * </p>
  *
  * @author Nicolas Haug

@@ -15,7 +15,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Konfigurieren eines Dungeons bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
@@ -166,8 +166,9 @@ public interface ConfiguratorServiceI {
     /**
      * Erstellen einer neuen Rolle.
      *
-     * @param AName        Rollenname.
-     * @param ADescription Rollenbeschreibung.
+     * @param AName            Rollenname.
+     * @param ADescription     Rollenbeschreibung.
+     * @param ALifepointsBonus Lebenspunkte-Bonus.
      */
     void createRole(String AName, String ADescription, Long ALifepointsBonus);
 
@@ -188,8 +189,9 @@ public interface ConfiguratorServiceI {
     /**
      * Erstellen einer neuen Rasse.
      *
-     * @param AName        Rassename.
-     * @param ADescription Rassebeschreibung.
+     * @param AName            Rassename.
+     * @param ADescription     Rassebeschreibung.
+     * @param ALifepointsBonus Lebenspunkte-Bonus.
      */
     void createRace(String AName, String ADescription, Long ALifepointsBonus);
 

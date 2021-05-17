@@ -2,7 +2,6 @@ package de.dhbw.binaeratops.view.chat;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.server.VaadinSession;
@@ -10,8 +9,6 @@ import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.User;
 import reactor.core.publisher.Flux;
-
-
 
 /**
  * Oberfläche für die Komponente "Chat".

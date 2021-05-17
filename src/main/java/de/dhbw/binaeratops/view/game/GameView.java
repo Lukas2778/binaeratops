@@ -45,9 +45,14 @@ import java.text.MessageFormat;
 import java.util.*;
 
 /**
- * Oberfläche des Tabs 'Über uns'
+ * Oberfläche für die Komponente "Spieler Ansicht".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Spielen des Dungeons bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Lukas Göpel, Nicolas Haug, Timon Gartung, Matthias Rall, Lars Rösel
  */
-//@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
 public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver {
     BeforeLeaveEvent.ContinueNavigationAction action;
@@ -105,15 +110,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
-     *  @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
-     * @param AParserService    Wird für die Interaktion mit dem Dungeon benötigt.
-     * @param AMapService       Wird zur Erstellung der Karte benötigt.
-     * @param ARoomRepo         Wird für das Auffinden von Räumen benötigt.
-     * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
-     * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
-     * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
-     * @param kickUsers Wird zum Kicken eines Users benötigt.
-     * @param userActionpublisher Wird zur Interaktion mit dem Dungeon-Master benötigt.
+     *
+     * @param messages            Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     * @param AParserService      Wird für die Interaktion mit dem Dungeon benötigt.
+     * @param AMapService         Wird zur Erstellung der Karte benötigt.
+     * @param ARoomRepo           Wird für das Auffinden von Räumen benötigt.
+     * @param ADungeonRepo        Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
+     * @param AGameService        Wird für die Interaktion mit der Datenbank benötigt.
+     * @param AMessagePublisher   Wird zum Empfangen von Nachrichten benötigt.
+     * @param kickUsers           Wird zum Kicken der Benutzer benötigt.
+     * @param userActionpublisher Wird zum Empfangen der Dungeon-Master-Reaktion benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
@@ -144,7 +150,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         loadChat();
     }
 
-    private void initializeKickSubscriber(){
+    private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(currentUser.getUserId())) {
                 if(message.getKick()){
@@ -152,7 +158,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     Notification.show(res.getString("view.game.notification.kicked"));
                     myAvatarDialog.close();
                     UI.getCurrent().navigate("aboutUs");
-                }else{
+                } else {
                     myAvatarDialog.close();
                     textField.focus();
                     loadAvatarProgress(selectedInDialogAvatar);
@@ -349,7 +355,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     changeRoom(currentRoom.getRoomId());
                     return;
                 }
-                userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar,"REQUEST","null"));
+                userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
             } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }
@@ -460,7 +466,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                         } else {
                             Avatar currentAvatar = new Avatar();
                             //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
-                            currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(),avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
+                            currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(), avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
 
                             //Neuen Avatar speichern
                             myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(),
