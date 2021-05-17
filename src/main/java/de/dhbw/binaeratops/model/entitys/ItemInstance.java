@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.api.ItemInstanceI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.Entity;
@@ -11,18 +12,19 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Entity Objekt für eine Gegenstand-Blaupause.
+ * Entity Objekt für eine Gegenstand-Instanz.
  * <p>
- * Es repräsentiert die Entity "Gegenstand-Blaupause" der Datenbank in der Programmlogik.
+ * Es repräsentiert die Entity "Gegenstand-Instanz" der Datenbank in der Programmlogik.
  * <p>
- * Es stellt eine Blaupause für die Entität "Gegenstand" dar.
- *
+ * Es implementiert dazu alle Funktionalitäten der Gegenstand-Instanz Schnittstelle.
+ * <p>
  * @author Nicolas Haug, Lars Rösel
+ * @see ItemInstanceI
  * @see de.dhbw.binaeratops.model.api.ItemI
  * @see Item
  */
 @Entity
-public class ItemInstance {
+public class ItemInstance implements ItemInstanceI {
 
     @Id
     @GeneratedValue

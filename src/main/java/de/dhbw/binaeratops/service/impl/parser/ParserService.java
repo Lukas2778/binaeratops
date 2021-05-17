@@ -46,7 +46,6 @@ public class ParserService implements ParserServiceI {
 
     public UserMessage parseCommand(String AInput, Long ADungeonId, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         DungeonI myDungeon = myDungeonRepo.findByDungeonId(ADungeonId);
-        // TODO Scanner hinzufügen
         AInput = AInput.trim();
         UserMessageI userMessage;
         if (checkPrefix(AInput, myDungeon)) {

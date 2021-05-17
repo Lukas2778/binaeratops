@@ -673,8 +673,53 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     }
 
     @Override
-    public UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException {
-        return null;
+    public UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                for (NpcInstance npc : avatar.getCurrentRoom().getNpcs()) {
+                    if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpcName)) {
+                        // Wenn Item in Equipment
+                        avatar.setRequested(true);
+                        avatarRepo.save(avatar);
+                        //userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); // TODO TALK
+                        return new UserMessage("view.game.ctrl.cmd.talk", npc.getNpc().getNpcName(), AMessage);
+                    }
+                }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(ANpcName);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
+            }
+        } else {
+            throw new CmdScannerInsufficientPermissionException("TALK");
+        }
+    }
+
+    @Override
+    public UserMessage onHit(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName) throws CmdScannerException, InvalidImplementationException {
+        Dungeon dungeon = Dungeon.check(ADungeon);
+        Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
+            if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
+                for (NpcInstance npc : avatar.getCurrentRoom().getNpcs()) {
+                    if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpcName)) {
+                        // Wenn Item in Equipment
+                        avatar.setRequested(true);
+                        avatarRepo.save(avatar);
+                        //userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); // TODO HIT
+                        return new UserMessage("view.game.ctrl.cmd.hit", npc.getNpc().getNpcName());
+                    }
+                }
+                // Gegenstand wurde nicht gefunden.
+                throw new CmdScannerInvalidParameterException(ANpcName);
+            } else {
+                throw new CmdScannerAlreadyRequestedException();
+            }
+        } else {
+            throw new CmdScannerInsufficientPermissionException("HIT");
+        }
     }
 
     private String getCurrentUsers(Dungeon ADungeon) {

@@ -68,5 +68,4 @@ public interface RaceI {
      * @param ALifepointBonus Zu setzender Lebenspunkte-Bonus der Rasse.
      */
     void setLifepointsBonus(Long ALifepointBonus);
-
 }

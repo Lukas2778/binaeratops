@@ -244,8 +244,8 @@ public class Avatar implements AvatarI {
         this.lifepoints = ALifepoints;
     }
 
-    public void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB) {
-        this.lifepoints = ALifepoints + ALifepointsBonus + ALifepointsBonusB;
+    public void setLifepoints(Long ALifepoints, Long ALifepointsBonusRace, Long ALifepointsBonusRole) {
+        this.lifepoints = ALifepoints + ALifepointsBonusRace + ALifepointsBonusRole;
     }
 
     @Override

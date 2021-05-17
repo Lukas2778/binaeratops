@@ -10,18 +10,18 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Entity Objekt für einen Gegenstand.
+ * Entity Objekt für eine Gegenstand-Blaupause.
  * <p>
  * Es repräsentiert die Entity "Gegenstand" der Datenbank in der Programmlogik.
  * <p>
- * Es implementiert dazu alle Funktionalitäten der Gegenstand Schnittstelle.
- * <p>
+ * Es stellt eine Blaupause für die Entität "Gegenstand-Instanz" dar.
  *
  * @author Nicolas Haug
+ * @see de.dhbw.binaeratops.model.api.ItemInstanceI
  * @see ItemI
  */
 @Entity
-public class Item {
+public class Item implements ItemI {
 
     @Id
     @GeneratedValue
@@ -59,50 +59,62 @@ public class Item {
 
     }
 
+    @Override
     public Long getItemId() {
         return itemId;
     }
 
+    @Override
     public void setItemId(Long AItemId) {
         this.itemId = AItemId;
     }
 
+    @Override
     public String getItemName() {
         return itemName;
     }
 
+    @Override
     public void setItemName(String AItemName) {
         this.itemName = AItemName;
     }
 
+    @Override
     public Long getSize() {
         return size;
     }
 
+    @Override
     public void setSize(Long ASize) {
         this.size = ASize;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String ADescription) {
         this.description = ADescription;
     }
 
+    @Override
     public ItemType getType() {
         return type;
     }
 
+    @Override
     public void setType(ItemType AType) {
         this.type = AType;
     }
 
+    @Override
     public Dungeon getDungeon() {
         return dungeon;
     }
 
+    @Override
     public void setDungeon(Dungeon ADungeon) {
         this.dungeon = ADungeon;
     }
