@@ -339,9 +339,18 @@ public interface ConfiguratorServiceI {
      */
     List<User> getAllUsers();
 
+    /**
+     * Gibt den Benutzer mit dem übergebenen Namen zurück.
+     *
+     * @param AName Name des Benutzers.
+     * @return Benutzer.
+     */
     User getUser(String AName);
 
+    /**
+     * Speichert den übergebenen Benutzer in die Datenbank.
+     *
+     * @param AUser Benutzer, der gespeichert werden soll.
+     */
     void saveUser(User AUser);
-
-
 }

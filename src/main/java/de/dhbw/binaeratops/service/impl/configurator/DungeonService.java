@@ -109,8 +109,8 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public Room getRoomByPosition(Dungeon ADungeon, int AX, int AY) {
-        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AX, AY);
+    public Room getRoomByPosition(Dungeon ADungeon, int AXCoordinate, int AYCoordinate) {
+        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AXCoordinate, AYCoordinate);
         if(room.size() == 0)
             return null;
         else
