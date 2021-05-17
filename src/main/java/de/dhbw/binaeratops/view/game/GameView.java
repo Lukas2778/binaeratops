@@ -49,7 +49,7 @@ import java.util.*;
  */
 //@Route(value = "gameView")
 @CssImport("./views/game/game-view.css")
-public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver, AfterNavigationObserver {
+public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver {
     BeforeLeaveEvent.ContinueNavigationAction action;
 
     ParserServiceI myParserService;
@@ -112,8 +112,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
      * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
-     * @param kickUsers
-     * @param userActionpublisher
+     * @param kickUsers Wird zum Kicken eines Users benötigt.
+     * @param userActionpublisher Wird zur Interaktion mit dem Dungeon-Master benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
@@ -141,7 +141,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         //Avatarauswahl öffnen
         createAvatarDialog();
         initializeKickSubscriber();
-
+        loadChat();
     }
 
     private void initializeKickSubscriber(){
@@ -682,10 +682,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     /**
      * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
      *
-     * @param event event.
      */
-    @Override
-    public void afterNavigation(AfterNavigationEvent event) {
+    public void loadChat() {
         String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), currentUser.getName());
         messagesPublisher.onNext(new ChatMessage(new Paragraph(new Html(greetingMessage)), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
