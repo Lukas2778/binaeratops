@@ -76,6 +76,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
                 break;
             }
         }
+
         if (recipient == null) {
             throw new CmdScannerInvalidParameterException(AUserName);
         }
@@ -85,7 +86,12 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         }
 
         if (avatar.getAvatarId() != recipient.getAvatarId()) {
-            myChatService.whisper(AMessage, recipient.getUser(), avatar);
+            if (avatar.getName() != null) {
+                myChatService.whisper(AMessage, recipient.getUser(), avatar);
+            } else {
+                User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
+                myChatService.whisperDungeonMaster(AMessage, recipient.getUser(), dungeonMaster);
+            }
             return new UserMessage("view.game.ingame.cmd.whisper", AMessage, AUserName);
         } else {
             throw new CmdScannerInvalidRecipientException();

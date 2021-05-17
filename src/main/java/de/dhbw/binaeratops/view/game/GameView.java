@@ -152,7 +152,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         //Avatarauswahl öffnen
         createAvatarDialog();
         initializeKickSubscriber();
-        loadChat();
     }
 
     private void initializeKickSubscriber() {
@@ -358,6 +357,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     loadAvatarProgress(selectedInDialogAvatar);
                     createMap();
                     changeRoom(currentRoom.getRoomId());
+                    loadChat();
                     return;
                 }
                 userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
