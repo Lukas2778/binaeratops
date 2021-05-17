@@ -215,9 +215,10 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         H2 title = new H2(res.getString("view.configurator.dungeon.h1.titlepermission"));
         Text permissionText = new Text(res.getString("view.configurator.dungeon.text.permission"));
 
-        Grid<User> grid = new Grid<>();
 
-        grid.setItems(userList);
+
+        if(configuratorService.getDungeon().getAllowedUsers() != null)
+        grid.setItems(configuratorService.getDungeon().getAllowedUsers());
 
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
@@ -296,6 +297,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     private void refreshGrid() {
         grid.setItems(configuratorService.getDungeon()
                 .getAllowedUsers());
+
     }
 
     @Override
