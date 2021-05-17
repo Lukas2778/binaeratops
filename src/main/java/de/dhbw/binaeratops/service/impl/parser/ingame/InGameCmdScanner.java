@@ -55,6 +55,9 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     public InGameCmdScanner() {
     }
 
+    public InGameCmdScanner(InGameCmdHooksI AInGameCmdHooks) {
+        this.hooks = AInGameCmdHooks;
+    }
     /**
      * Scanner im Zustand "Start".
      */
