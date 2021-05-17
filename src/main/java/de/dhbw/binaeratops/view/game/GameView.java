@@ -146,7 +146,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     private void initializeKickSubscriber(){
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
-            if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+            if (message.getUser().getUserId().equals(currentUser.getUserId())) {
                 if(message.getKick()){
                     myAvatar = null;
                     Notification.show(res.getString("view.game.notification.kicked"));
@@ -417,6 +417,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         // Avatar Felder
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
         avatarNameFiled.addValueChangeListener(e -> avatarNameFiled.setInvalid(false));
+        avatarNameFiled.focus();
 
 
         List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
