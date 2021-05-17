@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.impl.parser;
 
 import de.dhbw.binaeratops.groups.ImplGroup;
+import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
@@ -26,7 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 @RunWith(MockitoJUnitRunner.class)
 @Category({ImplGroup.class})
 @ActiveProfiles("test")
-public class InGameCmdScannerTest {
+public class InGameCmdScannerTest extends Logger {
 
     @Mock
     InGameCmdHooksI hooks;

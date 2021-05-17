@@ -49,7 +49,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
     private static final String CMD_SHOW_INVENTORY = "INVENTORY";
     private static final String CMD_SHOW_INVENTORY_K = "INV";
     private static final String CMD_SHOW_EQUIPMENT = "EQUIPMENT";
-    private static final String CMD_SHOW_EQUIPMENT_K = "EQ";
+    private static final String CMD_SHOW_EQUIPMENT_K = "EQUIP";
     private static final String CMD_TAKE = "TAKE";
     private static final String CMD_DROP = "DROP";
     private static final String CMD_CONSUME = "CONSUME";
@@ -66,6 +66,10 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
      */
     public GameCtrlCmdScanner() {
 
+    }
+
+    public GameCtrlCmdScanner(GameCtrlCmdHooksI AGameCtrlHooksI) {
+        this.hooks = AGameCtrlHooksI;
     }
 
     /**
