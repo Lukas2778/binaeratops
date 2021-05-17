@@ -716,7 +716,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 getUI().ifPresent(ui->ui.access(()->
                         {
                             refreshInventory();
-                            Notification.show("timer");
+                            //Notification.show("timer");
                         }
                         ));
             }
