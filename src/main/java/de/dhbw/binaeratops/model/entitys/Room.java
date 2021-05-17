@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Raum.
@@ -51,7 +50,7 @@ public class Room implements RoomI {
     private final List<ItemInstance> items = new ArrayList<>();
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<NpcInstance> npcs = new ArrayList<>();
+    private final List<NPCInstance> npcs = new ArrayList<>();
 
     private Integer xcoordinate;
 
@@ -178,16 +177,16 @@ public class Room implements RoomI {
         AItem.setRoom(null);
     }
 
-    public List<NpcInstance> getNpcs() {
+    public List<NPCInstance> getNpcs() {
         return npcs;
     }
 
-    public void addNpc(NpcInstance ANpc) {
+    public void addNpc(NPCInstance ANpc) {
         ANpc.setRoom(this);
         npcs.add(ANpc);
     }
 
-    public void removeNPC(NpcInstance ANpc) {
+    public void removeNPC(NPCInstance ANpc) {
         npcs.remove(ANpc);
         ANpc.setRoom(null);
     }

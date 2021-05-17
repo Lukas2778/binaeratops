@@ -86,8 +86,8 @@ public class Race implements RaceI {
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public Long getLifepointsBonus() {

@@ -5,13 +5,14 @@ import de.dhbw.binaeratops.model.entitys.*;
 import java.util.List;
 
 /**
- * Schnittstelle für einen NPC.
+ * Schnittstelle für eine NPC-Blaupause.
  * <p>
- * Sie stellt alle Funktionalitäten zum Umgang mit einem NPC bereit.
+ * Sie stellt alle Funktionalitäten zum Umgang mit einer NPC-Blaupause bereit.
  * <p>
  * Für Datenbankoperationen siehe {@link de.dhbw.binaeratops.model.repository.NPCRepositoryI}.
  * <p>
  * Für Implementierung siehe {@link de.dhbw.binaeratops.model.entitys.NPC}
+ *
  *
  * @author Nicolas Haug
  */
@@ -86,20 +87,6 @@ public interface NPCI {
      * @param ADungeon Dungeon des NPCs.
      */
     void setDungeon(Dungeon ADungeon);
-
-    /**
-     * Gibt den Raum des NPCs zurück.
-     *
-     * @return Raum des NPCs.
-     */
-    Room getRoom();
-
-    /**
-     * Setzt den Raum des NPCs.
-     *
-     * @param room Raum des NPCs.
-     */
-    void setRoom(Room room);
 
     /**
      * Gibt das Gepäck des NPCs zurück.

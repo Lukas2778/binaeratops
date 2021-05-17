@@ -88,8 +88,8 @@ public class Role implements RoleI {
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public Long getLifepointsBonus(){return lifepointsBonus; }

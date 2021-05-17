@@ -20,25 +20,29 @@ public interface ItemInstanceI {
 
     /**
      * Gibt die ID der Gegenstand-Instanz zurück.
+     *
      * @return ID der Gegenstand-Instanz.
      */
     Long getItemInstanceId();
 
     /**
      * Setzt die ID der Gegenstand-Instanz.
+     *
      * @param AItemId ID der Gegenstand-Instanz.
      */
     void setItemInstanceId(Long AItemId);
 
     /**
      * Gibt die Gegenstand-Blaupause der Gegenstand-Instanz zurück.
+     *
      * @return Gegenstand-Blaupause.
      */
     Item getItem();
 
     /**
      * Setzt die Gegenstand-Blaupause der Gegenstand-Instanz.
-     * @param AItem  Gegenstand-Blaupause.
+     *
+     * @param AItem Gegenstand-Blaupause.
      */
     void setItem(Item AItem);
 

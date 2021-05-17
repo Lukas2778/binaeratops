@@ -20,8 +20,8 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.KickUser;
-import de.dhbw.binaeratops.model.UserAction;
+import de.dhbw.binaeratops.model.actions.KickUserAction;
+import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -75,7 +75,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private TranslationProvider transProv = new TranslationProvider();
     private final Flux<ChatMessage> messages;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
-    private final Flux<KickUser> kickUsers;
+    private final Flux<KickUserAction> kickUsers;
     private final UnicastProcessor<UserAction> userActionpublisher;
 
     H2 binTitle;
@@ -126,7 +126,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUser> kickUsers,
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUserAction> kickUsers,
                     UnicastProcessor<UserAction> userActionpublisher) {
         this.userActionpublisher = userActionpublisher;
         this.messages = messages;

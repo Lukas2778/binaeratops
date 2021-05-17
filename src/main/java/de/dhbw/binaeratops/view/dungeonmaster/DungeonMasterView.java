@@ -19,8 +19,8 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.KickUser;
-import de.dhbw.binaeratops.model.UserAction;
+import de.dhbw.binaeratops.model.actions.KickUserAction;
+import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -76,7 +76,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
-    private final UnicastProcessor<KickUser> kickUsersPublisher;
+    private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
 
     private Timer timer=new Timer();
     Dungeon dungeon;
@@ -103,7 +103,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
-                             UnicastProcessor<KickUser> AKickUsersPublisher) {
+                             UnicastProcessor<KickUserAction> AKickUsersPublisherAction) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -112,7 +112,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
-        this.kickUsersPublisher = AKickUsersPublisher;
+        this.kickUsersPublisherAction = AKickUsersPublisherAction;
         setId("SomeView");
 
         userActionsIncoming();
@@ -150,13 +150,13 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     Dialog acceptanceDialog = new Dialog();
                     Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
                     Button acceptButton = new Button("Annehmen", e -> {
-                        kickUsersPublisher.onNext(new KickUser(action.getAvatar().getUser(), false));
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), false));
                         dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
                         acceptanceDialog.close();
                     });
                     Button declineButton = new Button("Ablehnen", e -> {
                         dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
-                        kickUsersPublisher.onNext(new KickUser(action.getAvatar().getUser(), true));
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), true));
                         acceptanceDialog.close();
                     });
 
@@ -434,7 +434,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisher.onNext(new KickUser(avatar.getUser(), true));
+                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), true));
                 confirmKickDialog.close();
             });
 
@@ -548,7 +548,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             roomDescriptionTextArea.setValue("");
 
         itemInRoomGrid.setItems(ARoom.getItems().stream().map(ItemInstance::getItem).toArray(Item[]::new));
-        npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NpcInstance::getNpc).toArray(NPC[]::new));
+        npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NPCInstance::getNpc).toArray(NPC[]::new));
     }
 
     @Override

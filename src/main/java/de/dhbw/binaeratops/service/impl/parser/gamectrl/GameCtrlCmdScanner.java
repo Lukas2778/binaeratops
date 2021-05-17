@@ -68,6 +68,10 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
 
     }
 
+    /**
+     * Konstruktor zum Ausführen der Tests mit Mocks.
+     * @param AGameCtrlHooksI Hooks.
+     */
     public GameCtrlCmdScanner(GameCtrlCmdHooksI AGameCtrlHooksI) {
         this.hooks = AGameCtrlHooksI;
     }

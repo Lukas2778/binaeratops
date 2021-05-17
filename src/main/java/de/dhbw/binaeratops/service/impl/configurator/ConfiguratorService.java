@@ -278,7 +278,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public double getNumberOfNPC(Room ARoom, NPC ANPC) {
         double counter = 0;
-        for (NpcInstance npcInstance : getAllNPCs(ARoom)) {
+        for (NPCInstance npcInstance : getAllNPCs(ARoom)) {
             if (npcInstance.getNpc().getNpcId().equals(ANPC.getNpcId())) {
                 counter++;
             }
@@ -287,13 +287,13 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public void setNpcInstances(Room ARoom, List<NpcInstance> ANPCList) {
+    public void setNpcInstances(Room ARoom, List<NPCInstance> ANPCList) {
         ARoom.getItems()
                 .clear();
-        for (NpcInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
+        for (NPCInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
             npcInstanceRepositoryI.delete(myNpc);
         }
-        for (NpcInstance myNpc : ANPCList) {
+        for (NPCInstance myNpc : ANPCList) {
             myNpc.setRoom(ARoom);
             npcInstanceRepositoryI.save(myNpc);
         }
@@ -303,7 +303,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
             roomRepo.save(ARoom);
         } catch (Exception e) {
 
-            for (NpcInstance myNpc : ANPCList) {
+            for (NPCInstance myNpc : ANPCList) {
                 myNpc.setRoom(ARoom);
                 npcInstanceRepositoryI.save(myNpc);
             }
@@ -329,7 +329,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<NpcInstance> getAllNPCs(Room ARoom){
+    public List<NPCInstance> getAllNPCs(Room ARoom){
         return npcInstanceRepositoryI.findByRoom(ARoom);
     }
 

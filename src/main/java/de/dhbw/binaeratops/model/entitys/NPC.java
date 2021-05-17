@@ -1,5 +1,6 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.api.NPCI;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 
 import javax.persistence.*;
@@ -10,18 +11,19 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 /**
- * Entity Objekt für einen NPC.
+ * Entity Objekt für eine NPC-Blaupause.
  * <p>
  * Es repräsentiert die Entity "NPC" der Datenbank in der Programmlogik.
  * <p>
- * Es implementiert dazu alle Funktionalitäten der NPC Schnittstelle.
+ * Es implementiert dazu alle Funktionalitäten der NPC-Blaupause Schnittstelle.
  * <p>
  *
  * @author Nicolas Haug
+ * @see de.dhbw.binaeratops.model.api.NPCInstanceI
  * @see de.dhbw.binaeratops.model.api.NPCI
  */
 @Entity
-public class NPC  {
+public class NPC implements NPCI {
 
     @Id
     @GeneratedValue
@@ -105,9 +107,17 @@ public class NPC  {
         return luggage;
     }
 
+    @Override
+    public void addItem(ItemInstance AItem) {
+        AItem.setNpc(this);
+        luggage.add(AItem);
+    }
 
-
-
+    @Override
+    public void removeItem(ItemInstance AItem) {
+        luggage.remove(AItem);
+        AItem.setNpc(null);
+    }
 
 
     @Override
@@ -152,7 +162,7 @@ public class NPC  {
      * @return Objekt.
      * @throws InvalidImplementationException Objekt ungültig.
      */
-    public static NPC check(NPC ANpc) throws InvalidImplementationException {
+    public static NPC check(NPCI ANpc) throws InvalidImplementationException {
         if (!(ANpc instanceof NPC)) {
             throw new InvalidImplementationException(-1,
                     MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),

@@ -55,6 +55,10 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     public InGameCmdScanner() {
     }
 
+    /**
+     * Konstruktor zum Ausführen von Tests mit Mocks.
+     * @param AInGameCmdHooks Hooks.
+     */
     public InGameCmdScanner(InGameCmdHooksI AInGameCmdHooks) {
         this.hooks = AInGameCmdHooks;
     }
@@ -78,7 +82,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
                     return scanSpeak(ADungeon, AAvatar);
                 case CMD_NOTIFY:
                     return scanNotify(ADungeon, AUser);
-                case CMD_WITHDRAW:
+                case CMD_WITHDRAW: // TODO WITHDRAW, EXIT, STOP ggf entfernen.
                     return scanWithdraw(ADungeon, AUser);
                 case CMD_EXIT:
                     return scanGame(ADungeon, AUser, false);

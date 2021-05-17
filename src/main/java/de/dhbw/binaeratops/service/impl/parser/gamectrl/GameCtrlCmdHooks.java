@@ -1,6 +1,6 @@
 package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 
-import de.dhbw.binaeratops.model.UserAction;
+import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
@@ -446,8 +446,8 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
-            List<NpcInstance> npcs = avatar.getCurrentRoom().getNpcs();
-            for (NpcInstance npc : npcs) {
+            List<NPCInstance> npcs = avatar.getCurrentRoom().getNpcs();
+            for (NPCInstance npc : npcs) {
                 if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpc)) {
                     return new UserMessage("view.game.ctrl.cmd.examine.npc", npc.getNpc().getNpcName(), npc.getNpc().getDescription());
                 }
@@ -678,7 +678,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
-                for (NpcInstance npc : avatar.getCurrentRoom().getNpcs()) {
+                for (NPCInstance npc : avatar.getCurrentRoom().getNpcs()) {
                     if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpcName)) {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
@@ -703,7 +703,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
-                for (NpcInstance npc : avatar.getCurrentRoom().getNpcs()) {
+                for (NPCInstance npc : avatar.getCurrentRoom().getNpcs()) {
                     if (npc.getNpc().getNpcName().equalsIgnoreCase(ANpcName)) {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
@@ -736,7 +736,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     private String getNpcs(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         int i = 0;
-        for (NpcInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
+        for (NPCInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
             s.append(npc.getNpc().getNpcName()).append(", ");
             i += npc.getNpc().getNpcName().length()+2;
         }

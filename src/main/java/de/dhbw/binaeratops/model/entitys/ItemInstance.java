@@ -155,7 +155,7 @@ public class ItemInstance implements ItemInstanceI {
      * @return Objekt.
      * @throws InvalidImplementationException Objekt ungültig.
      */
-    public static ItemInstance check(ItemInstance AItemInstance) throws InvalidImplementationException {
+    public static ItemInstance check(ItemInstanceI AItemInstance) throws InvalidImplementationException {
         if (!(AItemInstance instanceof ItemInstance)) {
             throw new InvalidImplementationException(-1,
                     MessageFormat.format(ResourceBundle.getBundle("language").getString("error.invalid.implementation"),

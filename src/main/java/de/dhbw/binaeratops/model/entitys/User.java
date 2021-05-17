@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import org.hibernate.annotations.Cascade;
 
 /**
  * Entity Objekt für einen Benutzer.
@@ -219,8 +218,6 @@ public class User implements UserI {
         ADungeon.setUser(null);
     }
 
-
-   
 
     @Override
     public boolean equals(Object AOther) {

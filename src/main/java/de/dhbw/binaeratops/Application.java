@@ -1,7 +1,7 @@
 package de.dhbw.binaeratops;
 
-import de.dhbw.binaeratops.model.KickUser;
-import de.dhbw.binaeratops.model.UserAction;
+import de.dhbw.binaeratops.model.actions.KickUserAction;
+import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -71,7 +71,7 @@ public class Application extends SpringBootServletInitializer {
      * @return Bean.
      */
     @Bean
-    UnicastProcessor<KickUser> kickUserPublisher() {
+    UnicastProcessor<KickUserAction> kickUserPublisher() {
         return UnicastProcessor.create();
     }
 
@@ -82,7 +82,7 @@ public class Application extends SpringBootServletInitializer {
      * @return Bean.
      */
     @Bean
-    Flux<KickUser> kickUsers(UnicastProcessor<KickUser> APublisher) {
+    Flux<KickUserAction> kickUsers(UnicastProcessor<KickUserAction> APublisher) {
         return APublisher.replay(30).autoConnect();
     }
 

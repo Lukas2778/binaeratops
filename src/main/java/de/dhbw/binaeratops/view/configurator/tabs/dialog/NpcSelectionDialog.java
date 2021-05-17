@@ -10,7 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
-import de.dhbw.binaeratops.model.entitys.NpcInstance;
+import de.dhbw.binaeratops.model.entitys.NPCInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
@@ -37,12 +37,12 @@ public class NpcSelectionDialog extends Dialog {
     public Button comfirmButton = new Button(res.getString("view.configurator.dialog.npc.select.button.confirm"));
     public Button cancelButton = new Button(res.getString("view.configurator.dialog.npc.select.button.cancel"));
     HashMap<NPC, NumberField> npcIntegerFieldHashMap = new HashMap<>();
-    private ListBox<NpcInstance> npcList;
+    private ListBox<NPCInstance> npcList;
     Grid<NPC> npcGrid = new Grid(NPC.class);
     ConfiguratorServiceI configuratorServiceI;
     Room room;
 
-    public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<NpcInstance> npcListBox){
+    public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<NPCInstance> npcListBox){
         configuratorServiceI = AConfiguratorService;
         room = ARoom;
         npcList = npcListBox;
@@ -75,11 +75,11 @@ public class NpcSelectionDialog extends Dialog {
 
         comfirmButton.addClickListener(e->{
             if(validate()) {
-                List<NpcInstance> instances = new ArrayList<>();
+                List<NPCInstance> instances = new ArrayList<>();
                 for (NPC npc : npcIntegerFieldHashMap.keySet()) {
                     if (!npcIntegerFieldHashMap.get(npc).isEmpty() && npcIntegerFieldHashMap.get(npc).getValue() >= 1) {
                         for (int i = 0; i < npcIntegerFieldHashMap.get(npc).getValue(); i++) {
-                            NpcInstance instance = new NpcInstance();
+                            NPCInstance instance = new NPCInstance();
                             instance.setNpc(npc);
                             instances.add(instance);
                         }

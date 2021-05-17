@@ -9,9 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Repository für eine Gegenstand-Blaupause.
+ * Repository für eine Gegenstand-Instanz.
  * <p>
- * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen einer Gegenstand-Blaupause aus der Datenbank bereit.
+ * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen einer Gegenstand-Instanz aus der Datenbank bereit.
  *
  * @author Lars Rösel, Nicolas Haug
  * Date: 08.05.2021
@@ -22,27 +22,27 @@ import java.util.List;
 public interface ItemInstanceRepositoryI extends JpaRepository<ItemInstance, Long> {
 
     /**
-     * Sucht alle Gegenstand-Blaupauseneinträge aus der Datenbank.
+     * Sucht alle Gegenstand-Instanzeinträge aus der Datenbank.
      *
-     * @return Alle Gegenstand-Blaupauseneinträge aus der Datenbank.
+     * @return Alle Gegenstand-Instanzeinträge aus der Datenbank.
      */
     @Override
     @NonNull
     List<ItemInstance> findAll();
 
     /**
-     * Sucht die Gegenstand-Blaupausen mit der übergebenen ID in der Datenbank.
+     * Sucht die Gegenstand-Instanzen mit der übergebenen ID in der Datenbank.
      *
-     * @param AItemId ID der gesuchten Gegenstand-Blaupause.
-     * @return Gesuchte Gegenstand-Blaupause.
+     * @param AItemId ID der gesuchten Gegenstand-Instanz.
+     * @return Gesuchte Gegenstand-Instanz.
      */
     ItemInstance findByItemInstanceId(Long AItemId);
 
     /**
-     * Sucht die Gegenstand-Blaupausen für den übergebenen Raum.
+     * Sucht die Gegenstand-Instanzen für den übergebenen Raum.
      *
-     * @param ARoom Raum, für den alle Gegenstand Blaupausen gesucht sind.
-     * @return Gegenstand-Blaupausen des Raumes.
+     * @param ARoom Raum, für den alle Gegenstand-Instanzen gesucht sind.
+     * @return Gegenstand-Instanzen des Raumes.
      */
     List<ItemInstance> findByRoom(Room ARoom);
 }

@@ -18,7 +18,7 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
-import de.dhbw.binaeratops.model.entitys.NpcInstance;
+import de.dhbw.binaeratops.model.entitys.NPCInstance;
 import de.dhbw.binaeratops.model.entitys.Room;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -50,7 +50,7 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
     ItemSelectionDialog itemSelectionDialog;
 
     ListBox<ItemInstance> itemList = new ListBox<>();
-    ListBox<NpcInstance> npcList = new ListBox<>();
+    ListBox<NPCInstance> npcList = new ListBox<>();
 
     VerticalLayout mapArea = new VerticalLayout();
     VerticalLayout globalRoomArea = new VerticalLayout();
@@ -325,7 +325,7 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
 
         npcList.clear();
         if (currentRoom != null) {
-            List<NpcInstance> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
+            List<NPCInstance> roomItems = configuratorServiceI.getAllNPCs(currentRoom);
             npcList.setItems(roomItems);
         }
 
