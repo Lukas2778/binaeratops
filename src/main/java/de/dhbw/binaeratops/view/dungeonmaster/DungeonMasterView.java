@@ -19,6 +19,8 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.shared.communication.PushMode;
+import com.vaadin.flow.shared.ui.Transport;
 import de.dhbw.binaeratops.model.actions.KickUserAction;
 import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
@@ -146,7 +148,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
                     Button acceptButton = new Button("Annehmen", e -> {
                         kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
-                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
+                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId());
                         acceptanceDialog.close();
                     });
                     Button declineButton = new Button("Ablehnen", e -> {
@@ -154,6 +156,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
                         acceptanceDialog.close();
                     });
+                    declineButton.getStyle().set("color", "red");
 
                     acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
                     acceptanceDialog.open();
@@ -566,7 +569,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Dialog leaveDialog = new Dialog();
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
-        leaveDialog.setHeight(75, Unit.PERCENTAGE);
+        //leaveDialog.setHeight(75, Unit.PERCENTAGE);
 
         H3 leaveHeadline = new H3("Dungeon verlassen");
         String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +

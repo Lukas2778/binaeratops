@@ -262,6 +262,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                         }
                     }
                 }
+                textField.setValue("");
+                textField.focus();
             } catch (CmdScannerAlreadyRequestedException alreadyRequested) {
                 Notification.show(transProv.getUserMessage(alreadyRequested.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
@@ -389,11 +391,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     createMap();
                     changeRoom(currentRoom.getRoomId());
                     loadChat();
-                    //TODO checken, dass es in der db gesetzt wird
                 }else {
                     userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
                     myAvatarDialog.removeAll();
-                    myAvatarDialog.add(new Label("Warte auf die Antwort des Dungeon Masters!"));
+                    myAvatarDialog.add(new Paragraph(new Html("<div>Warte auf die Antwort des Dungeon Masters!<br>Drücke die Eingabetaste, sobald du angenommen wurdest.</div>")));
                 }
             } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
