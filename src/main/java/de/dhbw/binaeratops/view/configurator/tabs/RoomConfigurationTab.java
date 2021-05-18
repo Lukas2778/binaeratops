@@ -111,7 +111,7 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
         //TODO folgende Zeile prüfen
         //mapService.init(width,configuratorServiceI.getDungeon().getDungeonId());
         ArrayList<Tile> initTiles = mapService.initConfigure(configuratorServiceI);
-        mapArea.setJustifyContentMode(JustifyContentMode.CENTER);
+        mapArea.setJustifyContentMode(JustifyContentMode.START);
         mapArea.setAlignItems(Alignment.CENTER);
         VerticalLayout lines = new VerticalLayout();
         lines.setSpacing(false);
