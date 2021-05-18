@@ -78,7 +78,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
 
-    private Timer timer=new Timer();
     Dungeon dungeon;
     Long dungeonId;
     String aboutText;
@@ -116,9 +115,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         setId("SomeView");
 
         userActionsIncoming();
-        Thread thread = new Thread();
-        thread.start();
 
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
