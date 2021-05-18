@@ -92,8 +92,6 @@ public class PermissionDialog extends Dialog {
 
                         refreshGrid();
                         this.close();
-                    } else {
-                        Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
                     }
                 }
             } else {
@@ -116,11 +114,15 @@ public class PermissionDialog extends Dialog {
     private boolean matchDungeonMasterId(String AName) {
         boolean result = false;
 
-        if (configuratorServiceI.getDungeon()
-                .getDungeonMasterId() == configuratorServiceI.getUser(AName)
-                .getUserId()) {
-            result = true;
+        try{
+            if (configuratorServiceI.getDungeon().getDungeonMasterId() == configuratorServiceI.getUser(AName).getUserId()) {
+                result = true;
+            }
+
+        }catch(Exception e){
+            Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
         }
+
 
         return result;
     }

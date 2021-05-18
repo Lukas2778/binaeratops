@@ -91,7 +91,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
             configuratorService.saveDungeon();
         });
 
-        titleField.setWidth("400px");
+        titleField.setWidth("200px");
 
         NumberField playerCountField = new NumberField(res.getString("view.configurator.dungeon.field.maxplayercount"));
         playerCountField.setHasControls(true);
@@ -102,7 +102,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
             configuratorService.saveDungeon();
         });
 
-        playerCountField.setWidth("150px");
+        playerCountField.setWidth("200px");
 
         if (configuratorService.getDungeon().getPlayerMaxSize() == null)
             playerCountField.setValue(30.0);
@@ -181,7 +181,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         TextField commandSymbolField = new TextField(res.getString("view.configurator.dungeon.field.cmdsymbol"));
         commandSymbolField.setMinLength(1);
         commandSymbolField.setMaxLength(1);
-        commandSymbolField.setWidth("100px");
+        commandSymbolField.setWidth("200px");
 
         commandSymbolField.addValueChangeListener(e -> {
             if (!commandSymbolField.isInvalid()) {
@@ -213,8 +213,11 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     private void permissionList() {
 
         H2 title = new H2(res.getString("view.configurator.dungeon.h1.titlepermission"));
+
         Text permissionText = new Text(res.getString("view.configurator.dungeon.text.permission"));
 
+        Details hint = new Details(res.getString("view.configurator.dungeon.details.info.permission.title"),
+                                   new Text(res.getString("view.configurator.dungeon.details.info.permission.info")));
 
 
         if(configuratorService.getDungeon().getAllowedUsers() != null)
@@ -266,7 +269,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
 
         buttonView.addAndExpand(addB, deleteB);
         permissionLayout.setSizeFull();
-        permissionLayout.add(title, permissionText, grid, buttonView);
+        permissionLayout.add(title, permissionText, hint,grid, buttonView);
 
     }
 

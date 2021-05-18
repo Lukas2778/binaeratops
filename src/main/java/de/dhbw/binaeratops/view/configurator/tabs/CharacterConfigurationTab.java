@@ -111,6 +111,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
         NumberField lifepointsField = new NumberField(res.getString("view.configurator.character.numberfield.lifepoints"));
         lifepointsField.setHasControls(true);
+        lifepointsField.setWidth("200px");
         lifepointsField.setMin(1);
 
         if(configuratorService.getDungeon().getStandardAvatarLifepoints() != null)
@@ -129,6 +130,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         NumberField inventorySize = new NumberField(res.getString("view.configurator.character.numberfield"));
         inventorySize.setHasControls(true);
         inventorySize.setMin(2);
+        inventorySize.setWidth("200px");
         //inventorySize.setMax(100);
 
         if(configuratorService.getDungeon().getDefaultInventoryCapacity() != null)
@@ -144,14 +146,14 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
             configuratorService.saveDungeon();
         });
 
-        RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
-        genderRadioButton.setLabel(res.getString("view.configurator.character.radiobutton.label"));
-        genderRadioButton.setItems(res.getString("view.configurator.character.radiobutton.activate.gender"),
-                res.getString("view.configurator.character.radiobutton.deactivate.gender"));
-        genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
-        genderRadioButton.setValue(res.getString("view.configurator.character.radiobutton.activate.gender"));
+//        RadioButtonGroup<String> genderRadioButton = new RadioButtonGroup<>();
+//        genderRadioButton.setLabel(res.getString("view.configurator.character.radiobutton.label"));
+//        genderRadioButton.setItems(res.getString("view.configurator.character.radiobutton.activate.gender"),
+//                res.getString("view.configurator.character.radiobutton.deactivate.gender"));
+//        genderRadioButton.addThemeVariants(RadioGroupVariant.LUMO_VERTICAL);
+//        genderRadioButton.setValue(res.getString("view.configurator.character.radiobutton.activate.gender"));
 
-        initFeldLayout.add(title, hint,lifepointsField ,inventorySize, genderRadioButton);
+        initFeldLayout.add(title, hint,lifepointsField ,inventorySize);
 
     }
 
