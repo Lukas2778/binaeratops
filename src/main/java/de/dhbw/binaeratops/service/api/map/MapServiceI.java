@@ -22,34 +22,27 @@ public interface MapServiceI {
     /**
      * Konstruktor des MapServices.
      *
-     * @param AConfiguratorService Service zur varwaltung der Konfiguration.
+     * @param AConfiguratorService Service zur Verwaltung der Konfiguration.
      * @return Kacheln der Map.
      */
     ArrayList<Tile> initConfigure(ConfiguratorServiceI AConfiguratorService);
 
     /**
-     * Gibt die Karte für den übergebenen Dungeon zurück.
+     * Auslesen der Karte aus der Datenbank für den übergebenen Dungeon.
      *
      * @param ADungeonId ID des Dungeons.
-     * @return Kacheln der Map.
-     */
-
-    /**
-     * Auslesen der Karte aus der Datenbank für den übergebenen Dungeon.
-     * @param ADungeonId ID des Dungeons.
-     * @param AGameView Wenn die Karte für die Spieleransicht erzeugt werden soll, muss hier True gesetzt werden.
+     * @param AGameView  Wenn die Karte für die Spieleransicht erzeugt werden soll, muss hier True gesetzt werden.
      * @return Kacheln der Map.
      */
     Tile[][] getMapGame(long ADungeonId, boolean AGameView);
 
     /**
-     *
      * @param ADungeonID ID.
      * @return so n zeug.
      */
     Tuple<Integer> getMinXY(long ADungeonID);
 
-                                   /**
+    /**
      * Überprüft, ob die Koordinate im Array und damit der Raum schon gesetzt wurde.
      *
      * @param ALocationX X Koordinate.

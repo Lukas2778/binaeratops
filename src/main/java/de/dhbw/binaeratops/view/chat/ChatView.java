@@ -132,4 +132,29 @@ public class ChatView extends VerticalLayout {
             UI.getCurrent().getPushConfiguration().setPushMode(PushMode.AUTOMATIC);
         }));
     }
+
+    /**
+     * Konvertiert eine Liste von "component" zu einem Array.
+     * @param AList Liste von Component.
+     * @return Array von Component.
+     */
+    public Component[] toComArray(List<Component> AList){
+        Component[] array = new Component[AList.size()];
+        for(int i = 0; i<AList.size();i++){
+            array[i] = AList.get(i);
+        }
+        return array;
+    }
+
+    /**
+     * Fügt dem Chat eine Aktionsnachricht hinzu.
+     * @param AComponent Aktionsnachricht als Paragraph.
+     */
+    public void addMessage(Component AComponent){
+        actionMessagesList.add(AComponent);
+        allMessagesList.add(AComponent);
+        if (filterMode == FilterMode.All || filterMode == FilterMode.ACTIONS){
+            messageList.add(AComponent);
+        }
+    }
 }
