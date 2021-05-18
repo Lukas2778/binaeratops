@@ -74,6 +74,11 @@ public interface GameServiceI {
      */
     void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
+    /**
+     * TODO
+     * @param ADungeon
+     * @return
+     */
     Long getStandardAvatarLifepoints(Dungeon ADungeon);
 
     boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName);

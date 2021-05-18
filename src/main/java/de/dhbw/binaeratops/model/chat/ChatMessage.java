@@ -14,7 +14,7 @@ import java.util.List;
 public class ChatMessage {
     private String textMessage;
     private Paragraph paragraph;
-    private boolean isParagraphMessage;
+    private boolean isChatMessage = false;
     private List<Long> userIdList;
 
     /**
@@ -27,7 +27,6 @@ public class ChatMessage {
         this.textMessage = message;
         this.userIdList = AUserIdList;
         this.paragraph = new Paragraph(new Label(""));
-        this.isParagraphMessage = false;
     }
 
     /**
@@ -42,7 +41,6 @@ public class ChatMessage {
         list.add(AUserId);
         this.userIdList = list;
         this.paragraph = new Paragraph(new Label(""));
-        this.isParagraphMessage = false;
     }
 
     /**
@@ -55,7 +53,7 @@ public class ChatMessage {
     public ChatMessage(Paragraph AParagraph, String AMessage, List<Long> AUserIdList) {
         this.paragraph = AParagraph;
         this.userIdList = AUserIdList;
-        this.isParagraphMessage = true;
+        this.isChatMessage = true;
     }
 
     /**
@@ -70,7 +68,7 @@ public class ChatMessage {
         List<Long> list = new ArrayList<Long>();
         list.add(AUserId);
         this.userIdList = list;
-        this.isParagraphMessage = true;
+        this.isChatMessage = true;
     }
 
     /**
@@ -101,11 +99,11 @@ public class ChatMessage {
     }
 
     /**
-     * Gibt "true" zurück falls ein Paragraph erstellt wurde.
+     * Gibt "true" zurück falls es eine Chatnachricht ist.
      *
-     * @return Boolean.
+     * @return
      */
-    public boolean IsParagraph() {
-        return isParagraphMessage;
+    public boolean isChatMessage() {
+        return isChatMessage;
     }
 }

@@ -98,6 +98,10 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     List<Avatar> avatarList;
     Grid<Avatar> avatarGrid;
 
+    Button filterChatButton;
+    Button filterActionButton;
+    Button resetFilterButton;
+
     private List<ItemInstance> inventoryList;
     Grid<ItemInstance> inventoryGrid;
     private List<ItemInstance> armorList;
@@ -187,6 +191,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         mapLayout = new VerticalLayout();
         gridLayout = new HorizontalLayout();
         gridLayoutVert = new VerticalLayout();
+
+        //FilterButtons
+        HorizontalLayout filterButtonsLayout = new HorizontalLayout();
+        filterActionButton = new Button("Aktionen");
+        filterActionButton.addClickListener(e-> myDungeonChatView.setFilterModeAction());
+        filterChatButton = new Button("Chat");
+        filterChatButton.addClickListener(e -> myDungeonChatView.setFilterModeChat());
+        resetFilterButton = new Button("Reset");
+        resetFilterButton.addClickListener(e-> myDungeonChatView.setFilterModeAll());
+
+        filterButtonsLayout.add(resetFilterButton, filterChatButton, filterActionButton);
+
+
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leftDungeonButt.getStyle().set("color", "red");
         leftDungeonButt.addClickListener(e -> {
@@ -204,7 +221,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 if (textField.getValue() != "") {
                     UserMessage um = myParserService.parseCommand(textField.getValue(), dungeonId, myAvatar, currentUser);
                     String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
-                    myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                    myDungeonChatView.addMessage(new Paragraph(new Html(message)));
                     if (um.getKey() != null) {
                         switch (um.getKey()) {
                             case "view.game.ctrl.cmd.move.north":
@@ -275,7 +292,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
 
-        gameFirstLayout.add(binTitle, html, myDungeonChatView, insertInputLayout);
+        gameFirstLayout.add(binTitle, html,filterButtonsLayout, myDungeonChatView, insertInputLayout);
         gameSecondLayout.add(mapLayout, gridLayoutVert, leftDungeonButt);
         mapLayout.setClassName("map-layout");
         gridLayoutVert.setClassName("grid-layout");

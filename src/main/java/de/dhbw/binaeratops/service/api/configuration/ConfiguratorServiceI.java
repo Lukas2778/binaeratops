@@ -77,6 +77,10 @@ public interface ConfiguratorServiceI {
      */
     void setStartRoom(Room ARoom);
 
+    /**
+     * Befehlssymbol des Dungeons holen.
+     * @return Befehlssymbol.
+     */
     char getCommandSymbol();
 
     /**
@@ -256,6 +260,12 @@ public interface ConfiguratorServiceI {
      */
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
+    /**
+     * TODO
+     * @param ARoom
+     * @param ANPC
+     * @return
+     */
     double getNumberOfNPC(Room ARoom, NPC ANPC);
 
     /**
