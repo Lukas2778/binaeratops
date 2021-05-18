@@ -211,9 +211,54 @@ public interface AvatarI {
      */
     void removeVisitedRoom(Room ARoom);
 
+    /**
+     * Gibt die Lebenspunkte des Avatars zurück.
+     *
+     * @return Lebenspunkte des Avatars.
+     */
     Long getLifepoints();
 
+    /**
+     * Setzt die Lebenspunkte des Avatars.
+     *
+     * @param ALifepoints Lebenspunkte des Avatars.
+     */
     void setLifepoints(Long ALifepoints);
 
-    void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB);
+    /**
+     * Setzt die Lebenspunkte des Avatars inkl. Boni.
+     *
+     * @param ALifepoints          Lebenspunkte des Avatars.
+     * @param ALifepointsBonusRace Bonus der Rasse.
+     * @param ALifepointsBonusRole Bonus der Rolle.
+     */
+    void setLifepoints(Long ALifepoints, Long ALifepointsBonusRace, Long ALifepointsBonusRole);
+
+    /**
+     * Gibt den Wahrheitswert zurück, ob der Spieler aktiv ist.
+     *
+     * @return Wahrheitswert, ob Spieler aktiv ist.
+     */
+    boolean isActive();
+
+    /**
+     * Setzt den Wahrheitswert, ob der Avatar aktiv ist.
+     *
+     * @param AActive Wahrheitswert, ob Avatar aktiv ist oder nicht.
+     */
+    void setActive(boolean AActive);
+
+    /**
+     * Gibt den Wahrheitswert zurück, ob der Avatar eine Anfrage an den Dungeon-Master gestellt hat.
+     *
+     * @return Wahrheitswert, ob der Avatar eine Anfrage an den Dungeon-Master gestellt hat.
+     */
+    boolean hasRequested();
+
+    /**
+     * Setzt den Wahrheitswert, ob der Avatar eine Anfrage an den Dungeon-Master gestellt hat.
+     *
+     * @param ARequested Wahrheitswert, ob der Avatar eine Anfrage an den Dungeon-Master gestellt hat oder nicht.
+     */
+    void setRequested(boolean ARequested);
 }

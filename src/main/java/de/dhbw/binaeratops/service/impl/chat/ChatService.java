@@ -23,7 +23,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Erstellen und Versenden von Chatnachrichten bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link ChatServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link ChatServiceI}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer

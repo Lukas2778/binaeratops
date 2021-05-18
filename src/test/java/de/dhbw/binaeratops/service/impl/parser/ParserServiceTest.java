@@ -1,22 +1,10 @@
-package de.dhbw.binaeratops.service.impl;
+package de.dhbw.binaeratops.service.impl.parser;
 
 import de.dhbw.binaeratops.groups.ImplGroup;
 import de.dhbw.binaeratops.groups.Logger;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
-import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.User;
-import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxMissingException;
-import de.dhbw.binaeratops.service.exceptions.parser.CmdScannerSyntaxUnexpectedException;
-import de.dhbw.binaeratops.service.impl.parser.ParserService;
-import de.dhbw.binaeratops.service.impl.parser.UserMessage;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -24,12 +12,12 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class ParserServiceTest extends Logger {
 
-//    private ParserService parser;
-//
-//    private DungeonI dungeon;
-//    private UserI user;
-//    private AvatarI avatar;
-//
+    private ParserService parser;
+
+    private DungeonI dungeon;
+    private UserI user;
+    private AvatarI avatar;
+
 //    @Before
 //    public void setUp() {
 //        parser = new ParserService();

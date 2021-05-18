@@ -40,6 +40,8 @@ public class Avatar implements AvatarI {
 
     private boolean active;
 
+    private boolean requested = false;
+
     @ManyToOne
     private User user;
 
@@ -67,19 +69,20 @@ public class Avatar implements AvatarI {
     /**
      * Konstruktor zum Erzeugen eines Avatars mit allen Eigenschaften.
      *
-     * @param ARoom Raum des Avatars, in dem er sich befindet.
-     * @param AGender Geschlecht des Avatars.
-     * @param AName   Name des Avatars.
-     * @param ARace   Rasse des Avatars.
-     * @param ARole   Rolle des Avatars.
+     * @param ARoom       Raum des Avatars, in dem er sich befindet.
+     * @param AGender     Geschlecht des Avatars.
+     * @param AName       Name des Avatars.
+     * @param ARace       Rasse des Avatars.
+     * @param ARole       Rolle des Avatars.
+     * @param ALifepoints Lebenspunkte des Avatars.
      */
-    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole, Long ALebenspunkte) {
+    public Avatar(Room ARoom, Gender AGender, String AName, Race ARace, Role ARole, Long ALifepoints) {
         this.currentRoom = ARoom;
         this.gender = AGender;
         this.name = AName;
         this.race = ARace;
         this.role = ARole;
-        this.lifepoints = ALebenspunkte;
+        this.lifepoints = ALifepoints;
     }
 
     /**
@@ -137,6 +140,14 @@ public class Avatar implements AvatarI {
         active = AActive;
     }
 
+    public boolean hasRequested() {
+        return requested;
+    }
+
+    public void setRequested(boolean ARequested) {
+        requested = ARequested;
+    }
+
     public User getUser() {
         return user;
     }
@@ -188,7 +199,7 @@ public class Avatar implements AvatarI {
 
     public void removeInventoryItem(ItemInstance AItem) {
         inventory.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setInventoryAvatar(null);
     }
 
     public List<ItemInstance> getEquipment() {
@@ -202,7 +213,7 @@ public class Avatar implements AvatarI {
 
     public void removeEquipmentItem(ItemInstance AItem) {
         equipment.remove(AItem);
-        AItem.setRoom(null);
+        AItem.setEquipmentAvatar(null);
     }
 
     public List<Room> getVisitedRooms() {
@@ -225,11 +236,17 @@ public class Avatar implements AvatarI {
         ARoom.setVisitedByAvatar(null);
     }
 
-    public Long getLifepoints(){ return lifepoints;}
+    public Long getLifepoints() {
+        return lifepoints;
+    }
 
-    public void setLifepoints(Long ALifepoints){ this.lifepoints = ALifepoints; }
+    public void setLifepoints(Long ALifepoints) {
+        this.lifepoints = ALifepoints;
+    }
 
-    public void setLifepoints(Long ALifepoints, Long ALifepointsBonus, Long ALifepointsBonusB){ this.lifepoints = ALifepoints + ALifepointsBonus + ALifepointsBonusB; }
+    public void setLifepoints(Long ALifepoints, Long ALifepointsBonusRace, Long ALifepointsBonusRole) {
+        this.lifepoints = ALifepoints + ALifepointsBonusRace + ALifepointsBonusRole;
+    }
 
     @Override
     public boolean equals(Object AOther) {

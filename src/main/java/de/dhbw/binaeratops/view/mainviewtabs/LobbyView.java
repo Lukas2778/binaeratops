@@ -21,7 +21,13 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * Oberfläche des Tabs 'Lobby'
+ * Tab-Oberfläche für die Komponente "Lobby" des Hauptmenüs.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Lobby aller aktiven und öffentlichen Dungeons bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Lukas Göpel, Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall
  */
 public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 

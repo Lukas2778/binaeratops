@@ -12,7 +12,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Versenden von Chatnachrichten bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.chat.ChatService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.chat.ChatService}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer

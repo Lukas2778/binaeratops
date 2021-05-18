@@ -3,22 +3,21 @@ package de.dhbw.binaeratops.service.exceptions.parser;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 
 /**
- * Exception für den Fall, dass der Empfänger der Nachricht offline ist.
+ * Exception für den Fall, dass noch die Antwort einer Anfrage aussteht.
  *
  *
  * @author Nicolas Haug
  */
-public class CmdScannerRecipientOfflineException extends CmdScannerException {
+public class CmdScannerAlreadyRequestedException extends CmdScannerException {
     private static final long serialVersionUID = 1L;
 
     private UserMessage um;
 
     /**
-     * Standard-Exception für den Fall, dass der Empfänger offline ist.
-     * @param ARecipent Nicht vorhandener Empfänger.
+     * Standard-Exception für den Fall, dass noch die Antwort einer Anfrage aussteht.
      */
-    public CmdScannerRecipientOfflineException(String ARecipent) {
-        um = new UserMessage("error.parser.cmd.scanner.cmd.whisper.offline", ARecipent);
+    public CmdScannerAlreadyRequestedException() {
+        um = new UserMessage("error.parser.cmd.scanner.already.requested");
     }
 
     /**

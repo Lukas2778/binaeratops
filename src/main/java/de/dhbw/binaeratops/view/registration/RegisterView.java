@@ -33,6 +33,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+
+/**
+ * Oberfläche für die Komponente "Registrierung".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Registrieren eines Benutzers bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service,
+ * welcher dann eine E-Mail an den Benutzer schickt.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
+ */
+
 /**
  * Registrierungs Fenster. Erscheint, wenn auf den Button 'Registrieren' geklickt wird.
  * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
@@ -121,7 +133,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
         register.add(verticalLogin);
 
         add(
-            languageDiv,
+                languageDiv,
                 register
         );
         name.focus();

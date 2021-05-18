@@ -30,7 +30,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Diese Seite wird aufgerufen, wenn der Benutzer auf den 'Passwort vergessen'-Link klickt.
+ * Oberfläche für die Komponente "Passwort vergessen".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Zurücksetzen eines Benutzerpasswortes bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
  */
 @Route("forgotPassword")
 @CssImport("./views/registration/language.css")

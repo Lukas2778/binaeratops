@@ -10,13 +10,13 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 /**
  * Schnittstelle für die Callbacks des Scanners für die Spielsteuerungs-Befehle.
  * <p>
- * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdHooks}.
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.service.impl.parser.gamectrl.GameCtrlCmdHooks}.
  * </p>
  *
  * @author Nicolas Haug, Lukas Göpel
  */
 public interface GameCtrlCmdHooksI {
-    // TODO JAVADOC Übergabeparameter ergänzen/hinzufügen
+
     /**
      * Callback Befehl "whereami".
      *
@@ -274,7 +274,9 @@ public interface GameCtrlCmdHooksI {
      * @param AMessage Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
-     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
-    UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException;
+    UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException, InvalidImplementationException;
+
+    UserMessage onHit(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName) throws CmdScannerException, InvalidImplementationException;
 }

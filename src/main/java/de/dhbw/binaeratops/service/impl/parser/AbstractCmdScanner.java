@@ -187,8 +187,10 @@ public abstract class AbstractCmdScanner {
                         for (; n < input.length() && input.charAt(n) != '"';n++) {
                             flagPos++;
                         }
-                        if (input.charAt(n) == '"') {
-                            flag = true;
+                        if (n < input.length()) {
+                            if (input.charAt(n) == '"') {
+                                flag = true;
+                            }
                         }
                     } else {
                         for (; n < input.length() && input.charAt(n) != ' '; n++) {

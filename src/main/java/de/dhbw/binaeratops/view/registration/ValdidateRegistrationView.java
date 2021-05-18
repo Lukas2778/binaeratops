@@ -31,7 +31,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Fenster zur Validierung des Benutzeraccounts über den per E-Mail versandten Code.
+ * Oberfläche für die Komponente "Konto-Validierung".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Validieren eines Benutzerkontos bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
  */
 @Route("validateRegistration")
 @CssImport("./views/registration/language.css")

@@ -200,6 +200,7 @@ public interface DungeonI {
 
     /**
      * Gibt den Avatar zurück der über die übergebene ID gefunden wurde.
+     *
      * @param AAvatarId Avatar ID.
      * @return Gefundener Avatar oder null falls nicht gefunden.
      */
@@ -387,8 +388,17 @@ public interface DungeonI {
      */
     void removeRace(Race ARace);
 
+    /**
+     * Gibt die Standard Avatar-Lebenspunkte der Avatare zurück.
+     *
+     * @return Standard Avatar-Lebenspunkte der Avatare.
+     */
     Long getStandardAvatarLifepoints();
 
+    /**
+     * Setzt die Standard Avatar-Lebenspunkte der Avatare.
+     *
+     * @param AStandardAvatarLifepoints Standard Avatar-Lebenspunkte.
+     */
     void setStandardAvatarLifepoints(Long AStandardAvatarLifepoints);
-
 }

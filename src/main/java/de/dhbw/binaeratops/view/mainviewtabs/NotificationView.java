@@ -9,9 +9,14 @@ import com.vaadin.flow.server.VaadinSession;
 import java.util.ResourceBundle;
 
 /**
- * Oberfläche des Tabs 'Mitteilungen'
+ * Tab-Oberfläche für die Komponente "Mitteilungen" des Hauptmenüs.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Mitteilungen eines Benutzers bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-//@Route(value = "notification",layout = MainView.class)
 public class NotificationView extends HorizontalLayout implements HasDynamicTitle {
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 

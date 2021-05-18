@@ -39,7 +39,19 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * The main view is a top-level placeholder for other views.
+ * Oberfläche für die Komponente "Hauptmenü".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Navigieren durch den MUD-Server bereit.
+ * <p>
+ * Das Hauptmenü unterteilt sich in die Tab-Oberflächen:
+ * <ul>
+ *     <li>Über uns</li>
+ *     <li>Mitteilungen</li>
+ *     <li>Lobby</li>
+ *     <li>Eigene Dungeons</li>
+ * </ul>
+ *
+ * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
 @Push
 @JsModule("./styles/shared-styles.js")
@@ -122,7 +134,7 @@ public class MainView extends AppLayout {
         layout.add(viewTitle);
         layout.add(menuLayout);
         //layout.add(avatar);
-        layout.add(new Button("logout",e -> UI.getCurrent().navigate("logout")));
+        layout.add(new Button("logout", e -> UI.getCurrent().navigate("logout")));
         return layout;
     }
 

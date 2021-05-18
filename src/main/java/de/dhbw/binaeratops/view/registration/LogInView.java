@@ -37,11 +37,20 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+
 /**
- * Login Fenster auf der Webapplikation.
- * Dies ist das erste Fenster, das der Benutzer sieht.
+ * Oberfläche für die Komponente "Anmeldung".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Anmelden eines Benutzers bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ * <p>
+ * Sie ist das erste Fenster dass der Benutzer sieht, wenn er die Webapplikation besucht.
+ * <p>
+ * Sofern keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf diese Seite verwiesen.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
  */
-//wenn keine Adresse zu einer bestimmten Seite in der URL eingegeben wird, wird sofort auf die Login-Seite verwiesen
 @RouteAlias("")
 @PWA(name = "Binäratops", shortName = "Binäratops", enableInstallPrompt = false)
 @Route("login")

@@ -20,7 +20,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Umgang mit einem Dungen bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link DungeonServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link DungeonServiceI}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
@@ -109,8 +109,8 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public Room getRoomByPosition(Dungeon ADungeon, int AX, int AY) {
-        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AX, AY);
+    public Room getRoomByPosition(Dungeon ADungeon, int AXCoordinate, int AYCoordinate) {
+        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AXCoordinate, AYCoordinate);
         if(room.size() == 0)
             return null;
         else
@@ -147,9 +147,12 @@ public class DungeonService implements DungeonServiceI {
     public void kickPlayer(Long ADungeonId, Long AUserId){
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
         User user = userRepo.findByUserId(AUserId);
-        Avatar avatar = avatarRepo.findByUserAndActive(user, true).get(0);
-        avatar.setActive(false);
-        avatarRepo.save(avatar);
+        List<Avatar> avatars = avatarRepo.findByUserAndActive(user, true);
+        if (avatars.size() > 0) {
+            Avatar avatar = avatars.get(0);
+            avatar.setActive(false);
+            avatarRepo.save(avatar);
+        }
         dungeon.addBlockedUser(user);
         dungeonRepo.save(dungeon);
     }
@@ -157,5 +160,20 @@ public class DungeonService implements DungeonServiceI {
     @Override
     public Room getRoomById(Long ARoomId) {
         return roomRepo.findByRoomId(ARoomId);
+    }
+
+    public void setAvatarNotRequested(Long AAvatarId) {
+        Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
+        avatar.setRequested(false);
+        avatarRepo.save(avatar);
+    }
+
+    @Override
+    public void allowUser(Long ADungeonId, Long AUserId) {
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        User user = userRepo.findByUserId(AUserId);
+        dungeon.addAllowedUser(user);
+        userRepo.save(user);
+        dungeonRepo.save(dungeon);
     }
 }

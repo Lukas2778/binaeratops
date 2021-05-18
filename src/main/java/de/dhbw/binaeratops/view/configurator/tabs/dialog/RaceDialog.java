@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Race;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import java.util.ArrayList;
+
 import java.util.ResourceBundle;
 
 /**
@@ -63,7 +63,7 @@ public class RaceDialog extends Dialog
         currentDescriptionField = new TextField(res.getString("view.configurator.dialog.race.field.description"));
         NumberField lifepointsBonusField = new NumberField(res.getString("view.configurator.dialog.race.field.lifepointsBonus"));
         lifepointsBonusField.setHasControls(true);
-        lifepointsBonusField.setMin(-50);
+        lifepointsBonusField.setMin(0);
         lifepointsBonusField.setValue(0.0);
 
         Button saveDialog = new Button(res.getString("view.configurator.dialog.race.button.save"));

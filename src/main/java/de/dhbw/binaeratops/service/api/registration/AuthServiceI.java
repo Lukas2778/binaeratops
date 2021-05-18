@@ -11,7 +11,7 @@ import de.dhbw.binaeratops.service.exceptions.RegistrationException;
  * Dieser Service stellt die Schnittstelle zwischen der User-Authentifizierung und der Benutzeroberfläche dar.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.registration.AuthService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.registration.AuthService}.
  * </p>
  *
  * @author Lukas Göpel, Matthias Rall

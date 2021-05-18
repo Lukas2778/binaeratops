@@ -31,6 +31,7 @@ public class ChatMessage {
 
     /**
      * Konstruktor der Nachricht mit einem Empfänger.
+     *
      * @param message Nur die Textnachricht ohne Absender.
      * @param AUserId Empfänger der Nachricht.
      */
@@ -44,8 +45,9 @@ public class ChatMessage {
 
     /**
      * Konstruktor der Nachricht als Paragraph mit mehreren Empfängern.
-     * @param AParagraph Paragraph mit Absender.
-     * @param AMessage Nur die Textnachricht ohne Absender.
+     *
+     * @param AParagraph  Paragraph mit Absender.
+     * @param AMessage    Nur die Textnachricht ohne Absender.
      * @param AUserIdList Liste von Empfänger der Nachricht.
      */
     public ChatMessage(Paragraph AParagraph, String AMessage, List<Long> AUserIdList) {
@@ -56,11 +58,12 @@ public class ChatMessage {
 
     /**
      * Konstruktor der Nachricht als Paragraph mit einem Empfänger.
+     *
      * @param AParagraph Paragraph mit Absender.
-     * @param AMessage Nur die Textnachricht ohne Absender.
-     * @param AUserId Empfänger der Nachricht.
+     * @param AMessage   Nur die Textnachricht ohne Absender.
+     * @param AUserId    Empfänger der Nachricht.
      */
-    public ChatMessage(Paragraph AParagraph,String AMessage, Long AUserId) {
+    public ChatMessage(Paragraph AParagraph, String AMessage, Long AUserId) {
         this.paragraph = AParagraph;
         List<Long> list = new ArrayList<Long>();
         list.add(AUserId);
@@ -88,7 +91,8 @@ public class ChatMessage {
 
     /**
      * Gibt die Nachricht mit farbigen Absender als Paragraph zurück.
-     * @return
+     *
+     * @return Nachricht mit farbigen Absender.
      */
     public Paragraph getParagraph() {
         return paragraph;
@@ -96,6 +100,7 @@ public class ChatMessage {
 
     /**
      * Gibt "true" zurück falls es eine Chatnachricht ist.
+     *
      * @return
      */
     public boolean isChatMessage() {
