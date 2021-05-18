@@ -722,6 +722,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         }
     }
 
+    // TODO Kommentare schreiben
     private String getCurrentUsers(Dungeon ADungeon) {
         List<User> avatars = ADungeon.getCurrentUsers();
         StringBuilder s = new StringBuilder();

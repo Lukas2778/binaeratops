@@ -30,7 +30,7 @@ public class MessageListView extends Div {
                     .callFunction("scrollIntoView");
         }
     }
-
+// TODO Kommentare schreiben
     public void delete(){
         super.removeAll();
 

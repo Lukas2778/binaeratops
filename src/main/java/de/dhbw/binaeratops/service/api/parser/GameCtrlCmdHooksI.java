@@ -278,5 +278,16 @@ public interface GameCtrlCmdHooksI {
      */
     UserMessage onTalk(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
+    /**
+     * Callback Befehl "hit".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar Avatar, der den Befehl ausführt.
+     * @param AUser Benutzer, der den Befehl ausführt.
+     * @param ANpcName Name des NPCs.
+     * @return Benutzernachricht.
+     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
+     */
     UserMessage onHit(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName) throws CmdScannerException, InvalidImplementationException;
 }

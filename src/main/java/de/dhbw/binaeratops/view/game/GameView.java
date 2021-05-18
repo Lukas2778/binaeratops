@@ -157,7 +157,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarDialog();
         initializeKickSubscriber();
     }
-
+    // TODO Kommentare schreiben
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(currentUser.getUserId())) {

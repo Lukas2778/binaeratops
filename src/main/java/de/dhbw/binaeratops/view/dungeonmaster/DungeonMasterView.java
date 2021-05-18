@@ -99,7 +99,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     boolean sureToLeave = false;
     boolean loaded = true;
-
+    // TODO Kommentare schreiben
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,

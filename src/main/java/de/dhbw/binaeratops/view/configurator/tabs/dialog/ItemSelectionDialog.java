@@ -41,7 +41,7 @@ public class ItemSelectionDialog extends Dialog {
 
     ConfiguratorServiceI configuratorServiceI;
 
-
+    // TODO Kommentare schreiben
     public ItemSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<ItemInstance> itemList){
         room = ARoom;
         this.itemList = itemList;

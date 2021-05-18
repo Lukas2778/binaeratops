@@ -95,6 +95,8 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    // TODO Kommentare schreiben
+
     private UserMessage scanHelp1(DungeonI ADungeon) throws CmdScannerException {
         String token = findRestOfInput();
         if (token == null) {

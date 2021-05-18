@@ -56,7 +56,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     Grid<User> grid = new Grid<>();
 
     private ConfiguratorServiceI configuratorService;
-
+    // TODO Kommentare schreiben
     public DungeonConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
         this.configuratorService = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();

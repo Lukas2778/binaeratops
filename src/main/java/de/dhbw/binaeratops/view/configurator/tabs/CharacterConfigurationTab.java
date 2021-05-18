@@ -74,7 +74,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
     private Race currentRace;
 
     private ConfiguratorServiceI configuratorService;
-
+    // TODO Kommentare schreiben
     public CharacterConfigurationTab(@Autowired ConfiguratorServiceI AConfiguratorServiceI) {
         configuratorService = AConfiguratorServiceI;
 

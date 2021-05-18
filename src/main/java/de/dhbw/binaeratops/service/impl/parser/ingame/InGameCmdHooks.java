@@ -187,6 +187,8 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         return null;
     }
 
+    // TODO Kommentare schreiben
+
     private List<User> getUsersOfRoom(Dungeon ADungeon, Room ARoom) {
         List<User> users = new ArrayList<>();
         for (Avatar avatar : getCurrentAvatars(ADungeon)) {
@@ -196,6 +198,8 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         }
         return users;
     }
+
+    // TODO Kommentare schreiben
 
     private List<Avatar> getCurrentAvatars(Dungeon ADungeon) {
         List<Avatar> avatars = new ArrayList<>();

@@ -55,7 +55,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void notifyAll(String AMessage, List<User> AReceiverList, User ADungeonMaster) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label("Dungeon-Master~ALL~" + ADungeonMaster.getName()+":");
+        Label sender = new Label("Dungeon-Master~ALL~" + ADungeonMaster.getName() + ":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
@@ -63,7 +63,7 @@ public class ChatService implements ChatServiceI {
 
     @Override
     public void whisperDungeonMaster(String AMessage, User AReceiver, User ADungeonMaster) {
-        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName()+":");
+        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName() + ":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
@@ -71,7 +71,7 @@ public class ChatService implements ChatServiceI {
 
     @Override
     public void whisper(String AMessage, User AReceiver, Avatar AAvatar) {
-        Label sender = new Label(AAvatar.getName()+":");
+        Label sender = new Label(AAvatar.getName() + ":");
         sender.addClassName("playernamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
@@ -80,7 +80,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void sendRoomMessage(String AMessage, List<User> AReceiverList, Avatar AAvatar, Room ARoom) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName()+":");
+        Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName() + ":");
         sender.addClassName("roomnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
@@ -89,7 +89,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void sendRoomMessage(String AMessage, List<User> AReceiverList, User ADungeonMaster, Room ARoom) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label(ARoom.getRoomName() + "~" + "Dungeon-Master~" + ADungeonMaster.getName()+":");
+        Label sender = new Label(ARoom.getRoomName() + "~" + "Dungeon-Master~" + ADungeonMaster.getName() + ":");
         sender.addClassName("roomnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
@@ -121,6 +121,7 @@ public class ChatService implements ChatServiceI {
 
     /**
      * Verschickt die Nachricht an alle Benutzer, die einen Chat offen haben.
+     *
      * @param message Nachricht.
      */
     private void sendChatMessage(ChatMessage message) {

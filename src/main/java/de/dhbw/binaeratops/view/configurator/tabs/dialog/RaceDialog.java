@@ -40,7 +40,7 @@ public class RaceDialog extends Dialog
     private Race currentRace;
     Grid<Race> grid;
     ConfiguratorServiceI configuratorServiceI;
-
+    // TODO Kommentare schreiben
     public RaceDialog()
     {
     }

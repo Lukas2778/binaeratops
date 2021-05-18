@@ -64,7 +64,7 @@ public class MainView extends AppLayout {
     private HorizontalLayout menuLayout;
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
-
+    // TODO Kommentare schreiben
     public MainView() {
         setPrimarySection(Section.DRAWER);
         createTopRightMenu();

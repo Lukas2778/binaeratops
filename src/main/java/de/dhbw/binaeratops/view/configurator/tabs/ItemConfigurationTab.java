@@ -4,12 +4,10 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
@@ -45,7 +43,7 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
     ItemDialog itemDialog;
 
     private Item currentItem;
-
+    // TODO Kommentare schreiben
     public ItemConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();

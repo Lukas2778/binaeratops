@@ -63,7 +63,7 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
 
     private final int width = 8;
     Image[][] tiles = new Image[width][width];
-
+    // TODO Kommentare schreiben
     public RoomConfigurationTab(ConfiguratorServiceI AConfiguratorServiceI, MapServiceI AMapServiceI) {
         mapService = AMapServiceI;
         configuratorServiceI = AConfiguratorServiceI;

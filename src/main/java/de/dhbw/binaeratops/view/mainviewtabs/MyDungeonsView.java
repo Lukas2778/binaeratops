@@ -98,7 +98,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
     }
-
+    // TODO Kommentare schreiben
     private Button createRemoveButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
