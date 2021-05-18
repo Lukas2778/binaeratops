@@ -32,7 +32,13 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * Diese Seite wird angezeigt, wenn der Benutzer seinen Benutzernamen eingegeben hat und die E-Mail an ihn gesendet wurde.
+ * Oberfläche für die Komponente "Neues Passwort vergeben".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für das Setzen des neuen Benutzerpasswortes bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service, welcher dann eine E-Mail absendet.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
  */
 @Route("setNewPassword")
 @CssImport("./views/registration/language.css")

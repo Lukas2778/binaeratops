@@ -1,5 +1,7 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Dungeon;
+
 /**
  * Schnittstelle für eine Rasse.
  * <p>
@@ -56,15 +58,30 @@ public interface RaceI {
     void setDescription(String ADescription);
 
     /**
-     * TODO
-     * @return
+     * Gibt den Dungeon der Rasse zurück.
+     *
+     * @return Dungeon der Rasse.
+     */
+    Dungeon getDungeon();
+
+    /**
+     * Setzt den Dungeon der Rasse.
+     *
+     * @param ADungeon Dungeon der Rasse.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
+     * Gibt den Lebenspunkte-Bonus der Rasse zurück.
+     *
+     * @return Lebenspunkte-Bonus der Rasse.
      */
     Long getLifepointsBonus();
 
     /**
-     * TODO
-     * @param ALifepointBonus
+     * Setzt den Lebenspunkte-Bonus der Rasse.
+     *
+     * @param ALifepointBonus Zu setzender Lebenspunkte-Bonus der Rasse.
      */
     void setLifepointsBonus(Long ALifepointBonus);
-
 }

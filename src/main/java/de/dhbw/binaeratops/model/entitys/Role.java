@@ -10,8 +10,6 @@ import javax.persistence.ManyToOne;
 import java.text.MessageFormat;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 /**
  * Entity Objekt für eine Rolle.
@@ -46,6 +44,7 @@ public class Role implements RoleI {
      *
      * @param ARoleName    Name der Rolle.
      * @param ADescription Beschreibung der Rolle.
+     * @param ALifepointsBonus Lebenspunkte-Bonus der Rolle.
      */
     public Role(String ARoleName, String ADescription, Long ALifepointsBonus) {
         this.roleName = ARoleName;
@@ -89,8 +88,8 @@ public class Role implements RoleI {
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public Long getLifepointsBonus(){return lifepointsBonus; }

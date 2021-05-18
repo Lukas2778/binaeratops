@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Repository für einen Gegenstand.
+ * Repository für eine Gegenstand-Blaupause.
  * <p>
- * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen eines Gegenstandes aus der Datenbank bereit.
+ * Es stellt alle Funktionalitäten zum Speichern, Löschen und Holen einer Gegenstand-Blaupause aus der Datenbank bereit.
  *
  * @author Nicolas Haug
  * @see Item
@@ -19,19 +19,19 @@ import java.util.List;
 public interface ItemRepositoryI extends JpaRepository<Item, Long> {
 
     /**
-     * Sucht alle Gegenstandeinträge aus der Datenbank.
+     * Sucht alle Gegenstand-Blaupauseneinträge aus der Datenbank.
      *
-     * @return Alle Gegenstandeinträge aus der Datenbank.
+     * @return Alle Gegenstand-Blaupauseneinträge aus der Datenbank.
      */
     @Override
     @NonNull
     List<Item> findAll();
 
     /**
-     * Sucht den Gegenstand mit der übergebenen ID in der Datenbank.
+     * Sucht die Gegenstand-Blaupausen mit der übergebenen ID in der Datenbank.
      *
-     * @param AItemId ID des gesuchten Gegenstandes.
-     * @return Gesuchter Gegenstand.
+     * @param AItemId ID der gesuchten Gegenstand-Blaupause.
+     * @return Gesuchte Gegenstand-Blaupause.
      */
     Item findByItemId(Long AItemId);
 }

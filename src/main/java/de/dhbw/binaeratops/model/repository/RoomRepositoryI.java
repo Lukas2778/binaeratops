@@ -36,11 +36,37 @@ public interface RoomRepositoryI extends JpaRepository<Room, Long> {
      */
     Room findByRoomId(Long ARoomId);
 
-    List<Room> findByXcoordinate (Integer AXCoordinate);
+    /**
+     * Sucht alle Raum mit der übergebenen X-Koordinate in der Datenbank
+     *
+     * @param AXCoordinate X-Koordinate des gesuchten Raumes.
+     * @return Gesuchte Raum.
+     */
+    List<Room> findByXcoordinate(Integer AXCoordinate);
 
-    List<Room> findByYcoordinate (Integer AYCoordinate);
+    /**
+     * Sucht alle Raum mit der übergebenen Y-Koordinate in der Datenbank
+     *
+     * @param AYCoordinate Y-Koordinate des gesuchten Raumes.
+     * @return Gesuchte Raum.
+     */
+    List<Room> findByYcoordinate(Integer AYCoordinate);
 
-    List<Room> findByDungeon (Dungeon ADungeon);
+    /**
+     * Sucht alle Räume des übergebenen Dungeons.
+     *
+     * @param ADungeon Dungeon der gesuchten Räume.
+     * @return Gesuchte Räume
+     */
+    List<Room> findByDungeon(Dungeon ADungeon);
 
-    List<Room> findByDungeonAndXcoordinateAndYcoordinate(Dungeon ADungeon, Integer AX, Integer AY);
+    /**
+     * Sucht alle Räume mit den übergebenen Koordinaten im übergebenen Dungeon.
+     *
+     * @param ADungeon     Dungeon der gesuchten Räume.
+     * @param AXCoordinate X-Koordinate.
+     * @param AYCoordinate Y-Koordinate
+     * @return Gesuchte Räume.
+     */
+    List<Room> findByDungeonAndXcoordinateAndYcoordinate(Dungeon ADungeon, Integer AXCoordinate, Integer AYCoordinate);
 }

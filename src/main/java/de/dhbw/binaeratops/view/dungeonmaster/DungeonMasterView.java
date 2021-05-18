@@ -19,8 +19,8 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.KickUser;
-import de.dhbw.binaeratops.model.UserAction;
+import de.dhbw.binaeratops.model.actions.KickUserAction;
+import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -41,11 +41,14 @@ import reactor.core.publisher.UnicastProcessor;
 import java.util.*;
 
 /**
- * @author Mathias Rall
- * Date: 07.05.2021
- * Time: 16:20
+ * Oberfläche für die Komponente "Dungeon-Master Ansicht".
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Verwaltung des Dungeons bereit.
+ * <p>
+ * Dafür sendet sie die Benutzerangaben direkt an den entsprechenden Service.
+ *
+ * @author Matthias Rall, Lars Rösel
  */
-
 @CssImport("./views/game/map-master.css")
 @PageTitle("Title")
 @Push
@@ -73,7 +76,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
-    private final UnicastProcessor<KickUser> kickUsersPublisher;
+    private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
 
     private Timer timer=new Timer();
     Dungeon dungeon;
@@ -100,7 +103,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
-                             UnicastProcessor<KickUser> AKickUsersPublisher) {
+                             UnicastProcessor<KickUserAction> AKickUsersPublisherAction) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
@@ -109,7 +112,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
-        this.kickUsersPublisher = AKickUsersPublisher;
+        this.kickUsersPublisherAction = AKickUsersPublisherAction;
         setId("SomeView");
 
         userActionsIncoming();
@@ -127,6 +130,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private void refreshView () {
         getUI().ifPresent(ui -> ui.access(() -> {
             userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
+            for (Avatar avatar : actionMap.keySet()) { //TODO Farbe wird zurückgesetzt
+                notificationButtons.get(avatar).getStyle().set("background", "red");
+            }
             if(currentRoom != null ) {
                 Room room = dungeonServiceI.getRoomById(currentRoom.getRoomId());
                 fillCurrentRoom(room);
@@ -140,10 +146,29 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 if (action.getActionType().equals("UPDATE")) {
                     //TODO update der view
                     return;
+                } else if (action.getActionType().equals("REQUEST")) {
+                    Dialog acceptanceDialog = new Dialog();
+                    Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
+                    Button acceptButton = new Button("Annehmen", e -> {
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), false));
+                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
+                        acceptanceDialog.close();
+                    });
+                    Button declineButton = new Button("Ablehnen", e -> {
+                        dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), true));
+                        acceptanceDialog.close();
+                    });
+
+                    acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
+                    acceptanceDialog.open();
+                    //TODO den user einlassen
+                    action.getAvatar();
+                    return;
                 }
-                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getUser(), 5000, Notification.Position.TOP_END);
-                notificationButtons.get(action.getUser()).getStyle().set("background", "red");
-                actionMap.put(action.getUser(), action);
+                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
+                notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
+                actionMap.put(action.getAvatar(), action);
             }
         })));
     }
@@ -204,7 +229,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 UserMessage um = myParserService.parseCommand(textField.getValue(), dungeon.getDungeonId(), myAvatar, VaadinSession.getCurrent().getAttribute(
                         User.class));
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
-                myDungeonChatView.messageList.add(new Paragraph(new Html(message)));
+                myDungeonChatView.addMessage(new Paragraph(new Html(message)));
             } catch (CmdScannerRecipientOfflineException recipientOffline) {
                 Notification.show(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
@@ -316,7 +341,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "CONSUME":
                             Dialog consumeDialog = new Dialog();
                             TextArea consumeActionText = new TextArea();
-                            Label consumeUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label consumeUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
 
                             HorizontalLayout randomLayout = makeDice();
                             Button consumeSendActionButton = new Button("Senden", evfds -> {
@@ -332,7 +357,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "TALK":
                             Dialog talkDialog = new Dialog();
                             TextArea talkActionText = new TextArea();
-                            Label talkUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label talkUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
                             Button talkSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(talkActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
@@ -346,7 +371,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                         case "ATTACK":
                             Dialog attackDialog = new Dialog();
                             TextArea attackActionText = new TextArea();
-                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getUser().getName() + ":" + myUserAction.getUserActionMessage());
+                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
                             Button attackSendActionButton = new Button("Test", evfds -> {
                                 messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
                                 actionMap.remove(avatar);
@@ -362,13 +387,15 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             });
             return requestsButton;
         }).setHeader("Anfragen");
-        userGrid.addComponentColumn(avatar -> {
+        /*userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
             whisperButton.addClickListener(e -> {
                 Notification.show("Not Implemented");
             });
             return whisperButton;
         }).setHeader("Anflüstern");
+
+         */
         userGrid.addComponentColumn(avatar -> {
             Button infoButton = new Button("Infos");
             VerticalLayout lay = new VerticalLayout();
@@ -407,7 +434,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisher.onNext(new KickUser(avatar.getUser()));
+                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), true));
                 confirmKickDialog.close();
             });
 
@@ -521,7 +548,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             roomDescriptionTextArea.setValue("");
 
         itemInRoomGrid.setItems(ARoom.getItems().stream().map(ItemInstance::getItem).toArray(Item[]::new));
-        npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NpcInstance::getNpc).toArray(NPC[]::new));
+        npcInRoomGrid.setItems(ARoom.getNpcs().stream().map(NPCInstance::getNpc).toArray(NPC[]::new));
     }
 
     @Override

@@ -56,6 +56,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     }
 
     /**
+     * Konstruktor zum Ausführen von Tests mit Mocks.
+     * @param AInGameCmdHooks Hooks.
+     */
+    public InGameCmdScanner(InGameCmdHooksI AInGameCmdHooks) {
+        this.hooks = AInGameCmdHooks;
+    }
+    /**
      * Scanner im Zustand "Start".
      */
     protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
@@ -75,7 +82,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
                     return scanSpeak(ADungeon, AAvatar);
                 case CMD_NOTIFY:
                     return scanNotify(ADungeon, AUser);
-                case CMD_WITHDRAW:
+                case CMD_WITHDRAW: // TODO WITHDRAW, EXIT, STOP ggf entfernen.
                     return scanWithdraw(ADungeon, AUser);
                 case CMD_EXIT:
                     return scanGame(ADungeon, AUser, false);

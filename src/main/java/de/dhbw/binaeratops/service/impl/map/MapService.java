@@ -18,7 +18,7 @@ import java.util.*;
  * Dieser Service beinhaltet die Businesslogik zur Interaktion im Konfigurator mit der Karte.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link MapServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link MapServiceI}.
  * </p>
  *
  * @author Lukas Göpel, Matthias Rall, Lars Rösel

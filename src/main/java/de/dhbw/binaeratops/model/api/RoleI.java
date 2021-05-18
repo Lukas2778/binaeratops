@@ -1,5 +1,7 @@
 package de.dhbw.binaeratops.model.api;
 
+import de.dhbw.binaeratops.model.entitys.Dungeon;
+
 /**
  * Schnittstelle für eine Rolle.
  * <p>
@@ -56,14 +58,30 @@ public interface RoleI {
     void setDescription(String ADescription);
 
     /**
-     * TODO
-     * @return
+     * Gibt den Dungeon der Rolle zurück.
+     *
+     * @return Dungeon der Rolle.
+     */
+    Dungeon getDungeon();
+
+    /**
+     * Setzt den Dungeon der Rolle.
+     *
+     * @param ADungeon Dungeon der Rolle.
+     */
+    void setDungeon(Dungeon ADungeon);
+
+    /**
+     * Gibt den Lebenspunkte-Bonus der Rolle zurück.
+     *
+     * @return Lebenspunkte-Bonus der Rolle.
      */
     Long getLifepointsBonus();
 
     /**
-     * TODO
-     * @param ALifepointBonus
+     * Setzt den Lebenspunkte-Bonus der Rolle.
+     *
+     * @param ALifepointBonus Zu setzender Lebenspunkte-Bonus der Rolle.
      */
     void setLifepointsBonus(Long ALifepointBonus);
 }

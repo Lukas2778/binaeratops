@@ -8,7 +8,7 @@ import java.util.List;
  * Stellt alle Funktionalitäten zum Umgang mit einer Benutzernachricht bereit.
  * </p>
  * <p>
- * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.UserMessage}.
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.service.impl.parser.UserMessage}.
  * </p>
  *
  * @author Nicolas Haug

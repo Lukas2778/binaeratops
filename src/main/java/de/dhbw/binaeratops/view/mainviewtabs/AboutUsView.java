@@ -9,9 +9,12 @@ import com.vaadin.flow.server.VaadinSession;
 import java.util.ResourceBundle;
 
 /**
- * Oberfläche des Tabs 'Über uns'
+ * Tab-Oberfläche für die Komponente "Über uns" des Hauptmenüs.
+ * <p>
+ * Diese Ansicht stellt alle View-Komponenten für die Anzeige der Infos bereit.
+ *
+ * @author Lukas Göpel, Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall
  */
-//@Route(value = "aboutUs",layout = MainView.class)
 public class AboutUsView extends VerticalLayout implements HasDynamicTitle {
 
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());

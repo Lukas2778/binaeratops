@@ -7,8 +7,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
 /**
- * Diese Seite ist nicht síchtbar.
- * Hier wird der Benutzer ausgeloggt und auf die Login-Seite weitergeleitet.
+ * Oberfläche für die Komponente "Abmeldung".
+ * <p>
+ * Diese Ansicht ist nicht sichtbar.
+ * <p>
+ * Sie beendet die aktuelle Benutzersitzung und leitet ihn auf die Seite zur Anmeldung weiter.
+ *
+ * @author Matthias Rall, Lukas Göpel, Nicolas Haug
  */
 @Route("logout")
 @PageTitle("logout")

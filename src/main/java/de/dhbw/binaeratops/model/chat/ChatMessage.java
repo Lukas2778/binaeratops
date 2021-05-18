@@ -14,7 +14,7 @@ import java.util.List;
 public class ChatMessage {
     private String textMessage;
     private Paragraph paragraph;
-    private boolean isParagraphMessage;
+    private boolean isChatMessage = false;
     private List<Long> userIdList;
 
     /**
@@ -27,11 +27,11 @@ public class ChatMessage {
         this.textMessage = message;
         this.userIdList = AUserIdList;
         this.paragraph = new Paragraph(new Label(""));
-        this.isParagraphMessage = false;
     }
 
     /**
      * Konstruktor der Nachricht mit einem Empfänger.
+     *
      * @param message Nur die Textnachricht ohne Absender.
      * @param AUserId Empfänger der Nachricht.
      */
@@ -41,33 +41,34 @@ public class ChatMessage {
         list.add(AUserId);
         this.userIdList = list;
         this.paragraph = new Paragraph(new Label(""));
-        this.isParagraphMessage = false;
     }
 
     /**
      * Konstruktor der Nachricht als Paragraph mit mehreren Empfängern.
-     * @param AParagraph Paragraph mit Absender.
-     * @param AMessage Nur die Textnachricht ohne Absender.
+     *
+     * @param AParagraph  Paragraph mit Absender.
+     * @param AMessage    Nur die Textnachricht ohne Absender.
      * @param AUserIdList Liste von Empfänger der Nachricht.
      */
     public ChatMessage(Paragraph AParagraph, String AMessage, List<Long> AUserIdList) {
         this.paragraph = AParagraph;
         this.userIdList = AUserIdList;
-        this.isParagraphMessage = true;
+        this.isChatMessage = true;
     }
 
     /**
      * Konstruktor der Nachricht als Paragraph mit einem Empfänger.
+     *
      * @param AParagraph Paragraph mit Absender.
-     * @param AMessage Nur die Textnachricht ohne Absender.
-     * @param AUserId Empfänger der Nachricht.
+     * @param AMessage   Nur die Textnachricht ohne Absender.
+     * @param AUserId    Empfänger der Nachricht.
      */
-    public ChatMessage(Paragraph AParagraph,String AMessage, Long AUserId) {
+    public ChatMessage(Paragraph AParagraph, String AMessage, Long AUserId) {
         this.paragraph = AParagraph;
         List<Long> list = new ArrayList<Long>();
         list.add(AUserId);
         this.userIdList = list;
-        this.isParagraphMessage = true;
+        this.isChatMessage = true;
     }
 
     /**
@@ -90,17 +91,19 @@ public class ChatMessage {
 
     /**
      * Gibt die Nachricht mit farbigen Absender als Paragraph zurück.
-     * @return
+     *
+     * @return Nachricht mit farbigen Absender.
      */
     public Paragraph getParagraph() {
         return paragraph;
     }
 
     /**
-     * Gibt "true" zurück falls ein Paragraph erstellt wurde.
-     * @return Boolean.
+     * Gibt "true" zurück falls es eine Chatnachricht ist.
+     *
+     * @return
      */
-    public boolean IsParagraph() {
-        return isParagraphMessage;
+    public boolean isChatMessage() {
+        return isChatMessage;
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Umgang mit einem Dungen bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.configurator.DungeonService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.configurator.DungeonService}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
@@ -36,14 +36,14 @@ public interface DungeonServiceI {
     List<Dungeon> getDungeonsLobby(User AUser);
 
     /**
-     * setzt einen Dungeon auf aktiv.
+     * Setzt einen Dungeon auf aktiv.
      *
      * @param ADungeonId Id des Dungeon.
      */
     void activateDungeon(long ADungeonId);
 
     /**
-     * setzt einen Dungeon auf inaktiv.
+     * Setzt einen Dungeon auf inaktiv.
      *
      * @param ADungeonId Id des Dungeon.
      */
@@ -64,32 +64,84 @@ public interface DungeonServiceI {
     void saveUser(User AUser);
 
     /**
+     * Gibt die aktuellen Avatare zurück.
      *
-     * @param ADungeonId  ID des Dungeon.
+     * @param ADungeonId ID des Dungeon.
      * @return Liste der activen Spieleravatare.
      */
-    List<Avatar> getCurrentAvatars( long ADungeonId);
-
+    List<Avatar> getCurrentAvatars(long ADungeonId);
 
     /**
+     * Gibt den Raum des übergebenen Avatars zurück.
      *
      * @param AAvatar den gesucheten Avatar.
      * @return den aktuellen Raum des Avatars.
      */
-    Room getRoomOfAvatar ( Avatar AAvatar);
+    Room getRoomOfAvatar(Avatar AAvatar);
 
-    Room getRoomByPosition(Dungeon ADungeon ,int AX, int AY);
+    /**
+     * Gibt den Raum an der übergebenen Position zurück.
+     *
+     * @param ADungeon     Dungeon des Raumes.
+     * @param AXCoordinate X-Koordinate des Raumes.
+     * @param AYCoordinate Y-Koordinate des Raumes.
+     * @return Gesuchter Raum.
+     */
+    Room getRoomByPosition(Dungeon ADungeon, int AXCoordinate, int AYCoordinate);
 
+    /**
+     * Setzt den Dungeon-Master des übergebenen Dungeons.
+     *
+     * @param ADungeon Dungeon, für den der Dungeon-Master gesetzt werden soll.
+     * @param AUserId  Benutzer ID des Benutzers, der Dungeon-Master werden soll.
+     */
     void setDungeonMaster(Dungeon ADungeon, Long AUserId);
 
+    /**
+     * Gibt die aktuellen Benutzer zurück.
+     *
+     * @param ADungeon Dungeon, für den die aktuellen Benutzer zurückgegeben werden soll.
+     * @return Aktuelle Benutzer.
+     */
     List<User> getCurrentUsers(Dungeon ADungeon);
 
+    /**
+     * Gibt den Dungeon mit der übergebenen ID zurück.
+     *
+     * @param ADungeonId ID, des gesuchten Dungeons.
+     * @return Gesuchter Dungeon.
+     */
     Dungeon getDungeon(Long ADungeonId);
 
+    /**
+     * Kickt den übergebenen Benutzer aus dem übergebenen Dungeon.
+     *
+     * @param ADungeonId Dungeon aus dem der Benutzer entfernt werden soll.
+     * @param AUserId    Benutzer, der entfernt werden soll.
+     */
     void kickPlayer(Long ADungeonId, Long AUserId);
 
+    /**
+     * Gibt den Raum der übergebenen ID zurück.
+     *
+     * @param ARoomId ID des gesuchten Raumes.
+     * @return Gesuchter Raum.
+     */
     Room getRoomById(Long ARoomId);
 
+    /**
+     * Erlaubt übergebenen Benutzer dem Dungeon beizutreten.
+     *
+     * @param ADungeonId Dungeon, dem der Benutzer beitreten können soll.
+     * @param AUserId    Benutzer, der beitreten können soll.
+     */
+    void allowUser(Long ADungeonId, Long AUserId);
+
+    /**
+     * Setzt den Avatar in Status "Keine ausstehende Anfrage vorhanden".
+     *
+     * @param AAvatarId Avatar, der den Status geändert bekommen soll.
+     */
     void setAvatarNotRequested(Long AAvatarId);
 }
 

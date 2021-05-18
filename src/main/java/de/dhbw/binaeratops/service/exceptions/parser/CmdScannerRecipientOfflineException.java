@@ -15,6 +15,7 @@ public class CmdScannerRecipientOfflineException extends CmdScannerException {
 
     /**
      * Standard-Exception für den Fall, dass der Empfänger offline ist.
+     * @param ARecipent Nicht vorhandener Empfänger.
      */
     public CmdScannerRecipientOfflineException(String ARecipent) {
         um = new UserMessage("error.parser.cmd.scanner.cmd.whisper.offline", ARecipent);

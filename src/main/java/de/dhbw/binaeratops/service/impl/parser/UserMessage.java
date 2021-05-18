@@ -11,7 +11,7 @@ import java.util.List;
  * Stellt alle Funktionalitäten zum Umgang mit einer Benutzernachricht bereit.
  * </p>
  * <p>
- * Für Schnittstelle siehe @{@link UserMessageI}.
+ * Für Schnittstelle siehe {@link UserMessageI}.
  * </p>
  *
  * @author Nicolas Haug

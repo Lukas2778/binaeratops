@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
  * Dieser Service stellt alle Funktionalitäten zum Parsen der Spielereingabe bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link ParserServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link ParserServiceI}.
  * </p>
  *
  * @author Nicolas Haug, Lukas Göpel
@@ -46,7 +46,6 @@ public class ParserService implements ParserServiceI {
 
     public UserMessage parseCommand(String AInput, Long ADungeonId, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         DungeonI myDungeon = myDungeonRepo.findByDungeonId(ADungeonId);
-        // TODO Scanner hinzufügen
         AInput = AInput.trim();
         UserMessageI userMessage;
         if (checkPrefix(AInput, myDungeon)) {

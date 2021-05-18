@@ -272,7 +272,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         deleteB.addClickListener(e -> {
             try{
                 if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rollen haben zu können ;)");
+                    Notification.show(res.getString("view.configurator.character.notification.in.config"));
                 }else{
                     Role[] selectedRole = grid.getSelectedItems()
                             .toArray(Role[]::new);
@@ -284,7 +284,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
 
                 }
             }catch(Exception es){
-                Notification.show("Die Rolle kann nicht gelöscht werden, vielleicht wird die Rolle von einem Avatar verwendet");
+                Notification.show(res.getString("view.configurator.character.notification.inconfig.role"));
             }
 
 
@@ -297,7 +297,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         deleteRaceButton.addClickListener(e -> {
             try{
                 if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                    Notification.show("Setzte zuerst den Dungeon auf In-Konfiguration um keine Rassen haben zu können ;)");
+                    Notification.show(res.getString("view.configurator.character.notification.in.config.race"));
                 }else
                 {
                     Race[] selectedRace = raceGrid.getSelectedItems()
@@ -311,7 +311,7 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                     }
                 }
             }catch(Exception es){
-                Notification.show("Die Rasse kann nicht gelöscht werden, vielleicht wird die Rasse von einem Avatar verwendet");
+                Notification.show(res.getString("view.configurator.character.notification.in.config.race2"));
             }
 
         });

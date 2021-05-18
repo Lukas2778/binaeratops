@@ -23,7 +23,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Erstellen und Versenden von Chatnachrichten bereit.
  * </p>
  * <p>
- * Für Schnittstelle dieser Komponente siehe @{@link ChatServiceI}.
+ * Für Schnittstelle dieser Komponente siehe {@link ChatServiceI}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer
@@ -55,7 +55,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void notifyAll(String AMessage, List<User> AReceiverList, User ADungeonMaster) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName()+":");
+        Label sender = new Label("Dungeon-Master~ALL~" + ADungeonMaster.getName()+":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));

@@ -15,7 +15,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten zum Konfigurieren eines Dungeons bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService}.
  * </p>
  *
  * @author Timon Gartung, Pedro Treuer, Nicolas Haug, Lukas Göpel, Matthias Rall, Lars Rösel
@@ -77,6 +77,10 @@ public interface ConfiguratorServiceI {
      */
     void setStartRoom(Room ARoom);
 
+    /**
+     * Befehlssymbol des Dungeons holen.
+     * @return Befehlssymbol.
+     */
     char getCommandSymbol();
 
     /**
@@ -166,8 +170,9 @@ public interface ConfiguratorServiceI {
     /**
      * Erstellen einer neuen Rolle.
      *
-     * @param AName        Rollenname.
-     * @param ADescription Rollenbeschreibung.
+     * @param AName            Rollenname.
+     * @param ADescription     Rollenbeschreibung.
+     * @param ALifepointsBonus Lebenspunkte-Bonus.
      */
     void createRole(String AName, String ADescription, Long ALifepointsBonus);
 
@@ -188,8 +193,9 @@ public interface ConfiguratorServiceI {
     /**
      * Erstellen einer neuen Rasse.
      *
-     * @param AName        Rassename.
-     * @param ADescription Rassebeschreibung.
+     * @param AName            Rassename.
+     * @param ADescription     Rassebeschreibung.
+     * @param ALifepointsBonus Lebenspunkte-Bonus.
      */
     void createRace(String AName, String ADescription, Long ALifepointsBonus);
 
@@ -254,6 +260,12 @@ public interface ConfiguratorServiceI {
      */
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
+    /**
+     * TODO
+     * @param ARoom
+     * @param ANPC
+     * @return
+     */
     double getNumberOfNPC(Room ARoom, NPC ANPC);
 
     /**
@@ -262,7 +274,7 @@ public interface ConfiguratorServiceI {
      * @param ARoom    Raum.
      * @param ANPCList NPCliste.
      */
-    void setNpcInstances(Room ARoom, List<NpcInstance> ANPCList);
+    void setNpcInstances(Room ARoom, List<NPCInstance> ANPCList);
 
     /**
      * Gibt alle Gegenstände eines Dungeons zurück.
@@ -292,7 +304,7 @@ public interface ConfiguratorServiceI {
      * @param ARoom Raum.
      * @return Liste mit NPCs.
      */
-    List<NpcInstance> getAllNPCs(Room ARoom);
+    List<NPCInstance> getAllNPCs(Room ARoom);
 
     /**
      * Entfernt den Raum aus dem Dungeon und löscht ihn.
@@ -337,9 +349,18 @@ public interface ConfiguratorServiceI {
      */
     List<User> getAllUsers();
 
+    /**
+     * Gibt den Benutzer mit dem übergebenen Namen zurück.
+     *
+     * @param AName Name des Benutzers.
+     * @return Benutzer.
+     */
     User getUser(String AName);
 
+    /**
+     * Speichert den übergebenen Benutzer in die Datenbank.
+     *
+     * @param AUser Benutzer, der gespeichert werden soll.
+     */
     void saveUser(User AUser);
-
-
 }

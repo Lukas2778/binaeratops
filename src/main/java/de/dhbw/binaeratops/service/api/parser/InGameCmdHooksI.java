@@ -10,7 +10,7 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 /**
  * Schnittstelle für die Callbacks des Scanners für die "In-Game"-Befehle.
  * <p>
- * Für Implementierung siehe @{@link de.dhbw.binaeratops.service.impl.parser.ingame.InGameCmdHooks}.
+ * Für Implementierung siehe {@link de.dhbw.binaeratops.service.impl.parser.ingame.InGameCmdHooks}.
  * </p>
  *
  * @author Nicolas Haug
@@ -50,6 +50,7 @@ public interface InGameCmdHooksI {
      * @param ADungeon  Dungeon, in dem der Befehl ausgeführt wird.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdWhisper(DungeonI ADungeon, AvatarI AAvatar, String AUserName, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
@@ -61,6 +62,7 @@ public interface InGameCmdHooksI {
      * @param AMessage Nachricht
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
@@ -72,6 +74,7 @@ public interface InGameCmdHooksI {
      * @param AMessage Nachricht.
      * @return Benutzernachricht
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
@@ -84,6 +87,7 @@ public interface InGameCmdHooksI {
      * @param AMessage  Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
@@ -95,6 +99,7 @@ public interface InGameCmdHooksI {
      * @param AMessage Nachricht.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException, InvalidImplementationException;
 
@@ -107,6 +112,7 @@ public interface InGameCmdHooksI {
      * @return Benutzernachricht.
      * @throws CmdScannerException            Fehler bei der Ausführung des Befehls.
      * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
+     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdWithdrawRole(DungeonI ADungeon, UserI AUser, String ARecipent) throws CmdScannerException, InvalidImplementationException;
 
@@ -117,6 +123,7 @@ public interface InGameCmdHooksI {
      * @param AUser    Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdStop(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
 
@@ -127,6 +134,7 @@ public interface InGameCmdHooksI {
      * @param AUser    Benutzer, der den Befehl ausführt.
      * @return Benutzernachricht.
      * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
+     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdExit(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
 }

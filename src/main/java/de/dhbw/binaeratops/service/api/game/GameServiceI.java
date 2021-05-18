@@ -13,7 +13,7 @@ import java.util.List;
  * Dieser Service stellt alle Funktionalitäten für das Spiel bereit.
  * </p>
  * <p>
- * Für Implementierung dieser Komponente siehe @{@link de.dhbw.binaeratops.service.impl.game.GameService}.
+ * Für Implementierung dieser Komponente siehe {@link de.dhbw.binaeratops.service.impl.game.GameService}.
  * </p>
  *
  * @author Timon Gartung, Lukas Göpel, Matthias Rall, Lars Rösel
@@ -42,6 +42,7 @@ public interface GameServiceI {
      * @param AAvatarGender Geschlecht des Avatars.
      * @param AAvatarRole Rolle des Avatars.
      * @param AAvatarRace Rasse des Avatars.
+     * @param ALifepoints Lebenspunkte des Avatars.
      */
     void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints);
 
@@ -73,6 +74,11 @@ public interface GameServiceI {
      */
     void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
+    /**
+     * TODO
+     * @param ADungeon
+     * @return
+     */
     Long getStandardAvatarLifepoints(Dungeon ADungeon);
 
     boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName);
