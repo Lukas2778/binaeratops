@@ -31,7 +31,6 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
-import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 
 import java.util.List;
 import java.util.Locale;
@@ -166,7 +165,6 @@ public class MainView extends AppLayout {
     private Component[] createMenuItems() {
         return new Tab[]{
                 createTab(res.getString("view.main.tab.about.us"), AboutUsView.class),
-                createTab(res.getString("view.main.tab.notification.view"), NotificationView.class),
                 createTab(res.getString("view.main.tab.lobby"), LobbyView.class),
                 createTab(res.getString("view.main.tab.my.dungeons"), MyDungeonsView.class)
         };
