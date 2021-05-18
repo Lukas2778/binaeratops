@@ -55,7 +55,7 @@ public class ChatService implements ChatServiceI {
     @Override
     public void notifyAll(String AMessage, List<User> AReceiverList, User ADungeonMaster) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        Label sender = new Label("Dungeon-Master~" + ADungeonMaster.getName()+":");
+        Label sender = new Label("Dungeon-Master~ALL~" + ADungeonMaster.getName()+":");
         sender.addClassName("dmnamecolor");
         Paragraph paragraph = buildParagraph(sender, AMessage);
         sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));

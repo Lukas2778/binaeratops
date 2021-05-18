@@ -24,9 +24,23 @@ public class MessageListView extends Div {
     @Override
     public void add(Component... components) {
         super.add(components);
-        components[components.length - 1]
-                .getElement()
-                .callFunction("scrollIntoView");
+        if(components.length != 0){
+            components[components.length - 1]
+                    .getElement()
+                    .callFunction("scrollIntoView");
+        }
+    }
 
+    public void delete(){
+        super.removeAll();
+
+    }
+
+    public Component[] getComponents(){
+        Component[] list = new Component[super.getComponentCount()];
+        for(int i = 0; i < super.getComponentCount(); i++){
+           list[i] = (super.getComponentAt(i));
+        }
+        return list;
     }
 }
