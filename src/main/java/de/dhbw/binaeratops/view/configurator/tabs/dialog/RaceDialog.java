@@ -64,7 +64,9 @@ public class RaceDialog extends Dialog
         NumberField lifepointsBonusField = new NumberField(res.getString("view.configurator.dialog.race.field.lifepointsBonus"));
         lifepointsBonusField.setHasControls(true);
         lifepointsBonusField.setMin(0);
+        lifepointsBonusField.setMax(50);
         lifepointsBonusField.setValue(0.0);
+        lifepointsBonusField.setWidth("160px");
 
         Button saveDialog = new Button(res.getString("view.configurator.dialog.race.button.save"));
         Button closeDialog = new Button(res.getString("view.configurator.dialog.race.button.cancel"));

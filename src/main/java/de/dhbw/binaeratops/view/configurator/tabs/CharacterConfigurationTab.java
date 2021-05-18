@@ -283,15 +283,10 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                         configuratorService.removeRole(currentRole);
                         refreshRoleGrid();
                     }
-
                 }
             }catch(Exception es){
                 Notification.show(res.getString("view.configurator.character.notification.inconfig.role"));
             }
-
-
-
-
         });
     }
 
@@ -309,16 +304,13 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                         currentRace = selectedRace[0];
                         configuratorService.removeRace(currentRace);
                         refreshRaceGrid();
-
                     }
                 }
             }catch(Exception es){
                 Notification.show(res.getString("view.configurator.character.notification.in.config.race2"));
             }
-
         });
     }
-
 
     @Override
     public String getPageTitle() {

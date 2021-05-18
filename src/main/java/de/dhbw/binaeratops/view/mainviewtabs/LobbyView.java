@@ -55,7 +55,7 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         this.gameService = AGameService;
 
         titleText=new H1(res.getString("view.lobby.headline"));
-        explanationText=new String(res.getString("view.lobby.text"));
+        explanationText=res.getString("view.lobby.text");
         html=new Html(explanationText);
         dungeonList = new ArrayList<>();
 
