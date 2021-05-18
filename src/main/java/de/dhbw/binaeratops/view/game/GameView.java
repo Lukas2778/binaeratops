@@ -160,18 +160,32 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
-            if (message.getUser().getUserId().equals(currentUser.getUserId())) {
-                if(message.getKick()){
-                    myAvatar = null;
-                    Notification.show(res.getString("view.game.notification.kicked"));
-                    myAvatarDialog.close();
-                    UI.getCurrent().navigate("aboutUs");
-                } else {
-                    myAvatarDialog.close();
-                    textField.focus();
-                    loadAvatarProgress(selectedInDialogAvatar);
-                    createMap();
-                    changeRoom(currentRoom.getRoomId());
+            if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
+                switch (message.getKick()) {
+                    case "KICK":
+                        myAvatar = null;
+                        Notification.show(res.getString("view.game.notification.kicked"));
+                        myAvatarDialog.close();
+                        UI.getCurrent().navigate("aboutUs");
+                        break;
+                    case "ACCEPT":
+                        myAvatarDialog.close();
+                        textField.focus();
+                        loadAvatarProgress(selectedInDialogAvatar);
+                        createMap();
+                        changeRoom(currentRoom.getRoomId());
+                        loadChat();
+                        break;
+                    case "DECLINE":
+                        myAvatar = null;
+                        Notification.show("Der DungeonMaster hat den Eintritt abgelehnt", 5000, Notification.Position.MIDDLE);
+                        UI.getCurrent().navigate("aboutUs");
+                        break;
+                    default:
+                        myAvatar = null;
+                        Notification.show("Es ist ein Fehler beim Beitritt des Dungeons aufgetreten", 5000, Notification.Position.MIDDLE);
+                        UI.getCurrent().navigate("aboutUs");
+                        break;
                 }
             }
         })));
@@ -366,8 +380,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 if (selectedInDialogAvatar.getDungeon().getBlockedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
                     myAvatar = null;
                     myAvatarDialog.close();
+                    Notification.show("Du bist in diesem Dungeon gebannt, kontaktiere den DungeonMaster", 5000, Notification.Position.MIDDLE);
                     UI.getCurrent().navigate("lobby");
-                    return;
                 } else if (selectedInDialogAvatar.getDungeon().getAllowedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
                     myAvatarDialog.close();
                     textField.focus();
@@ -375,9 +389,12 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                     createMap();
                     changeRoom(currentRoom.getRoomId());
                     loadChat();
-                    return;
+                    //TODO checken, dass es in der db gesetzt wird
+                }else {
+                    userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
+                    myAvatarDialog.removeAll();
+                    myAvatarDialog.add(new Label("Warte auf die Antwort des Dungeon Masters!"));
                 }
-                userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
             } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }

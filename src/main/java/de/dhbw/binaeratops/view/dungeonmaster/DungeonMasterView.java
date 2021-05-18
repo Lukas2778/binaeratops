@@ -143,27 +143,23 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private void userActionsIncoming() {
         userAction.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
             if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                if (action.getActionType().equals("UPDATE")) {
-                    //TODO update der view
-                    return;
-                } else if (action.getActionType().equals("REQUEST")) {
+                if (action.getActionType().equals("REQUEST")) {
                     Dialog acceptanceDialog = new Dialog();
                     Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
                     Button acceptButton = new Button("Annehmen", e -> {
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), false));
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
                         dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
                         acceptanceDialog.close();
                     });
                     Button declineButton = new Button("Ablehnen", e -> {
                         dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), true));
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
                         acceptanceDialog.close();
                     });
 
                     acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
                     acceptanceDialog.open();
                     //TODO den user einlassen
-                    action.getAvatar();
                     return;
                 }
                 Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
@@ -368,7 +364,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();
                             break;
-                        case "ATTACK":
+                        case "HIT":
                             Dialog attackDialog = new Dialog();
                             TextArea attackActionText = new TextArea();
                             Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
@@ -434,7 +430,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), true));
+                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(),"KICK"));
                 confirmKickDialog.close();
             });
 
