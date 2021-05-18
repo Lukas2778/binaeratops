@@ -51,6 +51,9 @@ public class User implements UserI {
     private Dungeon blockedDungeons;
 
     @ManyToOne
+    private Dungeon requestedDungeons;
+
+    @ManyToOne
     private Dungeon currentDungeon;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -167,6 +170,14 @@ public class User implements UserI {
     @Override
     public void setBlockedDungeon(Dungeon ABlockedDungeons) {
         this.blockedDungeons = ABlockedDungeons;
+    }
+
+    public Dungeon getRequestedDungeons() {
+        return requestedDungeons;
+    }
+
+    public void setRequestedDungeons(Dungeon ARequestedDungeon) {
+        this.requestedDungeons = ARequestedDungeon;
     }
 
     @Override

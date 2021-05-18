@@ -87,6 +87,10 @@ public class Dungeon implements DungeonI {
     private final List<User> blockedUsers = new ArrayList<>();
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
+    @OneToMany(mappedBy = "requestedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<User> requestedUsers = new ArrayList<>();
+
+    @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
     private final List<User> currentUsers = new ArrayList<>();
 
@@ -321,6 +325,20 @@ public class Dungeon implements DungeonI {
     public void removeBlockedUser(User AUser) {
         blockedUsers.remove(AUser);
         AUser.setBlockedDungeon(null);
+    }
+
+    public List<User> getRequestedUsers() {
+        return requestedUsers;
+    }
+
+    public void addRequestedUser(User AUser) {
+        AUser.setRequestedDungeons(this);
+        requestedUsers.add(AUser);
+    }
+
+    public void removeRequestUser(User AUser) {
+        requestedUsers.remove(AUser);
+        AUser.setRequestedDungeons(null);
     }
 
     public List<User> getCurrentUsers() {
