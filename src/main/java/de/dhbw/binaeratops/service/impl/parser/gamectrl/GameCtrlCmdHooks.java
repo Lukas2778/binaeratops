@@ -90,7 +90,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), String.valueOf(dungeon.getRooms().size()));
             } else {
                 return new UserMessage("view.game.ctrl.cmd.info.all", dungeon.getDungeonName(), dungeonMaster.getName(),
-                        String.valueOf(dungeon.getCurrentUsers().size()), getCurrentUsers(dungeon), currentRoom.getRoomName(),
+                        String.valueOf(dungeon.getCurrentUsers().size()), getCurrentAvatars(dungeon), currentRoom.getRoomName(),
                         currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), "???");
             }
         } else {
@@ -126,7 +126,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             return new UserMessage("view.game.ctrl.cmd.info.players", String.valueOf(dungeon.getCurrentUsers().size()),
-                    getCurrentUsers(dungeon));
+                    getCurrentAvatars(dungeon));
         } else {
             throw new CmdScannerInsufficientPermissionException("INFO PLAYERS");
         }
