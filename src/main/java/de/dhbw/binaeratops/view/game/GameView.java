@@ -20,7 +20,6 @@ import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.UserAction;
 import de.dhbw.binaeratops.model.actions.KickUserAction;
 import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.RoomI;
