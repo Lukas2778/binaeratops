@@ -63,12 +63,12 @@ public class DungeonService implements DungeonServiceI {
                             && myDungeon.getDungeonStatus().equals(Status.ACTIVE)
                             && !myDungeon.getDungeonMasterId().equals(AUser.getUserId())
                             && (
-                                    myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
-                            || (
+                            myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
+                                    || (
                                     myDungeon.getDungeonVisibility().equals(Visibility.PRIVATE)
-                                    && myDungeon.getAllowedUsers().contains(AUser)
-                                    && !myDungeon.getBlockedUsers().contains(AUser)
-                                )
+                                            && myDungeon.getAllowedUsers().contains(AUser)
+                                            && !myDungeon.getBlockedUsers().contains(AUser)
+                            )
                     )
             ) {
                 userDungeons.add(myDungeon);
@@ -101,6 +101,13 @@ public class DungeonService implements DungeonServiceI {
                 avatars.add(avatar);
         });
         return avatars;
+    }
+
+    @Override
+    public void setAvatarInactive(long AAvatarId) {
+        Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
+        avatar.setActive(false);
+        avatarRepo.save(avatar);
     }
 
     @Override

@@ -19,8 +19,6 @@ import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
-import com.vaadin.flow.shared.communication.PushMode;
-import com.vaadin.flow.shared.ui.Transport;
 import de.dhbw.binaeratops.model.actions.KickUserAction;
 import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
@@ -597,6 +595,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
                 dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
                 dungeonServiceI.deactivateDungeon(dungeonId);
+                setPlayersInactive();
                 leaveDialog.close();
                 UI.getCurrent().navigate("myDungeons");
             } else {
@@ -607,6 +606,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         leaveForSureButton.addClickListener(event -> {
             sureToLeave = true;
             dungeonServiceI.deactivateDungeon(dungeonId);
+            setPlayersInactive();
             leaveDialog.close();
             UI.getCurrent().navigate("myDungeons");
         });
@@ -619,5 +619,12 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
 
         return leaveDialog;
+    }
+
+    private void setPlayersInactive () {
+        List<Avatar> avatars = dungeonServiceI.getCurrentAvatars(dungeonId);
+        for (Avatar avatar : avatars) {
+            dungeonServiceI.setAvatarInactive(avatar.getAvatarId());
+        }
     }
 }

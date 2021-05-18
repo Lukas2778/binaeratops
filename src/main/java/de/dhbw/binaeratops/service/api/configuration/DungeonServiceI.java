@@ -72,6 +72,12 @@ public interface DungeonServiceI {
     List<Avatar> getCurrentAvatars(long ADungeonId);
 
     /**
+     * Setzt den gewünschten Avatar auf inaktiv
+     * @param AAvatarId der gewünschte Avatar.
+     */
+    void setAvatarInactive(long AAvatarId);
+
+    /**
      * Gibt den Raum des übergebenen Avatars zurück.
      *
      * @param AAvatar den gesucheten Avatar.

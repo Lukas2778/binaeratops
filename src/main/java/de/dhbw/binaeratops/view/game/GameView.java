@@ -753,7 +753,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                             refreshInventory();
                             //Notification.show("timer");
                         }
-                        ));
+                ));
             }
         }catch (Exception e){}
     }
