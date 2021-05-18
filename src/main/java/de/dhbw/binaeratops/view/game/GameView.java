@@ -365,7 +365,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }
         });
-        enterDungeon.addClickShortcut(Key.ENTER);
+        //enterDungeon.addClickShortcut(Key.ENTER);
 
         buttLayout.add(cancel, createAvatar, enterDungeon);
         buttLayout.setWidthFull();

@@ -151,7 +151,7 @@ public class GameService implements GameServiceI {
 
     @Override
     public boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName) {
-        if (AAvatarName.isEmpty())
+        if (AAvatarName.isEmpty()||AAvatarName.contains(" "))
             return false;
         for (Avatar myAvatar : ADungeon.getAvatars()) {
             if (myAvatar.getName().equals(AAvatarName))
