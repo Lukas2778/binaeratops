@@ -298,6 +298,13 @@ public class MapService implements MapServiceI {
         return tiles;
     }
 
+    /**
+     * TODO Kommentar schreiben
+     * @param r1
+     * @param r2
+     * @param checkedRooms
+     * @return
+     */
     private boolean canReachRoom(Room r1, Room r2, ArrayList<Room> checkedRooms) {
         //Man sucht mit r1 r2. Entweder r1 ist r2 und es war erfolgreich oder man sucht noch weiter. Mit checked Rooms werden schon besuchte Räume gespeichert.
         if (r1 == null || checkedRooms.contains(r1))
@@ -416,6 +423,11 @@ public class MapService implements MapServiceI {
         return returnS;
     }
 
+    /**
+     * TODO Kommentar schreiben
+     * @param ARoom
+     * @return
+     */
     private LinkedList<Room> getAllNeighbours(Room ARoom) {
         LinkedList<Room> returnR = new LinkedList<>();
         if (ARoom.getNorthRoomId() != null)

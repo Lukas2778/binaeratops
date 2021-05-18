@@ -124,6 +124,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    // TODO Kommentare schreiben
 
     private UserMessage scanInfo1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();

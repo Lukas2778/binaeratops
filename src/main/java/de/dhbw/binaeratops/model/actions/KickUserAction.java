@@ -10,7 +10,7 @@ import de.dhbw.binaeratops.model.entitys.User;
 public class KickUserAction {
 
     User user;
-    boolean kick;
+    String kick;
 
     /**
      * Standardkonstruktor zum Erzeugen der KickUserAction mit dem Spieler und dem Wahrheitswert, ob gekickt werden soll.
@@ -18,7 +18,7 @@ public class KickUserAction {
      * @param user Spieler
      * @param kick Wahrheitswert, ob Spieler gekickt werden soll.
      */
-    public KickUserAction(User user, boolean kick) {
+    public KickUserAction(User user, String kick) {
         this.user = user;
         this.kick = kick;
     }
@@ -37,7 +37,7 @@ public class KickUserAction {
      *
      * @return Wahrheitswert, ob Spieler gekickt werden soll.
      */
-    public boolean getKick() {
+    public String getKick() {
         return kick;
     }
 }

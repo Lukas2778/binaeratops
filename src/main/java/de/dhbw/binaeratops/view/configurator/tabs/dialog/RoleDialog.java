@@ -18,7 +18,6 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -41,7 +40,7 @@ public class RoleDialog extends Dialog {
     Grid<Role> grid;
     private ConfiguratorServiceI configuratorServiceI;
 
-
+    // TODO Kommentare schreiben
     public RoleDialog() {
     }
 

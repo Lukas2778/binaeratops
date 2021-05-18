@@ -174,5 +174,4 @@ public class GameService implements GameServiceI {
     public boolean avatarRaceIsValid(Race AAvatarRace) {
         return AAvatarRace != null;
     }
-
 }

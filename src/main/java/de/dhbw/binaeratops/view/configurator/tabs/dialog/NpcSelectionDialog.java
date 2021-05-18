@@ -41,7 +41,7 @@ public class NpcSelectionDialog extends Dialog {
     Grid<NPC> npcGrid = new Grid(NPC.class);
     ConfiguratorServiceI configuratorServiceI;
     Room room;
-
+    // TODO Kommentare schreiben
     public NpcSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<NPCInstance> npcListBox){
         configuratorServiceI = AConfiguratorService;
         room = ARoom;

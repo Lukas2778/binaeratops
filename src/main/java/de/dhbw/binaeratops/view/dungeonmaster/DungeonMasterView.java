@@ -78,7 +78,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
 
-    private Timer timer=new Timer();
     Dungeon dungeon;
     Long dungeonId;
     String aboutText;
@@ -99,7 +98,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
     boolean sureToLeave = false;
     boolean loaded = true;
-
+    // TODO Kommentare schreiben
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
                              Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                              UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
@@ -116,9 +115,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         setId("SomeView");
 
         userActionsIncoming();
-        Thread thread = new Thread();
-        thread.start();
 
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -143,27 +141,24 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
     private void userActionsIncoming() {
         userAction.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
             if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                if (action.getActionType().equals("UPDATE")) {
-                    //TODO update der view
-                    return;
-                } else if (action.getActionType().equals("REQUEST")) {
+                if (action.getActionType().equals("REQUEST")) {
                     Dialog acceptanceDialog = new Dialog();
                     Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
                     Button acceptButton = new Button("Annehmen", e -> {
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), false));
-                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId()); //TODO Not yet working
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
+                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId());
                         acceptanceDialog.close();
                     });
                     Button declineButton = new Button("Ablehnen", e -> {
                         dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), true));
+                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
                         acceptanceDialog.close();
                     });
+                    declineButton.getStyle().set("color", "red");
 
                     acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
                     acceptanceDialog.open();
                     //TODO den user einlassen
-                    action.getAvatar();
                     return;
                 }
                 Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
@@ -368,7 +363,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                             talkDialog.add(new VerticalLayout(talkUserActionText, talkActionText, talkSendActionButton));
                             talkDialog.open();
                             break;
-                        case "ATTACK":
+                        case "HIT":
                             Dialog attackDialog = new Dialog();
                             TextArea attackActionText = new TextArea();
                             Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
@@ -434,7 +429,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), true));
+                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(),"KICK"));
                 confirmKickDialog.close();
             });
 
@@ -572,7 +567,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         Dialog leaveDialog = new Dialog();
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
-        leaveDialog.setHeight(75, Unit.PERCENTAGE);
+        //leaveDialog.setHeight(75, Unit.PERCENTAGE);
 
         H3 leaveHeadline = new H3("Dungeon verlassen");
         String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen?<br>" +
@@ -600,6 +595,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
                 dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
                 dungeonServiceI.deactivateDungeon(dungeonId);
+                setPlayersInactive();
                 leaveDialog.close();
                 UI.getCurrent().navigate("myDungeons");
             } else {
@@ -610,6 +606,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
         leaveForSureButton.addClickListener(event -> {
             sureToLeave = true;
             dungeonServiceI.deactivateDungeon(dungeonId);
+            setPlayersInactive();
             leaveDialog.close();
             UI.getCurrent().navigate("myDungeons");
         });
@@ -622,5 +619,12 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
 
         return leaveDialog;
+    }
+
+    private void setPlayersInactive () {
+        List<Avatar> avatars = dungeonServiceI.getCurrentAvatars(dungeonId);
+        for (Avatar avatar : avatars) {
+            dungeonServiceI.setAvatarInactive(avatar.getAvatarId());
+        }
     }
 }

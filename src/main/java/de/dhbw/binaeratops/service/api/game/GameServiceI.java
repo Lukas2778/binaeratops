@@ -75,7 +75,7 @@ public interface GameServiceI {
     void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
 
     /**
-     * TODO
+     * TODO Kommentare schreiben
      * @param ADungeon
      * @return
      */

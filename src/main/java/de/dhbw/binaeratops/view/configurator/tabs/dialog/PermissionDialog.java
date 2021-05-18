@@ -43,7 +43,7 @@ public class PermissionDialog extends Dialog {
 
     VerticalLayout layout = new VerticalLayout();
     HorizontalLayout buttonLayout = new HorizontalLayout();
-
+    // TODO Kommentare schreiben
     public PermissionDialog() {
     }
 

@@ -76,7 +76,7 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
         setSizeFull ();
     }
-
+    // TODO Kommentare schreiben
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
