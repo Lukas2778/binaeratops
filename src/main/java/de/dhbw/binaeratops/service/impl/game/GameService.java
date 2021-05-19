@@ -4,6 +4,7 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
@@ -187,5 +188,10 @@ public class GameService implements GameServiceI {
     @Override
     public boolean avatarRaceIsValid(Race AAvatarRace) {
         return AAvatarRace != null;
+    }
+
+    @Override
+    public Status getDungeonStatus(Long ADungeonId) {
+        return dungeonRepositoryI.findByDungeonId(ADungeonId).getDungeonStatus();
     }
 }

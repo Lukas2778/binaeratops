@@ -26,6 +26,7 @@ import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.map.Tile;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
@@ -734,8 +735,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         confirmButt.clickInClient();
     }
 
-    void refreshView() {
+    private void refreshView() {
         //wird dem Timer nach aufgerufen, sodass der DungeonMaster das Inventar des Spielers aktualisieren kann
+        if (myGameService.getDungeonStatus(dungeonId).equals(Status.INACTIVE)) {
+            Dialog dialog = new Dialog();
+            Label dungeonMasterLeft = new Label("Der Dungeon-Master hat das Spiel verlassen.");
+            myAvatar = null;
+            getUI().ifPresent(ui -> ui.access(() -> {
+                ui.navigate("lobby");
+                dialog.add(dungeonMasterLeft);
+                dialog.open();
+            }));
+            return;
+        }
         try {
             if (myAvatar != null) {
                 getUI().ifPresent(ui -> ui.access(() ->

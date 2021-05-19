@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.api.game;
 import com.vaadin.flow.component.UI;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 
 import java.util.List;
@@ -96,4 +97,10 @@ public interface GameServiceI {
 
     boolean avatarRaceIsValid(Race AAvatarRace);
 
+    /**
+     * Gibt zurück, ob der Dungeon noch aktiv ist.
+     * @param ADungeonId Der gewünschte Dungeon.
+     * @return Boolean, ob es aktiv ist oder nicht.
+     */
+    Status getDungeonStatus(Long ADungeonId);
 }
