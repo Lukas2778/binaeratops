@@ -115,10 +115,13 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         Avatar avatar = Avatar.check(AAvatar);
         Dungeon dungeon = Dungeon.check(ADungeon);
         Room currentRoom = avatar.getCurrentRoom();
-        List<User> recipients = dungeon.getCurrentUsers();
+        List<User> recipients = getUsersOfRoom(dungeon, currentRoom);
         User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
         recipients.add(dungeonMaster);
-        myChatService.sendRoomMessage(AMessage, recipients, avatar, currentRoom);
+        for (User user : recipients) {
+            myChatService.whisperRoom(AMessage, user, avatar, currentRoom.getRoomName());
+        }
+        //myChatService.sendRoomMessage(AMessage, recipients, avatar, currentRoom);
         return new UserMessage("view.game.ingame.cmd.speak", AMessage, currentRoom.getRoomName());
     }
 
@@ -131,7 +134,10 @@ public class InGameCmdHooks implements InGameCmdHooksI {
                 if (room.getRoomName().equalsIgnoreCase(ARoomName)) {
                     List<User> users = getUsersOfRoom(dungeon, room);
                     User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
-                    myChatService.sendRoomMessage(AMessage, users, dungeonMaster, room);
+                    for (User tempUser : users) {
+                        myChatService.whisperDungeonMasterRoom(AMessage, tempUser, dungeonMaster, room.getRoomName());
+                    }
+                    //myChatService.sendRoomMessage(AMessage, users, dungeonMaster, room);
                     return new UserMessage("view.game.ingame.cmd.speak", AMessage, room.getRoomName());
                 }
             }
@@ -146,7 +152,11 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         User user = User.check(AUser);
         Dungeon dungeon = Dungeon.check(ADungeon);
         if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
-            myChatService.notifyAll(AMessage, ADungeon.getCurrentUsers(), ADungeon.getUser());
+            for (User tempUser : dungeon.getCurrentUsers()) {
+                User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
+                myChatService.whisperDungeonMaster(AMessage, tempUser, dungeonMaster);
+            }
+            //myChatService.notifyAll(AMessage, ADungeon.getCurrentUsers(), ADungeon.getUser());
             return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
         } else {
             throw new CmdScannerInsufficientPermissionException("NOTIFY ALL");
