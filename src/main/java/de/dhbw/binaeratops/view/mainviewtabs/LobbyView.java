@@ -58,9 +58,10 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
      * @param ADungeonService DungeonService.
      * @param AGameService GameService.
+     * @param AUserActionPublisher UserActionPublisher.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> userActionpublisher){
-        this.userActionpublisher = userActionpublisher;
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> AUserActionPublisher){
+        this.userActionpublisher = AUserActionPublisher;
         dungeonServiceI=ADungeonService;
         this.gameService = AGameService;
 

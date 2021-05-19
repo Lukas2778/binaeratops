@@ -101,7 +101,7 @@ public class ChatMessage {
     /**
      * Gibt "true" zurück falls es eine Chatnachricht ist.
      *
-     * @return
+     * @return Wahrheitswert.
      */
     public boolean isChatMessage() {
         return isChatMessage;

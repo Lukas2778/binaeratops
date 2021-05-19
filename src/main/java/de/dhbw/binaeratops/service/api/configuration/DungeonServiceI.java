@@ -139,6 +139,7 @@ public interface DungeonServiceI {
      *
      * @param ADungeonId Dungeon, dem der Benutzer beitreten können soll.
      * @param AUserId    Benutzer, der beitreten können soll.
+     * @param APermission Aktuelle Berechtigung.
      */
     void allowUser(Long ADungeonId, Long AUserId, Permission APermission);
 

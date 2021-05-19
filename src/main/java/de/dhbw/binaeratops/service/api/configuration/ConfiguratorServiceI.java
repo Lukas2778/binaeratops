@@ -262,11 +262,11 @@ public interface ConfiguratorServiceI {
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
     /**
-     * TODO
+     * Gibt die Anzahl von NPCs in einem Raum zurück.
      *
-     * @param ARoom
-     * @param ANPC
-     * @return
+     * @param ARoom Raum, aus dem die NPCs geholt werden sollen.
+     * @param ANPC NPC, dessen Anzahl von Instanzen in einem Raum gesucht werden soll.
+     * @return Anzahl von NPC-Instanzen.
      */
     double getNumberOfNPC(Room ARoom, NPC ANPC);
 
