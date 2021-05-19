@@ -25,6 +25,7 @@ import de.dhbw.binaeratops.model.entitys.Permission;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.view.configurator.tabs.dialog.BlockedPermissionDialog;
 import de.dhbw.binaeratops.view.configurator.tabs.dialog.PermissionDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,6 +48,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
 
     VerticalLayout initFieldLayout;
     VerticalLayout permissionLayout;
+    VerticalLayout blockedPermissionLayout;
     ArrayList<User> userList;
     TextField titleField;
     TextField playerCountField;
@@ -55,6 +57,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     User currentUser;
 
     Grid<Permission> grid = new Grid<>();
+    Grid<Permission> blockedGrid = new Grid<>();
 
     private ConfiguratorServiceI configuratorService;
     // TODO Kommentare schreiben
@@ -62,18 +65,28 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         this.configuratorService = AConfiguratorServiceI;
         initFieldLayout = new VerticalLayout();
         permissionLayout = new VerticalLayout();
+        blockedPermissionLayout = new VerticalLayout();
         userList = new ArrayList<>();
         titleField = new TextField(res.getString("view.configurator.dungeon.field.dungeonname"));
 
         initField();
         permissionList();
+        blockedPermissionList();
 
         SplitLayout splitLayout = new SplitLayout();
-        splitLayout.setPrimaryStyle("minWidth", "550px");
-        splitLayout.setSecondaryStyle("minWidth", "400px");
+        SplitLayout innerLayout = new SplitLayout();
+        innerLayout.setPrimaryStyle("minWidth", "600px");
+        innerLayout.setSecondaryStyle("minWidth", "600px");
+
+        //splitLayout.setPrimaryStyle("minWidth", "550px");
+        splitLayout.setSecondaryStyle("minWidth", "1200px");
+
+        innerLayout.addToPrimary(permissionLayout);
+        innerLayout.addToSecondary(blockedPermissionLayout);
+
 
         splitLayout.addToPrimary(initFieldLayout);
-        splitLayout.addToSecondary(permissionLayout);
+        splitLayout.addToSecondary(innerLayout);
 
         splitLayout.setSizeFull();
         add(splitLayout);
@@ -259,7 +272,6 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                 Permission selectedPerm = selectedUser[0];
                 currentUser = selectedPerm.getUser();
                 configuratorService.removePermission(currentUser);
-                // configuratorService.getDungeon().removePermission(configuratorService.getDungeon().getPermission(configuratorService.getDungeon(), currentUser));
 
                 refreshGrid();
 
@@ -271,6 +283,63 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         permissionLayout.add(title, permissionText, hint,grid, buttonView);
 
     }
+
+    private void blockedPermissionList() {
+
+        H2 title = new H2(res.getString("view.configurator.dungeon.h2"));
+
+        Text permissionText = new Text(res.getString("view.configurator.dungeon.text.blocked.permission"));
+
+        if(configuratorService.getDungeon().getBlockedUsers() != null)
+            blockedGrid.setItems(configuratorService.getDungeon().getBlockedUsers());
+
+        TextField roleNameField = new TextField();
+        TextField descriptionField = new TextField();
+
+        Column<Permission> nameColumn = blockedGrid.addColumn(user -> user.getUser().getName())
+                .setHeader(res.getString("view.configurator.dungeon.h2"));
+
+        roleNameField.getElement()
+                .setAttribute("focus-target", "");
+        descriptionField.getElement()
+                .setAttribute("focus-target", "");
+
+        blockedGrid.addThemeVariants(GridVariant.LUMO_ROW_STRIPES, GridVariant.LUMO_COLUMN_BORDERS);
+
+        HorizontalLayout buttonView = new HorizontalLayout();
+        buttonView.setVerticalComponentAlignment(Alignment.END);
+
+        Button addB = new Button(res.getString("view.configurator.dungeon.button.addpermission"));
+        Button deleteB = new Button(res.getString("view.configurator.dungeon.button.deletepermission"));
+
+        addB.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        deleteB.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+
+        addB.addClickListener(e -> {
+            currentUser = new User();
+            BlockedPermissionDialog dialog = new BlockedPermissionDialog(userList, currentUser, blockedGrid, configuratorService);
+            dialog.open();
+        });
+
+        deleteB.addClickListener(e -> {
+            Permission[] selectedUser = blockedGrid.getSelectedItems()
+                    .toArray(Permission[]::new);
+            if (selectedUser.length >= 1) {
+                Permission selectedPerm = selectedUser[0];
+                currentUser = selectedPerm.getUser();
+                configuratorService.removeBlockedPermission(currentUser);
+
+                refreshGrid();
+
+            }
+        });
+
+        buttonView.addAndExpand(addB, deleteB);
+        blockedPermissionLayout.setSizeFull();
+        blockedPermissionLayout.add(title, permissionText, blockedGrid, buttonView);
+
+    }
+
 
     private Visibility getVisibility(String value) {
         if (value.equals(res.getString("view.configurator.dungeon.radiobutton.public"))) {
@@ -298,6 +367,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
 
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllowedPermissions());
+        blockedGrid.setItems(configuratorService.getBlockedPermissions());
     }
 
     @Override

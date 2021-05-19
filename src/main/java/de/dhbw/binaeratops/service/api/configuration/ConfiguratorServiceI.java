@@ -373,6 +373,8 @@ public interface ConfiguratorServiceI {
      */
     void removePermission(User AUser);
 
+    void removeBlockedPermission(User AUser);
+
     /**
      * Speichert die übergebene Berechtigung.
      *
@@ -386,4 +388,6 @@ public interface ConfiguratorServiceI {
      * @return Alle erlaubten Berechtigungen.
      */
     List<Permission> getAllowedPermissions();
+
+    List<Permission> getBlockedPermissions();
 }

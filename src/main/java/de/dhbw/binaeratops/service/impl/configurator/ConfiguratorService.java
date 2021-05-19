@@ -394,6 +394,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         permissionRepo.delete(permissions.get(0));
     }
 
+    public void removeBlockedPermission(User AUser) {
+        List<Permission> permissions = permissionRepo.findByBlockedDungeonAndUser(dungeon, AUser);
+        dungeon.removeBlockedUser(permissions.get(0));
+        permissionRepo.delete(permissions.get(0));
+    }
+
     @Override
     public void savePermission(Permission APermission) {
         permissionRepo.save(APermission);
@@ -401,6 +407,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     public List<Permission> getAllowedPermissions() {
         return permissionRepo.findByAllowedDungeon(dungeon);
+    }
+
+    public List<Permission> getBlockedPermissions() {
+        return permissionRepo.findByBlockedDungeon(dungeon);
     }
 
 }
