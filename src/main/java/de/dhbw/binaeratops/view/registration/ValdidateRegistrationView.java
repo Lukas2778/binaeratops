@@ -69,6 +69,7 @@ public class ValdidateRegistrationView extends VerticalLayout implements HasDyna
 
         /* Sprache */
         Select<Locale> languageSelect = new Select<>();
+        languageSelect.setLabel(res.getString("view.main.select"));
         languageSelect.setPlaceholder(res.getString("view.main.select"));
         List<Locale> locales = transProv.getProvidedLocales();
 

@@ -62,7 +62,6 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
 
     /**
      * Konstruktor.
-     *
      */
     public GameCtrlCmdScanner() {
 
@@ -70,6 +69,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
 
     /**
      * Konstruktor zum Ausführen der Tests mit Mocks.
+     *
      * @param AGameCtrlHooksI Hooks.
      */
     public GameCtrlCmdScanner(GameCtrlCmdHooksI AGameCtrlHooksI) {
@@ -78,6 +78,11 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
 
     /**
      * Scanner im Zustand "Start".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
      */
     @Override
     protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
@@ -124,8 +129,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    // TODO Kommentare schreiben
-
+    /**
+     * Scanner im Zustand "scanInfo1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanInfo1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
@@ -146,6 +157,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanMove1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanMove1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String direction = findRestOfInput();
         if (direction == null) {
@@ -159,7 +178,7 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
                 case CMD_MOVE_EAST:
                 case CMD_MOVE_EAST_K:
                     return hooks.onMoveEast(ADungeon, AAvatar, AUser);
-                    case CMD_MOVE_SOUTH:
+                case CMD_MOVE_SOUTH:
                 case CMD_MOVE_SOUTH_K:
                     return hooks.onMoveSouth(ADungeon, AAvatar, AUser);
                 case CMD_MOVE_WEST:
@@ -172,6 +191,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanLook1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanLook1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
@@ -188,6 +215,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanExamine1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanExamine1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
@@ -206,6 +241,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanExamine2".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanExamine2(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, boolean ANpcOrItem) throws CmdScannerException, InvalidImplementationException {
         String name = findRestOfInput();
         if (name == null) {
@@ -220,7 +263,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-
+    /**
+     * Scanner im Zustand "scanShow2".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanShow1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findRestOfInput();
         if (token == null) {
@@ -241,7 +291,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
-
+    /**
+     * Scanner im Zustand "scanTake1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanTake1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
@@ -252,6 +309,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanDrop1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanDrop1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
@@ -262,6 +327,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanConsume1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanConsume1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String eatableItem = findRestOfInput();
         if (eatableItem == null) {
@@ -272,6 +345,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanEquip1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanEquip1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String equipableItem = findRestOfInput();
         if (equipableItem == null) {
@@ -282,6 +363,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanShow2".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanLayDown1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String item = findRestOfInput();
         if (item == null) {
@@ -292,6 +381,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanTalk1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanTalk1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String name = findParenthesesToken();
         if (name == null) {
@@ -302,6 +399,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanTalk2".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanTalk2(DungeonI ADungeon, AvatarI AAvatar, UserI AUser, String ANpcName) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
@@ -312,6 +417,14 @@ public class GameCtrlCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanHit1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanHit1(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String npcName = findRestOfInput();
         if (npcName == null) {

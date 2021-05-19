@@ -145,7 +145,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 
     private void initEditDungeonButton() {
         editDungeonButton.addClickListener(e -> {
-            if (true || !((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {//TODO
+            if (!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {
                 if (dungeonGrid.getSelectedItems().size() > 0) {
                     //das ist das hässlichste stück code ever ever
                     UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());

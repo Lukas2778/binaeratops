@@ -15,6 +15,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Permission;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
@@ -36,7 +37,7 @@ public class PermissionDialog extends Dialog {
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
 
     private ArrayList<User> userList;
-    Grid<User> grid;
+    Grid<Permission> grid;
     ConfiguratorServiceI configuratorServiceI;
     User currentUser;
     User currentUserDB;
@@ -50,7 +51,7 @@ public class PermissionDialog extends Dialog {
     public PermissionDialog(ArrayList<User> userList,
 
                             User currentUser,
-                            Grid<User> grid,
+                            Grid<Permission> grid,
                             ConfiguratorServiceI AConfiguratorServiceI) {
         this.userList = userList;
 
@@ -86,14 +87,15 @@ public class PermissionDialog extends Dialog {
                         Notification.show(res.getString("view.configurator.dialog.permission.notification.self"));
                     } else if (currentUserDB != null) {
                         //Hier wird die Berechtigung erteilt, falls alle Abfagen erfolgreich waren
-                        configuratorServiceI.getDungeon().addAllowedUser(currentUserDB);
+                        //configuratorServiceI.getDungeon().addAllowedUser(currentUserDB);
+                        Permission p = new Permission(currentUserDB);
+                        configuratorServiceI.getDungeon().addAllowedUser(p);
+                        configuratorServiceI.savePermission(p);
                         configuratorServiceI.saveUser(currentUserDB);
                         configuratorServiceI.saveDungeon();
 
                         refreshGrid();
                         this.close();
-                    } else {
-                        Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
                     }
                 }
             } else {
@@ -116,20 +118,24 @@ public class PermissionDialog extends Dialog {
     private boolean matchDungeonMasterId(String AName) {
         boolean result = false;
 
-        if (configuratorServiceI.getDungeon()
-                .getDungeonMasterId() == configuratorServiceI.getUser(AName)
-                .getUserId()) {
-            result = true;
+        try{
+            if (configuratorServiceI.getDungeon().getDungeonMasterId() == configuratorServiceI.getUser(AName).getUserId()) {
+                result = true;
+            }
+
+        }catch(Exception e){
+            Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
         }
+
 
         return result;
     }
 
     private boolean findAllowedUser(String AName) {
         boolean result = false;
-        for (User user : configuratorServiceI.getDungeon()
+        for (Permission user : configuratorServiceI.getDungeon()
                 .getAllowedUsers()) {
-            if (user.getName()
+            if (user.getUser().getName()
                     .equals(AName)) {
                 result = true;
             }

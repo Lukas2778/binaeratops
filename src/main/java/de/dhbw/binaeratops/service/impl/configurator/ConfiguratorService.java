@@ -49,6 +49,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
     NpcInstanceRepositoryI npcInstanceRepositoryI;
+    @Autowired
+    PermissionRepositoryI permissionRepo;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -385,4 +387,21 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void saveUser(User AUser) {
         userRepo.save(AUser);
     }
+
+    @Override
+    public void removePermission(User AUser) {
+        List<Permission> permissions = permissionRepo.findByAllowedDungeonAndUser(dungeon, AUser);
+        dungeon.removeAllowedUser(permissions.get(0));
+        permissionRepo.delete(permissions.get(0));
+    }
+
+    @Override
+    public void savePermission(Permission APermission) {
+        permissionRepo.save(APermission);
+    }
+
+    public List<Permission> getAllowedPermissions() {
+        return permissionRepo.findByAllowedDungeon(dungeon);
+    }
+
 }

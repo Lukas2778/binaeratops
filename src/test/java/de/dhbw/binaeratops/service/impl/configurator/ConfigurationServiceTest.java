@@ -1,4 +1,4 @@
-package de.dhbw.binaeratops.service.impl.configuration;
+package de.dhbw.binaeratops.service.impl.configurator;
 
 
 import de.dhbw.binaeratops.groups.ImplGroup;
@@ -7,7 +7,6 @@ import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
-import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -24,12 +23,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 public class ConfigurationServiceTest extends Logger {
 
-
-
     ConfiguratorService configuratorService;
     @Mock
     DungeonRepositoryI dungeonRepositoryI;
-
 
     Dungeon testDungeon;
 

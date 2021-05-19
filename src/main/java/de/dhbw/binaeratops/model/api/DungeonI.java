@@ -225,35 +225,35 @@ public interface DungeonI {
      *
      * @return Liste der Spieler, die den Dungeon betreten darf.
      */
-    List<User> getAllowedUsers();
+    List<Permission> getAllowedUsers();
 
     /**
      * Fügt den übergebenen Benutzer der WhiteList hinzu.
      *
      * @param AUser Benutzer, welcher der WhiteList hinzugefügt werden soll,
      */
-    void addAllowedUser(User AUser);
+    void addAllowedUser(Permission AUser);
 
     /**
      * Entfernt den übergebenen Benutzer der Whitelist.
      *
      * @param AUser Benutzer, welcher der Whitelist entfernt werden soll.
      */
-    void removeAllowedUser(User AUser);
+    void removeAllowedUser(Permission AUser);
 
     /**
      * Gibt die Liste der Spieler zurück, die nicht mehr anfragen dürfen dem Dungeon beizutreten.
      *
      * @return Liste der Spieler, die nicht mehr anfragen dürfen dem Dungeon beizutreten.
      */
-    List<User> getBlockedUsers();
+    List<Permission> getBlockedUsers();
 
     /**
      * Fügt den übergebenen Benutzer der Blacklist hinzu.
      *
      * @param AUser Benutzer, welcher der Blacklist hinzugefügt werden soll,
      */
-    void addBlockedUser(User AUser);
+    void addBlockedUser(Permission AUser);
 
     /**
      * Gibt die Liste der Spieler zurück, die sich momentan im Dungeon befinden.
@@ -281,7 +281,7 @@ public interface DungeonI {
      *
      * @param AUser Benutzer, welcher der Blacklist entfernt werden soll.
      */
-    void removeBlockedUser(User AUser);
+    void removeBlockedUser(Permission AUser);
 
     /**
      * Gibt die Liste der Räume des Dungeons zurück.

@@ -79,6 +79,7 @@ public interface ConfiguratorServiceI {
 
     /**
      * Befehlssymbol des Dungeons holen.
+     *
      * @return Befehlssymbol.
      */
     char getCommandSymbol();
@@ -261,10 +262,11 @@ public interface ConfiguratorServiceI {
     void setItemInstances(Room ARoom, List<ItemInstance> AItemList);
 
     /**
-     * TODO
-     * @param ARoom
-     * @param ANPC
-     * @return
+     * Gibt die Anzahl von NPCs in einem Raum zurück.
+     *
+     * @param ARoom Raum, aus dem die NPCs geholt werden sollen.
+     * @param ANPC  NPC, dessen Anzahl von Instanzen in einem Raum gesucht werden soll.
+     * @return Anzahl von NPC-Instanzen.
      */
     double getNumberOfNPC(Room ARoom, NPC ANPC);
 
@@ -363,4 +365,25 @@ public interface ConfiguratorServiceI {
      * @param AUser Benutzer, der gespeichert werden soll.
      */
     void saveUser(User AUser);
+
+    /**
+     * Entfernt die Berechtigung vom übergebenen Benutzer.
+     *
+     * @param AUser Benutzer, dem die Berechtigung entfernt werden soll.
+     */
+    void removePermission(User AUser);
+
+    /**
+     * Speichert die übergebene Berechtigung.
+     *
+     * @param APermission Berechtigung, die gespeichert werden soll.
+     */
+    void savePermission(Permission APermission);
+
+    /**
+     * Gibt alle erlaubten Berechtigungen des Dungeons zurück.
+     *
+     * @return Alle erlaubten Berechtigungen.
+     */
+    List<Permission> getAllowedPermissions();
 }

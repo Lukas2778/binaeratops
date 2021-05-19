@@ -683,7 +683,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
                         avatarRepo.save(avatar);
-                        //userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); // TODO TALK
+                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage));
                         return new UserMessage("view.game.ctrl.cmd.talk", npc.getNpc().getNpcName(), AMessage);
                     }
                 }

@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Permission;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -53,7 +54,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     String visibilityValue;
     User currentUser;
 
-    Grid<User> grid = new Grid<>();
+    Grid<Permission> grid = new Grid<>();
 
     private ConfiguratorServiceI configuratorService;
     // TODO Kommentare schreiben
@@ -91,7 +92,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
             configuratorService.saveDungeon();
         });
 
-        titleField.setWidth("400px");
+        titleField.setWidth("200px");
 
         NumberField playerCountField = new NumberField(res.getString("view.configurator.dungeon.field.maxplayercount"));
         playerCountField.setHasControls(true);
@@ -102,7 +103,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
             configuratorService.saveDungeon();
         });
 
-        playerCountField.setWidth("150px");
+        playerCountField.setWidth("200px");
 
         if (configuratorService.getDungeon().getPlayerMaxSize() == null)
             playerCountField.setValue(30.0);
@@ -181,7 +182,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         TextField commandSymbolField = new TextField(res.getString("view.configurator.dungeon.field.cmdsymbol"));
         commandSymbolField.setMinLength(1);
         commandSymbolField.setMaxLength(1);
-        commandSymbolField.setWidth("100px");
+        commandSymbolField.setWidth("200px");
 
         commandSymbolField.addValueChangeListener(e -> {
             if (!commandSymbolField.isInvalid()) {
@@ -213,8 +214,11 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     private void permissionList() {
 
         H2 title = new H2(res.getString("view.configurator.dungeon.h1.titlepermission"));
+
         Text permissionText = new Text(res.getString("view.configurator.dungeon.text.permission"));
 
+        Details hint = new Details(res.getString("view.configurator.dungeon.details.info.permission.title"),
+                                   new Text(res.getString("view.configurator.dungeon.details.info.permission.info")));
 
 
         if(configuratorService.getDungeon().getAllowedUsers() != null)
@@ -223,7 +227,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
 
-        Column<User> nameColumn = grid.addColumn(User::getName)
+        Column<Permission> nameColumn = grid.addColumn(user -> user.getUser().getName())
                 .setHeader(res.getString("view.configurator.dungeon.grid.column.approved.players"));
 
         roleNameField.getElement()
@@ -249,15 +253,13 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         });
 
         deleteB.addClickListener(e -> {
-            User[] selectedUser = grid.getSelectedItems()
-                    .toArray(User[]::new);
+            Permission[] selectedUser = grid.getSelectedItems()
+                    .toArray(Permission[]::new);
             if (selectedUser.length >= 1) {
-                currentUser = selectedUser[0];
-                configuratorService.getDungeon()
-                        .removeAllowedUser(currentUser);
+                Permission selectedPerm = selectedUser[0];
+                currentUser = selectedPerm.getUser();
+                configuratorService.removePermission(currentUser);
                 // configuratorService.getDungeon().removePermission(configuratorService.getDungeon().getPermission(configuratorService.getDungeon(), currentUser));
-                configuratorService.saveUser(currentUser);
-                configuratorService.saveDungeon();
 
                 refreshGrid();
 
@@ -266,7 +268,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
 
         buttonView.addAndExpand(addB, deleteB);
         permissionLayout.setSizeFull();
-        permissionLayout.add(title, permissionText, grid, buttonView);
+        permissionLayout.add(title, permissionText, hint,grid, buttonView);
 
     }
 
@@ -295,9 +297,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     }
 
     private void refreshGrid() {
-        grid.setItems(configuratorService.getDungeon()
-                .getAllowedUsers());
-
+        grid.setItems(configuratorService.getAllowedPermissions());
     }
 
     @Override

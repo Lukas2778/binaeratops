@@ -2,6 +2,8 @@ package de.dhbw.binaeratops.model.actions;
 
 import de.dhbw.binaeratops.model.entitys.Avatar;
 import de.dhbw.binaeratops.model.entitys.Dungeon;
+import de.dhbw.binaeratops.model.entitys.Permission;
+import de.dhbw.binaeratops.model.entitys.User;
 
 /**
  * Transportklasse für die UserAction.
@@ -13,6 +15,9 @@ public class UserAction {
     private Avatar avatar;
     private String actionType;
     private String userActionMessage;
+    private User user;
+    private Permission permission;
+    private String talkMessage;
 
     /**
      * Standardkonstruktor mit Dungeon, Avatar, AktionsTyp und Benutzernachricht.
@@ -29,6 +34,22 @@ public class UserAction {
         this.userActionMessage = AUserActionMessage;
     }
 
+    public UserAction(Dungeon ADungeon, User AUser, Permission APermission, String AActionType, String AUserActionMessage) {
+        this.dungeon = ADungeon;
+        this.user = AUser;
+        this.permission = APermission;
+        this.actionType = AActionType;
+        this.userActionMessage = AUserActionMessage;
+    }
+
+    public UserAction(Dungeon dungeon, Avatar avatar, String actionType, String userActionMessage, String talkMessage) {
+        this.dungeon = dungeon;
+        this.avatar = avatar;
+        this.actionType = actionType;
+        this.userActionMessage = userActionMessage;
+        this.talkMessage = talkMessage;
+    }
+
     /**
      * Testkonstruktor.
      *
@@ -36,6 +57,10 @@ public class UserAction {
      */
     public UserAction(String AUserActionMessage) {
         this.userActionMessage = AUserActionMessage;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     /**
@@ -72,5 +97,13 @@ public class UserAction {
      */
     public String getActionType() {
         return actionType;
+    }
+
+    public Permission getPermission() {
+        return permission;
+    }
+
+    public String getTalkMessage() {
+        return talkMessage;
     }
 }

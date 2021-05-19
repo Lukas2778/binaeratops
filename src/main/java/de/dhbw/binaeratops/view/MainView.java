@@ -79,6 +79,7 @@ public class MainView extends AppLayout {
         // --- SPRACHE HINZUFÜGEN IN MENÜ --- NICHT ENTFERNEN!!! ---
 
         languageSelect = new Select<>();
+        languageSelect.setLabel(res.getString("view.main.select"));
         languageSelect.setPlaceholder(res.getString("view.main.select"));
         List<Locale> locales = transProv.getProvidedLocales();
 
@@ -107,17 +108,6 @@ public class MainView extends AppLayout {
         menuLayout.addClassName("menuRight");
 
         menuLayout.add(menuBar, avatar);
-
-        /* OLD - Menubar Example */
-//        menuBar = new MenuBar();
-//        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
-//        menuBar.setOpenOnHover(true);
-//        menuBar.setClassName("menuRight");
-//        MenuItem menuItem = menuBar.addItem(avatar);
-//        SubMenu subMenu = menuItem.getSubMenu();
-//        subMenu.addItem("Profile");
-//        subMenu.addItem(languageSelect);
-//        subMenu.addItem("Sign out");
     }
 
     private Component createHeaderContent() {
