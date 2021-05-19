@@ -596,6 +596,7 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                 User newDM = dungeonServiceI.getUser(((User) newDMGrid.getSelectedItems().toArray()[0]).getUserId());
                 dungeonServiceI.setDungeonMaster(dungeon.getDungeonId(), newDM.getUserId());
                 dungeonServiceI.deactivateDungeon(dungeonId);
+                sureToLeave = true;
                 setPlayersInactive();
                 leaveDialog.close();
                 UI.getCurrent().navigate("myDungeons");
