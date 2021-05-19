@@ -57,7 +57,6 @@ public class ConfiguratorMainView extends Div implements HasDynamicTitle, HasUrl
     private MapServiceI mapServiceI;
 
     private Long dungeonId;
-    // TODO Kommentare schreiben
     public ConfiguratorMainView(@Autowired ConfiguratorServiceI AConfiguratorServiceI, @Autowired MapServiceI AMapServiceI) {
         configuratorServiceI = AConfiguratorServiceI;
         mapServiceI = AMapServiceI;

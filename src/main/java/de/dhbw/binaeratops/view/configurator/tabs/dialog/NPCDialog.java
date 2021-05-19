@@ -39,7 +39,6 @@ public class NPCDialog extends Dialog {
     Grid<NPC> grid;
 
     public NPCDialog() {}
-    // TODO Kommentare schreiben
     public NPCDialog(ConfiguratorServiceI AConfiguratorServiceI, NPC currentNPC, Grid<NPC> grid) {
         configuratorService = AConfiguratorServiceI;
         this.currentNPC = currentNPC;
@@ -47,6 +46,9 @@ public class NPCDialog extends Dialog {
         init();
     }
 
+    /**
+     * Initialisierung des NPCDialogs.
+     */
     private void init() {
         currentName = new TextField(res.getString("view.configurator.dialog.npc.field.name"));
         currentRace = new ComboBox<>(res.getString("view.configurator.dialog.npc.combobox.race"));
@@ -79,6 +81,10 @@ public class NPCDialog extends Dialog {
         closeDialog.addClickListener(e -> this.close());
     }
 
+    /**
+     * Überprüft die Felder des NPC Dialogs.
+     * @return Validiert.
+     */
     private boolean validate() {
         if (currentName.isEmpty() || currentRace.isEmpty() || currentDescription.isEmpty()) {
             return false;
@@ -86,6 +92,10 @@ public class NPCDialog extends Dialog {
         return true;
     }
 
+    /**
+     * Werte für den NPC Dialog aus der Datenbank laden.
+     * @param npc NPC für den Dialog übergeben.
+     */
     public void fillDialog(NPC npc) {
         currentNPC = npc;
         currentName.setValue(npc.getNpcName());
@@ -93,38 +103,73 @@ public class NPCDialog extends Dialog {
         currentDescription.setValue(npc.getDescription());
     }
 
+    /**
+     * NPC Grid aktualisieren.
+     */
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllNPCs());
     }
 
+    /**
+     * Textfeld NPC Name.
+     * @return Textfeld.
+     */
     public TextField getCurrentName() {
         return currentName;
     }
 
+    /**
+     * Aktuellen NPC Namen setzen.
+     * @param currentName Name übergeben.
+     */
     public void setCurrentName(TextField currentName) {
         this.currentName = currentName;
     }
 
+    /**
+     * NPC Bezeichnung Textfeld erstellen.
+     * @return TextField.
+     */
     public TextField getCurrentDescription() {
         return currentDescription;
     }
 
+    /**
+     * Combobox für die Rasse erstellen.
+     * @return ComboBox.
+     */
     public ComboBox<Race> getCurrentRace() {
         return currentRace;
     }
 
+    /**
+     * Rasse aus der ComboBox Auswahl setzen.
+     * @param currentRace Combobox mit der Auswahl.
+     */
     public void setCurrentRace(ComboBox<Race> currentRace) {
         this.currentRace = currentRace;
     }
 
+    /**
+     * Beschreibung aus dem Beschreibungsfeld setzen.
+     * @param currentDescription Beschreibungsfeld.
+     */
     public void setCurrentDescription(TextField currentDescription) {
         this.currentDescription = currentDescription;
     }
 
+    /**
+     * Aktuellen NPC auslesen.
+     * @return NPC zurückgeben.
+     */
     public NPC getCurrentNPC() {
         return currentNPC;
     }
 
+    /**
+     * Aktuellen NPC setzen.
+     * @param currentNPC NPC.
+     */
     public void setCurrentNPC(NPC currentNPC) {
         this.currentNPC = currentNPC;
     }

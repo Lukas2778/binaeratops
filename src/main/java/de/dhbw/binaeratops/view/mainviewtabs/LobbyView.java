@@ -101,10 +101,6 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button entryButton = new Button("", clickEvent -> {
-//            if (!ADungeon.getCurrentUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
-//                ADungeon.addCurrentUser(VaadinSession.getCurrent().getAttribute(User.class));
-//                dungeonServiceI.saveDungeon(ADungeon);
-//            }
             currentUser = VaadinSession.getCurrent().getAttribute(User.class);
             Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
             Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
@@ -115,12 +111,12 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                     ADungeon.addRequestedUser(requested);
                     dungeonServiceI.savePermission(requested);
                     userActionpublisher.onNext(new UserAction(ADungeon, currentUser, requested, "REQUEST", "null"));
-                    Notification.show("Anfrage wurde gesendet");
+                    Notification.show(res.getString("view.lobby.notification.request.sent"));
                 } else {
-                    Notification.show("Spielberechtigung noch ausstehend");
+                    Notification.show(res.getString("view.lobby.notification.request.idle"));
                 }
             } else if (permissionBlocked != null) {
-                Notification.show("Du wurdest von diesem Dungeon gebannt.");
+                Notification.show(res.getString("view.lobby.notification.request.denied"));
             } else {
                 UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
             }
