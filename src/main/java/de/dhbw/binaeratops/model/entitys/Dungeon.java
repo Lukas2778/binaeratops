@@ -79,16 +79,16 @@ public class Dungeon implements DungeonI {
     private final List<Avatar> avatars = new ArrayList<>();
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    @OneToMany(mappedBy = "allowedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
-    private final List<User> allowedUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "allowedDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    private final List<Permission> allowedUsers = new ArrayList<>();
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    @OneToMany(mappedBy = "blockedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<User> blockedUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "blockedDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    private final List<Permission> blockedUsers = new ArrayList<>();
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
-    @OneToMany(mappedBy = "requestedDungeons", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<User> requestedUsers = new ArrayList<>();
+    @OneToMany(mappedBy = "requestedDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
+    private final List<Permission> requestedUsers = new ArrayList<>();
 
     @Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DELETE})
     @OneToMany(mappedBy = "currentDungeon", fetch = FetchType.LAZY, cascade = CascadeType.REFRESH, orphanRemoval = true)
@@ -297,48 +297,48 @@ public class Dungeon implements DungeonI {
         AAvatar.setDungeon(null);
     }
 
-    public List<User> getAllowedUsers() {
+    public List<Permission> getAllowedUsers() {
         return allowedUsers;
     }
 
-    public void addAllowedUser(User AUser) {
+    public void addAllowedUser(Permission AUser) {
         AUser.setAllowedDungeon(this);
         allowedUsers.add(AUser);
     }
 
-    public void removeAllowedUser(User AUser) {
+    public void removeAllowedUser(Permission AUser) {
         allowedUsers.remove(AUser);
         AUser.setAllowedDungeon(null);
     }
 
-    public List<User> getBlockedUsers() {
+    public List<Permission> getBlockedUsers() {
         return blockedUsers;
     }
 
-    public void addBlockedUser(User AUser) {
+    public void addBlockedUser(Permission AUser) {
         if (!blockedUsers.contains(AUser)) {
             AUser.setBlockedDungeon(this);
             blockedUsers.add(AUser);
         }
     }
 
-    public void removeBlockedUser(User AUser) {
+    public void removeBlockedUser(Permission AUser) {
         blockedUsers.remove(AUser);
         AUser.setBlockedDungeon(null);
     }
 
-    public List<User> getRequestedUsers() {
+    public List<Permission> getRequestedUsers() {
         return requestedUsers;
     }
 
-    public void addRequestedUser(User AUser) {
-        AUser.setRequestedDungeons(this);
+    public void addRequestedUser(Permission AUser) {
+        AUser.setRequestedDungeon(this);
         requestedUsers.add(AUser);
     }
 
-    public void removeRequestUser(User AUser) {
+    public void removeRequestUser(Permission AUser) {
+        AUser.setRequestedDungeon(null);
         requestedUsers.remove(AUser);
-        AUser.setRequestedDungeons(null);
     }
 
     public List<User> getCurrentUsers() {

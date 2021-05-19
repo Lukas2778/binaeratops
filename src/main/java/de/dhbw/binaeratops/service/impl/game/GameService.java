@@ -48,6 +48,9 @@ public class GameService implements GameServiceI {
     @Autowired
     AvatarRepositoryI avatarRepositoryI;
 
+    @Autowired
+    PermissionRepositoryI permissionRepositoryI;
+
     /**
      * Standardkonstruktor zum erzeugen des GameService.
      */
@@ -127,6 +130,10 @@ public class GameService implements GameServiceI {
             avatar.setActive(true);
             avatarRepositoryI.save(avatar);
             user.setCurrentDungeon(dungeon);
+            List<Permission> permissions = permissionRepositoryI.findByAllowedDungeonAndUser(dungeon, user);
+            dungeon.removeRequestUser(permissions.get(0));
+            dungeon.addAllowedUser(permissions.get(0));
+            permissionRepositoryI.save(permissions.get(0));
             dungeonRepositoryI.save(dungeon);
             userRepositoryI.save(user);
         }

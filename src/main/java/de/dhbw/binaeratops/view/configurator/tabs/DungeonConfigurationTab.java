@@ -21,6 +21,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.Permission;
 import de.dhbw.binaeratops.model.entitys.User;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -53,7 +54,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     String visibilityValue;
     User currentUser;
 
-    Grid<User> grid = new Grid<>();
+    Grid<Permission> grid = new Grid<>();
 
     private ConfiguratorServiceI configuratorService;
     // TODO Kommentare schreiben
@@ -226,7 +227,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         TextField roleNameField = new TextField();
         TextField descriptionField = new TextField();
 
-        Column<User> nameColumn = grid.addColumn(User::getName)
+        Column<Permission> nameColumn = grid.addColumn(user -> user.getUser().getName())
                 .setHeader(res.getString("view.configurator.dungeon.grid.column.approved.players"));
 
         roleNameField.getElement()
@@ -256,8 +257,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                     .toArray(User[]::new);
             if (selectedUser.length >= 1) {
                 currentUser = selectedUser[0];
-                configuratorService.getDungeon()
-                        .removeAllowedUser(currentUser);
+                configuratorService.removePermission(currentUser);
                 // configuratorService.getDungeon().removePermission(configuratorService.getDungeon().getPermission(configuratorService.getDungeon(), currentUser));
                 configuratorService.saveUser(currentUser);
                 configuratorService.saveDungeon();

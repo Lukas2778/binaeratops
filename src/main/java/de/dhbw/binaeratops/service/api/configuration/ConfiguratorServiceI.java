@@ -79,6 +79,7 @@ public interface ConfiguratorServiceI {
 
     /**
      * Befehlssymbol des Dungeons holen.
+     *
      * @return Befehlssymbol.
      */
     char getCommandSymbol();
@@ -262,6 +263,7 @@ public interface ConfiguratorServiceI {
 
     /**
      * TODO
+     *
      * @param ARoom
      * @param ANPC
      * @return
@@ -363,4 +365,8 @@ public interface ConfiguratorServiceI {
      * @param AUser Benutzer, der gespeichert werden soll.
      */
     void saveUser(User AUser);
+
+    void removePermission(User AUser);
+
+    void savePermission(Permission APermission);
 }

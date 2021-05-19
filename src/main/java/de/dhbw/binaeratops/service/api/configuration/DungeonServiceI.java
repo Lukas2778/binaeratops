@@ -1,9 +1,6 @@
 package de.dhbw.binaeratops.service.api.configuration;
 
-import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Room;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
 
 import java.util.List;
 
@@ -127,6 +124,8 @@ public interface DungeonServiceI {
      */
     void kickPlayer(Long ADungeonId, Long AUserId);
 
+    void declinePlayer(Long ADungeonId, Long AUserId, Permission APermission);
+
     /**
      * Gibt den Raum der übergebenen ID zurück.
      *
@@ -141,7 +140,7 @@ public interface DungeonServiceI {
      * @param ADungeonId Dungeon, dem der Benutzer beitreten können soll.
      * @param AUserId    Benutzer, der beitreten können soll.
      */
-    void allowUser(Long ADungeonId, Long AUserId);
+    void allowUser(Long ADungeonId, Long AUserId, Permission APermission);
 
     /**
      * Setzt den Avatar in Status "Keine ausstehende Anfrage vorhanden".
@@ -149,5 +148,15 @@ public interface DungeonServiceI {
      * @param AAvatarId Avatar, der den Status geändert bekommen soll.
      */
     void setAvatarNotRequested(Long AAvatarId);
+
+    void removeRequestedUser(Long ADungeonId, Long AUserId);
+
+    Permission getPermissionRequest(User AUser, Dungeon ADungeon);
+
+    Permission getPermissionGranted(User AUser,Dungeon ADungeon);
+
+    Permission getPermissionBlocked(User AUser,Dungeon ADungeon);
+
+    void savePermission(Permission APermission);
 }
 

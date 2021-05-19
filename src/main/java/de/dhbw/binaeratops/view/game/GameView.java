@@ -145,7 +145,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         currentUser = VaadinSession.getCurrent().getAttribute(User.class);
 
         //Timer
-        myTimer=new Timer();
+        myTimer = new Timer();
     }
 
     @Override
@@ -157,6 +157,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarDialog();
         initializeKickSubscriber();
     }
+
     // TODO Kommentare schreiben
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
@@ -209,11 +210,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         //FilterButtons
         HorizontalLayout filterButtonsLayout = new HorizontalLayout();
         filterActionButton = new Button("Aktionen");
-        filterActionButton.addClickListener(e-> myDungeonChatView.setFilterModeAction());
+        filterActionButton.addClickListener(e -> myDungeonChatView.setFilterModeAction());
         filterChatButton = new Button("Chat");
         filterChatButton.addClickListener(e -> myDungeonChatView.setFilterModeChat());
         resetFilterButton = new Button("Reset");
-        resetFilterButton.addClickListener(e-> myDungeonChatView.setFilterModeAll());
+        resetFilterButton.addClickListener(e -> myDungeonChatView.setFilterModeAll());
 
         filterButtonsLayout.add(resetFilterButton, filterChatButton, filterActionButton);
 
@@ -308,7 +309,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         gameLayout.add(gameSplitLayout);
         gameLayout.setSizeFull();
 
-        gameFirstLayout.add(binTitle, html,filterButtonsLayout, myDungeonChatView, insertInputLayout);
+        gameFirstLayout.add(binTitle, html, filterButtonsLayout, myDungeonChatView, insertInputLayout);
         gameSecondLayout.add(mapLayout, gridLayoutVert, leftDungeonButt);
         mapLayout.setClassName("map-layout");
         gridLayoutVert.setClassName("grid-layout");
@@ -375,27 +376,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatar.focus();
 
         Button enterDungeon = new Button(res.getString("view.game.grid.button.enter.dungeon"), e -> {
+            currentUser = VaadinSession.getCurrent().getAttribute(User.class);
             Set selectedAvatar = avatarGrid.getSelectedItems();
             if (selectedAvatar.size() > 0) {
-                //Dungeon betreten
                 selectedInDialogAvatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
-                if (selectedInDialogAvatar.getDungeon().getBlockedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
-                    myAvatar = null;
-                    myAvatarDialog.close();
-                    Notification.show("Du bist in diesem Dungeon gebannt, kontaktiere den DungeonMaster", 5000, Notification.Position.MIDDLE);
-                    UI.getCurrent().navigate("lobby");
-                } else if (selectedInDialogAvatar.getDungeon().getAllowedUsers().contains(VaadinSession.getCurrent().getAttribute(User.class))) {
-                    myAvatarDialog.close();
-                    textField.focus();
-                    loadAvatarProgress(selectedInDialogAvatar);
-                    createMap();
-                    changeRoom(currentRoom.getRoomId());
-                    loadChat();
-                }else {
-                    userActionpublisher.onNext(new UserAction(selectedInDialogAvatar.getDungeon(), selectedInDialogAvatar, "REQUEST", "null"));
-                    myAvatarDialog.removeAll();
-                    myAvatarDialog.add(new Paragraph(new Html("<div>Warte auf die Antwort des Dungeon Masters!<br>Drücke die Eingabetaste, sobald du angenommen wurdest.</div>")));
-                }
+                myAvatarDialog.close();
+                textField.focus();
+                loadAvatarProgress(selectedInDialogAvatar);
+                createMap();
+                changeRoom(currentRoom.getRoomId());
+                loadChat();
             } else {
                 Notification.show(res.getString("view.game.notification.select.avatar"));
             }
@@ -624,7 +614,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             public void run() {
                 refreshView();
             }
-        },0,2000);//eine Sekunde delay
+        }, 0, 2000);//eine Sekunde delay
     }
 
     void refreshInventory() {
@@ -737,7 +727,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     /**
      * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
-     *
      */
     public void loadChat() {
         String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), currentUser.getName());
@@ -745,17 +734,18 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         confirmButt.clickInClient();
     }
 
-    void refreshView(){
+    void refreshView() {
         //wird dem Timer nach aufgerufen, sodass der DungeonMaster das Inventar des Spielers aktualisieren kann
         try {
-            if(myAvatar!=null) {
-                getUI().ifPresent(ui->ui.access(()->
+            if (myAvatar != null) {
+                getUI().ifPresent(ui -> ui.access(() ->
                         {
                             refreshInventory();
                             //Notification.show("timer");
                         }
                 ));
             }
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
     }
 }

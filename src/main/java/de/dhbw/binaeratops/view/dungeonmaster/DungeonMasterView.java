@@ -143,15 +143,17 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
                 if (action.getActionType().equals("REQUEST")) {
                     Dialog acceptanceDialog = new Dialog();
-                    Label label = new Label("Der User " + action.getAvatar().getUser().getName() + " will als " + action.getAvatar().getName() + " beitreten");
+                    Label label = new Label("Der User " + action.getUser().getName() + " will beitreten");
                     Button acceptButton = new Button("Annehmen", e -> {
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
-                        dungeonServiceI.allowUser(dungeonId, action.getAvatar().getUser().getUserId());
+                        dungeonServiceI.allowUser(dungeonId, action.getUser().getUserId(), action.getPermission());
+                        //dungeonServiceI.removeRequestedUser(dungeonId, action.getUser().getUserId());
+                        //kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
                         acceptanceDialog.close();
                     });
                     Button declineButton = new Button("Ablehnen", e -> {
-                        dungeonServiceI.kickPlayer(dungeonId, action.getAvatar().getUser().getUserId());
-                        kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
+                        dungeonServiceI.declinePlayer(dungeonId, action.getUser().getUserId(), action.getPermission());
+                        //dungeonServiceI.removeRequestedUser(dungeonId, action.getUser().getUserId());
+                        //kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
                         acceptanceDialog.close();
                     });
                     declineButton.getStyle().set("color", "red");
@@ -161,9 +163,9 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
                     //TODO den user einlassen
                     return;
                 }
-                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
-                notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
-                actionMap.put(action.getAvatar(), action);
+//                Notification.show("Message:" + action.getUserActionMessage() + " Avatar: " + action.getAvatar(), 5000, Notification.Position.TOP_END);
+//                notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
+//                actionMap.put(action.getAvatar(), action);
             }
         })));
     }
