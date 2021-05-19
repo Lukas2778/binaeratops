@@ -88,12 +88,36 @@ public interface GameServiceI {
      */
     Long getStandardAvatarLifepoints(Dungeon ADungeon);
 
+    /**
+     * Gibt den Wahrheitswert zurück, ob der eingegebene Benutzername gültig ist.
+     *
+     * @param ADungeon    Dungeon für den gesucht werden soll, ob der Name eindeutig ist.
+     * @param AAvatarName Gesuchter Avatarname.
+     * @return Wahrheitswert.
+     */
     boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName);
 
+    /**
+     * Gibt den Wahrheitswert zurück, ob das eingegebene Geschlecht gültig ist.
+     *
+     * @param AAvatarGender Eingegebenes Geschlecht.
+     * @return Wahrheitswert.
+     */
     boolean avatarGenderIsValid(Gender AAvatarGender);
 
+    /**
+     * Gibt den Wahrheitswert zurück, ob die eingegebene Rolle gültig ist.
+     *
+     * @param AAvatarRole Eingegebene Avatarrolle.
+     * @return Wahrheitswert.
+     */
     boolean avatarRoleIsValid(Role AAvatarRole);
 
+    /**
+     * Gibt den Wahrheitswert zurück, ob die eingegebene Rasse gültig ist.
+     *
+     * @param AAvatarRace Eingegebene Avatarrasse.
+     * @return Wahrheitswert.
+     */
     boolean avatarRaceIsValid(Race AAvatarRace);
-
 }

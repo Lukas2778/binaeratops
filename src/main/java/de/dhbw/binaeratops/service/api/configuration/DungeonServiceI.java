@@ -70,6 +70,7 @@ public interface DungeonServiceI {
 
     /**
      * Setzt den gewünschten Avatar auf inaktiv
+     *
      * @param AAvatarId der gewünschte Avatar.
      */
     void setAvatarInactive(long AAvatarId);
@@ -145,8 +146,8 @@ public interface DungeonServiceI {
     /**
      * Erlaubt übergebenen Benutzer dem Dungeon beizutreten.
      *
-     * @param ADungeonId Dungeon, dem der Benutzer beitreten können soll.
-     * @param AUserId    Benutzer, der beitreten können soll.
+     * @param ADungeonId  Dungeon, dem der Benutzer beitreten können soll.
+     * @param AUserId     Benutzer, der beitreten können soll.
      * @param APermission Aktuelle Berechtigung.
      */
     void allowUser(Long ADungeonId, Long AUserId, Permission APermission);
@@ -158,14 +159,47 @@ public interface DungeonServiceI {
      */
     void setAvatarNotRequested(Long AAvatarId);
 
-    void removeRequestedUser(Long ADungeonId, Long AUserId);
-
+    /**
+     * Gibt die angefragte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
     Permission getPermissionRequest(User AUser, Dungeon ADungeon);
 
-    Permission getPermissionGranted(User AUser,Dungeon ADungeon);
+    /**
+     * Gibt die erlaubte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
+    Permission getPermissionGranted(User AUser, Dungeon ADungeon);
 
-    Permission getPermissionBlocked(User AUser,Dungeon ADungeon);
+    /**
+     * Gibt die blockierte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
+    Permission getPermissionBlocked(User AUser, Dungeon ADungeon);
 
+    /**
+     * Speichert die übergebene Berechtigung in der Datenbank.
+     *
+     * @param APermission Berechtigung, die gespeichert werden soll.
+     */
     void savePermission(Permission APermission);
 }
 

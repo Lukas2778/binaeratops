@@ -189,7 +189,7 @@ public abstract class AbstractCmdScanner {
                     n = input.length();
                 } else {
                     if (AParentheses) {
-                        for (; n < input.length() && input.charAt(n) != '"';n++) {
+                        for (; n < input.length() && input.charAt(n) != '"'; n++) {
                             flagPos++;
                         }
                         if (n < input.length()) {

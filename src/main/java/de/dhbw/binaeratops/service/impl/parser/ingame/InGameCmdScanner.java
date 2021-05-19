@@ -50,20 +50,26 @@ public class InGameCmdScanner extends AbstractCmdScanner {
 
     /**
      * Konstruktor.
-     *
      */
     public InGameCmdScanner() {
     }
 
     /**
      * Konstruktor zum Ausführen von Tests mit Mocks.
+     *
      * @param AInGameCmdHooks Hooks.
      */
     public InGameCmdScanner(InGameCmdHooksI AInGameCmdHooks) {
         this.hooks = AInGameCmdHooks;
     }
+
     /**
-     * Scanner im Zustand "Start".
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
      */
     protected UserMessage scanStart(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         startWithPos(1); // Überspringe Befehlszeichen
@@ -71,7 +77,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         String token = findNextToken();
         if (token == null) {
             onMissingToken("<Befehl>");
-            return  null;
+            return null;
         } else {
             switch (token.toUpperCase()) {
                 case CMD_HELP:
@@ -95,8 +101,12 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
-    // TODO Kommentare schreiben
-
+    /**
+     * Scanner im Zustand "scanHelp1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanHelp1(DungeonI ADungeon) throws CmdScannerException {
         String token = findRestOfInput();
         if (token == null) {
@@ -116,6 +126,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanWhisper1".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanWhisper1(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String avatarname = findNextToken();
         if (avatarname == null) {
@@ -131,6 +148,14 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon  Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar   Avatar, der den Befehl ausführt.
+     * @param ARecipent Empfänger
+     * @return Benutzernachricht.
+     */
     private UserMessage scanWhisperAvatarName(DungeonI ADungeon, AvatarI AAvatar, String ARecipent) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
@@ -141,6 +166,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         return null;
     }
 
+    /**
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanWhisperMaster(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
@@ -151,6 +183,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanSpeak".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AAvatar  Avatar, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanSpeak(DungeonI ADungeon, AvatarI AAvatar) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
@@ -161,6 +200,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanNotify".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanNotify(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
@@ -179,6 +225,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanNotifyRoom".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanNotifyRoom(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String roomName = findParenthesesToken();
         if (roomName == null) {
@@ -189,6 +242,14 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon  Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser     Benutzer, der den Befehl ausführt.
+     * @param ARoomName Name des Raumes.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanNotifyRoomMessage(DungeonI ADungeon, UserI AUser, String ARoomName) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
         if (message == null) {
@@ -199,9 +260,16 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanNotifyAll(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String message = findRestOfInput();
-        if(message == null) {
+        if (message == null) {
             onMissingToken("<Nachricht>");
             return null;
         } else {
@@ -209,6 +277,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanWithdraw".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanWithdraw(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String token = findNextToken();
         if (token == null) {
@@ -225,6 +300,13 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanWithdrawRole".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanWithdrawRole(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         String username = findRestOfInput();
         if (username == null) {
@@ -235,6 +317,14 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
     }
 
+    /**
+     * Scanner im Zustand "scanStart".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @param AUser    Benutzer, der den Befehl ausführt.
+     * @param AStop    Wahrheitswert, ob gestoppt oder pausiert werden soll.
+     * @return Benutzernachricht.
+     */
     private UserMessage scanGame(DungeonI ADungeon, UserI AUser, Boolean AStop) throws CmdScannerException {
         String game = findRestOfInput();
         if (game == null) {
@@ -254,63 +344,4 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         }
         return null;
     }
-
-    /**
-     * Scanner Zustand "Join" Level 1.
-     */
-    private void _scanJoin1() throws CmdScannerException {
-        String token = findNextToken();
-        if (token == null) {
-            onMissingToken("chat|lobby");
-        } else {
-            switch (token.toLowerCase()) {
-                case "chat" :
-                    _scanJoinChat1();
-                    break;
-                case "lobby" :
-                    _scanJoinLobby1();
-                    break;
-                default :
-                    onUnexpectedToken();
-                    break;
-            }
-        }
-    }
-
-    private void _scanJoinChat1() throws CmdScannerException {
-//        hooks.onCmdJoinChat();
-    }
-    private void _scanJoinLobby1() throws CmdScannerException {
-//        hooks.onCmdJoinLobby();
-    }
-
-    /**
-     * Scanner Zustand "Leave" Level 1.
-     */
-    private void _scanLogout1() throws CmdScannerException {
-//        hooks.onCmdLogout();
-    }
-
-//    /**
-//     * Scanner Zustand "Whisper" Level 1.
-//     */
-//    private void _scanWhisper1() throws CmdScannerException {
-//        String userName = findNextToken();
-//        if (userName == null) {
-//            onMissingToken("Benutzername");
-//        } else {
-//            _scanWhisper2(userName);
-//        }
-//    }
-//    /**
-//     * Scanner Zustand "Whisper" Level 2.
-//     */
-//    private void _scanWhisper2(String AUserName) throws CmdScannerException {
-//        String message = findRestOfInput();
-//        if (message == null) {
-//            onMissingToken("Meldung");
-//        } else {
-//            hooks.onCmdWhisper(AUserName, message);
-//        }
-//    }
 }

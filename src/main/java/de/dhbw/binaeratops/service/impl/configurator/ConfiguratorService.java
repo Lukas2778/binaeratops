@@ -400,7 +400,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         permissionRepo.save(APermission);
     }
 
-    public List<Permission> getPermissions() {
+    public List<Permission> getAllowedPermissions() {
         return permissionRepo.findByAllowedDungeon(dungeon);
     }
 

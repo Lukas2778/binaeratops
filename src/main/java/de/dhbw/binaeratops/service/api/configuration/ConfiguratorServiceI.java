@@ -265,7 +265,7 @@ public interface ConfiguratorServiceI {
      * Gibt die Anzahl von NPCs in einem Raum zurück.
      *
      * @param ARoom Raum, aus dem die NPCs geholt werden sollen.
-     * @param ANPC NPC, dessen Anzahl von Instanzen in einem Raum gesucht werden soll.
+     * @param ANPC  NPC, dessen Anzahl von Instanzen in einem Raum gesucht werden soll.
      * @return Anzahl von NPC-Instanzen.
      */
     double getNumberOfNPC(Room ARoom, NPC ANPC);
@@ -366,9 +366,24 @@ public interface ConfiguratorServiceI {
      */
     void saveUser(User AUser);
 
+    /**
+     * Entfernt die Berechtigung vom übergebenen Benutzer.
+     *
+     * @param AUser Benutzer, dem die Berechtigung entfernt werden soll.
+     */
     void removePermission(User AUser);
 
+    /**
+     * Speichert die übergebene Berechtigung.
+     *
+     * @param APermission Berechtigung, die gespeichert werden soll.
+     */
     void savePermission(Permission APermission);
 
-    List<Permission> getPermissions();
+    /**
+     * Gibt alle erlaubten Berechtigungen des Dungeons zurück.
+     *
+     * @return Alle erlaubten Berechtigungen.
+     */
+    List<Permission> getAllowedPermissions();
 }
