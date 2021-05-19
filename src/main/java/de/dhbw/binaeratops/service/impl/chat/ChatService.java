@@ -78,6 +78,14 @@ public class ChatService implements ChatServiceI {
     }
 
     @Override
+    public void whisperFromNpc(String AMessage, User AReceiver, String AAvatarName) {
+        Label sender = new Label("NPC~" + AAvatarName + ":");
+        sender.addClassName("npcnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
+    }
+
+    @Override
     public void sendRoomMessage(String AMessage, List<User> AReceiverList, Avatar AAvatar, Room ARoom) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
         Label sender = new Label(ARoom.getRoomName() + "~" + AAvatar.getName() + ":");

@@ -163,31 +163,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                switch (message.getKick()) {
-                    case "KICK":
-                        myAvatar = null;
-                        Notification.show(res.getString("view.game.notification.kicked"));
-                        myAvatarDialog.close();
-                        UI.getCurrent().navigate("aboutUs");
-                        break;
-                    case "ACCEPT":
-                        myAvatarDialog.close();
-                        textField.focus();
-                        loadAvatarProgress(selectedInDialogAvatar);
-                        createMap();
-                        changeRoom(currentRoom.getRoomId());
-                        loadChat();
-                        break;
-                    case "DECLINE":
-                        myAvatar = null;
-                        Notification.show("Der DungeonMaster hat den Eintritt abgelehnt", 5000, Notification.Position.MIDDLE);
-                        UI.getCurrent().navigate("aboutUs");
-                        break;
-                    default:
-                        myAvatar = null;
-                        Notification.show("Es ist ein Fehler beim Beitritt des Dungeons aufgetreten", 5000, Notification.Position.MIDDLE);
-                        UI.getCurrent().navigate("aboutUs");
-                        break;
+                if ("KICK".equals(message.getKick())) {
+                    myAvatar = null;
+                    Notification.show(res.getString("view.game.notification.kicked"));
+                    myAvatarDialog.close();
+                    UI.getCurrent().navigate("aboutUs");
                 }
             }
         })));
@@ -619,6 +599,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     }
 
     void refreshInventory() {
+        myAvatar = myGameService.getAvatarById(myAvatar.getAvatarId());
         inventoryList = myAvatar.getInventory();
         inventoryGrid.setItems(inventoryList);
 

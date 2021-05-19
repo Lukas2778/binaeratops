@@ -52,7 +52,10 @@ padding-left:   10px;
     color: darkgreen;
     font-weight: bold;
 }
-
+.npcnamecolor{
+    color: #d56006;
+    font-weight: bold;
+}
 .roomnamecolor{
     color: #83639d;
     font-weight: bold;

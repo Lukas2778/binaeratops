@@ -17,6 +17,7 @@ public class UserAction {
     private String userActionMessage;
     private User user;
     private Permission permission;
+    private String talkMessage;
 
     /**
      * Standardkonstruktor mit Dungeon, Avatar, AktionsTyp und Benutzernachricht.
@@ -39,6 +40,14 @@ public class UserAction {
         this.permission = APermission;
         this.actionType = AActionType;
         this.userActionMessage = AUserActionMessage;
+    }
+
+    public UserAction(Dungeon dungeon, Avatar avatar, String actionType, String userActionMessage, String talkMessage) {
+        this.dungeon = dungeon;
+        this.avatar = avatar;
+        this.actionType = actionType;
+        this.userActionMessage = userActionMessage;
+        this.talkMessage = talkMessage;
     }
 
     /**
@@ -92,5 +101,9 @@ public class UserAction {
 
     public Permission getPermission() {
         return permission;
+    }
+
+    public String getTalkMessage() {
+        return talkMessage;
     }
 }

@@ -80,4 +80,6 @@ public interface ChatServiceI {
      */
     void sendRoomMessage(String AMessage, List<User> AReceiverList, User ADungeonMaster, Room ARoom);
 
+
+    void whisperFromNpc(String AMessage, User AReceiver, String AAvatarName);
 }
