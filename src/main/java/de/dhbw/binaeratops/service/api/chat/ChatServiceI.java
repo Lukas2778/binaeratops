@@ -82,4 +82,8 @@ public interface ChatServiceI {
 
 
     void whisperFromNpc(String AMessage, User AReceiver, String AAvatarName);
+
+    void whisperDungeonMasterRoom(String AMessage, User AReceiver, User ADungeonMaster, String ARoom);
+
+    void whisperRoom(String AMessage, User AReceiver, Avatar AAvatar, String ARoom);
 }

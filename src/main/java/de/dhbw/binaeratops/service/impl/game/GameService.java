@@ -194,4 +194,29 @@ public class GameService implements GameServiceI {
     public Status getDungeonStatus(Long ADungeonId) {
         return dungeonRepositoryI.findByDungeonId(ADungeonId).getDungeonStatus();
     }
+
+    //Wird für Tests benötigt
+    public void setItemInstanceRepositoryI(ItemInstanceRepositoryI itemInstanceRepositoryI) {
+        this.itemInstanceRepositoryI = itemInstanceRepositoryI;
+    }
+
+    public void setDungeonRepositoryI(DungeonRepositoryI dungeonRepositoryI) {
+        this.dungeonRepositoryI = dungeonRepositoryI;
+    }
+
+    public void setUserRepositoryI(UserRepositoryI userRepositoryI) {
+        this.userRepositoryI = userRepositoryI;
+    }
+
+    public void setRoomRepositoryI(RoomRepositoryI roomRepositoryI) {
+        this.roomRepositoryI = roomRepositoryI;
+    }
+
+    public void setAvatarRepositoryI(AvatarRepositoryI avatarRepositoryI) {
+        this.avatarRepositoryI = avatarRepositoryI;
+    }
+
+    public void setPermissionRepositoryI(PermissionRepositoryI permissionRepositoryI) {
+        this.permissionRepositoryI = permissionRepositoryI;
+    }
 }

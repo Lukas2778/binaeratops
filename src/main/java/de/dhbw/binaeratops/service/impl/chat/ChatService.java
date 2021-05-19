@@ -78,6 +78,22 @@ public class ChatService implements ChatServiceI {
     }
 
     @Override
+    public void whisperDungeonMasterRoom(String AMessage, User AReceiver, User ADungeonMaster, String ARoom) {
+        Label sender = new Label(ARoom + "~" + "Dungeon-Master" + ":");
+        sender.addClassName("dmnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
+    }
+
+    @Override
+    public void whisperRoom(String AMessage, User AReceiver, Avatar AAvatar, String ARoom) {
+        Label sender = new Label(ARoom + "~" +  AAvatar.getName() + ":");
+        sender.addClassName("roomnamecolor");
+        Paragraph paragraph = buildParagraph(sender, AMessage);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
+    }
+
+    @Override
     public void whisperFromNpc(String AMessage, User AReceiver, String AAvatarName) {
         Label sender = new Label("NPC~" + AAvatarName + ":");
         sender.addClassName("npcnamecolor");

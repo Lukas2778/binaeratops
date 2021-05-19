@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.groups;
 
 import de.dhbw.binaeratops.service.impl.configurator.ConfigurationServiceTest;
 import de.dhbw.binaeratops.service.impl.configurator.DungeonServiceTest;
+import de.dhbw.binaeratops.service.impl.game.GameServiceTest;
 import de.dhbw.binaeratops.service.impl.player.map.MapServiceTest;
 import de.dhbw.binaeratops.service.impl.registration.AuthServiceTest;
 import org.junit.experimental.categories.Categories;
@@ -21,6 +22,7 @@ import org.junit.runners.Suite;
         MapServiceTest.class,
         AuthServiceTest.class,
         DungeonServiceTest.class,
+        GameServiceTest.class,
 //        ParserServiceTest.class
 })
 public interface ImplGroup {
