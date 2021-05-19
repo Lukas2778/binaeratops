@@ -119,13 +119,16 @@ public class GameService implements GameServiceI {
 
     @Override
     public void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar) {
-        if (!ADungeon.getCurrentUsers().contains(AUser)) {
-            ADungeon.addCurrentUser(AUser);
-            AAvatar.setActive(true);
-            avatarRepositoryI.save(AAvatar);
-            AUser.setCurrentDungeon(ADungeon);
-            dungeonRepositoryI.save(ADungeon);
-            userRepositoryI.save(AUser);
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeon.getDungeonId());
+        User user = userRepositoryI.findByUserId(AUser.getUserId());
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId());
+        if (!dungeon.getCurrentUsers().contains(user)) {
+            dungeon.addCurrentUser(user);
+            avatar.setActive(true);
+            avatarRepositoryI.save(avatar);
+            user.setCurrentDungeon(dungeon);
+            dungeonRepositoryI.save(dungeon);
+            userRepositoryI.save(user);
         }
     }
 
@@ -136,12 +139,16 @@ public class GameService implements GameServiceI {
 
     @Override
     public void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar) {
-        if (ADungeon.getCurrentUsers().contains(AUser)) {
-            ADungeon.removeCurrentUser(AUser);
-            avatarRepositoryI.save(AAvatar);
-            AUser.removeCurrentDungeon();
-            dungeonRepositoryI.save(ADungeon);
-            userRepositoryI.save(AUser);
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeon.getDungeonId());
+        User user = userRepositoryI.findByUserId(AUser.getUserId());
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId());
+        if (dungeon.getCurrentUsers().contains(user)) {
+            dungeon.removeCurrentUser(user);
+            avatar.setActive(false);
+            avatarRepositoryI.save(avatar);
+            user.removeCurrentDungeon();
+            dungeonRepositoryI.save(dungeon);
+            userRepositoryI.save(user);
         }
     }
 

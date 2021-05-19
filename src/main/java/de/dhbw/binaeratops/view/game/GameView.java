@@ -637,6 +637,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     void changeRoom(Long ARoomId) {
         currentRoom = myRoomRepo.findByRoomId(ARoomId);
+        myAvatar = myGameService.getAvatarById(myAvatar.getAvatarId());
         //Avatar Fortschritt speichern
         visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
         //Kartenanzeige aktualisieren
