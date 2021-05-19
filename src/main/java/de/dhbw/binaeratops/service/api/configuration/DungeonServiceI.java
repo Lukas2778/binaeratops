@@ -136,10 +136,10 @@ public interface DungeonServiceI {
     Room getRoomById(Long ARoomId);
 
     /**
-     * Gibt den User aus der DB zurück.
+     * Gibt den Benutzer aus der DB zurück.
      *
-     * @param AUserId Der gewünschte User.
-     * @return
+     * @param AUserId Der gewünschte Benutzer.
+     * @return Gewünschter Benutzer.
      */
     User getUser(Long AUserId);
 
