@@ -73,17 +73,40 @@ public interface ChatServiceI {
 
     /**
      * Nachricht vom Dungeon-Master für den Raumchat wird erstellt und verschickt.
-     * @param AMessage Nachricht.
-     * @param AReceiverList Liste von Benutzern, die die Nachricht erhalten sollen.
+     *
+     * @param AMessage       Nachricht.
+     * @param AReceiverList  Liste von Benutzern, die die Nachricht erhalten sollen.
      * @param ADungeonMaster Dungeon-Master, der die Nachricht abschickt.
-     * @param ARoom Raum an dem die Nachricht geschickt wird.
+     * @param ARoom          Raum an dem die Nachricht geschickt wird.
      */
     void sendRoomMessage(String AMessage, List<User> AReceiverList, User ADungeonMaster, Room ARoom);
 
-
+    /**
+     * Nachricht vom Dungeon-Master als NPC wird erstellt und verschickt.
+     *
+     * @param AMessage    Nachricht.
+     * @param AReceiver   Empfänger.
+     * @param AAvatarName Avatar.
+     */
     void whisperFromNpc(String AMessage, User AReceiver, String AAvatarName);
 
+    /**
+     * Nachricht vom Dungeon-Master für den Raumchat wird erstellt und verschickt.
+     *
+     * @param AMessage       Nachricht.
+     * @param AReceiver      Empfänger.
+     * @param ADungeonMaster Dungeon-Master, der die Nachricht abschickt.
+     * @param ARoom          Raum an den die Nachricht geschickt wird.
+     */
     void whisperDungeonMasterRoom(String AMessage, User AReceiver, User ADungeonMaster, String ARoom);
 
+    /**
+     * Nachricht vom Spieler für den Raumchat wird erstellt und verschickt.
+     *
+     * @param AMessage  Nachricht.
+     * @param AReceiver Empfänger.
+     * @param AAvatar   Avatar, der die Nachricht abgeschickt.
+     * @param ARoom     Raum an den die Nachricht geschickt wird.
+     */
     void whisperRoom(String AMessage, User AReceiver, Avatar AAvatar, String ARoom);
 }
