@@ -154,8 +154,8 @@ public class User implements UserI {
     }
 
     @Override
-    public void removeCurrentDungeon(){
-        this.currentDungeon=null;
+    public void removeCurrentDungeon() {
+        this.currentDungeon = null;
     }
 
     @Override

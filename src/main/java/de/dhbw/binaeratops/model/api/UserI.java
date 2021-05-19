@@ -111,15 +111,16 @@ public interface UserI {
     void setVerified(Boolean AIsVerified);
 
 
-
     /**
      * Dungeon, indem sich der Benutzer zurzeit aufhält.
+     *
      * @return Aktueller Dungeon.
      */
     Dungeon getCurrentDungeon();
 
     /**
      * Aktuellen Dunegon setzen.
+     *
      * @param ACurrentDungeon Aktuellen Dungeon der gesetzt werden soll.
      */
     void setCurrentDungeon(Dungeon ACurrentDungeon);

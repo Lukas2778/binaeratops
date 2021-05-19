@@ -1,12 +1,24 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.api.PermissionI;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+/**
+ * Entity Objekt für eine Berechtigung.
+ * <p>
+ * Es repräsentiert die Entity "Berechtigung" der Datenbank in der Programmlogik.
+ * <p>
+ * Es implementiert dazu alle Funktionalitäten der Berechtigung Schnittstelle.
+ *
+ * @author Nicolas Haug
+ * @see PermissionI
+ */
 @Entity
-public class Permission {
+public class Permission implements PermissionI {
 
     @Id
     @GeneratedValue
@@ -24,10 +36,18 @@ public class Permission {
     @ManyToOne
     private Dungeon requestedDungeon;
 
+    /**
+     * Konstruktor zum Erzeugen einer Berechtigung mit dem zugehörigen Benutzer.
+     *
+     * @param AUser Benutzer, dem die Berechtigung erteilt werden soll.
+     */
     public Permission(User AUser) {
         this.user = AUser;
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen einer Berechtigung.
+     */
     public Permission() {
 
     }
@@ -35,17 +55,17 @@ public class Permission {
     public Long getPermissionId() {
         return permissionId;
     }
-// TODO Kommentare + Interface
-    public void setPermissionId(Long permissionId) {
-        this.permissionId = permissionId;
+
+    public void setPermissionId(Long APermissionId) {
+        this.permissionId = APermissionId;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User AUser) {
+        this.user = AUser;
     }
 
     public Dungeon getAllowedDungeon() {
