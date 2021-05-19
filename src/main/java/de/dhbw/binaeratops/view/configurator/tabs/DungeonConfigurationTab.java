@@ -297,7 +297,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     }
 
     private void refreshGrid() {
-        grid.setItems(configuratorService.getPermissions());
+        grid.setItems(configuratorService.getAllowedPermissions());
     }
 
     @Override

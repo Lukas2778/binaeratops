@@ -200,17 +200,6 @@ public class DungeonService implements DungeonServiceI {
         dungeonRepo.save(dungeon);
     }
 
-    public void removeRequestedUser(Long ADungeonId, Long AUserId) {
-        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
-        User user = userRepo.findByUserId(AUserId);
-        //user.setRequestedDungeons(null);
-        List<Permission> p = permissionRepo.findByAllowedDungeonAndUser(dungeon, user);
-        dungeon.removeRequestUser(p.get(0));
-        permissionRepo.save(p.get(0));
-        userRepo.save(user);
-        dungeonRepo.save(dungeon);
-    }
-
     public Permission getPermissionRequest(User AUser,Dungeon ADungeon) {
         List<Permission> p = permissionRepo.findByRequestedDungeonAndUser(ADungeon, AUser);
         if (p.size() > 0) {
