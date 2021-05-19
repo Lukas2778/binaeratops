@@ -98,7 +98,7 @@ public interface DungeonServiceI {
      * @param ADungeon Dungeon, für den der Dungeon-Master gesetzt werden soll.
      * @param AUserId  Benutzer ID des Benutzers, der Dungeon-Master werden soll.
      */
-    void setDungeonMaster(Dungeon ADungeon, Long AUserId);
+    void setDungeonMaster(Long ADungeonId, Long AUserId);
 
     /**
      * Gibt die aktuellen Benutzer zurück.
@@ -133,6 +133,14 @@ public interface DungeonServiceI {
      * @return Gesuchter Raum.
      */
     Room getRoomById(Long ARoomId);
+
+    /**
+     * Gibt den User aus der DB zurück.
+     *
+     * @param AUserId Der gewünschte User.
+     * @return
+     */
+    User getUser(Long AUserId);
 
     /**
      * Erlaubt übergebenen Benutzer dem Dungeon beizutreten.

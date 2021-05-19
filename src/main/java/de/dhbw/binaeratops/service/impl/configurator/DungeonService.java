@@ -135,9 +135,10 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public void setDungeonMaster(Dungeon ADungeon, Long AUserId) {
-        ADungeon.setDungeonMasterId(AUserId);
-        dungeonRepo.save(ADungeon);
+    public void setDungeonMaster(Long ADungeonId, Long AUserId) {
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        dungeon.setDungeonMasterId(AUserId);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -180,6 +181,10 @@ public class DungeonService implements DungeonServiceI {
         Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
         avatar.setRequested(false);
         avatarRepo.save(avatar);
+    }
+
+    public User getUser(Long AUserId) {
+        return userRepo.findByUserId(AUserId);
     }
 
     @Override

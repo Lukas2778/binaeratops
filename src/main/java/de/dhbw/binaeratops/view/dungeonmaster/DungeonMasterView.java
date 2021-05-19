@@ -312,7 +312,6 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
         });
-
     }
 
     private void createAvatarGrid() {
@@ -594,8 +593,8 @@ public class DungeonMasterView extends Div implements HasUrlParameter<Long>, Rou
 
         chooseDMButton.addClickListener(event -> {
             if (newDMGrid.getSelectedItems().size() > 0) {
-                User newDM = (User) newDMGrid.getSelectedItems().toArray()[0];
-                dungeonServiceI.setDungeonMaster(dungeon, newDM.getUserId());
+                User newDM = dungeonServiceI.getUser(((User) newDMGrid.getSelectedItems().toArray()[0]).getUserId());
+                dungeonServiceI.setDungeonMaster(dungeon.getDungeonId(), newDM.getUserId());
                 dungeonServiceI.deactivateDungeon(dungeonId);
                 setPlayersInactive();
                 leaveDialog.close();
