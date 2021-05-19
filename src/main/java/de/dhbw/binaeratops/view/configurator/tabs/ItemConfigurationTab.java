@@ -45,7 +45,6 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
     ItemDialog itemDialog;
 
     private Item currentItem;
-    // TODO Kommentare schreiben
     public ItemConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();

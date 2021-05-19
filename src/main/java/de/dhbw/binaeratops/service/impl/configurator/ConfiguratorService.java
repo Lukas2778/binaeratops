@@ -365,7 +365,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void saveRoom(Room ARoom) {
         roomRepo.save(ARoom);
-        //TODO test: dungeonRepo.save(dungeon);
     }
 
     @Override

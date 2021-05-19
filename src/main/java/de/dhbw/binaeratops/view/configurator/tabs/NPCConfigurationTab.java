@@ -45,7 +45,6 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
 
     NPCDialog npcDialog;
     private NPC currentNPC;
-    // TODO Kommentare schreiben
     public NPCConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         configuratorService = configuratorServiceI;
         initRoom();
@@ -56,6 +55,9 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
         add(new H1(res.getString("view.configurator.npc.headline")), hint,  items);
     }
 
+    /**
+     * Raum initialisieren.
+     */
     private void initRoom() {
         createGrid();
 

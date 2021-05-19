@@ -124,7 +124,7 @@ public class AuthService implements AuthServiceI {
     }
 
     /**
-     * Seiten Verlinkung vornehmen ohne Menüe. @TODO
+     * Seiten Verlinkung vornehmen ohne Menü.
      */
     private void createRoutes() {
         getRoutsForMenu().stream()
@@ -136,7 +136,7 @@ public class AuthService implements AuthServiceI {
     }
 
     /**
-     * Auflisten der Routen, die mit Menüband angezeigt werden. @TODO
+     * Auflisten der Routen, die mit Menüband angezeigt werden.
      *
      * @return Rückgabe Routen.
      */
@@ -149,9 +149,10 @@ public class AuthService implements AuthServiceI {
         return returnList;
     }
 
+
     /**
-     * @return @TODO
-     * @TODO
+     * Liste der verfügbaren Routen zurückgeben.
+     * @return Liste der Routen.
      */
     private List<AuthorizedRoute> getRouts() {
         List<AuthorizedRoute> returnList = new ArrayList<>();
