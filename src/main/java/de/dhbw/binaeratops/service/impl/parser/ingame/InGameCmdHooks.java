@@ -52,7 +52,13 @@ public class InGameCmdHooks implements InGameCmdHooksI {
 
     @Override
     public UserMessage onCmdHelp(DungeonI ADungeon) {
-        return new UserMessage("view.game.cmd.help", String.valueOf(ADungeon.getCommandSymbol()), String.valueOf(ADungeon.getCommandSymbol()));
+        return new UserMessage("view.game.cmd.help", String.valueOf(ADungeon.getCommandSymbol()),
+                String.valueOf(ADungeon.getCommandSymbol()), String.valueOf(ADungeon.getCommandSymbol()), String.valueOf(ADungeon.getCommandSymbol()));
+    }
+
+    @Override
+    public UserMessage onCmdHelpAll(DungeonI ADungeon) {
+        return new UserMessage("view.game.cmd.help.all", String.valueOf(ADungeon.getCommandSymbol()), String.valueOf(ADungeon.getCommandSymbol()));
     }
 
     @Override
