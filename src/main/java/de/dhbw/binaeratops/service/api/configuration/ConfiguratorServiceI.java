@@ -373,6 +373,11 @@ public interface ConfiguratorServiceI {
      */
     void removePermission(User AUser);
 
+    /**
+     * Entfernt die Berechtigung vom übergebenen Benutzer.
+     *
+     * @param AUser Benutzer, dem die Berechtigung entfernt werden soll.
+     */
     void removeBlockedPermission(User AUser);
 
     /**
@@ -389,5 +394,10 @@ public interface ConfiguratorServiceI {
      */
     List<Permission> getAllowedPermissions();
 
+    /**
+     * Gibt alle blockierten Berechtigungen des Dungeons zurück.
+     *
+     * @return Alle blockierten Berechtigungen.
+     */
     List<Permission> getBlockedPermissions();
 }
