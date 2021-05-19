@@ -1,15 +1,15 @@
 package de.dhbw.binaeratops.view.configurator.tabs;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
@@ -45,12 +45,15 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
 
     NPCDialog npcDialog;
     private NPC currentNPC;
-
+    // TODO Kommentare schreiben
     public NPCConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         configuratorService = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1(res.getString("view.configurator.npc.headline")), items);
+        Details hint = new Details(res.getString("view.configurator.npc.hint"),
+                                   new Text(res.getString("view.configurator.npc.hint.description")));
+
+        add(new H1(res.getString("view.configurator.npc.headline")), hint,  items);
     }
 
     private void initRoom() {

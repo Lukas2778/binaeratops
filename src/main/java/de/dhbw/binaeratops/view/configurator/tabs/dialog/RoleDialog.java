@@ -18,7 +18,6 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Role;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -41,7 +40,7 @@ public class RoleDialog extends Dialog {
     Grid<Role> grid;
     private ConfiguratorServiceI configuratorServiceI;
 
-
+    // TODO Kommentare schreiben
     public RoleDialog() {
     }
 
@@ -61,12 +60,15 @@ public class RoleDialog extends Dialog {
         currentDescriptionField = new TextField(res.getString("view.configurator.dialog.role.field.description"));
         NumberField lifepointsBonusField = new NumberField(res.getString("view.configurator.dialog.race.field.lifepointsBonus"));
         lifepointsBonusField.setHasControls(true);
-        lifepointsBonusField.setMin(-50);
+        lifepointsBonusField.setMin(0);
+        lifepointsBonusField.setMax(50);
         lifepointsBonusField.setValue(0.0);
+        lifepointsBonusField.setWidth("160px");
+
         Button saveDialog = new Button(res.getString("view.configurator.dialog.role.button.save"));
         Button closeDialog = new Button(res.getString("view.configurator.dialog.role.button.cancel"));
 
-        this.add(new VerticalLayout(currentRoleField, currentDescriptionField, lifepointsBonusField ,new HorizontalLayout(saveDialog, closeDialog)));
+        this.add(new VerticalLayout(currentRoleField, currentDescriptionField, lifepointsBonusField, new HorizontalLayout(saveDialog, closeDialog)));
 
         saveDialog.addClickListener(e -> {
             if (currentRoleField.getValue() != "") {

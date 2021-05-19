@@ -7,7 +7,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
@@ -40,7 +39,7 @@ public class NPCDialog extends Dialog {
     Grid<NPC> grid;
 
     public NPCDialog() {}
-
+    // TODO Kommentare schreiben
     public NPCDialog(ConfiguratorServiceI AConfiguratorServiceI, NPC currentNPC, Grid<NPC> grid) {
         configuratorService = AConfiguratorServiceI;
         this.currentNPC = currentNPC;

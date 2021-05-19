@@ -3,10 +3,7 @@ package de.dhbw.binaeratops.service.impl.configurator;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
-import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
-import de.dhbw.binaeratops.model.repository.DungeonRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.model.repository.UserRepositoryI;
+import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +36,9 @@ public class DungeonService implements DungeonServiceI {
     @Autowired
     AvatarRepositoryI avatarRepo;
 
+    @Autowired
+    PermissionRepositoryI permissionRepo;
+
     @Override
     public List<Dungeon> getAllDungeonsFromUser(User AUser) {
         List<Dungeon> userDungeons = new ArrayList<>();
@@ -63,12 +63,12 @@ public class DungeonService implements DungeonServiceI {
                             && myDungeon.getDungeonStatus().equals(Status.ACTIVE)
                             && !myDungeon.getDungeonMasterId().equals(AUser.getUserId())
                             && (
-                                    myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
-                            || (
+                            myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
+                                    || (
                                     myDungeon.getDungeonVisibility().equals(Visibility.PRIVATE)
-                                    && myDungeon.getAllowedUsers().contains(AUser)
-                                    && !myDungeon.getBlockedUsers().contains(AUser)
-                                )
+                                            && myDungeon.getAllowedUsers().contains(AUser)
+                                            && !myDungeon.getBlockedUsers().contains(AUser)
+                            )
                     )
             ) {
                 userDungeons.add(myDungeon);
@@ -104,6 +104,13 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
+    public void setAvatarInactive(long AAvatarId) {
+        Avatar avatar = avatarRepo.findByAvatarId(AAvatarId);
+        avatar.setActive(false);
+        avatarRepo.save(avatar);
+    }
+
+    @Override
     public Room getRoomOfAvatar(Avatar AAvatar) {
         return roomRepo.findByRoomId(AAvatar.getCurrentRoom().getRoomId());
     }
@@ -128,9 +135,10 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public void setDungeonMaster(Dungeon ADungeon, Long AUserId) {
-        ADungeon.setDungeonMasterId(AUserId);
-        dungeonRepo.save(ADungeon);
+    public void setDungeonMaster(Long ADungeonId, Long AUserId) {
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        dungeon.setDungeonMasterId(AUserId);
+        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -153,7 +161,14 @@ public class DungeonService implements DungeonServiceI {
             avatar.setActive(false);
             avatarRepo.save(avatar);
         }
-        dungeon.addBlockedUser(user);
+        dungeonRepo.save(dungeon);
+    }
+
+    public void declinePlayer(Long ADungeonId, Long AUserId, Permission APermission) {
+        Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
+        dungeon.addBlockedUser(APermission);
+        dungeon.removeRequestUser(APermission);
+        permissionRepo.save(APermission);
         dungeonRepo.save(dungeon);
     }
 
@@ -168,12 +183,68 @@ public class DungeonService implements DungeonServiceI {
         avatarRepo.save(avatar);
     }
 
+    public User getUser(Long AUserId) {
+        return userRepo.findByUserId(AUserId);
+    }
+
     @Override
-    public void allowUser(Long ADungeonId, Long AUserId) {
+    public void allowUser(Long ADungeonId, Long AUserId, Permission APermission) {
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
         User user = userRepo.findByUserId(AUserId);
-        dungeon.addAllowedUser(user);
+        dungeon.addAllowedUser(APermission);
+        dungeon.removeRequestUser(APermission);
+//        user.setAllowedDungeon(dungeon);
+//        dungeon.getAllowedUsers().add(user);
+        permissionRepo.save(APermission);
         userRepo.save(user);
         dungeonRepo.save(dungeon);
+    }
+
+    public Permission getPermissionRequest(User AUser,Dungeon ADungeon) {
+        List<Permission> p = permissionRepo.findByRequestedDungeonAndUser(ADungeon, AUser);
+        if (p.size() > 0) {
+            return p.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public Permission getPermissionGranted(User AUser,Dungeon ADungeon) {
+        List<Permission> p = permissionRepo.findByAllowedDungeonAndUser(ADungeon, AUser);
+        if (p.size() > 0) {
+            return p.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public Permission getPermissionBlocked(User AUser,Dungeon ADungeon) {
+        List<Permission> p = permissionRepo.findByBlockedDungeonAndUser(ADungeon, AUser);
+        if (p.size() > 0) {
+            return p.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public void savePermission(Permission APermission) {
+        permissionRepo.save(APermission);
+    }
+
+    //Diese Setter werden für Tests benötigt
+    public void setDungeonRepo(DungeonRepositoryI dungeonRepo) {
+        this.dungeonRepo = dungeonRepo;
+    }
+
+    public void setUserRepo(UserRepositoryI userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    public void setRoomRepo(RoomRepositoryI roomRepo) {
+        this.roomRepo = roomRepo;
+    }
+
+    public void setAvatarRepo(AvatarRepositoryI avatarRepo) {
+        this.avatarRepo = avatarRepo;
     }
 }

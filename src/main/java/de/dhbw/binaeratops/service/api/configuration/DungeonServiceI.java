@@ -1,9 +1,6 @@
 package de.dhbw.binaeratops.service.api.configuration;
 
-import de.dhbw.binaeratops.model.entitys.Avatar;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Room;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
 
 import java.util.List;
 
@@ -72,6 +69,13 @@ public interface DungeonServiceI {
     List<Avatar> getCurrentAvatars(long ADungeonId);
 
     /**
+     * Setzt den gewünschten Avatar auf inaktiv
+     *
+     * @param AAvatarId der gewünschte Avatar.
+     */
+    void setAvatarInactive(long AAvatarId);
+
+    /**
      * Gibt den Raum des übergebenen Avatars zurück.
      *
      * @param AAvatar den gesucheten Avatar.
@@ -92,10 +96,10 @@ public interface DungeonServiceI {
     /**
      * Setzt den Dungeon-Master des übergebenen Dungeons.
      *
-     * @param ADungeon Dungeon, für den der Dungeon-Master gesetzt werden soll.
+     * @param ADungeonId Dungeon, für den der Dungeon-Master gesetzt werden soll.
      * @param AUserId  Benutzer ID des Benutzers, der Dungeon-Master werden soll.
      */
-    void setDungeonMaster(Dungeon ADungeon, Long AUserId);
+    void setDungeonMaster(Long ADungeonId, Long AUserId);
 
     /**
      * Gibt die aktuellen Benutzer zurück.
@@ -121,6 +125,8 @@ public interface DungeonServiceI {
      */
     void kickPlayer(Long ADungeonId, Long AUserId);
 
+    void declinePlayer(Long ADungeonId, Long AUserId, Permission APermission);
+
     /**
      * Gibt den Raum der übergebenen ID zurück.
      *
@@ -130,12 +136,21 @@ public interface DungeonServiceI {
     Room getRoomById(Long ARoomId);
 
     /**
+     * Gibt den Benutzer aus der DB zurück.
+     *
+     * @param AUserId Der gewünschte Benutzer.
+     * @return Gewünschter Benutzer.
+     */
+    User getUser(Long AUserId);
+
+    /**
      * Erlaubt übergebenen Benutzer dem Dungeon beizutreten.
      *
-     * @param ADungeonId Dungeon, dem der Benutzer beitreten können soll.
-     * @param AUserId    Benutzer, der beitreten können soll.
+     * @param ADungeonId  Dungeon, dem der Benutzer beitreten können soll.
+     * @param AUserId     Benutzer, der beitreten können soll.
+     * @param APermission Aktuelle Berechtigung.
      */
-    void allowUser(Long ADungeonId, Long AUserId);
+    void allowUser(Long ADungeonId, Long AUserId, Permission APermission);
 
     /**
      * Setzt den Avatar in Status "Keine ausstehende Anfrage vorhanden".
@@ -143,5 +158,48 @@ public interface DungeonServiceI {
      * @param AAvatarId Avatar, der den Status geändert bekommen soll.
      */
     void setAvatarNotRequested(Long AAvatarId);
+
+    /**
+     * Gibt die angefragte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
+    Permission getPermissionRequest(User AUser, Dungeon ADungeon);
+
+    /**
+     * Gibt die erlaubte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
+    Permission getPermissionGranted(User AUser, Dungeon ADungeon);
+
+    /**
+     * Gibt die blockierte Berechtigung des Benutzers für den übergebenen Dungeon zurück.
+     * <p>
+     * NULL, wenn die Berechtigung nicht existiert.
+     * </p>
+     *
+     * @param AUser    Benutzer, für den die Berechtigung gesucht werden soll.
+     * @param ADungeon Dungeon, für den die Berechtigung gesucht werden soll.
+     * @return Berechtigung.
+     */
+    Permission getPermissionBlocked(User AUser, Dungeon ADungeon);
+
+    /**
+     * Speichert die übergebene Berechtigung in der Datenbank.
+     *
+     * @param APermission Berechtigung, die gespeichert werden soll.
+     */
+    void savePermission(Permission APermission);
 }
 

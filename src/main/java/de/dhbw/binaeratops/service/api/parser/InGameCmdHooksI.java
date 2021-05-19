@@ -18,12 +18,20 @@ import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 public interface InGameCmdHooksI {
 
     /**
-     * Callback Befehl "help" und "help all".
-     *
+     * Callback Befehl "help".
      * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
      * @return Benutzernachricht.
      */
     UserMessage onCmdHelp(DungeonI ADungeon);
+
+
+    /**
+     * Callback Befeh "help all".
+     *
+     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
+     * @return Benutzernachricht.
+     */
+    UserMessage onCmdHelpAll(DungeonI ADungeon);
 
     /**
      * Callback Befehl "help cmds".

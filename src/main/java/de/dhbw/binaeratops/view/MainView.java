@@ -31,7 +31,6 @@ import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
-import de.dhbw.binaeratops.view.mainviewtabs.NotificationView;
 
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +63,7 @@ public class MainView extends AppLayout {
     private HorizontalLayout menuLayout;
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
-
+    // TODO Kommentare schreiben
     public MainView() {
         setPrimarySection(Section.DRAWER);
         createTopRightMenu();
@@ -80,6 +79,7 @@ public class MainView extends AppLayout {
         // --- SPRACHE HINZUFÜGEN IN MENÜ --- NICHT ENTFERNEN!!! ---
 
         languageSelect = new Select<>();
+        languageSelect.setLabel(res.getString("view.main.select"));
         languageSelect.setPlaceholder(res.getString("view.main.select"));
         List<Locale> locales = transProv.getProvidedLocales();
 
@@ -108,17 +108,6 @@ public class MainView extends AppLayout {
         menuLayout.addClassName("menuRight");
 
         menuLayout.add(menuBar, avatar);
-
-        /* OLD - Menubar Example */
-//        menuBar = new MenuBar();
-//        menuBar.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
-//        menuBar.setOpenOnHover(true);
-//        menuBar.setClassName("menuRight");
-//        MenuItem menuItem = menuBar.addItem(avatar);
-//        SubMenu subMenu = menuItem.getSubMenu();
-//        subMenu.addItem("Profile");
-//        subMenu.addItem(languageSelect);
-//        subMenu.addItem("Sign out");
     }
 
     private Component createHeaderContent() {
@@ -166,7 +155,6 @@ public class MainView extends AppLayout {
     private Component[] createMenuItems() {
         return new Tab[]{
                 createTab(res.getString("view.main.tab.about.us"), AboutUsView.class),
-                createTab(res.getString("view.main.tab.notification.view"), NotificationView.class),
                 createTab(res.getString("view.main.tab.lobby"), LobbyView.class),
                 createTab(res.getString("view.main.tab.my.dungeons"), MyDungeonsView.class)
         };

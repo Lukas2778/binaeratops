@@ -98,7 +98,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
     }
-
+    // TODO Kommentare schreiben
     private Button createRemoveButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
         Button button = new Button("", clickEvent -> {
@@ -145,7 +145,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 
     private void initEditDungeonButton() {
         editDungeonButton.addClickListener(e -> {
-            if (true || !((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {//TODO
+            if (!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {
                 if (dungeonGrid.getSelectedItems().size() > 0) {
                     //das ist das hässlichste stück code ever ever
                     UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());

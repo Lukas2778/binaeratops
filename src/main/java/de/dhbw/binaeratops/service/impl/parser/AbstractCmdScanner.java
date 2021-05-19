@@ -117,6 +117,11 @@ public abstract class AbstractCmdScanner {
         startPos = APos;
     }
 
+    /**
+     * Liefert aus dem restlichen zu parsenden String das erste Wort in Anführungszeichen.
+     *
+     * @return 1. Wort. {@code null}, wenn bereits alles geparst wurde.
+     */
     protected String findParenthesesToken() {
         return findInput(false, true);
     }
@@ -184,7 +189,7 @@ public abstract class AbstractCmdScanner {
                     n = input.length();
                 } else {
                     if (AParentheses) {
-                        for (; n < input.length() && input.charAt(n) != '"';n++) {
+                        for (; n < input.length() && input.charAt(n) != '"'; n++) {
                             flagPos++;
                         }
                         if (n < input.length()) {

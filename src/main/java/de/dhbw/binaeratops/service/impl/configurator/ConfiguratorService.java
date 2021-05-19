@@ -49,6 +49,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
     NpcInstanceRepositoryI npcInstanceRepositoryI;
+    @Autowired
+    PermissionRepositoryI permissionRepo;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -193,7 +195,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void createRace(String AName, String ADescription, Long ALifepointsBonus) {
-        Race newRace = new Race(AName, ADescription,ALifepointsBonus);
+        Race newRace = new Race(AName, ADescription, ALifepointsBonus);
         dungeon.addRace(newRace);
         raceRepo.save(newRace);
         //dungeonRepo.save(dungeon);
@@ -329,7 +331,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<NPCInstance> getAllNPCs(Room ARoom){
+    public List<NPCInstance> getAllNPCs(Room ARoom) {
         return npcInstanceRepositoryI.findByRoom(ARoom);
     }
 
@@ -344,7 +346,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public Room getRoom(Long ARoomID) {
         for (Room r : dungeon.getRooms()) {
-            if(r.getRoomId().equals(ARoomID)){
+            if (r.getRoomId().equals(ARoomID)) {
                 return r;
             }
         }
@@ -372,17 +374,13 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     }
 
     @Override
-    public List<User> getAllUsers()
-    {
-
+    public List<User> getAllUsers() {
         return userRepo.findAll();
     }
 
     @Override
-    public User getUser(String AName)
-    {
-
-       return userRepo.findByName(AName);
+    public User getUser(String AName) {
+        return userRepo.findByName(AName);
     }
 
 
@@ -390,5 +388,20 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         userRepo.save(AUser);
     }
 
+    @Override
+    public void removePermission(User AUser) {
+        List<Permission> permissions = permissionRepo.findByAllowedDungeonAndUser(dungeon, AUser);
+        dungeon.removeAllowedUser(permissions.get(0));
+        permissionRepo.delete(permissions.get(0));
+    }
+
+    @Override
+    public void savePermission(Permission APermission) {
+        permissionRepo.save(APermission);
+    }
+
+    public List<Permission> getAllowedPermissions() {
+        return permissionRepo.findByAllowedDungeon(dungeon);
+    }
 
 }

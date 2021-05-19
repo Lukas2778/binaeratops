@@ -1,15 +1,15 @@
 package de.dhbw.binaeratops.view.configurator.tabs;
 
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.grid.HeaderRow;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.Item;
@@ -45,12 +45,16 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
     ItemDialog itemDialog;
 
     private Item currentItem;
-
+    // TODO Kommentare schreiben
     public ItemConfigurationTab(@Autowired ConfiguratorServiceI configuratorServiceI) {
         this.configuratorServiceI = configuratorServiceI;
         initRoom();
         addClickListener();
-        add(new H1(res.getString("view.configurator.item.headline")), items);
+
+        Details hint = new Details(res.getString("view.configurator.item.hint"),
+                                   new Text(res.getString("view.configurator.item.hint.description")));
+
+        add(new H1(res.getString("view.configurator.item.headline")), hint , items);
     }
 
     private void initRoom() {

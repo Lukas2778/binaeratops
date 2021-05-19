@@ -38,7 +38,7 @@ public class ItemDialog extends Dialog {
 
     private Item currentItem;
     Grid<Item> grid;
-
+// TODO Kommentare schreiben
     public ItemDialog() {}
 
     public ItemDialog(ConfiguratorServiceI configuratorServiceI, Item currentItem, Grid<Item> grid) {

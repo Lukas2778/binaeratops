@@ -14,7 +14,17 @@ import java.util.List;
  * @author Nicolas Haug
  */
 public interface UserMessageI {
+    /**
+     * Gibt die Parameter der Benutzernachricht zurück.
+     *
+     * @return Parameter der Benutzernachricht.
+     */
     List<String> getParams();
 
+    /**
+     * Gibt den Resource-Bundle Schlüssel zurück.
+     *
+     * @return Resource-Bundle Schlüssel.
+     */
     String getKey();
 }
