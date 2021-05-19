@@ -236,4 +236,21 @@ public class DungeonService implements DungeonServiceI {
     public void savePermission(Permission APermission) {
         permissionRepo.save(APermission);
     }
+
+    //Diese Setter werden für Tests benötigt
+    public void setDungeonRepo(DungeonRepositoryI dungeonRepo) {
+        this.dungeonRepo = dungeonRepo;
+    }
+
+    public void setUserRepo(UserRepositoryI userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    public void setRoomRepo(RoomRepositoryI roomRepo) {
+        this.roomRepo = roomRepo;
+    }
+
+    public void setAvatarRepo(AvatarRepositoryI avatarRepo) {
+        this.avatarRepo = avatarRepo;
+    }
 }
