@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
- * Dialog-Oberfläche für die Komponente "Spielberechtigung" des Dungeoneigenschaften-Konfigurators.
+ * Dialog-Oberfläche für die Komponente "Blockierte Spielberechtigung" des Dungeoneigenschaften-Konfigurators.
  * <p>
- * Diese Ansicht stellt alle View-Komponenten für das Hinzufügen einer Berechtigung zu einem Dungeon bereit.
+ * Diese Ansicht stellt alle View-Komponenten für das Hinzufügen einer Blockierten-Berechtigung zu einem Dungeon bereit.
  * <p>
  * Dafür sendet sie die Benutzereingaben direkt an den entsprechenden Service.
  *
- * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
+ * @author Nicolas Haug
  */
 public class BlockedPermissionDialog extends Dialog {
     private TextField currentUserField;

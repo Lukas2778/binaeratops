@@ -299,11 +299,11 @@ public class MapService implements MapServiceI {
     }
 
     /**
-     * TODO Kommentar schreiben
-     * @param r1
-     * @param r2
-     * @param checkedRooms
-     * @return
+     * Überprüft, ob vom ersten Raum der zweite erreicht werden kann mithilfe der Raumliste.
+     * @param r1 Raum eins.
+     * @param r2 Raum zwei.
+     * @param checkedRooms Liste der Räume.
+     * @return Raum kann erreicht werden.
      */
     private boolean canReachRoom(Room r1, Room r2, ArrayList<Room> checkedRooms) {
         //Man sucht mit r1 r2. Entweder r1 ist r2 und es war erfolgreich oder man sucht noch weiter. Mit checked Rooms werden schon besuchte Räume gespeichert.
@@ -424,9 +424,9 @@ public class MapService implements MapServiceI {
     }
 
     /**
-     * TODO Kommentar schreiben
-     * @param ARoom
-     * @return
+     * Alle Nachbarn eines Raumes laden.
+     * @param ARoom Raum dessen Nachbarn gesucht werden sollen.
+     * @return Liste der Nachbarräume.
      */
     private LinkedList<Room> getAllNeighbours(Room ARoom) {
         LinkedList<Room> returnR = new LinkedList<>();
