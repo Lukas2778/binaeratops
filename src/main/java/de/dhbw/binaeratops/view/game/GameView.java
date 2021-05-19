@@ -176,7 +176,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     void initiateGameView() {
         binTitle = new H2(res.getString("view.game.headline"));
-        aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getCommandSymbol());
+        aboutText = MessageFormat.format(res.getString("view.game.text"), myDungeon.getDungeonName(), myDungeon.getCommandSymbol());
         html = new Html(aboutText);
 
         myDungeonChatView = new ChatView(messages);
@@ -711,7 +711,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * Der Chat wird aktiviert. Ohne diese Methode würde der Chat nicht direkt automatisch Nachrichten laden.
      */
     public void loadChat() {
-        String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), currentUser.getName());
+        String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), selectedInDialogAvatar.getName());
         messagesPublisher.onNext(new ChatMessage(new Paragraph(new Html(greetingMessage)), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
     }
@@ -720,7 +720,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         //wird dem Timer nach aufgerufen, sodass der DungeonMaster das Inventar des Spielers aktualisieren kann
         if (myGameService.getDungeonStatus(dungeonId).equals(Status.INACTIVE)) {
             Dialog dialog = new Dialog();
-            Label dungeonMasterLeft = new Label("Der Dungeon-Master hat das Spiel verlassen.");
+            Label dungeonMasterLeft = new Label(res.getString("view.game.label.dm.left"));
             myAvatar = null;
             getUI().ifPresent(ui -> ui.access(() -> {
                 ui.navigate("lobby");

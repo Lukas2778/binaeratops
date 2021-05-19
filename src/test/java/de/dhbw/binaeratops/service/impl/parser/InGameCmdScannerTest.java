@@ -50,7 +50,7 @@ public class InGameCmdScannerTest extends Logger {
     @Test
     public void testHelpCommand() throws CmdScannerException, InvalidImplementationException {
         String input = "/HELP";
-        Mockito.when(hooks.onCmdHelpAll(dungeon)).thenReturn(new UserMessage("view.game.cmd.help"));
+        Mockito.when(hooks.onCmdHelp(dungeon)).thenReturn(new UserMessage("view.game.cmd.help"));
         UserMessage um = scanner.scan(input, dungeon, avatar, user);
         Assert.assertEquals("view.game.cmd.help", um.getKey());
     }
@@ -58,9 +58,9 @@ public class InGameCmdScannerTest extends Logger {
     @Test
     public void testHelpAll() throws CmdScannerException, InvalidImplementationException {
         String input = "/HELP ALL";
-        Mockito.when(hooks.onCmdHelpAll(dungeon)).thenReturn(new UserMessage("view.game.cmd.help"));
+        Mockito.when(hooks.onCmdHelpAll(dungeon)).thenReturn(new UserMessage("view.game.cmd.help.all"));
         UserMessage um = scanner.scan(input, dungeon, avatar, user);
-        Assert.assertEquals("view.game.cmd.help", um.getKey());
+        Assert.assertEquals("view.game.cmd.help.all", um.getKey());
     }
 
     @Test
