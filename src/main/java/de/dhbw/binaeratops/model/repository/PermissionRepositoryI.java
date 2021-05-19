@@ -26,4 +26,6 @@ public interface PermissionRepositoryI extends JpaRepository<Permission, Long> {
     List<Permission> findByRequestedDungeonAndUser(Dungeon AAllowedDungeon, User AUser);
 
     List<Permission> findByBlockedDungeonAndUser(Dungeon AAllowedDungeon, User AUser);
+
+    List<Permission> findByAllowedDungeon(Dungeon AAllowedDungeon);
 }

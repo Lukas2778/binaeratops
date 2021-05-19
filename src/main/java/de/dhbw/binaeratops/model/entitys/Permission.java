@@ -52,23 +52,23 @@ public class Permission {
         return allowedDungeon;
     }
 
-    public void setAllowedDungeon(Dungeon allowedDungeon) {
-        this.allowedDungeon = allowedDungeon;
+    public void setAllowedDungeon(Dungeon AAllowedDungeon) {
+        this.allowedDungeon = AAllowedDungeon;
     }
 
     public Dungeon getBlockedDungeon() {
         return blockedDungeon;
     }
 
-    public void setBlockedDungeon(Dungeon blockedDungeon) {
-        this.blockedDungeon = blockedDungeon;
+    public void setBlockedDungeon(Dungeon ABlockedDungeon) {
+        this.blockedDungeon = ABlockedDungeon;
     }
 
     public Dungeon getRequestedDungeon() {
         return requestedDungeon;
     }
 
-    public void setRequestedDungeon(Dungeon requestedDungeon) {
-        this.requestedDungeon = requestedDungeon;
+    public void setRequestedDungeon(Dungeon ARequestedDungeon) {
+        this.requestedDungeon = ARequestedDungeon;
     }
 }

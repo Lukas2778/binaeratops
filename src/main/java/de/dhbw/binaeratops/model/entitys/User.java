@@ -45,15 +45,6 @@ public class User implements UserI {
     private Boolean isVerified;
 
     @ManyToOne
-    private Dungeon allowedDungeons;
-
-    @ManyToOne
-    private Dungeon blockedDungeons;
-
-    @ManyToOne
-    private Dungeon requestedDungeons;
-
-    @ManyToOne
     private Dungeon currentDungeon;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -150,34 +141,6 @@ public class User implements UserI {
     @Override
     public void setVerified(Boolean AIsVerified) {
         this.isVerified = AIsVerified;
-    }
-
-    @Override
-    public Dungeon getAllowedDungeon() {
-        return allowedDungeons;
-    }
-
-    @Override
-    public void setAllowedDungeon(Dungeon AAllowedDungeons) {
-        this.allowedDungeons = AAllowedDungeons;
-    }
-
-    @Override
-    public Dungeon getBlockedDungeon() {
-        return blockedDungeons;
-    }
-
-    @Override
-    public void setBlockedDungeon(Dungeon ABlockedDungeons) {
-        this.blockedDungeons = ABlockedDungeons;
-    }
-
-    public Dungeon getRequestedDungeons() {
-        return requestedDungeons;
-    }
-
-    public void setRequestedDungeons(Dungeon ARequestedDungeon) {
-        this.requestedDungeons = ARequestedDungeon;
     }
 
     @Override

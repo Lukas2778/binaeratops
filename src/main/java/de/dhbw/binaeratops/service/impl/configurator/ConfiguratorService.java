@@ -393,7 +393,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         List<Permission> permissions = permissionRepo.findByAllowedDungeonAndUser(dungeon, AUser);
         dungeon.removeAllowedUser(permissions.get(0));
         permissionRepo.delete(permissions.get(0));
-        dungeonRepo.save(dungeon);
     }
 
     @Override
@@ -401,5 +400,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
         permissionRepo.save(APermission);
     }
 
+    public List<Permission> getPermissions() {
+        return permissionRepo.findByAllowedDungeon(dungeon);
+    }
 
 }

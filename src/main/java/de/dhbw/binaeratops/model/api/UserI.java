@@ -110,32 +110,7 @@ public interface UserI {
      */
     void setVerified(Boolean AIsVerified);
 
-    /***
-     * Gibt den erlaubten Dungeons zurück.
-     * @return Erlaubten Dungeons.
-     */
-    Dungeon getAllowedDungeon();
 
-    /**
-     * Setzt den erlaubten Dungeon.
-     *
-     * @param AAllowedDungeons Zu setzender erlaubter Dungeon.
-     */
-    void setAllowedDungeon(Dungeon AAllowedDungeons);
-
-    /**
-     * Gibt den blockierten Dungeon zurück.
-     *
-     * @return Blockierter Dungeon.
-     */
-    Dungeon getBlockedDungeon();
-
-    /**
-     * Setzt den blockierten Dungeon.
-     *
-     * @param ABlockedDungeons Zu setzender blockierter Dungeon.
-     */
-    void setBlockedDungeon(Dungeon ABlockedDungeons);
 
     /**
      * Dungeon, indem sich der Benutzer zurzeit aufhält.

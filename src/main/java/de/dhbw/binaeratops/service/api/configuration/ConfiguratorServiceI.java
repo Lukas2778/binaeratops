@@ -369,4 +369,6 @@ public interface ConfiguratorServiceI {
     void removePermission(User AUser);
 
     void savePermission(Permission APermission);
+
+    List<Permission> getPermissions();
 }

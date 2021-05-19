@@ -253,14 +253,13 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
         });
 
         deleteB.addClickListener(e -> {
-            User[] selectedUser = grid.getSelectedItems()
-                    .toArray(User[]::new);
+            Permission[] selectedUser = grid.getSelectedItems()
+                    .toArray(Permission[]::new);
             if (selectedUser.length >= 1) {
-                currentUser = selectedUser[0];
+                Permission selectedPerm = selectedUser[0];
+                currentUser = selectedPerm.getUser();
                 configuratorService.removePermission(currentUser);
                 // configuratorService.getDungeon().removePermission(configuratorService.getDungeon().getPermission(configuratorService.getDungeon(), currentUser));
-                configuratorService.saveUser(currentUser);
-                configuratorService.saveDungeon();
 
                 refreshGrid();
 
@@ -298,9 +297,7 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     }
 
     private void refreshGrid() {
-        grid.setItems(configuratorService.getDungeon()
-                .getAllowedUsers());
-
+        grid.setItems(configuratorService.getPermissions());
     }
 
     @Override
