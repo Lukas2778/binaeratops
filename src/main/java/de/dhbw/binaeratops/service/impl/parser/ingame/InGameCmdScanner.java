@@ -35,18 +35,6 @@ public class InGameCmdScanner extends AbstractCmdScanner {
     private static final String CMD_NOTIFY = "NOTIFY";
     private static final String CMD_NOTIFY_ALL = "ALL";
     private static final String CMD_NOTIFY_ROOM = "ROOM";
-    private static final String CMD_REPORT = "REPORT";
-    private static final String CMD_WITHDRAW = "WITHDRAW";
-    private static final String CMD_WITHDRAW_ROLE = "ROLE";
-    private static final String CMD_NPC = "NPC";
-    private static final String CMD_NPC_SPEAK = "SPEAK";
-    private static final String CMD_NPC_ATTACK = "ATTACK";
-    private static final String CMD_NPC_TELEPORT = "TELEPORT";
-    private static final String CMD_NPC_DROP = "DROP";
-    private static final String CMD_EXIT = "EXIT";
-    private static final String CMD_EXIT_STOP_GAME = "GAME";
-    private static final String CMD_STOP = "STOP";
-    private static final String CMD_STOP_GAME = "GAME";
 
     /**
      * Konstruktor.
@@ -88,12 +76,6 @@ public class InGameCmdScanner extends AbstractCmdScanner {
                     return scanSpeak(ADungeon, AAvatar);
                 case CMD_NOTIFY:
                     return scanNotify(ADungeon, AUser);
-                case CMD_WITHDRAW: // TODO WITHDRAW, EXIT, STOP ggf entfernen.
-                    return scanWithdraw(ADungeon, AUser);
-                case CMD_EXIT:
-                    return scanGame(ADungeon, AUser, false);
-                case CMD_STOP:
-                    return scanGame(ADungeon, AUser, true);
                 default:
                     onUnexpectedToken();
                     return null;
@@ -275,73 +257,5 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             return hooks.onCmdNotifyAll(ADungeon, AUser, message);
         }
-    }
-
-    /**
-     * Scanner im Zustand "scanWithdraw".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser    Benutzer, der den Befehl ausführt.
-     * @return Benutzernachricht.
-     */
-    private UserMessage scanWithdraw(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
-        String token = findNextToken();
-        if (token == null) {
-            onMissingToken("<ROLE>");
-            return null;
-        } else {
-            switch (token.toUpperCase()) {
-                case CMD_WITHDRAW_ROLE:
-                    return scanWithdrawRole(ADungeon, AUser);
-                default:
-                    onUnexpectedToken();
-                    return null;
-            }
-        }
-    }
-
-    /**
-     * Scanner im Zustand "scanWithdrawRole".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser    Benutzer, der den Befehl ausführt.
-     * @return Benutzernachricht.
-     */
-    private UserMessage scanWithdrawRole(DungeonI ADungeon, UserI AUser) throws CmdScannerException, InvalidImplementationException {
-        String username = findRestOfInput();
-        if (username == null) {
-            onMissingToken("<Benutzername>");
-            return null;
-        } else {
-            return hooks.onCmdWithdrawRole(ADungeon, AUser, username);
-        }
-    }
-
-    /**
-     * Scanner im Zustand "scanStart".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser    Benutzer, der den Befehl ausführt.
-     * @param AStop    Wahrheitswert, ob gestoppt oder pausiert werden soll.
-     * @return Benutzernachricht.
-     */
-    private UserMessage scanGame(DungeonI ADungeon, UserI AUser, Boolean AStop) throws CmdScannerException {
-        String game = findRestOfInput();
-        if (game == null) {
-            onMissingToken("<GAME>");
-        } else {
-            switch (game.toUpperCase()) {
-                case CMD_EXIT_STOP_GAME:
-                    if (AStop) {
-                        return hooks.onCmdStop(ADungeon, AUser);
-                    } else {
-                        return hooks.onCmdExit(ADungeon, AUser);
-                    }
-                default:
-                    onUnexpectedToken();
-                    return null;
-            }
-        }
-        return null;
     }
 }

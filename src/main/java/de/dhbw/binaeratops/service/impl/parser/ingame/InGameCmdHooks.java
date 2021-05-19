@@ -169,42 +169,13 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         }
     }
 
-    @Override
-    public UserMessage onCmdWithdrawRole(DungeonI ADungeon, UserI AUser, String ARecipent) throws CmdScannerException, InvalidImplementationException {
-        Dungeon dungeon = Dungeon.check(ADungeon);
-        if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
-            if (userRepo.findByName(ARecipent) != null) {
-                User user = userRepo.findByName(ARecipent);
-                ADungeon.setDungeonMasterId(user.getUserId());
-                dungeonRepo.save(dungeon);
-                // TODO return new UserMessage("", user.getUsername())
-            } else {
-                // return new UserMessage(User XY nicht gefunden.)
-            }
-        }
-        if (userRepo.findByName(ARecipent) != null) {
-            User user = userRepo.findByName(ARecipent);
-            ADungeon.setDungeonMasterId(user.getUserId());
-            dungeonRepo.save(dungeon);
-            // TODO return new UserMessage("", user.getUsername())
-        } else {
-            // return new UserMessage(User XY nicht gefunden.)
-        }
-        return null;
-    }
-
-    @Override
-    public UserMessage onCmdStop(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
-        return null;
-    }
-
-    @Override
-    public UserMessage onCmdExit(DungeonI ADungeon, UserI AUser) throws CmdScannerException {
-        return null;
-    }
-
-    // TODO Kommentare schreiben
-
+    /**
+     * Gibt alle Benutzer des aktuellen Raumes zurück.
+     *
+     * @param ADungeon Dungeon, in dem sich die Avatare befinden.
+     * @param ARoom    Raum.
+     * @return Alle Benutzer.
+     */
     private List<User> getUsersOfRoom(Dungeon ADungeon, Room ARoom) {
         List<User> users = new ArrayList<>();
         for (Avatar avatar : getCurrentAvatars(ADungeon)) {
@@ -215,8 +186,12 @@ public class InGameCmdHooks implements InGameCmdHooksI {
         return users;
     }
 
-    // TODO Kommentare schreiben
-
+    /**
+     * Gibt alle aktuellen Avatare des Dungeons zurück.
+     *
+     * @param ADungeon Dungeon.
+     * @return Alle aktuellen Avatare des Dungeons.
+     */
     private List<Avatar> getCurrentAvatars(Dungeon ADungeon) {
         List<Avatar> avatars = new ArrayList<>();
         ADungeon.getAvatars().forEach(avatar -> {
