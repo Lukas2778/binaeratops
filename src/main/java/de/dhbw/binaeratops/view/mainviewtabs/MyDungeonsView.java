@@ -84,10 +84,10 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addComponentColumn(dungeon -> {
             Button button = new Button(res.getString("view.my.dungeons.grid.button.start"));
             button.addClickListener(e -> {
-                if(dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION)
+                if (dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION)
                     Notification.show("Der Dungeon muss auf Public oder Private gesetzt werden");
                 else
-                UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
+                    UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
                 dungeonServiceI.activateDungeon(dungeon.getDungeonId());
             });
             return button;
@@ -98,6 +98,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         add(title, buttonsLayout, dungeonGrid);
         setSizeFull();
     }
+
     // TODO Kommentare schreiben
     private Button createRemoveButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
 
@@ -145,15 +146,15 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 
     private void initEditDungeonButton() {
         editDungeonButton.addClickListener(e -> {
-            if (!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {
-                if (dungeonGrid.getSelectedItems().size() > 0) {
+            if (dungeonGrid.getSelectedItems().size() > 0) {
+                if (!((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonStatus().equals(Status.ACTIVE)) {
                     //das ist das hässlichste stück code ever ever
                     UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
                 } else {
-                    Notification.show(res.getString("view.my.dungeons.notification.select.edit"));
+                    Notification.show(res.getString("view.my.dungeons.notification.ingame"));
                 }
             } else {
-                Notification.show(res.getString("view.my.dungeons.notification.ingame"));
+                Notification.show(res.getString("view.my.dungeons.notification.select.edit"));
             }
         });
     }
