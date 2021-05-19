@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.service.api.game;
 import com.vaadin.flow.component.UI;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
+import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 
 import java.util.List;
