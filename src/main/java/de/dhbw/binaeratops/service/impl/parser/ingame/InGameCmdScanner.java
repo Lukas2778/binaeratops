@@ -114,7 +114,7 @@ public class InGameCmdScanner extends AbstractCmdScanner {
         } else {
             switch (token.toUpperCase()) {
                 case CMD_HELP_ALL:
-                    return hooks.onCmdHelp(ADungeon);
+                    return hooks.onCmdHelpAll(ADungeon);
                 case CMD_HELP_CMDS:
                     return hooks.onCmdHelpCmds(ADungeon);
                 case CMD_HELP_CONTROL:
