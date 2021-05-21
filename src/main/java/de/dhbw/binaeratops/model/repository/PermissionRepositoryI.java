@@ -59,4 +59,11 @@ public interface PermissionRepositoryI extends JpaRepository<Permission, Long> {
      * @return Alle erlaubten Berechtigungen.
      */
     List<Permission> findByAllowedDungeon(Dungeon AAllowedDungeon);
+
+    /**
+     * Gibt alle blockierten Berechtigungen zu einem Dungeon zurück.
+     * @param ABlockedDungeon Dungeon, zu dem die Berechtigungen gesucht werden sollen.
+     * @return Alle blockierten Berechtigungen.
+     */
+    List<Permission> findByBlockedDungeon(Dungeon ABlockedDungeon);
 }

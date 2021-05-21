@@ -41,7 +41,12 @@ public class ItemSelectionDialog extends Dialog {
 
     ConfiguratorServiceI configuratorServiceI;
 
-    // TODO Kommentare schreiben
+    /**
+     * Konstruktor für die Auswahl eines Items.
+     * @param AConfiguratorService Konfigurator übergeben.
+     * @param ARoom Raum übergeben.
+     * @param itemList Liste der Items übergeben.
+     */
     public ItemSelectionDialog(ConfiguratorServiceI AConfiguratorService, Room ARoom, ListBox<ItemInstance> itemList){
         room = ARoom;
         this.itemList = itemList;

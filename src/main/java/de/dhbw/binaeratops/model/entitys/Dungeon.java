@@ -354,7 +354,7 @@ public class Dungeon implements DungeonI {
     public void removeCurrentUser(User AUser) {
         currentUsers.remove(AUser);
         setPlayerCount(Long.valueOf(currentUsers.size()));
-        AUser.setCurrentDungeon(null);//@TODO überprüfen, ob User gelöscht wird
+        AUser.setCurrentDungeon(null);
     }
 
     public List<Room> getRooms() {

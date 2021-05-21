@@ -149,7 +149,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                     return new UserMessage("view.game.ctrl.cmd.move.invalid");
                 }
             } else {
-                 throw new CmdScannerAlreadyRequestedException();
+                throw new CmdScannerAlreadyRequestedException();
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("MOVE NORTH");
@@ -722,40 +722,46 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         }
     }
 
-    // TODO Kommentare schreiben
-    private String getCurrentUsers(Dungeon ADungeon) {
-        List<User> avatars = ADungeon.getCurrentUsers();
-        StringBuilder s = new StringBuilder();
-        s.append("<ol>");
-        for (User tempAvatar : avatars) {
-            s.append("<li>").append(tempAvatar.getName()).append("</li>");
-        }
-        s.append("</ol>");
-        return s.toString();
-    }
-
+    /**
+     * Gibt die NPCs im Raum des Avatars als HTML String zurück.
+     *
+     * @param AAvatar Avatar.
+     * @return NPCs im Raum des Avatars als HTML String.
+     */
     private String getNpcs(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         int i = 0;
         for (NPCInstance npc : AAvatar.getCurrentRoom().getNpcs()) {
             s.append(npc.getNpc().getNpcName()).append(", ");
-            i += npc.getNpc().getNpcName().length()+2;
+            i += npc.getNpc().getNpcName().length() + 2;
         }
         String s2 = s.toString();
-        return s2.substring(0, i-2);
+        return s2.substring(0, i - 2);
     }
 
+    /**
+     * Gibt die Gegenstände im Raum des Avatars als HTML String zurück.
+     *
+     * @param AAvatar Avatar.
+     * @return Gegenstände im Raum des Avatars als HTML String.
+     */
     private String getItems(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         int i = 0;
         for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
             s.append(item.getItem().getItemName()).append(", ");
-            i += item.getItem().getItemName().length()+2;
+            i += item.getItem().getItemName().length() + 2;
         }
         String s2 = s.toString(); //s.substring(0, i-2);
-        return s2.substring(0, i-2);
+        return s2.substring(0, i - 2);
     }
 
+    /**
+     * Gibt das Inventar des Avatars als HTML String zurück.
+     *
+     * @param AAvatar Avatar.
+     * @return Inventar des Avatars als HTML String.
+     */
     private String getInventory(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         s.append("<ol>");
@@ -767,6 +773,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         return s.toString();
     }
 
+    /**
+     * Gibt die Ausrüstung des Avatars als HTML String zurück.
+     *
+     * @param AAvatar Avatar.
+     * @return Ausrüstung des Avatars als HTML String.
+     */
     private String getEquipment(Avatar AAvatar) {
         StringBuilder s = new StringBuilder();
         s.append("<ol>");
@@ -778,6 +790,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         return s.toString();
     }
 
+    /**
+     * Gibt die aktuelle Inventargröße des Avatars zurück.
+     *
+     * @param AAvatar Avatar.
+     * @return Aktuelle Inventargröße.
+     */
     private int getInventorySize(Avatar AAvatar) {
         int sum = 0;
         for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
@@ -786,6 +804,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         return sum;
     }
 
+    /**
+     * Überprüft ob der übergebene Gegenstand den korrekten Typ für die Ausrüstung hat.
+     *
+     * @param AItem Gegenstand.
+     * @return Wahrheitswert, ob korrekter Typ.
+     */
     private boolean checkIfItemHasCorrectType(ItemInstance AItem) {
         boolean res = false;
         switch (AItem.getItem().getType()) {
@@ -804,6 +828,13 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         return res;
     }
 
+    /**
+     * Überprüft ob der übergebene Gegenstand bereits ausgerüstet ist durch den Avatar.
+     *
+     * @param AAvatar Avatar.
+     * @param AItem   Gegenstand.
+     * @return Wahrheitswert.
+     */
     private boolean checkIfItemTypeAlreadyInEquip(Avatar AAvatar, ItemInstance AItem) {
         boolean res = false;
         for (ItemInstance item : AAvatar.getEquipment()) {
@@ -814,6 +845,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         return res;
     }
 
+    /**
+     * Gibt alle aktuellen Avatare des Dungeons zurück.
+     *
+     * @param ADungeon Dungeon.
+     * @return Alle aktuellen Avatare des Dungeons.
+     */
     private String getCurrentAvatars(Dungeon ADungeon) {
         List<Avatar> avatars = new ArrayList<>();
         ADungeon.getAvatars().forEach(avatar -> {

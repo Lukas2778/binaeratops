@@ -35,6 +35,7 @@ import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.TranslationProvider;
 import de.dhbw.binaeratops.view.chat.ChatView;
+import de.dhbw.binaeratops.view.game.GameView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
@@ -288,7 +289,8 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         leaveButton.getStyle().set("color", "red");
         addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
         VerticalLayout leaveAndPause = new VerticalLayout();
-        leaveAndPause.add(pauseButton, leaveButton);
+        //leaveAndPause.add(pauseButton, leaveButton);
+        leaveAndPause.add(leaveButton);
         buttLayoutV.add(leaveAndPause);
         //buttLayoutV.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
         //buttLayoutV.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
@@ -312,7 +314,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
             authorisationDialog.open();
         });
-        pauseButton.addClickListener(e -> Notification.show("Not Implemented"));
+        pauseButton.addClickListener(e -> {
+            Notification.show("Dungeon pausiert");
+        });
         leaveButton.addClickListener(e -> {
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
@@ -415,8 +419,8 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             inventory.setItems(avatar.getInventory().stream().map(ItemInstance::getItem).toArray(Item[]::new));
 
             Dialog infoDialog = new Dialog();
-            infoDialog.setMinHeight("700px");//@TODO
-            infoDialog.setMinWidth("1000px");//@TODO
+            infoDialog.setMinHeight("700px");
+            infoDialog.setMinWidth("1000px");
             lay.add(headline, user, room, equipment);
             infoDialog.add(lay, inventoryLabel, inventory);
             infoButton.addClickListener(e -> infoDialog.open());

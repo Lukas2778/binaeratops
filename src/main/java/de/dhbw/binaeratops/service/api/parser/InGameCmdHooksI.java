@@ -110,39 +110,4 @@ public interface InGameCmdHooksI {
      * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
      */
     UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException, InvalidImplementationException;
-
-    /**
-     * Callback Befehl "withdraw role".
-     *
-     * @param ADungeon  Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser     Benutzer, der den Befehl ausführt.
-     * @param ARecipent Benutzer, dem die Dungeon-Master Rolle übergeben werden soll.
-     * @return Benutzernachricht.
-     * @throws CmdScannerException            Fehler bei der Ausführung des Befehls.
-     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
-     * @throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
-     */
-    UserMessage onCmdWithdrawRole(DungeonI ADungeon, UserI AUser, String ARecipent) throws CmdScannerException, InvalidImplementationException;
-
-    /**
-     * Callback Befehl "stop game".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser    Benutzer, der den Befehl ausführt.
-     * @return Benutzernachricht.
-     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
-     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
-     */
-    UserMessage onCmdStop(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
-
-    /**
-     * Callback Befehl "exit game".
-     *
-     * @param ADungeon Dungeon, in dem der Befehl ausgeführt wird.
-     * @param AUser    Benutzer, der den Befehl ausführt.
-     * @return Benutzernachricht.
-     * @throws CmdScannerException Fehler bei der Ausführung des Befehls.
-     * //@throws InvalidImplementationException Fehler, bei der Übergabe des Interface Objektes.
-     */
-    UserMessage onCmdExit(DungeonI ADungeon, UserI AUser) throws CmdScannerException;
 }

@@ -1,43 +1,23 @@
 # Binäratops
 
-This is an example project that can be used as a starting point to create your own Vaadin application with Spring Boot.
-It contains all the necessary configuration and some placeholder files to get you started.
+Willkommen zu unserem Binäratops Projekt!
+Dies ist ein Multiuser Dungeon Online Spiel.
+Hier kannst du deine eigenen Dungeons erstellen und als Dungeon-Master der Gott der Fantasy werden
+oder als Spieler einem Dungeon beitreten und die unerforschten und gefährlichen Weiten ergründen.
 
-The project is a standard Maven project, so you can import it to your IDE of choice. [Read more how to set up a development environment](https://vaadin.com/docs/v14/flow/installing/installing-overview.html) for Vaadin projects (Windows, Linux, macOS). 
+## Server
+Aktuell ist unser Spiel unter folgender Adresse erreichbar: https://swe01.itsystemsconsulting.de:8443/
+Unsere Projektwebseite mit allen nötigen Infos findest du unter: https://swe01.itsystemsconsulting.de/
 
-This project was created from https://start.vaadin.com.
+### Voraussetzungen
+Um unsere Applikation starten zu können sind einige Voraussetzungen nötig.
+- Java JDK 11
+- Maven 3.8.0
+- npm
+- MySQL mit den Datenbanken "mud_db" und "mud_db_test"
 
-## Running and debugging the application
+### Installation
+Die Anwendung kann über eine Konsole mit folgendem Befehl gestartet werden:
+**mvn spring-boot:run**
 
-### Running the application from the command line.
-To run from the command line, use `mvn` and open http://localhost:8080 in your browser.
-
-### Running and debugging the application in Intellij IDEA
-- Locate the Application.java class in the Project view. It is in the src folder, under the main package's root.
-- Right-click on the Application class
-- Select "Debug 'Application.main()'" from the list
-
-After the application has started, you can view it at http://localhost:8080/ in your browser. 
-You can now also attach breakpoints in code for debugging purposes, by clicking next to a line number in any source file.
-
-### Running and debugging the application in Eclipse
-- Locate the Application.java class in the Package Explorer. It is in `src/main/java`, under the main package.
-- Right-click on the file and select `Debug As` --> `Java Application`.
-
-Do not worry if the debugger breaks at a `SilentExitException`. This is a Spring Boot feature and happens on every startup.
-
-After the application has started, you can view it at http://localhost:8080/ in your browser.
-You can now also attach breakpoints in code for debugging purposes, by clicking next to a line number in any source file.
-## Project structure
-
-- `MainView.java` in `src/main/java` contains the navigation setup. It uses [App Layout](https://vaadin.com/components/vaadin-app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/` contains the client-side JavaScript views of your application.
-
-## What next?
-
-[vaadin.com](https://vaadin.com) has lots of material to help you get you started:
-
-- Follow the tutorials in [vaadin.com/tutorials](https://vaadin.com/tutorials). Especially [vaadin.com/tutorials/getting-started-with-flow](https://vaadin.com/tutorials/getting-started-with-flow) is good for getting a grasp of the basic Vaadin concepts.
-- Read the documentation in [vaadin.com/docs](https://vaadin.com/docs).
-- For a bigger Vaadin application example, check out the Full Stack App starter from [vaadin.com/start](https://vaadin.com/start).
+<div> <hr> <h2>Willkommen bei der Hilfe!</h2> <hr> Hier findest du eine Erklärung aller Spielinformationen, aller InGame-Befehle und aller Steuerungsbefehle. <hr> <h3>InGame Befehle</h3> <hr> Ein InGame-Befehl ist ein Befehl, der keinen Einfluss auf das Spielgeschehen hat. Er dient zur Verwaltung und zur Kommunikation mit anderen Spielern. Einem InGame-Befehl muss immer das Befehlssymbol ''{0}'' vorangestellt werden. <hr> <h4>Erklärung der Zeichen:</h4> <hr> <ul style=”none”> <li>&lt;Variable Eingabe&gt; : An der Position dieser Zeichen kannst du einen variablen Text eingeben, sei es ein Spielername, ein NPC oder ein Gegenstand. </li> <li>SCHLÜSSELWORT : Ist ein Schlüsselwort für diesen Befehl und muss zwingend eingegeben werden.</li> <li>’(‘ & ‘)’ : Bedeuten, dass aus dem Inhalt nur eine Möglichkeit ausgewählt werden kann. Die Möglichkeiten sind meist per ‘|’ getrennt. </li> <li>‘|’ : Bedeutet, dass entweder das links davon stehende Schlüsselwort, oder das rechts davon stehende Schlüsselwort eingegeben werden kann. Aber nicht beide! </li> <li>’’{1}’’ : Bedeutet, dass ein InGame-Befehl ausgeführt wird.</li> <li>’&epsilon;’ : Bedeutet, dass der Befehl an dieser Stelle zu Ende sein kann. Nur in Zusammenhang mit einem ‘|’-Zeichen vorzufinden. </li> <li>’”’ & ’”’ : Bedeutet, dass die Variable dazwischen, in Anführungszeichen gestellt werden muss.</li> </ul> <hr> <h4>Alle InGame-Befehle</h4> <hr> <ul> <hr> <li><b>Befehl: HELP</b><br><b>Syntax: </b>HELP (&epsilon; | ALL | CMDS | CTRL)<br><b>Beschreibung: </b>Gibt die Hilfe aus <ul> <li><i>&epsilon;</i> und <i>ALL</i>: Geben die komplette Hilfe aus</li> <li><i>CMDS</i>: Gibt alle InGame-Befehle aus.</li> <li><i>CTRL</i>: Gibt alle Spielsteuerungsbefehle aus.</li> </ul> </li> <li><b>Befehl: WHISPER</b><br> <b>Syntax: </b>WHISPER (&lt;Avatarname&gt; | MASTER) &lt;Nachricht&gt;<br><b>Beschreibung: </b>Flüstert der angegebenen Person die eingegebene Nachricht. <ul> <li><i>MASTER</i>: Flüstert den Dungeon-Master an.</li> </ul> </li> <li><b>Befehl: SPEAK</b><br> <b>Syntax: </b>SPEAK &lt;Nachricht&gt;<br><b>Beschreibung: </b>Teilt die eingegebene Nachricht dem aktuellen Raum des Avatars mit. Diesen Befehl kann nur der Spieler ausführen! </li> <li><b>Befehl: NOTIFY</b><br> <b>Syntax: </b>NOTIFY (ALL | ROOM “&lt;Raumname&gt;” ) &lt;Nachricht&gt;<br><b>Beschreibung: </b>Teilt die eingegebene Nachricht dem angegebenen Raum oder allen mit. <ul> <li><i>ALL</i>: Nachricht geht an alle Spieler</li> <li><i>ROOM</i>: Nachricht geht an Raum der daraufhin folgt.</li> </ul> </li> </ul> <hr> <h3>Spielsteuerungsbefehle</h3> <hr> Ein Spielsteuerungsbefehl ist ein Befehl, der zur Interaktion mit dem Spielgeschehen ausgeführt werden kann. Darunter fällt die Bewegung, die Interaktion mit NPCs, Gegenständen und vielem mehr. Spielsteuerungsbefehle benötigen <b>kein</b> vorangestelltes Befehlszeichen! <hr> <h4>Alle Spielsteuerungsbefehlen</h4> <hr> <ul> <li><b>Befehl: INFO</b><br> <b>Syntax: </b>INFO (ALL | PLAYERS | ROOM ) <br><b>Beschreibung: </b>Gibt die Spielinfo aus. <ul> <li><i>ALL</i>: Gibt alle Spielerinformationen aus</li> <li><i>PLAYERS</i>: Gibt alle Informationen über die Spieler im Dungeon aus.</li> <li><i>ROOM</i>: Gibt die Informationen über den aktuellen Raum aus.</li> </ul> </li> <hr> <li><b>Befehl: MOVE</b><br><b>Syntax: </b>MOVE (NORTH | N | EAST | E | SOUTH | S | WEST | W ) <br><b>Beschreibung: </b>Lässt den Avatar sich in die übergebene Richtung von Raum zu Raum bewegen. <ul> <li><i>NORTH</i> und <i>N</i>: Lässt den Avatar sich nach Norden bewegen.</li> <li><i>EAST</i> und <i>E</i>: Lässt den Avatar sich nach Osten bewegen.</li> <li><i>SOUTH</i> und <i>S</i>: Lässt den Avatar sich nach Süden bewegen.</li> <li><i>WEST</i> und <i>W</i>: Lässt den Spieler sich nach Westen bewegen.</li> </ul> </li> <hr> <li><b>Befehl: LOOK AROUND</b><br><b>Syntax: </b>LOOK AROUND <br><b>Beschreibung: </b>Gibt die Umgebungsinformationen des Avatars aus. </li> <hr> <li><b>Befehl: WHEREAMI</b><br><b>Syntax: </b>WHEREAMI <br><b>Beschreibung: </b>Gibt die Position des Avatars aus. </li> <hr> <li><b>Befehl: WHOAMI</b><br><b>Syntax: </b>WHOAMI <br><b>Beschreibung: </b>Gibt die Beschreiung des Avatars aus. </li> <hr> <li><b>Befehl: EXAMINE</b><br><b>Syntax: </b>EXAMINE (NPC &lt;Name des NPC&gt; | ITEM &lt;Name des Gegenstandes&gt; )<br><b>Beschreibung: </b>Untersucht den eingegebenen NPC oder Gegenstand. <ul> <li><i>NPC</i>: Untersucht den danach eingegebenen NPC.</li> <li><i>ITEM</i>: Untersucht den danach eingegebenen Gegenstand.</li> </ul> </li> <hr> <li><b>Befehl: SHOW</b><br><b>Syntax: </b>SHOW (INVENTORY | INV | EQUIPMENT | EQUIP) <br><b>Beschreibung: </b>Zeigt das Inventar oder die Ausrüstung des Avatars an. <ul> <li><i>INVENTORY</i> und <i>INV</i>: Zeigt das Inventar des Avatars an.</li> <li><i>EQUIPMENT</i> und <i>EQUIP</i>: Zeigt die Ausrüstung des Avatars an.</li> </ul> </li> <hr> <li><b>Befehl: TAKE</b><br><b>Syntax: </b>TAKE &lt;Name des Gegenstandes&gt; <br><b>Beschreibung: </b>Nimmt den eingegebenen Gegenstand der im aktuellen Raum liegt in das Inventar des Avatars auf. </li> <hr> <li><b>Befehl: DROP</b><br><b>Syntax: </b>DROP &lt;Name des Gegenstandes&gt; <br><b>Beschreibung: </b>Lässt den eingegebenen Gegenstand im aktuellen Raum fallen und entfernt ihn aus dem Inventar des Avatars. </li> <hr> <li><b>Befehl: CONSUME</b><br><b>Syntax: </b>CONSUME &lt;Name des Gegenstandes&gt; <br><b>Beschreibung: </b>Konsumiert den eingegebenen Gegenstand und entfernt ihn aus dem Inventar des Avatars. Effekt wird von Dungeon-Master bestimmt. </li> <hr> <li><b>Befehl: EQUIP</b><br><b>Syntax: </b>EQUIP &lt;Name des Gegenstandes&gt; <br><b>Beschreibung: </b>Rüstet den eingegebenen Gegenstand aus. </li> <hr> <li><b>Befehl: LAYDOWN</b><br><b>Syntax: </b>LAYDOWN &lt;Name des Gegenstandes&gt; <br><b>Beschreibung: </b>Legt den eingegebenen Ausrüstungsgegenstand ab, behält ihn aber im Inventar. </li> <hr> <li><b>Befehl: HEALTH</b><br><b>Syntax: </b>HEALTH <br><b>Beschreibung: </b>Zeigt die aktuellen Lebenspunkte des Spielers an. </li> <hr> <li><b>Befehl: TALK</b><br> <b>Syntax: </b>TALK “&lt;Name des NPC&gt;” &lt;Nachricht&gt; <br><b>Beschreibung: </b>Startet ein Gespräch mit dem angegebenen NPC. Für Antwort wird Dungeon-Master in Anspruch genommen. </li> <hr> </ul></div>
