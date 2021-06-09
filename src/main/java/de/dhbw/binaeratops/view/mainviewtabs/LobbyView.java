@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,10 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.actions.UserAction;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Permission;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +108,9 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                     Permission requested = new Permission(currentUser);
                     ADungeon.addRequestedUser(requested);
                     dungeonServiceI.savePermission(requested);
-                    userActionpublisher.onNext(new UserAction(ADungeon, currentUser, requested, "REQUEST", "null"));
+                    UserAction userAction = new UserAction(ADungeon, currentUser, requested, ActionType.ENTRY_REQUEST);
+                    dungeonServiceI.saveUserAction(userAction);
+                    userActionpublisher.onNext(userAction);
                     Notification.show(res.getString("view.lobby.notification.request.sent"));
                 } else {
                     Notification.show(res.getString("view.lobby.notification.request.idle"));
@@ -144,18 +144,29 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         for (Map.Entry<Dungeon,Button> entry : entryButtonMap.entrySet()) {
             Dungeon dungeon = entry.getKey();
             Button b = entry.getValue();
+//            b.getIcon().getElement().getStyle().clear();
             Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, dungeon);
             Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, dungeon);
             Permission permissionRequest = dungeonServiceI.getPermissionRequest(currentUser, dungeon);
             if (permissionGranted != null) {
-                b.getStyle().set("background", "green");
+//                b.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+//                b.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                b.getIcon().getElement().getStyle().set("color", "green");
+                b.getElement().getStyle().set("color", "green");
+                entry.setValue(b);
+//                b.getStyle().set("background", "green");
             } else if (permissionBlocked != null) {
-                b.getStyle().set("background", "red");
+//                b.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
+//                b.addThemeVariants(ButtonVariant.LUMO_ERROR);
+//                b.getStyle().set("background", "red");
+                b.getIcon().getElement().getStyle().set("color", "red");
             } else if (permissionRequest != null) {
-                b.getStyle().set("background", "orange");
+//                b.getStyle().set("background", "orange");
+                b.getIcon().getElement().getStyle().set("color", "orange");
             } else {
-                b.getStyle().clear();
-                b.getStyle().set("color", "blue");
+                b.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+//                b.getStyle().clear();
+                b.getIcon().getElement().getStyle().set("color", "blue");
             }
         }
     }

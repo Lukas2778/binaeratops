@@ -20,7 +20,7 @@ import java.util.List;
 public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
 
     /**
-     * Sucht alle Avatareinträge aus der Datenbank zurück.
+     * Gibt alle Avatareinträge aus der Datenbank zurück.
      *
      * @return Alle Avatareinträge aus der Datenbank.
      */

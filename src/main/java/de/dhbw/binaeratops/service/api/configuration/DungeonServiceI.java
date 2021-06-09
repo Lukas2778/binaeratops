@@ -201,5 +201,13 @@ public interface DungeonServiceI {
      * @param APermission Berechtigung, die gespeichert werden soll.
      */
     void savePermission(Permission APermission);
+
+    void saveUserAction(UserAction AUserAction);
+
+    List<Permission> getRequestedPermissions(Dungeon ADungeon);
+
+    void deleteUserAction(UserAction AUserAction);
+
+    List<UserAction> getUserActions(Dungeon ADungeon);
 }
 
