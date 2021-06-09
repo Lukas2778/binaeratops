@@ -282,7 +282,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 Notification n = new Notification();
                 n.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 Span label = new Span(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()));
-                Button closeButton = new Button("Schließen", event -> n.close());
+                Button closeButton = new Button("", event -> n.close());
+                closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
                 closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
                 n.add(label, closeButton);
                 label.getStyle().set("margin-left", "0.3rem");

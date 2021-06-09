@@ -41,6 +41,8 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private List<Dungeon> dungeonList;
     Grid<Dungeon> dungeonGrid;
+    Grid.Column<Dungeon> componentColumn;
+    int i = 0;
 
     DungeonServiceI dungeonServiceI;
 
@@ -89,20 +91,19 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
-        dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader(res.getString("view.lobby.grid.action"));
-
+        componentColumn = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
+        componentColumn.setKey(""+i);
         add(titleText, html, dungeonGrid);
 
         setSizeFull ();
     }
     // TODO Kommentare schreiben
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
-
+        Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
+        Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
+        Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
         Button entryButton = new Button("", clickEvent -> {
             currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
-            Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
             if (permissionGranted == null && permissionBlocked == null) { // TODO User
                 if (permission == null) {
                     Permission requested = new Permission(currentUser);
@@ -126,8 +127,18 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
         entryButton.setIcon(iconEntryButton);
-
-        entryButton.getStyle().set("color", "blue");
+        if (permissionGranted != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        } else if (permissionBlocked != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+        } else if (permission != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+            entryButton.getStyle().set("background", "orange");
+        } else {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+        }
         return entryButton;
     }
 
@@ -139,36 +150,13 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private void reloadGrid() {
         dungeonList = new ArrayList<>();
+        dungeonGrid.removeColumnByKey(""+i);
+        i++;
+        entryButtonMap.clear();
+        Grid.Column<Dungeon> temp = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
+        temp.setKey(""+i);
         dungeonList.addAll(dungeonServiceI.getDungeonsLobby(currentUser));
         dungeonGrid.setItems(dungeonList);
-        for (Map.Entry<Dungeon,Button> entry : entryButtonMap.entrySet()) {
-            Dungeon dungeon = entry.getKey();
-            Button b = entry.getValue();
-//            b.getIcon().getElement().getStyle().clear();
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, dungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, dungeon);
-            Permission permissionRequest = dungeonServiceI.getPermissionRequest(currentUser, dungeon);
-            if (permissionGranted != null) {
-//                b.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
-//                b.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                b.getIcon().getElement().getStyle().set("color", "green");
-                b.getElement().getStyle().set("color", "green");
-                entry.setValue(b);
-//                b.getStyle().set("background", "green");
-            } else if (permissionBlocked != null) {
-//                b.removeThemeVariants(ButtonVariant.LUMO_CONTRAST);
-//                b.addThemeVariants(ButtonVariant.LUMO_ERROR);
-//                b.getStyle().set("background", "red");
-                b.getIcon().getElement().getStyle().set("color", "red");
-            } else if (permissionRequest != null) {
-//                b.getStyle().set("background", "orange");
-                b.getIcon().getElement().getStyle().set("color", "orange");
-            } else {
-                b.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
-//                b.getStyle().clear();
-                b.getIcon().getElement().getStyle().set("color", "blue");
-            }
-        }
     }
 
     @Override
