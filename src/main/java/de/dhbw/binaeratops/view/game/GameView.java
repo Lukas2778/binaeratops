@@ -186,14 +186,32 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         //FilterButtons
         HorizontalLayout filterButtonsLayout = new HorizontalLayout();
+        Label s = new Label("Filter: ");
+        s.getStyle().set("padding-top", "8px");
         filterActionButton = new Button("Aktionen");
-        filterActionButton.addClickListener(e -> myDungeonChatView.setFilterModeAction());
-        filterChatButton = new Button("Chat");
-        filterChatButton.addClickListener(e -> myDungeonChatView.setFilterModeChat());
-        resetFilterButton = new Button("Reset");
-        resetFilterButton.addClickListener(e -> myDungeonChatView.setFilterModeAll());
+        filterActionButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeAction();
+            filterActionButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterChatButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
 
-        filterButtonsLayout.add(resetFilterButton, filterChatButton, filterActionButton);
+        filterChatButton = new Button("Nachrichten");
+        filterChatButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeChat();
+            filterChatButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
+        resetFilterButton = new Button("Zurücksetzen");
+        resetFilterButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeAll();
+            resetFilterButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterChatButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
+
+        filterButtonsLayout.add(s, resetFilterButton, filterChatButton, filterActionButton);
 
 
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
