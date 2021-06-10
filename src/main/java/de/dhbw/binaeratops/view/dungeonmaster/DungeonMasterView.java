@@ -15,7 +15,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -538,13 +537,15 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 //        roleLayout.add(roleLabel, roleField);
 
 
-        NumberField avatarLifePointsField = new NumberField("Lebenspunkte: ");
+        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
         avatarLifePointsField.setStep(1);
         avatarLifePointsField.setHasControls(true);
         avatarLifePointsField.setMin(1);
-        avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().doubleValue());
+        avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
         avatarLifePointsField.addValueChangeListener(e -> {
-           // TODO Lebenspunkte speichern
+            if (!avatarLifePointsField.isInvalid()) {
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+            }
         });
 
 

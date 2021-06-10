@@ -128,4 +128,11 @@ public interface GameServiceI {
      * @return Boolean, ob es aktiv ist oder nicht.
      */
     Status getDungeonStatus(Long ADungeonId);
+
+    /**
+     * Setzt die Lebenspunkte des Avatars
+     * @param AAvatarId der gewünschte Avatar
+     * @param AValue der gewünschte Wert
+     */
+    void setLifePoints(Long AAvatarId, Integer AValue);
 }
