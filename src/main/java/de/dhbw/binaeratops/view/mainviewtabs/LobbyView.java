@@ -41,8 +41,7 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private List<Dungeon> dungeonList;
     Grid<Dungeon> dungeonGrid;
-    Grid.Column<Dungeon> componentColumn;
-    int i = 0;
+    private int i = 0;
 
     DungeonServiceI dungeonServiceI;
 
@@ -51,18 +50,17 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private final UnicastProcessor<UserAction> userActionpublisher;
 
-    private HashMap<Dungeon, Button> entryButtonMap = new HashMap<>();
-
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
-     * @param ADungeonService DungeonService.
-     * @param AGameService GameService.
+     *
+     * @param ADungeonService      DungeonService.
+     * @param AGameService         GameService.
      * @param AUserActionPublisher UserActionPublisher.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> AUserActionPublisher){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> AUserActionPublisher) {
         this.userActionpublisher = AUserActionPublisher;
-        dungeonServiceI=ADungeonService;
+        dungeonServiceI = ADungeonService;
         this.gameService = AGameService;
 
         timer = new Timer();
@@ -75,15 +73,15 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
         this.currentUser = VaadinSession.getCurrent().getAttribute(User.class);
 
-        titleText=new H1(res.getString("view.lobby.headline"));
-        explanationText=res.getString("view.lobby.text");
-        html=new Html(explanationText);
+        titleText = new H1(res.getString("view.lobby.headline"));
+        explanationText = res.getString("view.lobby.text");
+        html = new Html(explanationText);
         dungeonList = new ArrayList<>();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
         dungeonList.addAll(dungeonServiceI.getDungeonsLobby(user));
 
-        dungeonGrid=new Grid<>();
+        dungeonGrid = new Grid<>();
         dungeonGrid.setItems(dungeonList);
         dungeonGrid.setVerticalScrollingEnabled(true);
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader(res.getString("view.lobby.grid.dungeonname"));
@@ -91,12 +89,12 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
-        componentColumn = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
-        componentColumn.setKey(""+i);
+        dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
         add(titleText, html, dungeonGrid);
 
-        setSizeFull ();
+        setSizeFull();
     }
+
     // TODO Kommentare schreiben
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
         Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
@@ -123,8 +121,6 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
             }
         });
 
-        entryButtonMap.put(ADungeon, entryButton);
-
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
         entryButton.setIcon(iconEntryButton);
         if (permissionGranted != null) {
@@ -150,13 +146,15 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private void reloadGrid() {
         dungeonList = new ArrayList<>();
-        dungeonGrid.removeColumnByKey(""+i);
-        i++;
-        entryButtonMap.clear();
-        Grid.Column<Dungeon> temp = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
-        temp.setKey(""+i);
+        dungeonGrid.removeAllColumns();
         dungeonList.addAll(dungeonServiceI.getDungeonsLobby(currentUser));
         dungeonGrid.setItems(dungeonList);
+        dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader(res.getString("view.lobby.grid.dungeonname"));
+        dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader(res.getString("view.lobby.grid.dungeonid"));
+        dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
+        dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
+        dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
+        dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
     }
 
     @Override
