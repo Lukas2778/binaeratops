@@ -14,6 +14,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -21,7 +22,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.actions.KickUserAction;
-import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.RoomI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -77,7 +77,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     private final Flux<ChatMessage> messages;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final Flux<KickUserAction> kickUsers;
-    private final UnicastProcessor<UserAction> userActionpublisher;
 
     H2 binTitle;
     String aboutText;
@@ -126,14 +125,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
      * @param AGameService        Wird für die Interaktion mit der Datenbank benötigt.
      * @param AMessagePublisher   Wird zum Empfangen von Nachrichten benötigt.
      * @param kickUsers           Wird zum Kicken der Benutzer benötigt.
-     * @param userActionpublisher Wird zum Empfangen der Dungeon-Master-Reaktion benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
                     @Autowired DungeonRepositoryI ADungeonRepo, @Autowired GameServiceI AGameService,
-                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUserAction> kickUsers,
-                    UnicastProcessor<UserAction> userActionpublisher) {
-        this.userActionpublisher = userActionpublisher;
+                    UnicastProcessor<ChatMessage> AMessagePublisher, Flux<KickUserAction> kickUsers) {
         this.messages = messages;
         this.messagesPublisher = AMessagePublisher;
         myParserService = AParserService;
@@ -190,14 +186,32 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         //FilterButtons
         HorizontalLayout filterButtonsLayout = new HorizontalLayout();
+        Label s = new Label("Filter: ");
+        s.getStyle().set("padding-top", "8px");
         filterActionButton = new Button("Aktionen");
-        filterActionButton.addClickListener(e -> myDungeonChatView.setFilterModeAction());
-        filterChatButton = new Button("Chat");
-        filterChatButton.addClickListener(e -> myDungeonChatView.setFilterModeChat());
-        resetFilterButton = new Button("Reset");
-        resetFilterButton.addClickListener(e -> myDungeonChatView.setFilterModeAll());
+        filterActionButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeAction();
+            filterActionButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterChatButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
 
-        filterButtonsLayout.add(resetFilterButton, filterChatButton, filterActionButton);
+        filterChatButton = new Button("Nachrichten");
+        filterChatButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeChat();
+            filterChatButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
+        resetFilterButton = new Button("Zurücksetzen");
+        resetFilterButton.addClickListener(e -> {
+            myDungeonChatView.setFilterModeAll();
+            resetFilterButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+            filterChatButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        });
+
+        filterButtonsLayout.add(s, resetFilterButton, filterChatButton, filterActionButton);
 
 
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
@@ -265,8 +279,16 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 Notification.show(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);
             } catch (CmdScannerSyntaxMissingException syntaxMissing) {
-                Notification.show(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                Notification n = new Notification();
+                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                Span label = new Span(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()));
+                Button closeButton = new Button("", event -> n.close());
+                closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+                n.add(label, closeButton);
+                label.getStyle().set("margin-left", "0.3rem");
+                n.setPosition(Notification.Position.BOTTOM_CENTER);
+                n.open();
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
                 Notification.show(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale()))
                         .setPosition(Notification.Position.BOTTOM_CENTER);

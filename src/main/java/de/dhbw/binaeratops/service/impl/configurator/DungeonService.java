@@ -39,6 +39,9 @@ public class DungeonService implements DungeonServiceI {
     @Autowired
     PermissionRepositoryI permissionRepo;
 
+    @Autowired
+    UserActionRepositoryI userActionRepo;
+
     @Override
     public List<Dungeon> getAllDungeonsFromUser(User AUser) {
         List<Dungeon> userDungeons = new ArrayList<>();
@@ -117,11 +120,11 @@ public class DungeonService implements DungeonServiceI {
 
     @Override
     public Room getRoomByPosition(Dungeon ADungeon, int AXCoordinate, int AYCoordinate) {
-        List<Room> room=roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AXCoordinate, AYCoordinate);
-        if(room.size() == 0)
+        List<Room> room = roomRepo.findByDungeonAndXcoordinateAndYcoordinate(ADungeon, AXCoordinate, AYCoordinate);
+        if (room.size() == 0)
             return null;
         else
-            return  room.get(0);
+            return room.get(0);
     }
 
     @Override
@@ -147,12 +150,12 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public Dungeon getDungeon(Long ADungeonId){
+    public Dungeon getDungeon(Long ADungeonId) {
         return dungeonRepo.findByDungeonId(ADungeonId);
     }
 
     @Override
-    public void kickPlayer(Long ADungeonId, Long AUserId){
+    public void kickPlayer(Long ADungeonId, Long AUserId) {
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
         User user = userRepo.findByUserId(AUserId);
         List<Avatar> avatars = avatarRepo.findByUserAndActive(user, true);
@@ -200,7 +203,7 @@ public class DungeonService implements DungeonServiceI {
         dungeonRepo.save(dungeon);
     }
 
-    public Permission getPermissionRequest(User AUser,Dungeon ADungeon) {
+    public Permission getPermissionRequest(User AUser, Dungeon ADungeon) {
         List<Permission> p = permissionRepo.findByRequestedDungeonAndUser(ADungeon, AUser);
         if (p.size() > 0) {
             return p.get(0);
@@ -209,7 +212,7 @@ public class DungeonService implements DungeonServiceI {
         }
     }
 
-    public Permission getPermissionGranted(User AUser,Dungeon ADungeon) {
+    public Permission getPermissionGranted(User AUser, Dungeon ADungeon) {
         List<Permission> p = permissionRepo.findByAllowedDungeonAndUser(ADungeon, AUser);
         if (p.size() > 0) {
             return p.get(0);
@@ -218,7 +221,7 @@ public class DungeonService implements DungeonServiceI {
         }
     }
 
-    public Permission getPermissionBlocked(User AUser,Dungeon ADungeon) {
+    public Permission getPermissionBlocked(User AUser, Dungeon ADungeon) {
         List<Permission> p = permissionRepo.findByBlockedDungeonAndUser(ADungeon, AUser);
         if (p.size() > 0) {
             return p.get(0);
@@ -246,5 +249,28 @@ public class DungeonService implements DungeonServiceI {
 
     public void setAvatarRepo(AvatarRepositoryI avatarRepo) {
         this.avatarRepo = avatarRepo;
+    }
+
+    public void saveUserAction(UserAction AUserAction) {
+        userActionRepo.save(AUserAction);
+    }
+
+    public List<Permission> getRequestedPermissions(Dungeon ADungeon) {
+        return permissionRepo.findByRequestedDungeon(ADungeon);
+    }
+
+    public void deleteUserAction(UserAction AUserAction) {
+        userActionRepo.delete(AUserAction);
+    }
+
+    public List<UserAction> getUserActions(Dungeon ADungeon) {
+        List<UserAction> userActions = userActionRepo.findByDungeon(ADungeon);
+        List<UserAction> filtered = new ArrayList<>();
+        for (UserAction temp : userActions) {
+            if (!temp.getActionType().equals(ActionType.ENTRY_REQUEST)) {
+                filtered.add(temp);
+            }
+        }
+        return filtered;
     }
 }

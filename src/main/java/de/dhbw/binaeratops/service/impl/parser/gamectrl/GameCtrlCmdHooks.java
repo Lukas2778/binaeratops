@@ -1,15 +1,12 @@
 package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 
-import de.dhbw.binaeratops.model.actions.UserAction;
+import de.dhbw.binaeratops.model.entitys.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
-import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
-import de.dhbw.binaeratops.model.repository.ItemInstanceRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.model.repository.UserRepositoryI;
+import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.*;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
@@ -44,6 +41,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
 
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
+
+    @Autowired
+    UserActionRepositoryI userActionRepo;
 
     @Autowired
     UnicastProcessor<UserAction> userActionPublisher;
@@ -580,7 +580,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         avatar.setRequested(true);
                         itemInstanceRepo.save(item);
                         avatarRepo.save(avatar);
-                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.CONSUME, AItem);
+                        userActionRepo.save(userAction);
+                        userActionPublisher.onNext(userAction);
                         return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
                     }
                 }
@@ -683,7 +685,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
                         avatarRepo.save(avatar);
-                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage));
+//                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); TODO
                         return new UserMessage("view.game.ctrl.cmd.talk", npc.getNpc().getNpcName(), AMessage);
                     }
                 }

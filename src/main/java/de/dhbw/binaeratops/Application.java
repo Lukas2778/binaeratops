@@ -1,7 +1,7 @@
 package de.dhbw.binaeratops;
 
 import de.dhbw.binaeratops.model.actions.KickUserAction;
-import de.dhbw.binaeratops.model.actions.UserAction;
+import de.dhbw.binaeratops.model.entitys.UserAction;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

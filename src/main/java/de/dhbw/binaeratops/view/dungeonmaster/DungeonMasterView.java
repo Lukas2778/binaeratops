@@ -7,6 +7,8 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,7 +22,6 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.actions.KickUserAction;
-import de.dhbw.binaeratops.model.actions.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
 import de.dhbw.binaeratops.model.entitys.*;
@@ -35,7 +36,6 @@ import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
 import de.dhbw.binaeratops.view.TranslationProvider;
 import de.dhbw.binaeratops.view.chat.ChatView;
-import de.dhbw.binaeratops.view.game.GameView;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.UnicastProcessor;
@@ -77,7 +77,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
 
-    private final UnicastProcessor<UserAction> userActionsPublisher;
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
@@ -103,17 +102,16 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
     boolean sureToLeave = false;
     boolean loaded = true;
+
     // TODO Kommentare schreiben
     public DungeonMasterView(@Autowired MapServiceI mapServiceI, @Autowired GameService gameService, @Autowired DungeonServiceI dungeonServiceI,
-                             Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
-                             UnicastProcessor<UserAction> userActionsPublisher, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
+                             Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService, Flux<UserAction> userAction, UnicastProcessor<ChatMessage> AMessagePublisher,
                              UnicastProcessor<KickUserAction> AKickUsersPublisherAction, @Autowired ChatService chatService) {
         this.mapServiceI = mapServiceI;
         this.gameService = gameService;
         this.dungeonServiceI = dungeonServiceI;
         this.messages = messages;
         this.myParserService = AParserService;
-        this.userActionsPublisher = userActionsPublisher;
         this.userAction = userAction;
         this.messagesPublisher = AMessagePublisher;
         this.kickUsersPublisherAction = AKickUsersPublisherAction;
@@ -128,16 +126,16 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             public void run() {
                 refreshView();
             }
-        },0,1000);
+        }, 0, 1000);
     }
 
-    private void refreshView () {
+    private void refreshView() {
         getUI().ifPresent(ui -> ui.access(() -> {
             userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
             for (Avatar avatar : actionMap.keySet()) { //TODO Farbe wird zurückgesetzt
                 notificationButtons.get(avatar).getStyle().set("background", "red");
             }
-            if(currentRoom != null ) {
+            if (currentRoom != null) {
                 Room room = dungeonServiceI.getRoomById(currentRoom.getRoomId());
                 fillCurrentRoom(room);
             }
@@ -147,28 +145,58 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private void userActionsIncoming() {
         userAction.subscribe(action -> getUI().ifPresent(ui -> ui.access(() -> {
             if (action.getDungeon().getDungeonMasterId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
-                if (action.getActionType().equals("REQUEST")) {
-                    Dialog acceptanceDialog = new Dialog();
-                    Label label = new Label(MessageFormat.format(res.getString("view.dungeon.master.label.user.joins"), action.getUser().getName()));
+                if (action.getActionType().equals(ActionType.ENTRY_REQUEST)) {
+                    Notification notification = new Notification();
+                    Span label = new Span(MessageFormat.format(res.getString("view.dungeon.master.label.user.joins"), action.getUser().getName()));
                     Button acceptButton = new Button(res.getString("view.dungeon.master.button.accept"), e -> {
                         dungeonServiceI.allowUser(dungeonId, action.getUser().getUserId(), action.getPermission());
-                        //dungeonServiceI.removeRequestedUser(dungeonId, action.getUser().getUserId());
-                        //kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "ACCEPT"));
-                        acceptanceDialog.close();
+                        notification.close();
                     });
+                    acceptButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     Button declineButton = new Button(res.getString("view.dungeon.master.button.decline"), e -> {
                         dungeonServiceI.declinePlayer(dungeonId, action.getUser().getUserId(), action.getPermission());
-                        //dungeonServiceI.removeRequestedUser(dungeonId, action.getUser().getUserId());
-                        //kickUsersPublisherAction.onNext(new KickUserAction(action.getAvatar().getUser(), "DECLINE"));
-                        acceptanceDialog.close();
+                        notification.close();
                     });
-                    declineButton.getStyle().set("color", "red");
+                    declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
+                    Button closeButton = new Button("", e -> {
+                        notification.close();
+                    });
+                    closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                    closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
-                    acceptanceDialog.add(new VerticalLayout(label, new HorizontalLayout(acceptButton, declineButton)));
-                    acceptanceDialog.open();
+                    notification.add(label, acceptButton, declineButton, closeButton);
+                    label.getStyle().set("margin-right", "0.3rem");
+                    acceptButton.getStyle().set("margin-right", "0.3rem");
+                    declineButton.getStyle().set("margin-right", "0.3rem");
+                    notification.setDuration(10000);
+                    notification.setPosition(Notification.Position.TOP_END);
+                    dungeonServiceI.deleteUserAction(action);
+                    notification.open();
                     //TODO den user einlassen
-                }else {
-                    Notification.show(MessageFormat.format(res.getString("view.dungeon.master.notification.action"), action.getAvatar().getName(), action.getActionType().toUpperCase()), 5000, Notification.Position.TOP_END);
+                } else if (action.getActionType().equals(ActionType.CONSUME)) {
+                    Notification notification = new Notification();
+                    Span label = new Span("Avatar " + action.getAvatar().getName() + " möchte den Gegenstand " + action.getInteractedItem() + " konsumieren");
+                    Button answerButton = new Button("Beantworten", b -> {
+                        notification.close();
+                        createInteractionsDialog().open();
+                    });
+                    answerButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                    Button closeButton = new Button("", e -> {
+                        notification.close();
+                    });
+                    closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                    closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+                    notification.add(label, answerButton, closeButton);
+                    label.getStyle().set("margin-right", "0.3rem");
+                    answerButton.getStyle().set("margin-right", "0.3rem");
+                    notification.setDuration(10000);
+                    notification.setPosition(Notification.Position.TOP_END);
+                    notification.open();
+                } else if (action.getActionType().equals(ActionType.TALK)) { // TODO
+
+                } else {
+                    Notification.show(MessageFormat.format(res.getString("view.dungeon.master.notification.action"), action.getAvatar().getName(), action.getActionType().toString()), 5000, Notification.Position.TOP_END);
                     notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
                     actionMap.put(action.getAvatar(), action);
                     //TODO test
@@ -286,11 +314,13 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         Button authorisationButton = new Button("Spielberechtigungen"); // TODO entfernen
         Button pauseButton = new Button(res.getString("view.dungeon.master.button.pause.game"));
         Button leaveButton = new Button(res.getString("view.dungeon.master.button.leave.game"));
+        Button requestButton = new Button("Beitrittsanfragen");
+        Button interactionsButton = new Button("Interaktionsanfragen");
         leaveButton.getStyle().set("color", "red");
-        addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton);
+        addClickListeners(actionsButton, npcsButton, authorisationButton, pauseButton, leaveButton, requestButton, interactionsButton);
         VerticalLayout leaveAndPause = new VerticalLayout();
         //leaveAndPause.add(pauseButton, leaveButton);
-        leaveAndPause.add(leaveButton);
+        leaveAndPause.add(leaveButton, requestButton, interactionsButton);
         buttLayoutV.add(leaveAndPause);
         //buttLayoutV.add(testActionsButton,actionsButton,  authorisationButton, leaveAndPause);
         //buttLayoutV.setAlignItems(leaveAndPause, FlexComponent.Alignment.END);
@@ -301,7 +331,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     }
 
     private void addClickListeners(Button actionsButton, Button npcsButton, Button authorisationButton,
-                                   Button pauseButton, Button leaveButton) {
+                                   Button pauseButton, Button leaveButton, Button requestButton, Button interactionsButton) {
         actionsButton.addClickListener(e -> {
             Dialog actionDialog = new Dialog(new Text("Aktionen zur Auswahl"));
             actionDialog.open();
@@ -321,6 +351,131 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
         });
+        requestButton.addClickListener(e -> {
+            Dialog requestDialog = createRequestDialog();
+            requestDialog.open();
+        });
+        interactionsButton.addClickListener(e -> {
+            Dialog interactionsDialog = createInteractionsDialog();
+            interactionsDialog.open();
+        });
+    }
+
+    private Dialog createRequestDialog() {
+        Dialog requestDialog = new Dialog();
+        H1 headline = new H1("Beitrittsanfragen");
+        Grid<Permission> perms = new Grid<>();
+        perms.addColumn(e -> e.getUser().getName()).setHeader("Benutzer");
+        perms.addComponentColumn(permission -> {
+            HorizontalLayout hl = new HorizontalLayout();
+            Button acceptButton = new Button("", v -> {
+                dungeon.removeRequestUser(permission);
+                dungeon.addAllowedUser(permission);
+                dungeonServiceI.savePermission(permission);
+                perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
+            });
+            acceptButton.setIcon(new Icon(VaadinIcon.CHECK));
+            Button declineButton = new Button("", v -> {
+                dungeon.removeRequestUser(permission);
+                dungeon.addBlockedUser(permission);
+                dungeonServiceI.savePermission(permission);
+                perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
+            });
+            declineButton.setIcon(new Icon(VaadinIcon.CLOSE));
+            hl.add(acceptButton, declineButton);
+            return hl;
+        });
+        perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
+
+        Button closeButton = new Button("Schließen", b -> {
+            requestDialog.close();
+        });
+
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        requestDialog.setWidth(500, Unit.PIXELS);
+        requestDialog.setMaxWidth(100, Unit.PERCENTAGE);
+        requestDialog.add(headline, perms, closeButton);
+        return requestDialog;
+    }
+
+    private Dialog createInteractionsDialog() {
+        Dialog interactionsDialog = new Dialog();
+        H1 headline = new H1("Interaktionsanfragen");
+        Grid<UserAction> interactions = new Grid<>();
+        interactions.addColumn(userAction -> userAction.getAvatar().getName()).setHeader("Avatarname");
+        interactions.addColumn(userAction -> userAction.getActionType().toString().toUpperCase()).setHeader("Aktionstyp");
+        interactions.addComponentColumn(userAction -> {
+            Button answerButton = new Button("Beantworten", b -> {
+                Avatar avatar = userAction.getAvatar();
+                switch (userAction.getActionType()) {
+                    case CONSUME:
+                        Dialog consumeDialog = new Dialog();
+                        TextArea consumeActionText = new TextArea();
+                        Label consumeUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.text"), userAction.getAvatar().getName(), userAction.getInteractedItem()));
+
+                        HorizontalLayout randomLayout = makeDice();
+                        Button consumeSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+                            chatService.sendActionMessage(consumeActionText.getValue(), avatar.getUser());
+                            actionMap.remove(avatar);
+                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+                            dungeonServiceI.deleteUserAction(userAction);
+                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+                            consumeDialog.close();
+                        });
+                        consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
+                        consumeDialog.open();
+                        break;
+                    case TALK: // TODO testen
+                        Dialog talkDialog = new Dialog();
+                        TextArea talkActionText = new TextArea();
+                        Label talkUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.text1"), userAction.getAvatar().getName(), userAction.getInteractedNpc().getNpc().getNpcName()));
+                        Label talkUserActionText2 = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.label2"), userAction.getMessage(), userAction.getInteractedNpc().getNpc().getNpcName()));
+                        Button talkSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+                            chatService.whisperFromNpc(talkActionText.getValue(), avatar.getUser(), userAction.getMessage());
+                            actionMap.remove(avatar);
+                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+                            dungeonServiceI.deleteUserAction(userAction);
+                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+                            talkDialog.close();
+                        });
+                        talkDialog.add(new VerticalLayout(talkUserActionText, talkUserActionText2, talkActionText, talkSendActionButton));
+                        talkDialog.open();
+                        break;
+                    case HIT: // TODO testen
+                        Dialog attackDialog = new Dialog();
+                        TextArea attackActionText = new TextArea();
+                        Label attackUserActionText = new Label("Aktion von " + userAction.getAvatar().getName() + ":" + userAction.getInteractedNpc().getNpc().getNpcName());
+                        Button attackSendActionButton = new Button("Test", evfds -> {
+                            messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
+                            actionMap.remove(avatar);
+                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+                            dungeonServiceI.deleteUserAction(userAction);
+                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+                            attackDialog.close();
+                        });
+                        attackDialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
+                        attackDialog.open();
+                        break;
+                    default:
+                        // TODO Fehlerbehandlung..
+                        break;
+                }
+            });
+            return answerButton;
+        });
+        interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+
+        Button closeButton = new Button("Schließen", b -> {
+            interactionsDialog.close();
+        });
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        interactionsDialog.setWidth(650, Unit.PIXELS);
+        interactionsDialog.setMaxWidth(100, Unit.PERCENTAGE);
+        interactionsDialog.add(headline, interactions, closeButton);
+
+        return interactionsDialog;
     }
 
     private void createAvatarGrid() {
@@ -336,63 +491,65 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         userGrid.addColumn(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName())
                 .setComparator(Comparator.comparing(avatar -> dungeonServiceI.getRoomOfAvatar(avatar).getRoomName()))
                 .setHeader(res.getString("view.dungeon.master.grid.room"));
-        userGrid.addComponentColumn(avatar -> {
-            Button requestsButton = new Button(res.getString("view.dungeon.master.grid.button.answer"));
-            notificationButtons.put(avatar, requestsButton);
-            requestsButton.addClickListener(e -> {
-                if (actionMap.containsKey(avatar)) {
-                    UserAction myUserAction = actionMap.get(avatar);
-                    switch (myUserAction.getActionType()) {
-                        case "CONSUME":
-                            Dialog consumeDialog = new Dialog();
-                            TextArea consumeActionText = new TextArea();
-                            Label consumeUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.text"), myUserAction.getAvatar().getName(), myUserAction.getUserActionMessage()));
-
-                            HorizontalLayout randomLayout = makeDice();
-                            Button consumeSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
-                                chatService.sendActionMessage(consumeActionText.getValue(),avatar.getUser());
-                                actionMap.remove(avatar);
-                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
-                                notificationButtons.get(avatar).getStyle().clear();
-                                consumeDialog.close();
-                            });
-                            consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
-                            consumeDialog.open();
-                            break;
-                        case "TALK":
-                            Dialog talkDialog = new Dialog();
-                            TextArea talkActionText = new TextArea();
-                            Label talkUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.text1"),myUserAction.getAvatar().getName(),myUserAction.getUserActionMessage()));
-                            Label talkUserActionText2 = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.label2"), myUserAction.getTalkMessage(), myUserAction.getUserActionMessage()));
-                            Button talkSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
-                                chatService.whisperFromNpc(talkActionText.getValue(),avatar.getUser(),myUserAction.getUserActionMessage());
-                                actionMap.remove(avatar);
-                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
-                                notificationButtons.get(avatar).getStyle().clear();
-                                talkDialog.close();
-                            });
-                            talkDialog.add(new VerticalLayout(talkUserActionText,talkUserActionText2, talkActionText, talkSendActionButton));
-                            talkDialog.open();
-                            break;
-                        case "HIT":
-                            Dialog attackDialog = new Dialog();
-                            TextArea attackActionText = new TextArea();
-                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
-                            Button attackSendActionButton = new Button("Test", evfds -> {
-                                messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
-                                actionMap.remove(avatar);
-                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
-                                notificationButtons.get(avatar).getStyle().clear();
-                                attackDialog.close();
-                            });
-                            attackDialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
-                            attackDialog.open();
-                            break;
-                    }
-                }
-            });
-            return requestsButton;
-        }).setHeader(res.getString("view.dungeon.master.grid.request"));
+//        userGrid.addComponentColumn(avatar -> {
+//            Button requestsButton = new Button(res.getString("view.dungeon.master.grid.button.answer"));
+//            notificationButtons.put(avatar, requestsButton);
+//            requestsButton.addClickListener(e -> {
+//                if (actionMap.containsKey(avatar)) {
+//                    UserAction myUserAction = actionMap.get(avatar);
+//                    switch (myUserAction.getActionType()) {
+//                        case CONSUME:
+//                            Dialog consumeDialog = new Dialog();
+//                            TextArea consumeActionText = new TextArea();
+//                            Label consumeUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.text"), myUserAction.getAvatar().getName(), myUserAction.getMessage()));
+//
+//                            HorizontalLayout randomLayout = makeDice();
+//                            Button consumeSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+//                                chatService.sendActionMessage(consumeActionText.getValue(), avatar.getUser());
+//                                actionMap.remove(avatar);
+//                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+//                                notificationButtons.get(avatar).getStyle().clear();
+//                                myUserAction.setRequested(false);
+//                                dungeonServiceI.saveUserAction(myUserAction);
+//                                consumeDialog.close();
+//                            });
+//                            consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
+//                            consumeDialog.open();
+//                            break;
+//                        case "TALK":
+//                            Dialog talkDialog = new Dialog();
+//                            TextArea talkActionText = new TextArea();
+//                            Label talkUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.text1"),myUserAction.getAvatar().getName(),myUserAction.getUserActionMessage()));
+//                            Label talkUserActionText2 = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.label2"), myUserAction.getTalkMessage(), myUserAction.getUserActionMessage()));
+//                            Button talkSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+//                                chatService.whisperFromNpc(talkActionText.getValue(),avatar.getUser(),myUserAction.getUserActionMessage());
+//                                actionMap.remove(avatar);
+//                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+//                                notificationButtons.get(avatar).getStyle().clear();
+//                                talkDialog.close();
+//                            });
+//                            talkDialog.add(new VerticalLayout(talkUserActionText,talkUserActionText2, talkActionText, talkSendActionButton));
+//                            talkDialog.open();
+//                            break;
+//                        case "HIT":
+//                            Dialog attackDialog = new Dialog();
+//                            TextArea attackActionText = new TextArea();
+//                            Label attackUserActionText = new Label("Aktion von " + myUserAction.getAvatar().getName() + ":" + myUserAction.getUserActionMessage());
+//                            Button attackSendActionButton = new Button("Test", evfds -> {
+//                                messagesPublisher.onNext(new ChatMessage(attackActionText.getValue(), avatar.getUser().getUserId()));
+//                                actionMap.remove(avatar);
+//                                dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+//                                notificationButtons.get(avatar).getStyle().clear();
+//                                attackDialog.close();
+//                            });
+//                            attackDialog.add(new VerticalLayout(attackUserActionText, attackActionText, attackSendActionButton));
+//                            attackDialog.open();
+//                            break;
+//                    }
+//                }
+//            });
+//            return requestsButton;
+//        }).setHeader(res.getString("view.dungeon.master.grid.request"));
         /*userGrid.addComponentColumn(avatar -> {
             Button whisperButton = new Button("Whisper");
             whisperButton.addClickListener(e -> {
@@ -440,7 +597,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
-                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(),"KICK"));
+                kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), "KICK"));
                 confirmKickDialog.close();
             });
 
@@ -468,7 +625,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         boundField.getStyle().set("padding", "0px");
 
         Button roll = new Button(res.getString("view.dungeon.master.button.dice"), e -> {
-            if(!boundField.isInvalid()) {
+            if (!boundField.isInvalid()) {
                 Random r = new Random();
                 resultLabel.setValue(String.valueOf(r.nextInt(boundField.getValue()) + 1));
             }
@@ -630,7 +787,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         return leaveDialog;
     }
 
-    private void setPlayersInactive () {
+    private void setPlayersInactive() {
         List<Avatar> avatars = dungeonServiceI.getCurrentAvatars(dungeonId);
         for (Avatar avatar : avatars) {
             dungeonServiceI.setAvatarInactive(avatar.getAvatarId());

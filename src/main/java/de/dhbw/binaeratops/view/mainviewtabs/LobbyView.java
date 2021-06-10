@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
@@ -11,10 +12,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.actions.UserAction;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Permission;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,8 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private List<Dungeon> dungeonList;
     Grid<Dungeon> dungeonGrid;
+    Grid.Column<Dungeon> componentColumn;
+    int i = 0;
 
     DungeonServiceI dungeonServiceI;
 
@@ -91,26 +91,27 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
-        dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader(res.getString("view.lobby.grid.action"));
-
+        componentColumn = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
+        componentColumn.setKey(""+i);
         add(titleText, html, dungeonGrid);
 
         setSizeFull ();
     }
     // TODO Kommentare schreiben
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
-
+        Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
+        Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
+        Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
         Button entryButton = new Button("", clickEvent -> {
             currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
-            Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
             if (permissionGranted == null && permissionBlocked == null) { // TODO User
                 if (permission == null) {
                     Permission requested = new Permission(currentUser);
                     ADungeon.addRequestedUser(requested);
                     dungeonServiceI.savePermission(requested);
-                    userActionpublisher.onNext(new UserAction(ADungeon, currentUser, requested, "REQUEST", "null"));
+                    UserAction userAction = new UserAction(ADungeon, currentUser, requested, ActionType.ENTRY_REQUEST);
+                    dungeonServiceI.saveUserAction(userAction);
+                    userActionpublisher.onNext(userAction);
                     Notification.show(res.getString("view.lobby.notification.request.sent"));
                 } else {
                     Notification.show(res.getString("view.lobby.notification.request.idle"));
@@ -126,8 +127,18 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
         entryButton.setIcon(iconEntryButton);
-
-        entryButton.getStyle().set("color", "blue");
+        if (permissionGranted != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        } else if (permissionBlocked != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+        } else if (permission != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+            entryButton.getStyle().set("background", "orange");
+        } else {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+        }
         return entryButton;
     }
 
@@ -139,25 +150,13 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private void reloadGrid() {
         dungeonList = new ArrayList<>();
+        dungeonGrid.removeColumnByKey(""+i);
+        i++;
+        entryButtonMap.clear();
+        Grid.Column<Dungeon> temp = dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
+        temp.setKey(""+i);
         dungeonList.addAll(dungeonServiceI.getDungeonsLobby(currentUser));
         dungeonGrid.setItems(dungeonList);
-        for (Map.Entry<Dungeon,Button> entry : entryButtonMap.entrySet()) {
-            Dungeon dungeon = entry.getKey();
-            Button b = entry.getValue();
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, dungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, dungeon);
-            Permission permissionRequest = dungeonServiceI.getPermissionRequest(currentUser, dungeon);
-            if (permissionGranted != null) {
-                b.getStyle().set("background", "green");
-            } else if (permissionBlocked != null) {
-                b.getStyle().set("background", "red");
-            } else if (permissionRequest != null) {
-                b.getStyle().set("background", "orange");
-            } else {
-                b.getStyle().clear();
-                b.getStyle().set("color", "blue");
-            }
-        }
     }
 
     @Override
