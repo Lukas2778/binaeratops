@@ -76,12 +76,12 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private final ParserServiceI myParserService;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-    private TranslationProvider transProv = new TranslationProvider();
+    private final TranslationProvider transProv = new TranslationProvider();
 
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
-    private ChatService chatService;
+    private final ChatService chatService;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -159,9 +159,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         notification.close();
                     });
                     declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                    Button closeButton = new Button("", e -> {
-                        notification.close();
-                    });
+                    Button closeButton = new Button("", e -> notification.close());
                     closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
                     closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -182,9 +180,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         createInteractionsDialog().open();
                     });
                     answerButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
-                    Button closeButton = new Button("", e -> {
-                        notification.close();
-                    });
+                    Button closeButton = new Button("", e -> notification.close());
                     closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
                     closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -363,9 +359,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
             authorisationDialog.open();
         });
-        pauseButton.addClickListener(e -> {
-            Notification.show("Dungeon pausiert");
-        });
+        pauseButton.addClickListener(e -> Notification.show("Dungeon pausiert"));
         leaveButton.addClickListener(e -> {
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
@@ -406,9 +400,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         });
         perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
 
-        Button closeButton = new Button("Schließen", b -> {
-            requestDialog.close();
-        });
+        Button closeButton = new Button("Schließen", b -> requestDialog.close());
 
         closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -629,7 +621,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         vlNpc.add(npcHeadline, npcNameField, npcRace, npcDescription);
 
-        talkDialog.add(avatarAndRequest, requestAndNpc);
+        talkDialog.add(avatarAndRequest);
 
         return talkDialog;
     }
@@ -747,9 +739,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Button cancelButton = new Button(res.getString("view.dungeon.master.dialog.kick.grid.button.kick.player.cancel"));
             confirmKickDialog.add(new VerticalLayout(confirmLabel, new HorizontalLayout(confirmButton, cancelButton)));
 
-            kickButton.addClickListener(e -> {
-                confirmKickDialog.open();
-            });
+            kickButton.addClickListener(e -> confirmKickDialog.open());
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
@@ -757,9 +747,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 confirmKickDialog.close();
             });
 
-            cancelButton.addClickListener(e -> {
-                confirmKickDialog.close();
-            });
+            cancelButton.addClickListener(e -> confirmKickDialog.close());
             return kickButton;
         }).setHeader(res.getString("view.dungeon.master.grid.kick"));
     }
@@ -907,9 +895,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         newDMGrid.addColumn(User::getName).setHeader(res.getString("view.dungeon.master.dialog.leave.grid.name"));
         newDMGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        continueButton.addClickListener(event -> {
-            leaveDialog.close();
-        });
+        continueButton.addClickListener(event -> leaveDialog.close());
 
         chooseDMButton.addClickListener(event -> {
             if (newDMGrid.getSelectedItems().size() > 0) {
