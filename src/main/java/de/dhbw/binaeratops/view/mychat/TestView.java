@@ -2,14 +2,12 @@ package de.dhbw.binaeratops.view.mychat;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.mychat.ChatMessage;
 
 /**
@@ -34,14 +32,16 @@ public class TestView extends VerticalLayout {
         add(usernameField, connectButt);
 
         connectButt.addClickListener(event -> {
-            userName = usernameField.getValue();
-            removeAll();
-            add(ChatComponent());
-            // connect to socket
+            if(usernameField.getValue()!="") {
+                userName = usernameField.getValue();
+                removeAll();
+                add(chatComponent());
+                // connect to socket
+            }
         });
     }
 
-    private Component ChatComponent() {
+    private Component chatComponent() {
         ListBox<ChatMessage> messageListBox = new ListBox<>();
         messageListBox.setSizeFull();
         ListBox<Button> recipientListBox=new ListBox<>();
@@ -62,5 +62,13 @@ public class TestView extends VerticalLayout {
         });
 
         return new VerticalLayout(new HorizontalLayout(messageListBox, recipientListBox), new HorizontalLayout(messageField, sendButt, disconnectButt));
+    }
+
+    private void setConnected(boolean connected){
+        // change variables in Vaadin surface
+    }
+
+    private void connect(){
+
     }
 }
