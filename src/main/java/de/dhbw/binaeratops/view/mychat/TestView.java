@@ -1,8 +1,16 @@
 package de.dhbw.binaeratops.view.mychat;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Key;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.mychat.ChatMessage;
 
 /**
  * @author Lukas Göpel
@@ -12,8 +20,47 @@ import com.vaadin.flow.router.Route;
 
 @Route("mychat")
 public class TestView extends VerticalLayout {
-    public TestView(){
-        Button lol = new Button("uff");
-        add(lol);
+    String userName;
+    String userMessage;
+
+    public TestView() {
+        userName = "";
+        userMessage="";
+
+        TextField usernameField = new TextField("Username");
+
+        Button connectButt = new Button("Connect");
+        connectButt.addClickShortcut(Key.ENTER);
+        add(usernameField, connectButt);
+
+        connectButt.addClickListener(event -> {
+            userName = usernameField.getValue();
+            removeAll();
+            add(ChatComponent());
+            // connect to socket
+        });
+    }
+
+    private Component ChatComponent() {
+        ListBox<ChatMessage> messageListBox = new ListBox<>();
+        messageListBox.setSizeFull();
+        ListBox<Button> recipientListBox=new ListBox<>();
+        recipientListBox.setSizeFull();
+
+        TextField messageField=new TextField("Chat message");
+        Button sendButt=new Button("Send");
+        sendButt.addClickShortcut(Key.ENTER);
+        Button disconnectButt =new Button("Disconnect");
+        disconnectButt.getStyle().set("color", "red");
+        disconnectButt.addClickListener(event -> {
+           //disconnect from socket
+        });
+
+        sendButt.addClickListener(event -> {
+            userMessage=messageField.getValue();
+           // send user message
+        });
+
+        return new VerticalLayout(new HorizontalLayout(messageListBox, recipientListBox), new HorizontalLayout(messageField, sendButt, disconnectButt));
     }
 }
