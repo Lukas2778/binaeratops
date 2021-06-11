@@ -5,6 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PreserveOnRefresh;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.communication.PushMode;
 import de.dhbw.binaeratops.model.chat.ChatMessage;
@@ -25,6 +26,7 @@ import java.util.List;
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug
  */
 @CssImport("./views/game/game-view.css")
+@PreserveOnRefresh
 public class ChatView extends VerticalLayout {
     enum FilterMode{
         All,

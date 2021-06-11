@@ -53,6 +53,7 @@ import java.util.*;
  * @author Matthias Rall, Lars Rösel
  */
 @CssImport("./views/game/map-master.css")
+@PreserveOnRefresh
 @Push
 public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
     Image[][] tiles;
@@ -64,7 +65,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private final SplitLayout splitMapAndRoomWithActions = new SplitLayout();
     private final SplitLayout splitMapWithRoom = new SplitLayout();
 
-    private final Grid<Avatar> userGrid = new Grid<>(Avatar.class);
+    private Grid<Avatar> userGrid = new Grid<>(Avatar.class);
 
     private final GameService gameService;
 
@@ -224,11 +225,32 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         gameService.initialize(dungeon, attachEvent.getUI(), this);
     }
 
+    private boolean isVirgin = true;
+
     @Override
     public void setParameter(BeforeEvent beforeEvent, Long ALong) {
         dungeon = dungeonServiceI.getDungeon(ALong);
         dungeonId = ALong;
-        createLayoutBasic();
+        if (isVirgin){
+            createLayoutBasic();
+        }
+        else{
+            userGridLayoutV.remove(userGrid);
+            userGrid = new Grid<>(Avatar.class);
+            userGridLayoutV.add(userGrid);
+            createAvatarGrid();
+            splitMapWithRoom.removeAll();
+            createCurrentRoom();
+            if (currentRoom != null){
+                //fillCurrentRoom(currentRoom);
+            }
+        }
+        takeVirginity();
+    }
+
+    private void takeVirginity()
+    {
+        isVirgin = false;
     }
 
     void createLayoutBasic() {
@@ -310,6 +332,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         gameLayout.expand(myDungeonChatView);
     }
 
+    VerticalLayout userGridLayoutV;
 
     private void createLayoutAction() {
         createAvatarGrid();
@@ -317,7 +340,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         HorizontalLayout userGridAndButtLayoutH = new HorizontalLayout();
         VerticalLayout buttLayoutV = new VerticalLayout();
-        VerticalLayout userGridLayoutV = new VerticalLayout();
+        userGridLayoutV = new VerticalLayout();
         buttLayoutV.getStyle().set("width", "200px");
         buttLayoutV.setClassName("button-layout");
 
@@ -820,9 +843,12 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         return columns;
     }
 
+    VerticalLayout vl;
+    HorizontalLayout hl;
+
     private void createCurrentRoom() {
-        VerticalLayout vl = new VerticalLayout();
-        HorizontalLayout hl = new HorizontalLayout();
+        vl = new VerticalLayout();
+        hl = new HorizontalLayout();
 
         roomNameTextField.setReadOnly(true);
         roomNameTextField.setWidthFull();

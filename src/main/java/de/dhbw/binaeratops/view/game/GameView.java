@@ -17,6 +17,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -55,6 +56,7 @@ import java.util.*;
  * @author Lukas Göpel, Nicolas Haug, Timon Gartung, Matthias Rall, Lars Rösel
  */
 @CssImport("./views/game/game-view.css")
+@PreserveOnRefresh
 public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlParameter<Long>, BeforeLeaveObserver {
     BeforeLeaveEvent.ContinueNavigationAction action;
 
@@ -145,16 +147,33 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myTimer = new Timer();
     }
 
+    private boolean isVirgin = true;
+
     @Override
     public void setParameter(BeforeEvent ABeforeEvent, Long ALong) {
         dungeonId = ALong;
         myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
-        initiateGameView();
-        //Avatarauswahl öffnen
-        createAvatarDialog();
-        initializeKickSubscriber();
+
+        if (isVirgin){
+            initiateGameView();
+            //Avatarauswahl öffnen
+            createAvatarDialog();
+            initializeKickSubscriber();
+            takeVirginity();
+        }
+        else{
+            gridLayout.remove(armorLayout);
+            gridLayout.remove(inventoryLayout);
+            createInventory();
+        }
+
+
     }
 
+    private void takeVirginity()
+    {
+        isVirgin = false;
+    }
     // TODO Kommentare schreiben
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
@@ -573,8 +592,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         return columns;
     }
 
+
+    VerticalLayout inventoryLayout;
+    VerticalLayout armorLayout;
     void createInventory() {
-        VerticalLayout inventoryLayout = new VerticalLayout();
+        inventoryLayout = new VerticalLayout();
         Text inventoryTitle = new Text(res.getString("view.game.text.inventory"));
 
         inventoryGrid = new Grid<>();
@@ -586,7 +608,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         inventoryGrid.setSizeFull();
         inventoryLayout.add(inventoryTitle, inventoryGrid);
 
-        VerticalLayout armorLayout = new VerticalLayout();
+        armorLayout = new VerticalLayout();
         Text armorTitle = new Text(res.getString("view.game.text.equipment"));
 
         armorGrid = new Grid<>();
