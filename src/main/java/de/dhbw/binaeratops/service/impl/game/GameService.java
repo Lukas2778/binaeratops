@@ -195,6 +195,13 @@ public class GameService implements GameServiceI {
         return dungeonRepositoryI.findByDungeonId(ADungeonId).getDungeonStatus();
     }
 
+    @Override
+    public void setLifePoints(Long AAvatarId, Integer AValue) {
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        avatar.setLifepoints(AValue.longValue());
+        avatarRepositoryI.save(avatar);
+    }
+
     //Wird für Tests benötigt
     public void setItemInstanceRepositoryI(ItemInstanceRepositoryI itemInstanceRepositoryI) {
         this.itemInstanceRepositoryI = itemInstanceRepositoryI;

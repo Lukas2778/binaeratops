@@ -75,12 +75,12 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private final ParserServiceI myParserService;
 
     private final ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
-    private TranslationProvider transProv = new TranslationProvider();
+    private final TranslationProvider transProv = new TranslationProvider();
 
     private final Flux<UserAction> userAction;
     private final UnicastProcessor<ChatMessage> messagesPublisher;
     private final UnicastProcessor<KickUserAction> kickUsersPublisherAction;
-    private ChatService chatService;
+    private final ChatService chatService;
 
     Dungeon dungeon;
     Long dungeonId;
@@ -158,9 +158,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         notification.close();
                     });
                     declineButton.addThemeVariants(ButtonVariant.LUMO_ERROR);
-                    Button closeButton = new Button("", e -> {
-                        notification.close();
-                    });
+                    Button closeButton = new Button("", e -> notification.close());
                     closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
                     closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -181,6 +179,24 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         createInteractionsDialog().open();
                     });
                     answerButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
+                    Button closeButton = new Button("", e -> notification.close());
+                    closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                    closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+                    notification.add(label, answerButton, closeButton);
+                    label.getStyle().set("margin-right", "0.3rem");
+                    answerButton.getStyle().set("margin-right", "0.3rem");
+                    notification.setDuration(10000);
+                    notification.setPosition(Notification.Position.TOP_END);
+                    notification.open();
+                } else if (action.getActionType().equals(ActionType.TALK)) { // TODO
+                    Notification notification = new Notification();
+                    Span label = new Span("Avatar " + action.getAvatar().getName() + " möchte mit dem NPC " + action.getInteractedNpc().getNpcName() + " sprechen");
+                    Button answerButton = new Button("Beantworten", b -> {
+                        notification.close();
+                        createInteractionsDialog().open();
+                    });
+                    answerButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
                     Button closeButton = new Button("", e -> {
                         notification.close();
                     });
@@ -193,8 +209,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                     notification.setDuration(10000);
                     notification.setPosition(Notification.Position.TOP_END);
                     notification.open();
-                } else if (action.getActionType().equals(ActionType.TALK)) { // TODO
-
                 } else {
                     Notification.show(MessageFormat.format(res.getString("view.dungeon.master.notification.action"), action.getAvatar().getName(), action.getActionType().toString()), 5000, Notification.Position.TOP_END);
                     notificationButtons.get(action.getAvatar()).getStyle().set("background", "red");
@@ -344,9 +358,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Dialog authorisationDialog = new Dialog(new Text("Neue Anfragen und aktuelle Spieler"));
             authorisationDialog.open();
         });
-        pauseButton.addClickListener(e -> {
-            Notification.show("Dungeon pausiert");
-        });
+        pauseButton.addClickListener(e -> Notification.show("Dungeon pausiert"));
         leaveButton.addClickListener(e -> {
             Dialog leaveDialog = createLeaveDialog();
             leaveDialog.open();
@@ -387,9 +399,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         });
         perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
 
-        Button closeButton = new Button("Schließen", b -> {
-            requestDialog.close();
-        });
+        Button closeButton = new Button("Schließen", b -> requestDialog.close());
 
         closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -427,19 +437,19 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         consumeDialog.open();
                         break;
                     case TALK: // TODO testen
-                        Dialog talkDialog = new Dialog();
-                        TextArea talkActionText = new TextArea();
-                        Label talkUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.text1"), userAction.getAvatar().getName(), userAction.getInteractedNpc().getNpc().getNpcName()));
-                        Label talkUserActionText2 = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.label2"), userAction.getMessage(), userAction.getInteractedNpc().getNpc().getNpcName()));
-                        Button talkSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
-                            chatService.whisperFromNpc(talkActionText.getValue(), avatar.getUser(), userAction.getMessage());
-                            actionMap.remove(avatar);
-                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
-                            dungeonServiceI.deleteUserAction(userAction);
-                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
-                            talkDialog.close();
-                        });
-                        talkDialog.add(new VerticalLayout(talkUserActionText, talkUserActionText2, talkActionText, talkSendActionButton));
+                        Dialog talkDialog = createTalkDialog(userAction, interactions);
+//                        TextArea talkActionText = new TextArea();
+//                        Label talkUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.text1"), userAction.getAvatar().getName(), userAction.getInteractedNpc().getNpc().getNpcName()));
+//                        Label talkUserActionText2 = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.talk.label2"), userAction.getMessage(), userAction.getInteractedNpc().getNpc().getNpcName()));
+//                        Button talkSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+//                            chatService.whisperFromNpc(talkActionText.getValue(), avatar.getUser(), userAction.getInteractedNpc().getNpcName());
+//                            actionMap.remove(avatar);
+//                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+//                            dungeonServiceI.deleteUserAction(userAction);
+//                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+//                            talkDialog.close();
+//                        });
+//                        talkDialog.add(new VerticalLayout(talkUserActionText, talkUserActionText2, talkActionText, talkSendActionButton));
                         talkDialog.open();
                         break;
                     case HIT: // TODO testen
@@ -476,6 +486,145 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         interactionsDialog.add(headline, interactions, closeButton);
 
         return interactionsDialog;
+    }
+
+    private Dialog createTalkDialog(UserAction AUserAction, Grid<UserAction> AUserActionGrid) {
+        Dialog talkDialog = new Dialog();
+        talkDialog.setWidth(75, Unit.PERCENTAGE);
+
+        SplitLayout avatarAndRequest = new SplitLayout();
+        SplitLayout requestAndNpc = new SplitLayout();
+
+        VerticalLayout vlAvatar = new VerticalLayout();
+        VerticalLayout vlRequest = new VerticalLayout();
+        VerticalLayout vlNpc = new VerticalLayout();
+
+//        avatarAndRequest.setSizeFull();
+        avatarAndRequest.addToPrimary(vlAvatar);
+        avatarAndRequest.addToSecondary(requestAndNpc);
+//        avatarAndRequest.setPrimaryStyle("width", "20%");
+
+//        requestAndNpc.setSizeFull();
+        requestAndNpc.addToPrimary(vlRequest);
+//        requestAndNpc.setPrimaryStyle("width", "20%");
+        requestAndNpc.addToSecondary(vlNpc);
+
+        // Avatar
+        H2 headlineAvatar = new H2("Avatar des Spielers");
+
+//        Label nameLabel = new Label("Name: ");
+        TextField nameField = new TextField();
+        nameField.setLabel("Name: ");
+        nameField.setReadOnly(true);
+        nameField.setValue(AUserAction.getAvatar().getName());
+//        HorizontalLayout nameLayout = new HorizontalLayout();
+//        nameLayout.add(nameLabel, nameField);
+
+//        Label raceLabel = new Label("Rasse: ");
+        TextField raceField = new TextField();
+        raceField.setLabel("Rasse: ");
+        raceField.setReadOnly(true);
+        raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
+//        HorizontalLayout raceLayout = new HorizontalLayout();
+//        raceLayout.add(raceLabel, raceField);
+
+        //Label roleLabel = new Label("Rolle: ");
+        TextField roleField = new TextField();
+        roleField.setLabel("Rolle: ");
+        roleField.setReadOnly(true);
+        roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
+//        HorizontalLayout roleLayout = new HorizontalLayout();
+//        roleLayout.add(roleLabel, roleField);
+
+
+        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
+        avatarLifePointsField.setStep(1);
+        avatarLifePointsField.setHasControls(true);
+        avatarLifePointsField.setMin(1);
+        avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
+        avatarLifePointsField.addValueChangeListener(e -> {
+            if (!avatarLifePointsField.isInvalid()) {
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+            }
+        });
+
+
+        Grid<ItemInstance> inventory = new Grid<>();
+        inventory.addColumn(item -> item.getItem().getItemName());
+        inventory.addColumn(item -> item.getItem().getDescription());
+        inventory.addColumn(item -> item.getItem().getType());
+        inventory.addComponentColumn(item -> {
+            Button deleteButton = new Button();
+            deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            deleteButton.addClickListener(e -> {
+                // TODO Item aus Avatar-Inventar entfernen.
+            });
+            return deleteButton;
+        });
+        inventory.setItems(AUserAction.getAvatar().getInventory());
+
+        vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
+
+        // REQUEST
+        H2 requestHeadline = new H2("Anfragenbehandlung");
+
+        TextArea senderMessageArea = new TextArea();
+        senderMessageArea.setReadOnly(true);
+        senderMessageArea.setValue(AUserAction.getMessage());
+        senderMessageArea.setLabel("Nachricht des Avatars: ");
+
+        Label questionLabel = new Label("Was antwortet der NPC \""+ AUserAction.getInteractedNpc().getNpcName() +"\"?");
+
+        TextArea receiverMessageArea = new TextArea();
+        receiverMessageArea.setLabel("Antwort des NPCs: ");
+
+        Button sendButton = new Button("Senden");
+        sendButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        sendButton.addClickListener(e -> {
+            chatService.whisperFromNpc(receiverMessageArea.getValue(), AUserAction.getAvatar().getUser(), AUserAction.getInteractedNpc().getNpcName());
+            actionMap.remove(AUserAction.getAvatar());
+            dungeonServiceI.setAvatarNotRequested(AUserAction.getAvatar().getAvatarId());
+            dungeonServiceI.deleteUserAction(AUserAction);
+            AUserActionGrid.setItems(dungeonServiceI.getUserActions(dungeon));
+            talkDialog.close();
+        });
+
+        Button cancelButton = new Button("Abbrechen");
+        cancelButton.addClickListener(e -> talkDialog.close());
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.add(sendButton, cancelButton);
+
+        vlRequest.add(requestHeadline, senderMessageArea, questionLabel, receiverMessageArea, buttonLayout);
+
+        // NPC
+        H2 npcHeadline = new H2("Angesprochener NPC");
+
+        TextField npcNameField = new TextField();
+        npcNameField.setLabel("Name des NPCs");
+        npcNameField.setReadOnly(true);
+        npcNameField.setValue(AUserAction.getInteractedNpc().getNpcName());
+
+        TextField npcRace = new TextField();
+        npcRace.setLabel("Rasse des NPCs");
+        npcRace.setReadOnly(true);
+        npcRace.setValue(AUserAction.getInteractedNpc().getNpc().getRace().getRaceName());
+
+        TextArea npcDescription = new TextArea();
+        npcDescription.setReadOnly(true);
+        npcDescription.setLabel("Beschreibung des NPCs");
+        if (AUserAction.getInteractedNpc().getNpc().getDescription() != null) {
+            npcDescription.setValue(AUserAction.getInteractedNpc().getNpc().getDescription());
+        } else {
+            npcDescription.setValue("");
+        }
+
+        vlNpc.add(npcHeadline, npcNameField, npcRace, npcDescription);
+
+        talkDialog.add(avatarAndRequest);
+
+        return talkDialog;
     }
 
     private void createAvatarGrid() {
@@ -591,9 +740,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             Button cancelButton = new Button(res.getString("view.dungeon.master.dialog.kick.grid.button.kick.player.cancel"));
             confirmKickDialog.add(new VerticalLayout(confirmLabel, new HorizontalLayout(confirmButton, cancelButton)));
 
-            kickButton.addClickListener(e -> {
-                confirmKickDialog.open();
-            });
+            kickButton.addClickListener(e -> confirmKickDialog.open());
 
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
@@ -601,9 +748,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 confirmKickDialog.close();
             });
 
-            cancelButton.addClickListener(e -> {
-                confirmKickDialog.close();
-            });
+            cancelButton.addClickListener(e -> confirmKickDialog.close());
             return kickButton;
         }).setHeader(res.getString("view.dungeon.master.grid.kick"));
     }
@@ -751,9 +896,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         newDMGrid.addColumn(User::getName).setHeader(res.getString("view.dungeon.master.dialog.leave.grid.name"));
         newDMGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        continueButton.addClickListener(event -> {
-            leaveDialog.close();
-        });
+        continueButton.addClickListener(event -> leaveDialog.close());
 
         chooseDMButton.addClickListener(event -> {
             if (newDMGrid.getSelectedItems().size() > 0) {
