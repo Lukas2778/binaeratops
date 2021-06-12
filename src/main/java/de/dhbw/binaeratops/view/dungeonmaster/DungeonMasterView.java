@@ -559,7 +559,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.add(sendButton, cancelButton);
 
-        vlRequest.add(requestHeadline, senderMessageArea, questionLabel, receiverMessageArea, buttonLayout);
+        vlRequest.add(requestHeadline, senderMessageArea, makeDice(), questionLabel, receiverMessageArea, buttonLayout);
 
         // NPC
         H2 npcHeadline = new H2("Angesprochener NPC");
@@ -685,7 +685,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.add(sendButton, cancelButton);
 
-        vlRequest.add(requestHeadline, receiverMessageArea, buttonLayout);
+        vlRequest.add(requestHeadline, makeDice(), receiverMessageArea, buttonLayout);
 
         // ITEM
         H2 itemHeadline = new H2("Konsumierter Gegenstand");
@@ -779,7 +779,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             }
         });
 
-
         Grid<ItemInstance> inventory = new Grid<>();
         inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
         inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
@@ -826,7 +825,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.add(sendButton, cancelButton);
 
-        vlRequest.add(requestHeadline, infoLabel, receiverMessageArea, buttonLayout);
+        vlRequest.add(requestHeadline, infoLabel, makeDice(), receiverMessageArea, buttonLayout);
 
         // NPC
         H2 npcHeadline = new H2("Angesprochener NPC");
@@ -919,7 +918,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     }
 
 
-    HorizontalLayout makeDice() {
+    private HorizontalLayout makeDice() {
         TextField resultLabel = new TextField();
         IntegerField boundField = new IntegerField();
         boundField.setMin(1);
@@ -943,7 +942,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         return new HorizontalLayout(roll, boundField, resultLabel);
     }
 
-    VerticalLayout initMap(Long ADungeonId) {
+    private VerticalLayout initMap(Long ADungeonId) {
         int minX = mapServiceI.getMinXY(ADungeonId).getKey();
         int minY = mapServiceI.getMinXY(ADungeonId).getValue();
 
