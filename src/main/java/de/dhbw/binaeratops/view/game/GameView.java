@@ -162,9 +162,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             takeVirginity();
         }
         else{
-            gridLayout.remove(armorLayout);
-            gridLayout.remove(inventoryLayout);
-            createInventory();
+            if(!myAvatarDialog.isOpened()){
+                gridLayout.remove(armorLayout);
+                gridLayout.remove(inventoryLayout);
+                createInventory();
+            }
         }
 
 
