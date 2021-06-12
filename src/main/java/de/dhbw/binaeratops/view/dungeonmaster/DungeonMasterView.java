@@ -59,7 +59,6 @@ import java.util.*;
 public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlParameter<Long>, RouterLayout, PageConfigurator, BeforeLeaveObserver {
     Image[][] tiles;
 
-    HashMap<Avatar, Button> notificationButtons = new HashMap<>();
     HashMap<Avatar, UserAction> actionMap = new HashMap<>();
 
     private final SplitLayout splitChatWithRest = new SplitLayout();
@@ -134,9 +133,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private void refreshView() {
         getUI().ifPresent(ui -> ui.access(() -> {
             userGrid.setItems(dungeonServiceI.getCurrentAvatars(dungeon.getDungeonId()));
-            for (Avatar avatar : actionMap.keySet()) { //TODO Farbe wird zurückgesetzt
-                notificationButtons.get(avatar).getStyle().set("background", "red");
-            }
             if (currentRoom != null) {
                 Room room = dungeonServiceI.getRoomById(currentRoom.getRoomId());
                 fillCurrentRoom(room);
@@ -409,7 +405,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         interactions.addColumn(userAction -> userAction.getActionType().toString().toUpperCase()).setHeader("Aktionstyp");
         interactions.addComponentColumn(userAction -> {
             Button answerButton = new Button("Beantworten", b -> {
-                Avatar avatar = userAction.getAvatar();
                 switch (userAction.getActionType()) {
                     case CONSUME:
                         Dialog consumeDialog = createConsumeDialog(userAction, interactions);
@@ -421,7 +416,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         confirmButt.setEnabled(false);
                         consumeDialog.open();
                         break;
-                    case TALK: // TODO testen
+                    case TALK:
                         Dialog talkDialog = createTalkDialog(userAction, interactions);
                         talkDialog.addOpenedChangeListener(e->{
                             if (!talkDialog.isOpened()) {
@@ -431,7 +426,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         confirmButt.setEnabled(false);
                         talkDialog.open();
                         break;
-                    case HIT: // TODO testen
+                    case HIT:
                         Dialog hitDialog = createHitDialog(userAction, interactions);
                         hitDialog.addOpenedChangeListener(e->{
                             if (!hitDialog.isOpened()) {
@@ -442,7 +437,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         hitDialog.open();
                         break;
                     default:
-                        // TODO Fehlerbehandlung..
                         break;
                 }
             });
