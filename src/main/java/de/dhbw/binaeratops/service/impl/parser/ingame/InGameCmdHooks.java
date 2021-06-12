@@ -108,7 +108,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException {
         Avatar avatar = Avatar.check(AAvatar);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (avatar == null) {
+        if (avatar.equals(new Avatar())) {
             throw new CmdScannerInvalidRecipientException();
         }
         User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
@@ -120,6 +120,11 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException {
         Avatar avatar = Avatar.check(AAvatar);
         Dungeon dungeon = Dungeon.check(ADungeon);
+
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("SPEAK");
+        }
+
         Room currentRoom = avatar.getCurrentRoom();
         List<User> recipients = getUsersOfRoom(dungeon, currentRoom);
         User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
