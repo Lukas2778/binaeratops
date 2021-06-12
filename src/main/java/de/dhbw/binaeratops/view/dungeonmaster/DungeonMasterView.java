@@ -985,11 +985,13 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         roomDescriptionTextArea.setReadOnly(true);
         roomDescriptionTextArea.setWidthFull();
 
+        itemInRoomGrid = new Grid<>(Item.class);
         itemInRoomGrid.removeAllColumns();
         itemInRoomGrid.addColumn(Item::getItemName).setHeader(res.getString("view.dungeon.master.current.room.grid.item"));
         itemInRoomGrid.setSizeFull();
         //itemInRoomGrid.setWidth("250px");
 
+        npcInRoomGrid = new Grid<>(NPC.class);
         npcInRoomGrid.removeAllColumns();
         npcInRoomGrid.addColumn(NPC::getNpcName).setHeader(res.getString("view.dungeon.master.current.room.grid.npc"));
         npcInRoomGrid.setSizeFull();
