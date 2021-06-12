@@ -803,7 +803,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
      */
     private int getInventorySize(Avatar AAvatar) {
         int sum = 0;
-        for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
+        for (ItemInstance item : AAvatar.getInventory()) {
             sum += item.getItem().getSize();
         }
         return sum;
