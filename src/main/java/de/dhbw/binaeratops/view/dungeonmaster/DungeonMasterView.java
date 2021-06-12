@@ -532,6 +532,11 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 //        requestAndNpc.setPrimaryStyle("width", "20%");
         requestAndNpc.addToSecondary(vlNpc);
 
+        vlAvatar.setWidth(40, Unit.PERCENTAGE);
+        requestAndNpc.setWidth(60, Unit.PERCENTAGE);
+        vlRequest.setWidth(60, Unit.PERCENTAGE);
+        vlNpc.setWidth(40, Unit.PERCENTAGE);
+
         // Avatar
         H2 headlineAvatar = new H2("Avatar des Spielers");
 
@@ -573,9 +578,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
 
         Grid<ItemInstance> inventory = new Grid<>();
-        inventory.addColumn(item -> item.getItem().getItemName());
-        inventory.addColumn(item -> item.getItem().getDescription());
-        inventory.addColumn(item -> item.getItem().getType());
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
+        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
@@ -584,7 +589,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 // TODO Item aus Avatar-Inventar entfernen.
             });
             return deleteButton;
-        });
+        }).setHeader("Entfernen");
         inventory.setItems(AUserAction.getAvatar().getInventory());
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
@@ -594,12 +599,14 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         TextArea senderMessageArea = new TextArea();
         senderMessageArea.setReadOnly(true);
+        senderMessageArea.setWidthFull();
         senderMessageArea.setValue(AUserAction.getMessage());
         senderMessageArea.setLabel("Nachricht des Avatars: ");
 
         Label questionLabel = new Label("Was antwortet der NPC \""+ AUserAction.getInteractedNpc().getNpcName() +"\"?");
 
         TextArea receiverMessageArea = new TextArea();
+        receiverMessageArea.setWidthFull();
         receiverMessageArea.setLabel("Antwort des NPCs: ");
 
         Button sendButton = new Button("Senden");
