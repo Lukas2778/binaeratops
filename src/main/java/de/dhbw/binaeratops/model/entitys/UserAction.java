@@ -1,5 +1,7 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.enums.ActionType;
+
 import javax.persistence.*;
 
 @Entity
@@ -39,6 +41,14 @@ public class UserAction {
         this.avatar = AAvatar;
         this.actionType = AActionType;
         this.message = AMessage;
+        this.interactedNpc = AInteractedNPC;
+        this.requested = true;
+    }
+
+    public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, NPCInstance AInteractedNPC) {
+        this.dungeon = ADungeon;
+        this.avatar = AAvatar;
+        this.actionType = AActionType;
         this.interactedNpc = AInteractedNPC;
         this.requested = true;
     }

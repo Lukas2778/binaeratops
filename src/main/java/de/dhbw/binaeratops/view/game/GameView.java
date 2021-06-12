@@ -17,7 +17,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.*;
@@ -224,7 +223,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
             filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         });
-        resetFilterButton = new Button("Zurücksetzen");
+        resetFilterButton = new Button("Alles");
         resetFilterButton.addClickListener(e -> {
             myDungeonChatView.setFilterModeAll();
             resetFilterButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
@@ -236,7 +235,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
 
         leftDungeonButt = new Button(res.getString("view.game.button.leave.dungeon"));
-        leftDungeonButt.getStyle().set("color", "red");
+        leftDungeonButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         leftDungeonButt.addClickListener(e -> {
             UI.getCurrent().navigate("lobby");
         });
@@ -246,6 +245,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         confirmButt = new Button(res.getString("view.game.button.submit"));
         confirmButt.addClickShortcut(Key.ENTER);
+        confirmButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         confirmButt.addClickListener(e -> {
             //Parser wird mit Texteingabe aufgerufen
             try {
@@ -760,6 +761,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         String greetingMessage = MessageFormat.format(res.getString("view.game.greeting"), selectedInDialogAvatar.getName());
         messagesPublisher.onNext(new ChatMessage(new Paragraph(new Html(greetingMessage)), greetingMessage, currentUser.getUserId()));
         confirmButt.clickInClient();
+        resetFilterButton.clickInClient();
     }
 
     private void refreshView() {

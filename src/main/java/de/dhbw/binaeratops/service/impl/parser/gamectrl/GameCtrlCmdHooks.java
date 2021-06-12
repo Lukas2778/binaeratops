@@ -5,6 +5,7 @@ import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.ActionType;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
@@ -713,7 +714,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
                         avatarRepo.save(avatar);
-                        //userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); // TODO HIT
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.HIT, npc);
+                        userActionRepo.save(userAction);
+                        userActionPublisher.onNext(userAction); // TODO HIT
                         return new UserMessage("view.game.ctrl.cmd.hit", npc.getNpc().getNpcName());
                     }
                 }

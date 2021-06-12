@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.service.impl.configurator;
 
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.ActionType;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;

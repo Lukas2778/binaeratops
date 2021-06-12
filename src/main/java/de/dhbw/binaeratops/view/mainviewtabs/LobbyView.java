@@ -13,6 +13,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.ActionType;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
