@@ -570,13 +570,14 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
-                // TODO Item aus Avatar-Inventar entfernen.
+                gameService.removeItemFromInventory(AUserAction.getAvatar().getAvatarId(), item.getItemInstanceId());
+                inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
             });
             return deleteButton;
-        }).setHeader("Entfernen");
-        inventory.setItems(AUserAction.getAvatar().getInventory());
+        }).setHeader("Löschen");
+        inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
 
@@ -703,13 +704,14 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
-            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             deleteButton.addClickListener(e -> {
-                // TODO Item aus Avatar-Inventar entfernen.
+                gameService.removeItemFromInventory(AUserAction.getAvatar().getAvatarId(), item.getItemInstanceId());
+                inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
             });
             return deleteButton;
-        }).setHeader("Entfernen");
-        inventory.setItems(AUserAction.getAvatar().getInventory());
+        }).setHeader("Löschen");
+        inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
 
