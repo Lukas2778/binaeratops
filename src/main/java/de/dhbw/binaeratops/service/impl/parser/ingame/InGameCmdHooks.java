@@ -184,7 +184,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     private List<User> getUsersOfRoom(Dungeon ADungeon, Room ARoom) {
         List<User> users = new ArrayList<>();
         for (Avatar avatar : getCurrentAvatars(ADungeon)) {
-            if (avatar.getCurrentRoom().equals(ARoom)) {
+            if (avatar.getCurrentRoom().getRoomId().equals(ARoom.getRoomId())) {
                 users.add(avatar.getUser());
             }
         }
