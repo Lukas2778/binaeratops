@@ -6,9 +6,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
@@ -48,6 +50,10 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     GameService gameService;
     User currentUser;
+
+    private final String REQUEST_SENT = "REQUEST SENT";
+    private final String REQUEST_ALREADY_SENT = "REQUEST ALREADY SENT";
+    private final String BLOCKED = "BLOCKED";
 
     private final UnicastProcessor<UserAction> userActionpublisher;
 
@@ -118,12 +124,17 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                     UserAction userAction = new UserAction(ADungeon, currentUser, requested, ActionType.ENTRY_REQUEST);
                     dungeonServiceI.saveUserAction(userAction);
                     userActionpublisher.onNext(userAction);
-                    Notification.show(res.getString("view.lobby.notification.request.sent"));
+                    Span label = new Span(res.getString("view.lobby.notification.request.sent"));
+                    showRequestStatusNotification(label, REQUEST_SENT);
+//                    Notification.show(res.getString("view.lobby.notification.request.sent"));
                 } else {
-                    Notification.show(res.getString("view.lobby.notification.request.idle"));
+                    Span label = new Span(res.getString("view.lobby.notification.request.idle"));
+                    showRequestStatusNotification(label, REQUEST_ALREADY_SENT);
+//                    Notification.show(res.getString("view.lobby.notification.request.idle"));
                 }
             } else if (permissionBlocked != null) {
-                Notification.show(res.getString("view.lobby.notification.request.denied"));
+                Span label = new Span(res.getString("view.lobby.notification.request.denied"));
+                showRequestStatusNotification(label, BLOCKED);
             } else {
                 UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
             }
@@ -144,6 +155,29 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
             entryButton.getStyle().set("color", "white");
         }
         return entryButton;
+    }
+
+    private void showRequestStatusNotification(Span ALabel, String ACase) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        if(ACase.equals(REQUEST_SENT)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        } else if (ACase.equals(REQUEST_ALREADY_SENT)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+        } else if (ACase.equals(BLOCKED)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     private void refreshView() {
