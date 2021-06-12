@@ -540,6 +540,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
         receiverMessageArea.focus();
+        receiverMessageArea.setHeight(30, Unit.PERCENTAGE);
         receiverMessageArea.setLabel("Antwort des NPCs: ");
 
         Button sendButton = new Button("Senden");
@@ -666,6 +667,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
         receiverMessageArea.focus();
+        receiverMessageArea.setHeight(20, Unit.PERCENTAGE);
         receiverMessageArea.setLabel("Effekt des konsumierten Gegenstandes: ");
 
         Button sendButton = new Button("Senden");
