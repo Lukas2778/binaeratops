@@ -202,6 +202,19 @@ public class GameService implements GameServiceI {
         avatarRepositoryI.save(avatar);
     }
 
+    public void removeItemFromInventory(Long AAvatarId, Long AItemId) {
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        ItemInstance item = itemInstanceRepositoryI.findByItemInstanceId(AItemId);
+        avatar.removeInventoryItem(item);
+        avatarRepositoryI.save(avatar);
+        itemInstanceRepositoryI.delete(item);
+    }
+
+    public List<ItemInstance> getInventory(Long AAvatarId) {
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        return avatar.getInventory();
+    }
+
     //Wird für Tests benötigt
     public void setItemInstanceRepositoryI(ItemInstanceRepositoryI itemInstanceRepositoryI) {
         this.itemInstanceRepositoryI = itemInstanceRepositoryI;
