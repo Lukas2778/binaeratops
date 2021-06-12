@@ -29,7 +29,8 @@ public class UserAction {
     @OneToOne
     private NPCInstance interactedNpc;
 
-    private String interactedItem;
+    @OneToOne
+    private Item interactedItem;
 
     private Boolean requested = false;
 
@@ -42,7 +43,7 @@ public class UserAction {
         this.requested = true;
     }
 
-    public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, String AInteractedItem) {
+    public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, Item AInteractedItem) {
         this.dungeon = ADungeon;
         this.avatar = AAvatar;
         this.actionType = AActionType;
@@ -126,11 +127,11 @@ public class UserAction {
         this.interactedNpc = interactedNpc;
     }
 
-    public String getInteractedItem() {
+    public Item getInteractedItem() {
         return interactedItem;
     }
 
-    public void setInteractedItem(String interactedItem) {
+    public void setInteractedItem(Item interactedItem) {
         this.interactedItem = interactedItem;
     }
 

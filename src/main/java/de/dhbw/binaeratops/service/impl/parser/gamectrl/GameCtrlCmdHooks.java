@@ -576,11 +576,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
                 for (ItemInstance item : avatar.getInventory()) {
                     if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        Item tempItem = item.getItem();
                         avatar.removeInventoryItem(item);
                         avatar.setRequested(true);
                         itemInstanceRepo.save(item);
                         avatarRepo.save(avatar);
-                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.CONSUME, AItem);
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.CONSUME, tempItem);
                         userActionRepo.save(userAction);
                         userActionPublisher.onNext(userAction);
                         return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());

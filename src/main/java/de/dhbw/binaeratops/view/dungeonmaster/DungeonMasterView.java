@@ -174,7 +174,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                     //TODO den user einlassen
                 } else if (action.getActionType().equals(ActionType.CONSUME)) {
                     Notification notification = new Notification();
-                    Span label = new Span("Avatar " + action.getAvatar().getName() + " möchte den Gegenstand " + action.getInteractedItem() + " konsumieren");
+                    Span label = new Span("Avatar " + action.getAvatar().getName() + " möchte den Gegenstand " + action.getInteractedItem().getItemName() + " konsumieren");
                     Button answerButton = new Button("Beantworten", b -> {
                         notification.close();
                         createInteractionsDialog().open();
@@ -443,20 +443,20 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 Avatar avatar = userAction.getAvatar();
                 switch (userAction.getActionType()) {
                     case CONSUME:
-                        Dialog consumeDialog = new Dialog();
-                        TextArea consumeActionText = new TextArea();
-                        Label consumeUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.text"), userAction.getAvatar().getName(), userAction.getInteractedItem()));
-
-                        HorizontalLayout randomLayout = makeDice();
-                        Button consumeSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
-                            chatService.sendActionMessage(consumeActionText.getValue(), avatar.getUser());
-                            actionMap.remove(avatar);
-                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
-                            dungeonServiceI.deleteUserAction(userAction);
-                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
-                            consumeDialog.close();
-                        });
-                        consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
+                        Dialog consumeDialog = createConsumeDialog(userAction, interactions);
+//                        TextArea consumeActionText = new TextArea();
+//                        Label consumeUserActionText = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.answer.text"), userAction.getAvatar().getName(), userAction.getInteractedItem()));
+//
+//                        HorizontalLayout randomLayout = makeDice();
+//                        Button consumeSendActionButton = new Button(res.getString("view.dungeon.master.dialog.answer.button.send"), evfds -> {
+//                            chatService.sendActionMessage(consumeActionText.getValue(), avatar.getUser());
+//                            actionMap.remove(avatar);
+//                            dungeonServiceI.setAvatarNotRequested(avatar.getAvatarId());
+//                            dungeonServiceI.deleteUserAction(userAction);
+//                            interactions.setItems(dungeonServiceI.getUserActions(dungeon));
+//                            consumeDialog.close();
+//                        });
+//                        consumeDialog.add(new VerticalLayout(consumeUserActionText, randomLayout, consumeActionText, consumeSendActionButton));
                         consumeDialog.open();
                         break;
                     case TALK: // TODO testen
@@ -522,14 +522,10 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         VerticalLayout vlRequest = new VerticalLayout();
         VerticalLayout vlNpc = new VerticalLayout();
 
-//        avatarAndRequest.setSizeFull();
         avatarAndRequest.addToPrimary(vlAvatar);
         avatarAndRequest.addToSecondary(requestAndNpc);
-//        avatarAndRequest.setPrimaryStyle("width", "20%");
 
-//        requestAndNpc.setSizeFull();
         requestAndNpc.addToPrimary(vlRequest);
-//        requestAndNpc.setPrimaryStyle("width", "20%");
         requestAndNpc.addToSecondary(vlNpc);
 
         vlAvatar.setWidth(40, Unit.PERCENTAGE);
@@ -540,30 +536,20 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         // Avatar
         H2 headlineAvatar = new H2("Avatar des Spielers");
 
-//        Label nameLabel = new Label("Name: ");
         TextField nameField = new TextField();
         nameField.setLabel("Name: ");
         nameField.setReadOnly(true);
         nameField.setValue(AUserAction.getAvatar().getName());
-//        HorizontalLayout nameLayout = new HorizontalLayout();
-//        nameLayout.add(nameLabel, nameField);
 
-//        Label raceLabel = new Label("Rasse: ");
         TextField raceField = new TextField();
         raceField.setLabel("Rasse: ");
         raceField.setReadOnly(true);
         raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
-//        HorizontalLayout raceLayout = new HorizontalLayout();
-//        raceLayout.add(raceLabel, raceField);
 
-        //Label roleLabel = new Label("Rolle: ");
         TextField roleField = new TextField();
         roleField.setLabel("Rolle: ");
         roleField.setReadOnly(true);
         roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
-//        HorizontalLayout roleLayout = new HorizontalLayout();
-//        roleLayout.add(roleLabel, roleField);
-
 
         IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
         avatarLifePointsField.setStep(1);
@@ -607,6 +593,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
+        receiverMessageArea.focus();
         receiverMessageArea.setLabel("Antwort des NPCs: ");
 
         Button sendButton = new Button("Senden");
@@ -655,6 +642,142 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         talkDialog.add(avatarAndRequest);
 
         return talkDialog;
+    }
+
+    private Dialog createConsumeDialog(UserAction AUserAction, Grid<UserAction> AUserActionGrid) {
+        Dialog consumeDialog = new Dialog();
+        consumeDialog.setWidth(75, Unit.PERCENTAGE);
+
+        SplitLayout avatarAndRequest = new SplitLayout();
+        SplitLayout requestAndItem = new SplitLayout();
+
+        VerticalLayout vlAvatar = new VerticalLayout();
+        VerticalLayout vlRequest = new VerticalLayout();
+        VerticalLayout vlItem = new VerticalLayout();
+
+        avatarAndRequest.addToPrimary(vlAvatar);
+        avatarAndRequest.addToSecondary(requestAndItem);
+
+        requestAndItem.addToPrimary(vlRequest);
+        requestAndItem.addToSecondary(vlItem);
+
+        vlAvatar.setWidth(40, Unit.PERCENTAGE);
+        requestAndItem.setWidth(60, Unit.PERCENTAGE);
+        vlRequest.setWidth(60, Unit.PERCENTAGE);
+        vlItem.setWidth(40, Unit.PERCENTAGE);
+
+        // Avatar
+        H2 headlineAvatar = new H2("Avatar des Spielers");
+
+        TextField nameField = new TextField();
+        nameField.setLabel("Name: ");
+        nameField.setReadOnly(true);
+        nameField.setValue(AUserAction.getAvatar().getName());
+
+        TextField raceField = new TextField();
+        raceField.setLabel("Rasse: ");
+        raceField.setReadOnly(true);
+        raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
+
+        TextField roleField = new TextField();
+        roleField.setLabel("Rolle: ");
+        roleField.setReadOnly(true);
+        roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
+
+        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
+        avatarLifePointsField.setStep(1);
+        avatarLifePointsField.setHasControls(true);
+        avatarLifePointsField.setMin(1);
+        avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
+        avatarLifePointsField.addValueChangeListener(e -> {
+            if (!avatarLifePointsField.isInvalid()) {
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+            }
+        });
+
+
+        Grid<ItemInstance> inventory = new Grid<>();
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
+        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.addComponentColumn(item -> {
+            Button deleteButton = new Button();
+            deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
+            deleteButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            deleteButton.addClickListener(e -> {
+                // TODO Item aus Avatar-Inventar entfernen.
+            });
+            return deleteButton;
+        }).setHeader("Entfernen");
+        inventory.setItems(AUserAction.getAvatar().getInventory());
+
+        vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
+
+        // REQUEST
+        H2 requestHeadline = new H2("Anfragenbehandlung");
+
+        TextArea receiverMessageArea = new TextArea();
+        receiverMessageArea.setWidthFull();
+        receiverMessageArea.focus();
+        receiverMessageArea.setLabel("Effekt des konsumierten Gegenstandes: ");
+
+        Button sendButton = new Button("Senden");
+        sendButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        sendButton.addClickListener(e -> {
+            chatService.sendActionMessage(receiverMessageArea.getValue(), AUserAction.getAvatar().getUser());
+            actionMap.remove(AUserAction.getAvatar());
+            dungeonServiceI.setAvatarNotRequested(AUserAction.getAvatar().getAvatarId());
+            dungeonServiceI.deleteUserAction(AUserAction);
+            AUserActionGrid.setItems(dungeonServiceI.getUserActions(dungeon));
+            consumeDialog.close();
+        });
+
+        Button cancelButton = new Button("Abbrechen");
+        cancelButton.addClickListener(e -> consumeDialog.close());
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.add(sendButton, cancelButton);
+
+        vlRequest.add(requestHeadline, receiverMessageArea, buttonLayout);
+
+        // ITEM
+        H2 itemHeadline = new H2("Konsumierter Gegenstand");
+
+        TextField itemNameField = new TextField();
+        itemNameField.setLabel("Name des Gegenstandes");
+        itemNameField.setWidthFull();
+        itemNameField.setReadOnly(true);
+        itemNameField.setValue(AUserAction.getInteractedItem().getItemName());
+
+        TextField itemType = new TextField();
+        itemType.setLabel("Typ des Gegenstandes");
+        itemType.setWidthFull();
+        itemType.setReadOnly(true);
+        itemType.setValue(AUserAction.getInteractedItem().getType().toString());
+
+        IntegerField itemSizeField = new IntegerField("Größe des Gegenstandes");
+        itemSizeField.setStep(1);
+        itemSizeField.setHasControls(true);
+        itemSizeField.setWidthFull();
+        itemSizeField.setReadOnly(true);
+        itemSizeField.setMin(1);
+        itemSizeField.setValue(AUserAction.getInteractedItem().getSize().intValue());
+
+        TextArea itemDescription = new TextArea();
+        itemDescription.setReadOnly(true);
+        itemDescription.setWidthFull();
+        itemDescription.setLabel("Beschreibung des Gegenstandes");
+        if (AUserAction.getInteractedItem().getDescription() != null) {
+            itemDescription.setValue(AUserAction.getInteractedItem().getDescription());
+        } else {
+            itemDescription.setValue("");
+        }
+
+        vlItem.add(itemHeadline, itemNameField, itemType, itemSizeField, itemDescription);
+
+        consumeDialog.add(avatarAndRequest);
+
+        return consumeDialog;
     }
 
     private void createAvatarGrid() {
