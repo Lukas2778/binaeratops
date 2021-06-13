@@ -15,7 +15,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.ItemInstance;
 import de.dhbw.binaeratops.model.entitys.NPCInstance;
@@ -40,7 +39,6 @@ import java.util.ResourceBundle;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-@PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 @CssImport("./views/mainviewtabs/configurator/map.css")
 public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTitle {

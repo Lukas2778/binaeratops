@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
@@ -68,6 +69,7 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
             ItemDialog dialog = createDialog();
             dialog.open();
         });
+        addItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         editItemButton.addClickListener(e -> {
             Item[] selectedItems = grid.getSelectedItems().toArray(Item[]::new);

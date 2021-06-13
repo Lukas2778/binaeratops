@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -81,6 +82,8 @@ public class ItemDialog extends Dialog {
                 Notification.show(res.getString("view.configurator.dialog.item.notification.check.input"));
             }
         });
+        saveDialog.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         closeDialog.addClickListener(e -> this.close());
     }
 

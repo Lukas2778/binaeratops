@@ -7,6 +7,7 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -74,6 +75,7 @@ public class PermissionDialog extends Dialog {
         layout.add(currentUserField, buttonLayout);
         this.add(layout);
 
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveButton.addClickListener(e -> {
             if (currentUserField.getValue() != "") {
                 currentUser.setName(currentUserField.getValue());

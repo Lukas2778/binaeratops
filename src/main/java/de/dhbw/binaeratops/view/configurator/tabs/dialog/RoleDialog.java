@@ -7,6 +7,7 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
@@ -92,6 +93,8 @@ public class RoleDialog extends Dialog {
             }
 
         });
+        saveDialog.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         closeDialog.addClickListener(e -> this.close());
     }
 

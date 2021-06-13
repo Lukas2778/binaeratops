@@ -2,6 +2,7 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
@@ -11,7 +12,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -29,7 +29,6 @@ import java.util.ResourceBundle;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-@PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
@@ -70,6 +69,7 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
             NPCDialog dialog = createNPCDialog();
             dialog.open();
         });
+        addNPCButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         editNPCButton.addClickListener(e -> {
             NPC[] selectedItems = grid.getSelectedItems().toArray(NPC[]::new);

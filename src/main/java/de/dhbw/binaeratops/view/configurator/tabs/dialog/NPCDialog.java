@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
@@ -62,6 +63,7 @@ public class NPCDialog extends Dialog {
 
         currentRace.setItems(configuratorService.getAllRace());
 
+        saveDialog.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveDialog.addClickListener(e -> {
             if (validate()) {
                 currentNPC.setNpcName(currentName.getValue());

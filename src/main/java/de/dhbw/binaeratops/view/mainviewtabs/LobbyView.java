@@ -126,11 +126,9 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                     userActionpublisher.onNext(userAction);
                     Span label = new Span(res.getString("view.lobby.notification.request.sent"));
                     showRequestStatusNotification(label, REQUEST_SENT);
-//                    Notification.show(res.getString("view.lobby.notification.request.sent"));
                 } else {
                     Span label = new Span(res.getString("view.lobby.notification.request.idle"));
                     showRequestStatusNotification(label, REQUEST_ALREADY_SENT);
-//                    Notification.show(res.getString("view.lobby.notification.request.idle"));
                 }
             } else if (permissionBlocked != null) {
                 Span label = new Span(res.getString("view.lobby.notification.request.denied"));

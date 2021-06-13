@@ -3,6 +3,7 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
@@ -135,8 +136,9 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 
         Icon iconDeleteDungeon = new Icon(VaadinIcon.CLOSE_BIG);
         button.setIcon(iconDeleteDungeon);
+        button.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
-        button.getStyle().set("color", "red");
+//        button.getStyle().set("color", "red");
         return button;
     }
 
@@ -166,6 +168,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
             //TODO param ID hinzufügen
             UI.getCurrent().navigate("configurator/" + dungeon.getDungeonId());
         });
+        newDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
     }
 
     @Override
