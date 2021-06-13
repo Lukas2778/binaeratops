@@ -139,9 +139,15 @@ public class DungeonService implements DungeonServiceI {
     }
 
     @Override
-    public void setDungeonMaster(Long ADungeonId, Long AUserId) {
+    public void changeDungeonMaster(Long ADungeonId, Long ANewUserId, Long AOldUserId) {
         Dungeon dungeon = dungeonRepo.findByDungeonId(ADungeonId);
-        dungeon.setDungeonMasterId(AUserId);
+        User newUser = userRepo.findByUserId(ANewUserId);
+        User oldUser = userRepo.findByUserId(AOldUserId);
+
+        oldUser.removeDungeon(dungeon);
+        newUser.addDungeon(dungeon);
+        dungeon.setDungeonMasterId(ANewUserId);
+
         dungeonRepo.save(dungeon);
     }
 

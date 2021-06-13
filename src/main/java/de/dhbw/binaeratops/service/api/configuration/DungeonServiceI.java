@@ -97,9 +97,10 @@ public interface DungeonServiceI {
      * Setzt den Dungeon-Master des übergebenen Dungeons.
      *
      * @param ADungeonId Dungeon, für den der Dungeon-Master gesetzt werden soll.
-     * @param AUserId  Benutzer ID des Benutzers, der Dungeon-Master werden soll.
+     * @param ANewUserId Benutzer ID des Benutzers, der Dungeon-Master werden soll.
+     * @param AOldUserId Alter DungeonMaster
      */
-    void setDungeonMaster(Long ADungeonId, Long AUserId);
+    void changeDungeonMaster(Long ADungeonId, Long ANewUserId, Long AOldUserId);
 
     /**
      * Gibt die aktuellen Benutzer zurück.

@@ -1156,7 +1156,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         chooseDMButton.addClickListener(event -> {
             if (newDMGrid.getSelectedItems().size() > 0) {
                 User newDM = dungeonServiceI.getUser(((User) newDMGrid.getSelectedItems().toArray()[0]).getUserId());
-                dungeonServiceI.setDungeonMaster(dungeon.getDungeonId(), newDM.getUserId());
+                dungeonServiceI.changeDungeonMaster(dungeon.getDungeonId(), newDM.getUserId(), dungeon.getUser().getUserId());
                 dungeonServiceI.deactivateDungeon(dungeonId);
                 sureToLeave = true;
                 setPlayersInactive();
