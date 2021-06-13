@@ -990,6 +990,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
             kickButton.addClickListener(e -> confirmKickDialog.open());
 
+            confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             confirmButton.addClickListener(e -> {
                 dungeonServiceI.kickPlayer(dungeonId, avatar.getUser().getUserId());
                 kickUsersPublisherAction.onNext(new KickUserAction(avatar.getUser(), "KICK"));
@@ -1086,13 +1087,11 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         itemInRoomGrid.removeAllColumns();
         itemInRoomGrid.addColumn(Item::getItemName).setHeader(res.getString("view.dungeon.master.current.room.grid.item"));
         itemInRoomGrid.setSizeFull();
-        //itemInRoomGrid.setWidth("250px");
 
         npcInRoomGrid = new Grid<>(NPC.class);
         npcInRoomGrid.removeAllColumns();
         npcInRoomGrid.addColumn(NPC::getNpcName).setHeader(res.getString("view.dungeon.master.current.room.grid.npc"));
         npcInRoomGrid.setSizeFull();
-        //npcInRoomGrid.setWidth("250px");
 
         hl.add(itemInRoomGrid, npcInRoomGrid);
         hl.setSizeFull();
@@ -1135,7 +1134,6 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         Dialog leaveDialog = new Dialog();
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
-        //leaveDialog.setHeight(75, Unit.PERCENTAGE);
 
         H3 leaveHeadline = new H3(res.getString("view.dungeon.master.dialog.leave.h3"));
         String leaveOrNewDMText = res.getString("view.dungeon.master.dialog.leave.text");
@@ -1144,7 +1142,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         Button chooseDMButton = new Button(res.getString("view.dungeon.master.dialog.leave.new.dm"));
         chooseDMButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button leaveForSureButton = new Button(res.getString("view.dungeon.master.dialog.leave.leave"));
-        leaveForSureButton.getStyle().set("color", "red");
+        leaveForSureButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
         Grid<User> newDMGrid = new Grid<>(User.class);
         newDMGrid.removeAllColumns();
