@@ -118,14 +118,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Über uns'.
      *
-     * @param messages            Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
-     * @param AParserService      Wird für die Interaktion mit dem Dungeon benötigt.
-     * @param AMapService         Wird zur Erstellung der Karte benötigt.
-     * @param ARoomRepo           Wird für das Auffinden von Räumen benötigt.
-     * @param ADungeonRepo        Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
-     * @param AGameService        Wird für die Interaktion mit der Datenbank benötigt.
-     * @param AMessagePublisher   Wird zum Empfangen von Nachrichten benötigt.
-     * @param kickUsers           Wird zum Kicken der Benutzer benötigt.
+     * @param messages          Wird für den Nachrichtenaustausch zwischen Spielern und Dungeon-Master benötigt.
+     * @param AParserService    Wird für die Interaktion mit dem Dungeon benötigt.
+     * @param AMapService       Wird zur Erstellung der Karte benötigt.
+     * @param ARoomRepo         Wird für das Auffinden von Räumen benötigt.
+     * @param ADungeonRepo      Wird für das Auffinden des Dungeon Objekts anhand der übergebenen Dungeon ID benötigt.
+     * @param AGameService      Wird für die Interaktion mit der Datenbank benötigt.
+     * @param AMessagePublisher Wird zum Empfangen von Nachrichten benötigt.
+     * @param kickUsers         Wird zum Kicken der Benutzer benötigt.
      */
     public GameView(Flux<ChatMessage> messages, @Autowired ParserServiceI AParserService,
                     @Autowired MapServiceI AMapService, @Autowired RoomRepositoryI ARoomRepo,
@@ -153,15 +153,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         dungeonId = ALong;
         myDungeon = myDungeonRepo.findByDungeonId(dungeonId);
 
-        if (isVirgin){
+        if (isVirgin) {
             initiateGameView();
             //Avatarauswahl öffnen
             createAvatarDialog();
             initializeKickSubscriber();
             takeVirginity();
-        }
-        else{
-            if(!myAvatarDialog.isOpened()){
+        } else {
+            if (!myAvatarDialog.isOpened()) {
                 gridLayout.remove(armorLayout);
                 gridLayout.remove(inventoryLayout);
                 createInventory();
@@ -171,17 +170,18 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     }
 
-    private void takeVirginity()
-    {
+    private void takeVirginity() {
         isVirgin = false;
     }
+
     // TODO Kommentare schreiben
     private void initializeKickSubscriber() {
         kickUsers.subscribe(message -> getUI().ifPresent(ui -> ui.access(() -> {
             if (message.getUser().getUserId().equals(VaadinSession.getCurrent().getAttribute(User.class).getUserId())) {
                 if ("KICK".equals(message.getKick())) {
                     myAvatar = null;
-                    Notification.show(res.getString("view.game.notification.kicked"));
+                    Span label = new Span(res.getString("view.game.notification.kicked"));
+                    showErrorNotification(label);
                     myAvatarDialog.close();
                     UI.getCurrent().navigate("aboutUs");
                 }
@@ -283,37 +283,21 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 textField.setValue("");
                 textField.focus();
             } catch (CmdScannerAlreadyRequestedException alreadyRequested) {
-                Notification.show(transProv.getUserMessage(alreadyRequested.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(alreadyRequested.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerRecipientOfflineException recipientOffline) {
-                Notification.show(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidRecipientException invalidRecipient) {
-                Notification.show(transProv.getUserMessage(invalidRecipient.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(invalidRecipient.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
-                Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidItemTypeException invalidItemType) {
-                Notification.show(transProv.getUserMessage(invalidItemType.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(invalidItemType.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidParameterException invalidParameter) {
-                Notification.show(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerSyntaxMissingException syntaxMissing) {
-                Notification n = new Notification();
-                n.addThemeVariants(NotificationVariant.LUMO_ERROR);
-                Span label = new Span(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()));
-                Button closeButton = new Button("", event -> n.close());
-                closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
-                closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-                n.add(label, closeButton);
-                label.getStyle().set("margin-left", "0.3rem");
-                n.setPosition(Notification.Position.BOTTOM_CENTER);
-                n.open();
+                showParseErrorNotification(new Span(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
-                Notification.show(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showParseErrorNotification(new Span(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
             }
@@ -412,7 +396,8 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 changeRoom(currentRoom.getRoomId());
                 loadChat();
             } else {
-                Notification.show(res.getString("view.game.notification.select.avatar"));
+                Span label = new Span(res.getString("view.game.notification.select.avatar"));
+                showErrorNotification(label);
             }
         });
         //enterDungeon.addClickShortcut(Key.ENTER);
@@ -505,19 +490,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatarButt.addClickListener(e -> {
             if (!myGameService.avatarNameIsValid(myDungeon, avatarNameFiled.getValue())) {
                 avatarNameFiled.setInvalid(true);
-                Notification.show(res.getString("view.game.notification.forgot.name"));
+                showErrorNotification(new Span(res.getString("view.game.notification.forgot.name")));
             } else {
                 if (!myGameService.avatarGenderIsValid(avatarGenderField.getValue())) {
                     avatarGenderField.setInvalid(true);
-                    Notification.show(res.getString("view.game.notification.forgot.gender"));
+                    showErrorNotification(new Span(res.getString("view.game.notification.forgot.gender")));
                 } else {
                     if (!myGameService.avatarRoleIsValid(avatarRoleField.getValue())) {
                         avatarRoleField.setInvalid(true);
-                        Notification.show(res.getString("view.game.notification.forgot.role"));
+                        showErrorNotification(new Span(res.getString("view.game.notification.forgot.role")));
                     } else {
                         if (!myGameService.avatarRaceIsValid(avatarRaceField.getValue())) {
                             avatarRaceField.setInvalid(true);
-                            Notification.show(res.getString("view.game.notification.forgot.race"));
+                            showErrorNotification(new Span(res.getString("view.game.notification.forgot.race")));
                         } else {
                             Avatar currentAvatar = new Avatar();
                             //Lebenspunkte berechnen also Standartlebenspunkte + Rollenbonus + Rassenbonus
@@ -530,7 +515,20 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                                     currentAvatar.getLifepoints());
                             refreshAvatarGrid();
                             myCreateAvatarDialog.close();
-                            Notification.show(res.getString("view.game.notification.avatar.saved"));
+                            Span label = new Span(res.getString("view.game.notification.avatar.saved"));
+                            Notification notification = new Notification();
+                            Button closeButton = new Button("", es -> {
+                                notification.close();
+                            });
+                            closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                            closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+                            notification.add(label, closeButton);
+                            label.getStyle().set("margin-right", "0.3rem");
+                            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                            notification.setDuration(10000);
+                            notification.setPosition(Notification.Position.TOP_END);
+                            notification.open();
                         }
                     }
                 }
@@ -598,6 +596,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     VerticalLayout inventoryLayout;
     VerticalLayout armorLayout;
+
     void createInventory() {
         inventoryLayout = new VerticalLayout();
         Text inventoryTitle = new Text(res.getString("view.game.text.inventory"));
@@ -711,7 +710,19 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             action =
                     event.postpone();
             confirmLeaveDialog();
-            Notification.show(res.getString("view.game.notification.already.leaving"));
+            Span label = new Span(res.getString("view.game.notification.already.leaving"));
+            Notification notification = new Notification();
+            Button closeButton = new Button("", e -> {
+                notification.close();
+            });
+            closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+            closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+            notification.add(label, closeButton);
+            label.getStyle().set("margin-right", "0.3rem");
+            notification.setDuration(10000);
+            notification.setPosition(Notification.Position.TOP_END);
+            notification.open();
         }
     }
 
@@ -748,6 +759,37 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         myConfirmLeavingDialog.add(title, buttLayout);
     }
 
+    private void showParseErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.BOTTOM_CENTER);
+        notification.open();
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
+    }
 
     @Override
     public String getPageTitle() {

@@ -2,11 +2,15 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.listbox.ListBox;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -173,7 +177,8 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
+                        Span label = new Span(res.getString("view.configurator.room.notification.wallerror"));
+                        showErrorNotification(label);
                     }
 
                 });
@@ -184,7 +189,8 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
                             tiles[t.getX()][t.getY()].setSrc("map/" + t.getPath() + ".png");
                         }
                     } else {
-                        Notification.show(res.getString("view.configurator.room.notification.wallerror"));
+                        Span label = new Span(res.getString("view.configurator.room.notification.wallerror"));
+                        showErrorNotification(label);
                     }
                 });
 
@@ -274,7 +280,8 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
                     this.currentRoom = configuratorServiceI.getRoom(configuratorServiceI.getDungeon().getStartRoomId());
                     initRoom();
                 } else {
-                    Notification.show(res.getString("view.configurator.room.notification.deleteroomerror"));
+                    Span label = new Span(res.getString("view.configurator.room.notification.deleteroomerror"));
+                    showErrorNotification(label);
                 }
             }
         });
@@ -391,6 +398,22 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
             counter++;
         }
         return out + counter;
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

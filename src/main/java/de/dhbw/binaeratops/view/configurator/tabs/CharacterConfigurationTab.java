@@ -16,11 +16,13 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
-import com.vaadin.flow.component.radiobutton.RadioGroupVariant;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
@@ -274,7 +276,8 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         deleteB.addClickListener(e -> {
             try{
                 if(configuratorService.getDungeon().getRoles().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                    Notification.show(res.getString("view.configurator.character.notification.in.config"));
+                    Span label = new Span(res.getString("view.configurator.character.notification.in.config"));
+                    showErrorNotification(label);
                 }else{
                     Role[] selectedRole = grid.getSelectedItems()
                             .toArray(Role[]::new);
@@ -285,7 +288,8 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                     }
                 }
             }catch(Exception es){
-                Notification.show(res.getString("view.configurator.character.notification.inconfig.role"));
+                Span label = new Span(res.getString("view.configurator.character.notification.inconfig.role"));
+                showErrorNotification(label);
             }
         });
     }
@@ -294,7 +298,8 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
         deleteRaceButton.addClickListener(e -> {
             try{
                 if(configuratorService.getDungeon().getRaces().size() == 1 && configuratorService.getDungeon().getDungeonVisibility() != Visibility.IN_CONFIGURATION){
-                    Notification.show(res.getString("view.configurator.character.notification.in.config.race"));
+                    Span label = new Span(res.getString("view.configurator.character.notification.in.config.race"));
+                    showErrorNotification(label);
                 }else
                 {
                     Race[] selectedRace = raceGrid.getSelectedItems()
@@ -307,9 +312,26 @@ public class CharacterConfigurationTab extends VerticalLayout implements HasDyna
                     }
                 }
             }catch(Exception es){
-                Notification.show(res.getString("view.configurator.character.notification.in.config.race2"));
+                Span label = new Span(res.getString("view.configurator.character.notification.in.config.race2"));
+                showErrorNotification(label);
             }
         });
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

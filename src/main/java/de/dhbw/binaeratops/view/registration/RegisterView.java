@@ -3,18 +3,17 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -71,7 +70,7 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
 
         HorizontalLayout validLoginLay = new HorizontalLayout();
         RouterLink loginLink = new RouterLink(res.getString("view.register.link.login"), LogInView.class);
-        RouterLink validLink = new RouterLink(res.getString("view.register.link.validation"), ValdidateRegistrationView.class);
+        RouterLink validLink = new RouterLink(res.getString("view.register.link.validation"), ValidateRegistrationView.class);
         validLoginLay.add(loginLink, new Label(" - "), validLink);
 
         setAlignItems(Alignment.CENTER);
@@ -150,23 +149,38 @@ public class RegisterView extends VerticalLayout implements HasDynamicTitle {
      */
     private void checkRegistration(String AName, String AEMail, String APassword, String AVerPassword) {
         if (AName.trim().isEmpty()) {
-            Notification.show(res.getString("view.register.notification.enter.username"));
+            showErrorNotification(new Span(res.getString("view.register.notification.enter.username")));
         } else if (APassword.isEmpty()) {
-            Notification.show(res.getString("view.register.notification.enter.password"));
+            showErrorNotification(new Span(res.getString("view.register.notification.enter.password")));
         } else if (!APassword.equals(AVerPassword)) {
-            Notification.show(res.getString("view.register.notification.password.not.equal"));
+            showErrorNotification(new Span(res.getString("view.register.notification.password.not.equal")));
         } else {
             try {
                 authServiceI.register(AName, APassword, AEMail);
                 UI.getCurrent().getPage().setLocation("validateRegistration");
             } catch (RegistrationException e) {
-                Notification.show(res.getString("view.register.notification.username.already.exists"));
-
+                showErrorNotification(new Span(res.getString("view.register.notification.username.already.exists")));
             } catch (Exception e) {
-                Notification.show(res.getString("view.register.notification.check.email"));
+                showErrorNotification(new Span(res.getString("view.register.notification.check.email")));
             }
 
         }
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

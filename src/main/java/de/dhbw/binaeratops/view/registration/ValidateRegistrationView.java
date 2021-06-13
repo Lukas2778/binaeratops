@@ -3,17 +3,20 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
@@ -41,7 +44,7 @@ import java.util.ResourceBundle;
  */
 @Route("validateRegistration")
 @CssImport("./views/registration/language.css")
-public class ValdidateRegistrationView extends VerticalLayout implements HasDynamicTitle {
+public class ValidateRegistrationView extends VerticalLayout implements HasDynamicTitle {
 
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
@@ -51,7 +54,7 @@ public class ValdidateRegistrationView extends VerticalLayout implements HasDyna
      *
      * @param AAuthServiceI AuthServiceI.
      */
-    public ValdidateRegistrationView(@Autowired AuthServiceI AAuthServiceI) {
+    public ValidateRegistrationView(@Autowired AuthServiceI AAuthServiceI) {
         TextField name = new TextField(res.getString("view.validate.registration.field.username"));
         IntegerField code = new IntegerField(res.getString("view.validate.registration.field.code"));
         Button submit = new Button(res.getString("view.validate.registration.button.submit"));
@@ -63,7 +66,7 @@ public class ValdidateRegistrationView extends VerticalLayout implements HasDyna
             if (AAuthServiceI.confirm(name.getValue(), code.getValue())) {
                 UI.getCurrent().getPage().setLocation("login");
             } else {
-                Notification.show(res.getString("view.validate.registration.notification.check.code"));
+                showErrorNotification(new Span(res.getString("view.validate.registration.notification.check.code")));
             }
         });
 
@@ -120,6 +123,22 @@ public class ValdidateRegistrationView extends VerticalLayout implements HasDyna
                 validate
         );
         name.focus();
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

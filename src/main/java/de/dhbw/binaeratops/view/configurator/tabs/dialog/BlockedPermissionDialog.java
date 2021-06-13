@@ -10,7 +10,11 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -82,14 +86,15 @@ public class BlockedPermissionDialog extends Dialog {
                 currentUserDB = configuratorServiceI.getUser(currentUser.getName());
 
                 if (findBlockedUser(currentUser.getName())) {
-                    Notification.show(res.getString("view.configurator.dialog.blocked.permission.notification.duplicate"));
+                    Span label = new Span(res.getString("view.configurator.dialog.blocked.permission.notification.duplicate"));
+                    showErrorNotification(label);
 
                 } else {
                     if (matchDungeonMasterId(currentUserField.getValue())) {
-                        Notification.show(res.getString("view.configurator.dialog.blocked.permission.notification.self"));
+                        Span label = new Span(res.getString("view.configurator.dialog.blocked.permission.notification.self"));
+                        showErrorNotification(label);
                     } else if (currentUserDB != null) {
                         //Hier wird die Berechtigung erteilt, falls alle Abfagen erfolgreich waren
-                        //configuratorServiceI.getDungeon().addAllowedUser(currentUserDB);
                         Permission p = new Permission(currentUserDB);
                         configuratorServiceI.getDungeon().addBlockedUser(p);
                         configuratorServiceI.savePermission(p);
@@ -100,8 +105,8 @@ public class BlockedPermissionDialog extends Dialog {
                     }
                 }
             } else {
-                Notification.show(res.getString("view.configurator.dialog.permission.notification.no.input"));
-
+                Span label = new Span(res.getString("view.configurator.dialog.permission.notification.no.input"));
+                showErrorNotification(label);
             }
 
         });
@@ -115,6 +120,21 @@ public class BlockedPermissionDialog extends Dialog {
         grid.setItems(configuratorServiceI.getDungeon().getBlockedUsers());
     }
 
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
+    }
 
     private boolean matchDungeonMasterId(String AName) {
         boolean result = false;
@@ -125,7 +145,8 @@ public class BlockedPermissionDialog extends Dialog {
             }
 
         }catch(Exception e){
-            Notification.show(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
+            Span label = new Span(res.getString("view.configurator.dialog.permission.notification.user.not.found"));
+            showErrorNotification(label);
         }
 
 

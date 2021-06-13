@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.Push;
@@ -203,6 +204,22 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         notification.open();
     }
 
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.BOTTOM_CENTER);
+        notification.open();
+    }
+
     @Override
     protected void onAttach(AttachEvent attachEvent) {
         gameService.initialize(dungeon, attachEvent.getUI(), this);
@@ -281,26 +298,19 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 String message = transProv.getUserMessage(um, VaadinSession.getCurrent().getLocale());
                 myDungeonChatView.addMessage(new Paragraph(new Html(message)));
             } catch (CmdScannerRecipientOfflineException recipientOffline) {
-                Notification.show(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(recipientOffline.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidRecipientException invalidRecipient) {
-                Notification.show(transProv.getUserMessage(invalidRecipient.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(invalidRecipient.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInsufficientPermissionException insufficientPermissions) {
-                Notification.show(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(insufficientPermissions.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidItemTypeException invalidItemType) {
-                Notification.show(transProv.getUserMessage(invalidItemType.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(invalidItemType.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerInvalidParameterException invalidParameter) {
-                Notification.show(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(invalidParameter.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerSyntaxMissingException syntaxMissing) {
-                Notification.show(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(syntaxMissing.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerSyntaxUnexpectedException syntaxUnexpected) {
-                Notification.show(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale()))
-                        .setPosition(Notification.Position.BOTTOM_CENTER);
+                showErrorNotification(new Span(transProv.getUserMessage(syntaxUnexpected.getUserMessage(), VaadinSession.getCurrent().getLocale())));
             } catch (CmdScannerException | InvalidImplementationException cmdScannerException) {
                 cmdScannerException.printStackTrace();
             }
@@ -408,7 +418,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 switch (userAction.getActionType()) {
                     case CONSUME:
                         Dialog consumeDialog = createConsumeDialog(userAction, interactions);
-                        consumeDialog.addOpenedChangeListener(e->{
+                        consumeDialog.addOpenedChangeListener(e -> {
                             if (!consumeDialog.isOpened()) {
                                 confirmButt.setEnabled(true);
                             }
@@ -418,7 +428,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         break;
                     case TALK:
                         Dialog talkDialog = createTalkDialog(userAction, interactions);
-                        talkDialog.addOpenedChangeListener(e->{
+                        talkDialog.addOpenedChangeListener(e -> {
                             if (!talkDialog.isOpened()) {
                                 confirmButt.setEnabled(true);
                             }
@@ -428,7 +438,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                         break;
                     case HIT:
                         Dialog hitDialog = createHitDialog(userAction, interactions);
-                        hitDialog.addOpenedChangeListener(e->{
+                        hitDialog.addOpenedChangeListener(e -> {
                             if (!hitDialog.isOpened()) {
                                 confirmButt.setEnabled(true);
                             }
@@ -1081,7 +1091,20 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 leaveDialog.close();
                 UI.getCurrent().navigate("myDungeons");
             } else {
-                Notification.show(res.getString("view.dungeon.master.dialog.leave.notification"));
+                Span label = new Span(res.getString("view.dungeon.master.dialog.leave.notification"));
+                Notification notification = new Notification();
+                Button closeButton = new Button("", e -> {
+                    notification.close();
+                });
+                closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+                notification.add(label, closeButton);
+                label.getStyle().set("margin-right", "0.3rem");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                notification.setDuration(10000);
+                notification.setPosition(Notification.Position.TOP_END);
+                notification.open();
             }
         });
 

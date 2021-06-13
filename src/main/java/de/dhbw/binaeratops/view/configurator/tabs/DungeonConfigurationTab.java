@@ -10,7 +10,11 @@ import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
@@ -142,16 +146,19 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                             configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
                             configuratorService.saveDungeon();
                         }else{
-                            Notification.show(res.getString("view.configurator.dungeon.notification.select.startroom"));
+                            Span label = new Span(res.getString("view.configurator.dungeon.notification.select.startroom"));
+                            showErrorNotification(label);
                             viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                         }
                     }else{
-                        Notification.show(res.getString("view.configurator.dungeon.notification.need.role"));
+                        Span label = new Span(res.getString("view.configurator.dungeon.notification.need.role"));
+                        showErrorNotification(label);
                         viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                     }
 
                 }else{
-                    Notification.show(res.getString("view.configurator.dungeon.notification.need.race"));
+                    Span label = new Span(res.getString("view.configurator.dungeon.notification.need.race"));
+                    showErrorNotification(label);
                     viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                 }
 
@@ -165,16 +172,19 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
                             configuratorService.getDungeon().setDungeonVisibility(getVisibility(viewRadioButton.getValue()));
                             configuratorService.saveDungeon();
                         }else{
-                            Notification.show(res.getString("view.configurator.dungeon.notification.select.startroom"));
+                            Span label = new Span(res.getString("view.configurator.dungeon.notification.select.startroom"));
+                            showErrorNotification(label);
                             viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                         }
                     }else{
-                        Notification.show(res.getString("view.configurator.dungeon.notification.need.role"));
+                        Span label = new Span(res.getString("view.configurator.dungeon.notification.need.role"));
+                        showErrorNotification(label);
                         viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                     }
 
                 }else{
-                    Notification.show(res.getString("view.configurator.dungeon.notification.need.race"));
+                    Span label = new Span(res.getString("view.configurator.dungeon.notification.need.race"));
+                    showErrorNotification(label);
                     viewRadioButton.setValue(res.getString("view.configurator.dungeon.radiobutton.in.configuration"));
                 }
 
@@ -368,6 +378,22 @@ public class DungeonConfigurationTab extends VerticalLayout implements HasDynami
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllowedPermissions());
         blockedGrid.setItems(configuratorService.getBlockedPermissions());
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

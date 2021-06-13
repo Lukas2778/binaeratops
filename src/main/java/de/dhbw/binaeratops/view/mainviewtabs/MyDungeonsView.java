@@ -7,9 +7,11 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -86,7 +88,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
             Button button = new Button(res.getString("view.my.dungeons.grid.button.start"));
             button.addClickListener(e -> {
                 if (dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION)
-                    Notification.show("Der Dungeon muss auf Public oder Private gesetzt werden");
+                    showErrorNotification(new Span("Der Dungeon muss auf Public oder Private gesetzt werden")); // TODO Mehrsprachigkeit
                 else
                     UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
                 dungeonServiceI.activateDungeon(dungeon.getDungeonId());
@@ -123,9 +125,22 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
                     dataProvider.getItems().remove(ADungeon);
                     configuratorServiceI.deleteDungeon(ADungeon.getDungeonId());
                     dataProvider.refreshAll();
-                    Notification.show(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.success"), ADungeon.getDungeonName()));
+                    Span label = new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.success"), ADungeon.getDungeonName()));
+                    Notification notification = new Notification();
+                    Button closeButton = new Button("", es -> {
+                        notification.close();
+                    });
+                    closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+                    closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+                    notification.add(label, closeButton);
+                    label.getStyle().set("margin-right", "0.3rem");
+                    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    notification.setDuration(10000);
+                    notification.setPosition(Notification.Position.TOP_END);
+                    notification.open();
                 } catch (Exception d) {
-                    Notification.show(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName()));
+                    showErrorNotification(new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName())));
                 }
                 deleteDungeonDialog.close();
             });
@@ -138,7 +153,6 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         button.setIcon(iconDeleteDungeon);
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
-//        button.getStyle().set("color", "red");
         return button;
     }
 
@@ -153,10 +167,10 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
                     //das ist das hässlichste stück code ever ever
                     UI.getCurrent().navigate("configurator/" + ((Dungeon) dungeonGrid.getSelectedItems().toArray()[0]).getDungeonId());
                 } else {
-                    Notification.show(res.getString("view.my.dungeons.notification.ingame"));
+                    showErrorNotification(new Span(res.getString("view.my.dungeons.notification.ingame")));
                 }
             } else {
-                Notification.show(res.getString("view.my.dungeons.notification.select.edit"));
+                showErrorNotification(new Span(res.getString("view.my.dungeons.notification.select.edit")));
             }
         });
     }
@@ -164,11 +178,40 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
     private void initNewDungeonButton() {
         newDungeonButton.addClickListener(e -> {
             Dungeon dungeon = configuratorServiceI.createDungeon(res.getString("view.my.dungeons.dungeonname.preset"), VaadinSession.getCurrent().getAttribute(User.class), Status.INACTIVE);
-            Notification.show(res.getString("view.my.dungeons.notification.dungeon.created"));
+            Span label = new Span(res.getString("view.my.dungeons.notification.dungeon.created"));
+            Notification notification = new Notification();
+            Button closeButton = new Button("", es -> {
+                notification.close();
+            });
+            closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+            closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+            notification.add(label, closeButton);
+            label.getStyle().set("margin-right", "0.3rem");
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            notification.setDuration(10000);
+            notification.setPosition(Notification.Position.TOP_END);
+            notification.open();
             //TODO param ID hinzufügen
             UI.getCurrent().navigate("configurator/" + dungeon.getDungeonId());
         });
         newDungeonButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override
