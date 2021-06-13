@@ -215,6 +215,11 @@ public class GameService implements GameServiceI {
         return avatar.getInventory();
     }
 
+    public List<ItemInstance> getEquipment(Long AAvatarId) {
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        return avatar.getEquipment();
+    }
+
     //Wird für Tests benötigt
     public void setItemInstanceRepositoryI(ItemInstanceRepositoryI itemInstanceRepositoryI) {
         this.itemInstanceRepositoryI = itemInstanceRepositoryI;

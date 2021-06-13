@@ -868,6 +868,96 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         return hitDialog;
     }
 
+    private Dialog createInfoDialog(Avatar AAvatar) {
+        Dialog infoDialog = new Dialog();
+        infoDialog.setWidth(60, Unit.PERCENTAGE);
+
+        SplitLayout avatarAttributesAndInventory = new SplitLayout();
+        SplitLayout avatarInventoryAndEquipment = new SplitLayout();
+
+        VerticalLayout vlAvatarAttributes = new VerticalLayout();
+        VerticalLayout vlAvatarInventory = new VerticalLayout();
+        VerticalLayout vlAvatarEquipment = new VerticalLayout();
+
+
+        avatarAttributesAndInventory.addToPrimary(vlAvatarAttributes);
+        avatarAttributesAndInventory.addToSecondary(avatarInventoryAndEquipment);
+
+        avatarInventoryAndEquipment.addToPrimary(vlAvatarInventory);
+        avatarInventoryAndEquipment.addToSecondary(vlAvatarEquipment);
+
+        vlAvatarAttributes.setWidth(30, Unit.PERCENTAGE);
+        avatarInventoryAndEquipment.setWidth(70, Unit.PERCENTAGE);
+        vlAvatarInventory.setWidth(35, Unit.PERCENTAGE);
+        vlAvatarEquipment.setWidth(35, Unit.PERCENTAGE);
+
+        // Attributes
+        H2 attributesHeadline = new H2("Eigenschaften");
+
+        TextField nameField = new TextField();
+        nameField.setLabel("Name");
+        nameField.setReadOnly(true);
+        nameField.setValue(AAvatar.getName());
+
+        TextField genderField = new TextField();
+        genderField.setLabel("Geschlecht");
+        genderField.setReadOnly(true);
+        genderField.setValue(AAvatar.getGender().toString());
+
+        TextField raceField = new TextField();
+        raceField.setLabel("Rasse");
+        raceField.setReadOnly(true);
+        raceField.setValue(AAvatar.getRace().getRaceName());
+
+        TextField roleField = new TextField();
+        roleField.setLabel("Rolle");
+        roleField.setReadOnly(true);
+        roleField.setValue(AAvatar.getRole().getRoleName());
+
+        TextField currentRoomField = new TextField();
+        currentRoomField.setLabel("Aktueller Raum");
+        currentRoomField.setReadOnly(true);
+        currentRoomField.setValue(AAvatar.getCurrentRoom().getRoomName());
+
+        IntegerField lifePointsField = new IntegerField();
+        lifePointsField.setLabel("Lebenspunkte");
+        lifePointsField.setReadOnly(true);
+        lifePointsField.setHasControls(true);
+        lifePointsField.setValue(AAvatar.getLifepoints().intValue());
+
+        Button closeButton = new Button("Schließen");
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        closeButton.addClickListener(es -> infoDialog.close());
+
+        vlAvatarAttributes.add(attributesHeadline, nameField, genderField, raceField, roleField, currentRoomField, lifePointsField, closeButton);
+
+        // INVENTORY
+        H2 inventoryHeadline = new H2("Inventar");
+
+        Grid<ItemInstance> inventory = new Grid<>();
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
+        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.setItems(gameService.getInventory(AAvatar.getAvatarId()));
+
+        vlAvatarInventory.add(inventoryHeadline, inventory);
+
+        // EQUIPMENT
+        H2 equipmentHeadline = new H2("Ausrüstung");
+
+        Grid<ItemInstance> equipment = new Grid<>();
+        equipment.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
+        equipment.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
+        equipment.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        equipment.setItems(gameService.getEquipment(AAvatar.getAvatarId()));
+
+        vlAvatarEquipment.add(equipmentHeadline, equipment);
+
+        infoDialog.add(avatarAttributesAndInventory);
+
+        return infoDialog;
+    }
+
     private void createAvatarGrid() {
         userGrid.setSizeFull();
         userGrid.removeAllColumns();
@@ -885,25 +975,25 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         userGrid.addComponentColumn(avatar -> {
             Button infoButton = new Button(res.getString("view.dungeon.master.grid.button.infos"));
-            VerticalLayout lay = new VerticalLayout();
-            H4 headline = new H4(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.h4"), avatar.getName()));
-            Label user = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label1"), avatar.getUser().getName()));
-            Label room = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label2"), dungeonServiceI.getRoomOfAvatar(avatar).getRoomName()));
-            Label equipment = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label3"), Arrays.toString(avatar.getEquipment().stream().map(itemInstance -> itemInstance.getItem().getItemName()).toArray(String[]::new))));
-            Label inventoryLabel = new Label(res.getString("view.dungeon.master.dialog.infos.label4"));
-            Grid<Item> inventory = new Grid<>(Item.class);
-            inventory.removeAllColumns();
-            inventory.addColumn(Item::getItemName).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.name")).setAutoWidth(true);
-            inventory.addColumn(Item::getDescription).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.description")).setAutoWidth(true);
-            inventory.addColumn(Item::getSize).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.size")).setAutoWidth(true);
-            inventory.addColumn(Item::getType).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.type")).setAutoWidth(true);
-            inventory.setItems(avatar.getInventory().stream().map(ItemInstance::getItem).toArray(Item[]::new));
+//            VerticalLayout lay = new VerticalLayout();
+//            H4 headline = new H4(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.h4"), avatar.getName()));
+//            Label user = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label1"), avatar.getUser().getName()));
+//            Label room = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label2"), dungeonServiceI.getRoomOfAvatar(avatar).getRoomName()));
+//            Label equipment = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.infos.label3"), Arrays.toString(avatar.getEquipment().stream().map(itemInstance -> itemInstance.getItem().getItemName()).toArray(String[]::new))));
+//            Label inventoryLabel = new Label(res.getString("view.dungeon.master.dialog.infos.label4"));
+//            Grid<Item> inventory = new Grid<>(Item.class);
+//            inventory.removeAllColumns();
+//            inventory.addColumn(Item::getItemName).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.name")).setAutoWidth(true);
+//            inventory.addColumn(Item::getDescription).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.description")).setAutoWidth(true);
+//            inventory.addColumn(Item::getSize).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.size")).setAutoWidth(true);
+//            inventory.addColumn(Item::getType).setHeader(res.getString("view.dungeon.master.dialog.infos.grid.type")).setAutoWidth(true);
+//            inventory.setItems(avatar.getInventory().stream().map(ItemInstance::getItem).toArray(Item[]::new));
 
-            Dialog infoDialog = new Dialog();
-            infoDialog.setMinHeight("700px");
-            infoDialog.setMinWidth("1000px");
-            lay.add(headline, user, room, equipment);
-            infoDialog.add(lay, inventoryLabel, inventory);
+            Dialog infoDialog = createInfoDialog(avatar);
+//            infoDialog.setMinHeight("700px");
+//            infoDialog.setMinWidth("1000px");
+//            lay.add(headline, user, room, equipment);
+//            infoDialog.add(lay, inventoryLabel, inventory);
             infoButton.addClickListener(e -> infoDialog.open());
             return infoButton;
         }).setHeader(res.getString("view.dungeon.master.grid.infos"));

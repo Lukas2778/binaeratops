@@ -622,7 +622,6 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
                             avatar.addEquipmentItem(item);
-                            avatar.setRequested(true);
                             itemInstanceRepo.save(item);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
