@@ -811,11 +811,15 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         //wird dem Timer nach aufgerufen, sodass der DungeonMaster das Inventar des Spielers aktualisieren kann
         if (myGameService.getDungeonStatus(dungeonId).equals(Status.INACTIVE)) {
             Dialog dialog = new Dialog();
+            VerticalLayout vl = new VerticalLayout();
             Label dungeonMasterLeft = new Label(res.getString("view.game.label.dm.left"));
+            Button closeButton = new Button("Schließen", es -> dialog.close());
+            vl.add(dungeonMasterLeft, closeButton);
+            closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             myAvatar = null;
             getUI().ifPresent(ui -> ui.access(() -> {
                 ui.navigate("lobby");
-                dialog.add(dungeonMasterLeft);
+                dialog.add(vl);
                 dialog.open();
             }));
             return;
@@ -825,7 +829,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 getUI().ifPresent(ui -> ui.access(() ->
                         {
                             refreshInventory();
-                            //Notification.show("timer");
                         }
                 ));
             }
