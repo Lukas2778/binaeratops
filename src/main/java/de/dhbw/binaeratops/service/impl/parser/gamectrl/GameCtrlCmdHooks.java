@@ -612,17 +612,25 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             for (ItemInstance alreadyEquipped : avatar.getEquipment()) {
                                 if (alreadyEquipped.getItem().getType().equals(item.getItem().getType())) {
                                     // Ausrüsten
+                                    Item tempItem = item.getItem();
+                                    ItemInstance newItem = new ItemInstance(tempItem);
                                     avatar.removeEquipmentItem(alreadyEquipped);
-                                    avatar.addEquipmentItem(item);
+                                    avatar.removeInventoryItem(item);
+                                    avatar.addEquipmentItem(newItem);
                                     itemInstanceRepo.save(alreadyEquipped);
                                     itemInstanceRepo.save(item);
+                                    itemInstanceRepo.save(newItem);
                                     avatarRepo.save(avatar);
                                     return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
-                            avatar.addEquipmentItem(item);
+                            Item tempItem = item.getItem();
+                            ItemInstance newItem = new ItemInstance(tempItem);
+                            avatar.removeInventoryItem(item);
+                            avatar.addEquipmentItem(newItem);
                             itemInstanceRepo.save(item);
+                            itemInstanceRepo.save(newItem);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
@@ -648,8 +656,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                 for (ItemInstance item : avatar.getEquipment()) {
                     if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                         // Wenn Item in Equipment
+                        Item tempItem = item.getItem();
+                        ItemInstance newItem = new ItemInstance(tempItem);
                         avatar.removeEquipmentItem(item);
+                        avatar.addInventoryItem(newItem);
                         itemInstanceRepo.save(item);
+                        itemInstanceRepo.save(newItem);
                         avatarRepo.save(avatar);
                         return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                     }
@@ -806,6 +818,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     private int getInventorySize(Avatar AAvatar) {
         int sum = 0;
         for (ItemInstance item : AAvatar.getInventory()) {
+            sum += item.getItem().getSize();
+        }
+        for (ItemInstance item : AAvatar.getEquipment()) {
             sum += item.getItem().getSize();
         }
         return sum;

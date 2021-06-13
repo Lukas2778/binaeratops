@@ -718,6 +718,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
             closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
+            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
             notification.add(label, closeButton);
             label.getStyle().set("margin-right", "0.3rem");
             notification.setDuration(10000);
