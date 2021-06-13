@@ -52,6 +52,12 @@ public class GameService implements GameServiceI {
     @Autowired
     PermissionRepositoryI permissionRepositoryI;
 
+    @Autowired
+    RoleRepositoryI roleRepositoryI;
+
+    @Autowired
+    RaceRepositoryI raceRepositoryI;
+
     /**
      * Standardkonstruktor zum erzeugen des GameService.
      */
@@ -71,61 +77,70 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints) {
-        Avatar createAvatar = new Avatar(roomRepositoryI.findByRoomId(ACurrentRoomId), AAvatarGender, AAvatarName, AAvatarRace, AAvatarRole,
-                ALifepoints);
-        createAvatar.setDungeon(ADungeon);
-        createAvatar.setUser(AUser);
+    public void createNewAvatar(Long ADungeonId, Long AUserId, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Long AAvatarRoleId, Long AAvatarRaceId, Long ALifepoints) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        User user = userRepositoryI.findByUserId(AUserId);
+        Room room = roomRepositoryI.findByRoomId(ACurrentRoomId);
+        Role role = roleRepositoryI.findByRoleId(AAvatarRoleId);
+        Race race = raceRepositoryI.findByRaceId(AAvatarRaceId);
+        Avatar createAvatar = new Avatar(room, AAvatarGender, AAvatarName, race, role, ALifepoints);
+        createAvatar.setDungeon(dungeon);
+        createAvatar.setUser(user);
         //createAvatar.setCurrentRoom(ACurrentRoom);
         avatarRepositoryI.save(createAvatar);
-        ADungeon.addAvatar(createAvatar);
-        AUser.addAvatar(createAvatar);
+        dungeon.addAvatar(createAvatar);
+        user.addAvatar(createAvatar);
+        dungeonRepositoryI.save(dungeon);
+        userRepositoryI.save(user);
     }
 
     @Override
-    public void deleteAvatar(Dungeon ADungeon, User AUser, Avatar AAvatar) {
-        if (avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId()) != null) {
-            for (int i = 0; i <= AAvatar.getInventory().size(); i++) {
+    public void deleteAvatar(Long ADungeonId, Long AUserId, Long AAvatarId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        User user = userRepositoryI.findByUserId(AUserId);
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        if (avatar != null) {
+            for (int i = 0; i <= avatar.getInventory().size(); i++) {
                 try {
-                    for (ItemInstance inventItem : AAvatar.getInventory()) {
-                        AAvatar.removeInventoryItem(inventItem);
+                    for (ItemInstance inventItem : avatar.getInventory()) {
+                        avatar.removeInventoryItem(inventItem);
                         itemInstanceRepositoryI.delete(inventItem);
                     }
-                } catch (Exception e) {
-                }
+                } catch (Exception e) { }
             }
-            for (int i = 0; i <= AAvatar.getEquipment().size(); i++) {
+            for (int i = 0; i <= avatar.getEquipment().size(); i++) {
                 try {
-                    for (ItemInstance equipItem : AAvatar.getEquipment()) {
-                        AAvatar.removeEquipmentItem(equipItem);
+                    for (ItemInstance equipItem : avatar.getEquipment()) {
+                        avatar.removeEquipmentItem(equipItem);
                         itemInstanceRepositoryI.delete(equipItem);
                     }
-                } catch (Exception e) {
-                }
+                } catch (Exception e) { }
             }
             try {
-                ADungeon.removeAvatar(AAvatar);
-                AUser.removeAvatar(AAvatar);
-                userRepositoryI.save(AUser);
-                dungeonRepositoryI.save(ADungeon);
-                avatarRepositoryI.delete(AAvatar);
-            }catch (Exception e){}
+                dungeon.removeAvatar(avatar);
+                user.removeAvatar(avatar);
+                userRepositoryI.save(user);
+                dungeonRepositoryI.save(dungeon);
+                avatarRepositoryI.delete(avatar);
+            } catch (Exception e){}
         }
     }
 
     @Override
-    public List<Room> saveAvatarProgress(Avatar AAvatar, Room ACurrentRoom) {
-        AAvatar.addVisitedRoom(ACurrentRoom);
-        AAvatar.setCurrentRoom(ACurrentRoom);
-        avatarRepositoryI.save(AAvatar);
-        return AAvatar.getVisitedRooms();
+    public List<Room> saveAvatarProgress(Long AAvatarId, Long ACurrentRoomId) {
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+        Room room = roomRepositoryI.findByRoomId(ACurrentRoomId);
+        avatar.addVisitedRoom(room);
+        avatar.setCurrentRoom(room);
+        avatarRepositoryI.save(avatar);
+        return avatar.getVisitedRooms();
     }
 
     @Override
-    public void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar) {
-        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeon.getDungeonId());
-        User user = userRepositoryI.findByUserId(AUser.getUserId());
-        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId());
+    public void addActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        User user = userRepositoryI.findByUserId(AUserId);
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
         if (!dungeon.getCurrentUsers().contains(user)) {
             dungeon.addCurrentUser(user);
             avatar.setActive(true);
@@ -146,10 +161,10 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar) {
-        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeon.getDungeonId());
-        User user = userRepositoryI.findByUserId(AUser.getUserId());
-        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatar.getAvatarId());
+    public void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        User user = userRepositoryI.findByUserId(AUserId);
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
         if (dungeon.getCurrentUsers().contains(user)) {
             dungeon.removeCurrentUser(user);
             avatar.setActive(false);
@@ -160,15 +175,18 @@ public class GameService implements GameServiceI {
         }
     }
 
-    public Long getStandardAvatarLifepoints(Dungeon ADungeon) {
-        return ADungeon.getStandardAvatarLifepoints();
+    @Override
+    public Long getStandardAvatarLifepoints(Long ADungeonId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        return dungeon.getStandardAvatarLifepoints();
     }
 
     @Override
-    public boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName) {
-        if (AAvatarName.isEmpty()||AAvatarName.contains(" "))
+    public boolean avatarNameIsValid(Long ADungeonId, String AAvatarName) {
+        if (AAvatarName.isEmpty() || AAvatarName.contains(" "))
             return false;
-        for (Avatar myAvatar : ADungeon.getAvatars()) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        for (Avatar myAvatar : dungeon.getAvatars()) {
             if (myAvatar.getName().equals(AAvatarName))
                 return false;
         }
@@ -196,9 +214,9 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void setLifePoints(Long AAvatarId, Integer AValue) {
+    public void setLifePoints(Long AAvatarId, Long AValue) {
         Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
-        avatar.setLifepoints(AValue.longValue());
+        avatar.setLifepoints(AValue);
         avatarRepositoryI.save(avatar);
     }
 

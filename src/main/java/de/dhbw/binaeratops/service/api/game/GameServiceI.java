@@ -39,64 +39,64 @@ public interface GameServiceI {
     /**
      * Neuen Avatar anlegen und in der Datenbank speichern.
      *
-     * @param ADungeon       Dungeon für den der Avatar erstellt werden soll.
-     * @param AUser          Nutzer für den der Avatar erstellt werden soll.
+     * @param ADungeonId     Dungeon für den der Avatar erstellt werden soll.
+     * @param AUserId        Nutzer für den der Avatar erstellt werden soll.
      * @param ACurrentRoomId Raum in dem der Avatar bei Start befinden soll.
      * @param AAvatarName    Name des Avatars.
      * @param AAvatarGender  Geschlecht des Avatars.
-     * @param AAvatarRole    Rolle des Avatars.
-     * @param AAvatarRace    Rasse des Avatars.
+     * @param AAvatarRoleId  Rolle des Avatars.
+     * @param AAvatarRaceId  Rasse des Avatars.
      * @param ALifepoints    Lebenspunkte des Avatars.
      */
-    void createNewAvatar(Dungeon ADungeon, User AUser, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Role AAvatarRole, Race AAvatarRace, Long ALifepoints);
+    void createNewAvatar(Long ADungeonId, Long AUserId, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Long AAvatarRoleId, Long AAvatarRaceId, Long ALifepoints);
 
-    void deleteAvatar(Dungeon ADungeon, User AUser, Avatar AAvatar);
+    void deleteAvatar(Long ADungeonId, Long AUserId, Long AAvatarId);
 
     Avatar getAvatarById(Long AAvatarId);
 
     /**
      * Avatarfortschritt im Dungeon speichern.
      *
-     * @param AAvatar      Avatar der aktualisiert werden soll.
-     * @param ACurrentRoom Raum der der Liste der vom Avatar besuchten Räume hinzugefügt werden soll.
+     * @param AAvatarId      Avatar der aktualisiert werden soll.
+     * @param ACurrentRoomId Raum der der Liste der vom Avatar besuchten Räume hinzugefügt werden soll.
      * @return Liste der schon besuchten Räume (inklusive dem aktuell übergebenen Raum).
      */
-    List<Room> saveAvatarProgress(Avatar AAvatar, Room ACurrentRoom);
+    List<Room> saveAvatarProgress(Long AAvatarId, Long ACurrentRoomId);
 
     /**
      * Spieler den aktiven Spielern hinzufügen.
      *
-     * @param ADungeon Dungeon dem der Spieler beitritt.
-     * @param AUser    Benutzer, der den Dungeon betritt.
-     * @param AAvatar  Avatar, der auf active gesetzt werden soll.
+     * @param ADungeonId Dungeon dem der Spieler beitritt.
+     * @param AUserId    Benutzer, der den Dungeon betritt.
+     * @param AAvatarId  Avatar, der auf active gesetzt werden soll.
      */
-    void addActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
+    void addActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId);
 
     /**
      * Spieler von der Liste der aktiven Spieler löschen.
      *
-     * @param ADungeon Dungeon der verlassen wird.
-     * @param AUser    Benutzer, der den Dungeon verlässt.
-     * @param AAvatar  Avatar, der auf active gesetzt werden soll.
+     * @param ADungeonId Dungeon der verlassen wird.
+     * @param AUserId    Benutzer, der den Dungeon verlässt.
+     * @param AAvatarId  Avatar, der auf active gesetzt werden soll.
      */
-    void removeActivePlayer(Dungeon ADungeon, User AUser, Avatar AAvatar);
+    void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId);
 
     /**
      * Gibt die Standard-Lebenspunkte eines Avatars in einem Dungeon zurück.
      *
-     * @param ADungeon Dungeon, zu welchem die Punkte geholt werden sollen.
+     * @param ADungeonId Dungeon, zu welchem die Punkte geholt werden sollen.
      * @return Standard-Lebenspunkte eines Avatars.
      */
-    Long getStandardAvatarLifepoints(Dungeon ADungeon);
+    Long getStandardAvatarLifepoints(Long ADungeonId);
 
     /**
      * Gibt den Wahrheitswert zurück, ob der eingegebene Benutzername gültig ist.
      *
-     * @param ADungeon    Dungeon für den gesucht werden soll, ob der Name eindeutig ist.
+     * @param ADungeonId  Dungeon für den gesucht werden soll, ob der Name eindeutig ist.
      * @param AAvatarName Gesuchter Avatarname.
      * @return Wahrheitswert.
      */
-    boolean avatarNameIsValid(Dungeon ADungeon, String AAvatarName);
+    boolean avatarNameIsValid(Long ADungeonId, String AAvatarName);
 
     /**
      * Gibt den Wahrheitswert zurück, ob das eingegebene Geschlecht gültig ist.
@@ -134,5 +134,5 @@ public interface GameServiceI {
      * @param AAvatarId der gewünschte Avatar
      * @param AValue der gewünschte Wert
      */
-    void setLifePoints(Long AAvatarId, Integer AValue);
+    void setLifePoints(Long AAvatarId, Long AValue);
 }

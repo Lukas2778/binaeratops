@@ -233,7 +233,7 @@ public class GameServiceTest extends Logger {
         Mockito.when(permissionRepo.save(Mockito.any(Permission.class))).thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(dungeonRepo.save(Mockito.any(Dungeon.class))).thenAnswer(i -> i.getArguments()[0]);
         Mockito.when(userRepo.save(Mockito.any(User.class))).thenAnswer(i -> i.getArguments()[0]);
-        gameService.addActivePlayer(d1, u1, a1);
+        gameService.addActivePlayer(d1.getDungeonId(), u1.getUserId(), a1.getAvatarId());
         Assert.assertTrue(a1.isActive());
     }
 }

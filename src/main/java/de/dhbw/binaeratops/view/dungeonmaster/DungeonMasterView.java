@@ -513,7 +513,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
         avatarLifePointsField.addValueChangeListener(e -> {
             if (!avatarLifePointsField.isInvalid()) {
-                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue().longValue());
             }
         });
 
@@ -648,7 +648,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
         avatarLifePointsField.addValueChangeListener(e -> {
             if (!avatarLifePointsField.isInvalid()) {
-                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue().longValue());
             }
         });
 
@@ -787,7 +787,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         avatarLifePointsField.setValue(AUserAction.getAvatar().getLifepoints().intValue());
         avatarLifePointsField.addValueChangeListener(e -> {
             if (!avatarLifePointsField.isInvalid()) {
-                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue());
+                gameService.setLifePoints(AUserAction.getAvatar().getAvatarId(), avatarLifePointsField.getValue().longValue());
             }
         });
 

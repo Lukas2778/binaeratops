@@ -164,8 +164,11 @@ public class DungeonService implements DungeonServiceI {
             Avatar avatar = avatars.get(0);
             avatar.setActive(false);
             avatarRepo.save(avatar);
+            user.removeCurrentDungeon();
+            userRepo.save(user);
+            dungeon.removeCurrentUser(user);
+            dungeonRepo.save(dungeon);
         }
-        dungeonRepo.save(dungeon);
     }
 
     public void declinePlayer(Long ADungeonId, Long AUserId, Permission APermission) {

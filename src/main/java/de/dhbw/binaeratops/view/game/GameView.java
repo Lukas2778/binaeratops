@@ -386,7 +386,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         Button enterDungeon = new Button(res.getString("view.game.grid.button.enter.dungeon"), e -> {
             currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-            Set selectedAvatar = avatarGrid.getSelectedItems();
+            Set<Avatar> selectedAvatar = avatarGrid.getSelectedItems();
             if (selectedAvatar.size() > 0) {
                 selectedInDialogAvatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
                 myAvatarDialog.close();
@@ -419,7 +419,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Button deleteAnywayButt = new Button(res.getString("view.game.button.delete.avatar"));
             deleteAnywayButt.getStyle().set("color", "red");
             deleteAnywayButt.addClickListener(e -> {
-                myGameService.deleteAvatar(myDungeon, currentUser, AAvatar);
+                myGameService.deleteAvatar(myDungeon.getDungeonId(), currentUser.getUserId(), AAvatar.getAvatarId());
                 refreshAvatarGrid();
                 confirmDeleteDialog.close();
             });
@@ -488,7 +488,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button createAvatarButt = new Button(res.getString("view.game.button.save"));
 
         createAvatarButt.addClickListener(e -> {
-            if (!myGameService.avatarNameIsValid(myDungeon, avatarNameFiled.getValue())) {
+            if (!myGameService.avatarNameIsValid(myDungeon.getDungeonId(), avatarNameFiled.getValue())) {
                 avatarNameFiled.setInvalid(true);
                 showErrorNotification(new Span(res.getString("view.game.notification.forgot.name")));
             } else {
@@ -509,9 +509,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                             currentAvatar.setLifepoints(myDungeon.getStandardAvatarLifepoints(), avatarRaceField.getValue().getLifepointsBonus(), avatarRoleField.getValue().getLifepointsBonus());
 
                             //Neuen Avatar speichern
-                            myGameService.createNewAvatar(myDungeon, currentUser, myDungeon.getStartRoomId(),
+                            myGameService.createNewAvatar(myDungeon.getDungeonId(), currentUser.getUserId(), myDungeon.getStartRoomId(),
                                     avatarNameFiled.getValue(), avatarGenderField.getValue(),
-                                    avatarRoleField.getValue(), avatarRaceField.getValue(),
+                                    avatarRoleField.getValue().getRoleId(), avatarRaceField.getValue().getRaceId(),
                                     currentAvatar.getLifepoints());
                             refreshAvatarGrid();
                             myCreateAvatarDialog.close();
@@ -565,7 +565,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId()) == null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
-        myGameService.addActivePlayer(myDungeon, currentUser, myAvatar);
+        myGameService.addActivePlayer(myDungeon.getDungeonId(), currentUser.getUserId(), myAvatar.getAvatarId());
     }
 
     void createMap() {
@@ -657,7 +657,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         currentRoom = myRoomRepo.findByRoomId(ARoomId);
         myAvatar = myGameService.getAvatarById(myAvatar.getAvatarId());
         //Avatar Fortschritt speichern
-        visitedRooms = myGameService.saveAvatarProgress(myAvatar, currentRoom);//Liste updaten
+        visitedRooms = myGameService.saveAvatarProgress(myAvatar.getAvatarId(), currentRoom.getRoomId());//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
         if (inventoryGrid != null && armorGrid != null)
@@ -746,7 +746,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button leaveButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leaveButt.getStyle().set("color", "red");
         leaveButt.addClickListener(e -> {
-            myGameService.removeActivePlayer(myDungeon, currentUser, myAvatar);
+            myGameService.removeActivePlayer(myDungeon.getDungeonId(), currentUser.getUserId(), myAvatar.getAvatarId());
             myConfirmLeavingDialog.close();
             action.proceed();
         });
