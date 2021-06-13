@@ -135,4 +135,10 @@ public interface GameServiceI {
      * @param AValue der gewünschte Wert
      */
     void setLifePoints(Long AAvatarId, Long AValue);
+
+    /**
+     * Setzt alle Spieler auf inaktiv und entfert die User aus dem Dungeon
+     * @param ADungeonId Der gewünschte Dungeon
+     */
+    void setPlayersInactive(Long ADungeonId);
 }

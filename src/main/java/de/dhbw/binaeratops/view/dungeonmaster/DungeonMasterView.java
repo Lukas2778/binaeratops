@@ -1199,10 +1199,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     }
 
     private void setPlayersInactive() {
-        List<Avatar> avatars = dungeonServiceI.getCurrentAvatars(dungeonId);
-        for (Avatar avatar : avatars) {
-            dungeonServiceI.setAvatarInactive(avatar.getAvatarId());
-        }
+        gameService.setPlayersInactive(dungeonId);
     }
 
     @Override

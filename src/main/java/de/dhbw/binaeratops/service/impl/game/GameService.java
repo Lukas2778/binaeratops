@@ -220,6 +220,24 @@ public class GameService implements GameServiceI {
         avatarRepositoryI.save(avatar);
     }
 
+    @Override
+    public void setPlayersInactive(Long ADungeonId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+
+        List<Avatar> avatars = dungeonServiceI.getCurrentAvatars(ADungeonId);
+        for (Avatar avatar : avatars) {
+            dungeonServiceI.setAvatarInactive(avatar.getAvatarId());
+        }
+
+        while (dungeon.getCurrentUsers().size() > 0) {
+            User user = dungeon.getCurrentUsers().get(0);
+            user.removeCurrentDungeon();
+            userRepositoryI.save(user);
+            dungeon.removeCurrentUser(user);
+        }
+        dungeonRepositoryI.save(dungeon);
+    }
+
     public void removeItemFromInventory(Long AAvatarId, Long AItemId) {
         Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
         ItemInstance item = itemInstanceRepositoryI.findByItemInstanceId(AItemId);
