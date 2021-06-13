@@ -90,8 +90,6 @@ public class GameService implements GameServiceI {
         avatarRepositoryI.save(createAvatar);
         dungeon.addAvatar(createAvatar);
         user.addAvatar(createAvatar);
-        dungeonRepositoryI.save(dungeon);
-        userRepositoryI.save(user);
     }
 
     @Override
