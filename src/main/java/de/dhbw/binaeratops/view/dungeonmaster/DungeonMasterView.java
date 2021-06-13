@@ -923,11 +923,13 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
     private HorizontalLayout makeDice() {
         TextField resultLabel = new TextField();
         IntegerField boundField = new IntegerField();
+        boundField.addClassName("dice");
         boundField.setMin(1);
         boundField.setMax(40);
         boundField.setValue(20);
 
         resultLabel.setReadOnly(true);
+        resultLabel.addClassName("dice");
         resultLabel.setMaxLength(3);
         resultLabel.setWidth("60px");
         resultLabel.getStyle().set("padding", "0px");
