@@ -141,4 +141,6 @@ public interface GameServiceI {
      * @param ADungeonId Der gewünschte Dungeon
      */
     void setPlayersInactive(Long ADungeonId);
+
+    User getUser(Long AUserId);
 }

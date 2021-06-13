@@ -236,6 +236,11 @@ public class GameService implements GameServiceI {
         dungeonRepositoryI.save(dungeon);
     }
 
+    @Override
+    public User getUser(Long AUserId) {
+        return userRepositoryI.findByUserId(AUserId);
+    }
+
     public void removeItemFromInventory(Long AAvatarId, Long AItemId) {
         Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
         ItemInstance item = itemInstanceRepositoryI.findByItemInstanceId(AItemId);

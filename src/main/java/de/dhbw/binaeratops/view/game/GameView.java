@@ -368,7 +368,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             return null;
         }).setHeader(res.getString("view.game.grid.room"));
         avatarGrid.addComponentColumn(item -> createDeleteAvatarButton(item)).setHeader(res.getString("view.game.grid.button.delete"));
-        //expand(avatarGrid);
         gridLayoutVert.add(avatarGrid);
 
         // Footer
@@ -376,7 +375,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             myAvatarDialog.close();
             UI.getCurrent().navigate("lobby");
         });
-        cancel.getStyle().set("color", "red");
+        cancel.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
         Button createAvatar = new Button(res.getString("view.game.grid.button.new.avatar"), e -> {
             createNewAvatarDialog();
@@ -400,7 +399,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 showErrorNotification(label);
             }
         });
-        //enterDungeon.addClickShortcut(Key.ENTER);
 
         buttLayout.add(cancel, createAvatar, enterDungeon);
         buttLayout.setWidthFull();
@@ -441,7 +439,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         return deleteAvatarButt;
     }
 
-    void createNewAvatarDialog() {
+    private void createNewAvatarDialog() {
         VerticalLayout contentLayout;
         HorizontalLayout buttCreateLayout;
         H2 title;
@@ -464,7 +462,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         TextField avatarNameFiled = new TextField(res.getString("view.game.textfield.avatarname"));
         avatarNameFiled.addValueChangeListener(e -> avatarNameFiled.setInvalid(false));
         avatarNameFiled.focus();
-
 
         List<Gender> avatarGenderList = new ArrayList<>(Arrays.asList(Gender.values()));
         ComboBox<Gender> avatarGenderField = new ComboBox<>(res.getString("view.game.combobox.gender"));
@@ -546,6 +543,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
     void refreshAvatarGrid() {
         avatarList = new ArrayList<>();
+        currentUser = myGameService.getUser(currentUser.getUserId());
         List<Avatar> tempAvatarList = currentUser.getAvatars();
         for (Avatar canAddAvatar : tempAvatarList) {
             try {
