@@ -1,11 +1,22 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.api.UserActionI;
 import de.dhbw.binaeratops.model.enums.ActionType;
 
 import javax.persistence.*;
 
+/**
+ * Entity Objekt für eine Benutzeraktion.
+ * <p>
+ * Es repräsentiert die Entity "Benutzeraktion" der Datenbank in der Programmlogik.
+ * <p>
+ * Es implementiert dazu alle Funktionalitäten der Benutzeraktion Schnittstelle.
+ *
+ * @author Nicolas Haug, Lars Rösel
+ * @see UserActionI
+ */
 @Entity
-public class UserAction {
+public class UserAction implements UserActionI {
 
     @Id
     @GeneratedValue
@@ -36,6 +47,15 @@ public class UserAction {
 
     private Boolean requested = false;
 
+    /**
+     * Konstruktor zum Erzeugen einer TALK-Anfrage.
+     *
+     * @param ADungeon       Dungeon, der Anfrage.
+     * @param AAvatar        Avatar des Anfragenden.
+     * @param AActionType    AktionsTyp.
+     * @param AMessage       Nachricht an den NPC.
+     * @param AInteractedNPC Angefragter NPC.
+     */
     public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, String AMessage, NPCInstance AInteractedNPC) {
         this.dungeon = ADungeon;
         this.avatar = AAvatar;
@@ -45,6 +65,14 @@ public class UserAction {
         this.requested = true;
     }
 
+    /**
+     * Konstruktor zum Erzeugen einer HIT-Anfrage.
+     *
+     * @param ADungeon       Dungeon, der Anfrage.
+     * @param AAvatar        Avatar des Anfragenden.
+     * @param AActionType    AktionsTyp.
+     * @param AInteractedNPC Angefragter NPC.
+     */
     public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, NPCInstance AInteractedNPC) {
         this.dungeon = ADungeon;
         this.avatar = AAvatar;
@@ -53,6 +81,14 @@ public class UserAction {
         this.requested = true;
     }
 
+    /**
+     * Konstruktor zum Erzeugen einer CONSUME-Anfrage.
+     *
+     * @param ADungeon        Dungeon, der Anfrage.
+     * @param AAvatar         Avatar des Anfragenden.
+     * @param AActionType     AktionsTyp.
+     * @param AInteractedItem Angefragter Gegenstand.
+     */
     public UserAction(Dungeon ADungeon, Avatar AAvatar, ActionType AActionType, Item AInteractedItem) {
         this.dungeon = ADungeon;
         this.avatar = AAvatar;
@@ -61,6 +97,14 @@ public class UserAction {
         this.requested = true;
     }
 
+    /**
+     * Konstruktor zum Erzeugen einer ENTRY_REQUEST-Anfrage.
+     *
+     * @param ADungeon    Dungeon, der Anfrage.
+     * @param AUser       Anfragender Benutzer.
+     * @param APermission Angefragte Berechtigung.
+     * @param AActionType AktionsTyp.
+     */
     public UserAction(Dungeon ADungeon, User AUser, Permission APermission, ActionType AActionType) {
         this.dungeon = ADungeon;
         this.user = AUser;
@@ -69,6 +113,9 @@ public class UserAction {
         this.requested = true;
     }
 
+    /**
+     * Standardkonstruktor zum Erzeugen einer Benutzeraktion.
+     */
     public UserAction() {
 
     }
@@ -77,79 +124,79 @@ public class UserAction {
         return actionId;
     }
 
-    public void setActionId(Long actionId) {
-        this.actionId = actionId;
+    public void setActionId(Long AActionId) {
+        this.actionId = AActionId;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User AUser) {
+        this.user = AUser;
     }
 
     public Avatar getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
+    public void setAvatar(Avatar AAvatar) {
+        this.avatar = AAvatar;
     }
 
     public Dungeon getDungeon() {
         return dungeon;
     }
 
-    public void setDungeon(Dungeon dungeon) {
-        this.dungeon = dungeon;
+    public void setDungeon(Dungeon ADungeon) {
+        this.dungeon = ADungeon;
     }
 
     public ActionType getActionType() {
         return actionType;
     }
 
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
+    public void setActionType(ActionType AActionType) {
+        this.actionType = AActionType;
     }
 
     public Permission getPermission() {
         return permission;
     }
 
-    public void setPermission(Permission permission) {
-        this.permission = permission;
+    public void setPermission(Permission APermission) {
+        this.permission = APermission;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMessage(String AMessage) {
+        this.message = AMessage;
     }
 
     public NPCInstance getInteractedNpc() {
         return interactedNpc;
     }
 
-    public void setInteractedNpc(NPCInstance interactedNpc) {
-        this.interactedNpc = interactedNpc;
+    public void setInteractedNpc(NPCInstance AInteractedNPC) {
+        this.interactedNpc = AInteractedNPC;
     }
 
     public Item getInteractedItem() {
         return interactedItem;
     }
 
-    public void setInteractedItem(Item interactedItem) {
-        this.interactedItem = interactedItem;
+    public void setInteractedItem(Item AInteractedItem) {
+        this.interactedItem = AInteractedItem;
     }
 
     public Boolean getRequested() {
         return requested;
     }
 
-    public void setRequested(Boolean requested) {
-        this.requested = requested;
+    public void setRequested(Boolean ARequested) {
+        this.requested = ARequested;
     }
 }

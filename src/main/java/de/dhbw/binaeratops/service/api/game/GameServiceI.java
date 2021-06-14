@@ -50,8 +50,21 @@ public interface GameServiceI {
      */
     void createNewAvatar(Long ADungeonId, Long AUserId, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Long AAvatarRoleId, Long AAvatarRaceId, Long ALifepoints);
 
+    /**
+     * Löscht den Avatar aus der Datenbank.
+     *
+     * @param ADungeonId Dungeon des Avatars.
+     * @param AUserId    Benutzer des Avatars.
+     * @param AAvatarId  Avatar, der gelöscht werden soll.
+     */
     void deleteAvatar(Long ADungeonId, Long AUserId, Long AAvatarId);
 
+    /**
+     * Gibt den Avatar zur übergebenen ID zurück.
+     *
+     * @param AAvatarId Avatar-ID des gesuchten Avatars.
+     * @return Gesuchter Avatar.
+     */
     Avatar getAvatarById(Long AAvatarId);
 
     /**
@@ -124,6 +137,7 @@ public interface GameServiceI {
 
     /**
      * Gibt zurück, ob der Dungeon noch aktiv ist.
+     *
      * @param ADungeonId Der gewünschte Dungeon.
      * @return Boolean, ob es aktiv ist oder nicht.
      */
@@ -131,16 +145,48 @@ public interface GameServiceI {
 
     /**
      * Setzt die Lebenspunkte des Avatars
+     *
      * @param AAvatarId der gewünschte Avatar
-     * @param AValue der gewünschte Wert
+     * @param AValue    der gewünschte Wert
      */
     void setLifePoints(Long AAvatarId, Long AValue);
 
     /**
      * Setzt alle Spieler auf inaktiv und entfert die User aus dem Dungeon
+     *
      * @param ADungeonId Der gewünschte Dungeon
      */
     void setPlayersInactive(Long ADungeonId);
 
+    /**
+     * Gibt den Benutzer zur angegebenen ID zurück.
+     *
+     * @param AUserId ID des gesuchten Benutzers.
+     * @return Gesuchter Benutzer.
+     */
     User getUser(Long AUserId);
+
+    /**
+     * Entfernt den übergebenen Gegenstand aus dem Inventar des übergebenen Avatars.
+     *
+     * @param AAvatarId Avatar, aus dessen Inventar der Gegenstand entfernt werden soll.
+     * @param AItemId   Gegenstand, der entfernt werden soll.
+     */
+    void removeItemFromInventory(Long AAvatarId, Long AItemId);
+
+    /**
+     * Gibt das Inventar eines Avatars zurück.
+     *
+     * @param AAvatarId Avatar, dessen Inventar gesucht ist.
+     * @return Inventar des Avatars.
+     */
+    List<ItemInstance> getInventory(Long AAvatarId);
+
+    /**
+     * Gibt die Ausrüstung eines Avatars zurück.
+     *
+     * @param AAvatarId Avatar, dessen Ausrüstung gesucht ist.
+     * @return Ausrüstung des Avatars.
+     */
+    List<ItemInstance> getEquipment(Long AAvatarId);
 }
