@@ -80,10 +80,10 @@ public class ChatView extends VerticalLayout {
                         messageList.add(message.getParagraph());
                     }
                 }else {
-                    actionMessagesList.add(new Paragraph(message.getText()));
-                    allMessagesList.add(new Paragraph(message.getText()));
+                    actionMessagesList.add(message.getParagraph());
+                    allMessagesList.add(message.getParagraph());
                     if (filterMode == FilterMode.All || filterMode == FilterMode.ACTIONS){
-                        messageList.add(new Paragraph(message.getText()));
+                        messageList.add(message.getParagraph());
                     }
                 }
                 UI.getCurrent().getPushConfiguration().setPushMode(PushMode.MANUAL);

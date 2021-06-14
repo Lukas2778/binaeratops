@@ -64,3 +64,8 @@ padding-left:   10px;
 .boldtext{
     font-weight: bold;
 }
+
+.actionColor{
+    color: deepskyblue;
+    font-weight: bold;
+}
