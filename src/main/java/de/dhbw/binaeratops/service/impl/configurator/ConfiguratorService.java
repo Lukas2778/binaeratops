@@ -7,11 +7,14 @@ import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
+import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Komponente "ConfiguratorService".
@@ -48,9 +51,11 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
-    NpcInstanceRepositoryI npcInstanceRepositoryI;
+    NpcInstanceRepositoryI npcInstanceRepository;
     @Autowired
     PermissionRepositoryI permissionRepo;
+    @Autowired
+    MapServiceI mapService;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -78,6 +83,27 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteDungeon(Long ADungeonId) {
         setDungeon(ADungeonId);
+        for (Role deleteRole : getAllRoles()) {
+            roleRepo.delete(deleteRole);
+        }
+        for (Permission deleteAllowedPermission : getAllowedPermissions()) {
+            permissionRepo.delete(deleteAllowedPermission);
+        }
+        for (Permission deleteBlockedPermission : getBlockedPermissions()) {
+            permissionRepo.delete(deleteBlockedPermission);
+        }
+        for (Room deleteRoom : getAllDungeonRooms()) {
+            deleteRoom(deleteRoom);
+        }
+        for (Item deleteItem : getAllItems()) {
+            deleteItem(deleteItem);
+        }
+        for (NPC deleteNpc : getAllNPCs()) {
+            deleteNPC(deleteNpc);
+        }
+        for (Race deleteRace : getAllRace()) {
+            raceRepo.delete(deleteRace);
+        }
         dungeonRepo.delete(dungeon);
     }
 
@@ -292,12 +318,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void setNpcInstances(Room ARoom, List<NPCInstance> ANPCList) {
         ARoom.getItems()
                 .clear();
-        for (NPCInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
-            npcInstanceRepositoryI.delete(myNpc);
+        for (NPCInstance myNpc : npcInstanceRepository.findByRoom(ARoom)) {
+            npcInstanceRepository.delete(myNpc);
         }
         for (NPCInstance myNpc : ANPCList) {
             myNpc.setRoom(ARoom);
-            npcInstanceRepositoryI.save(myNpc);
+            npcInstanceRepository.save(myNpc);
         }
         ARoom.getNpcs()
                 .addAll(ANPCList);
@@ -307,7 +333,7 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
             for (NPCInstance myNpc : ANPCList) {
                 myNpc.setRoom(ARoom);
-                npcInstanceRepositoryI.save(myNpc);
+                npcInstanceRepository.save(myNpc);
             }
             System.out.println("FALSCH");
             //Notification.show("Hier findet er den Entity nicht!");
@@ -332,14 +358,18 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<NPCInstance> getAllNPCs(Room ARoom) {
-        return npcInstanceRepositoryI.findByRoom(ARoom);
+        return npcInstanceRepository.findByRoom(ARoom);
     }
 
     @Override
     public void deleteRoom(Room ARoom) {
+        for (ItemInstance deleteItemInstance : ARoom.getItems()) {
+            itemInstanceRepo.delete(deleteItemInstance);
+        }
+        for (NPCInstance deleteNpcInstance : ARoom.getNpcs()) {
+            npcInstanceRepository.delete(deleteNpcInstance);
+        }
         dungeon.getRooms().remove(ARoom);
-        //dungeonRepo.save(dungeon);
-        //dungeonRepo.delete(dungeon);
         roomRepo.delete(ARoom);
     }
 

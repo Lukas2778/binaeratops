@@ -121,7 +121,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
             deleteDungeonDialog.open();
 
             deleteDungeonButt.addClickListener(e -> {
-                try {
+                //try {
                     dataProvider.getItems().remove(ADungeon);
                     configuratorServiceI.deleteDungeon(ADungeon.getDungeonId());
                     dataProvider.refreshAll();
@@ -139,9 +139,9 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
                     notification.setDuration(10000);
                     notification.setPosition(Notification.Position.TOP_END);
                     notification.open();
-                } catch (Exception d) {
-                    showErrorNotification(new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName())));
-                }
+//                } catch (Exception d) {
+//                    showErrorNotification(new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName())));
+//                }
                 deleteDungeonDialog.close();
             });
             cancelButt.addClickListener(e -> {
