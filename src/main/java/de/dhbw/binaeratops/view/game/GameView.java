@@ -164,6 +164,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 gridLayout.remove(armorLayout);
                 gridLayout.remove(inventoryLayout);
                 createInventory();
+                loadChat();
             }
         }
 
