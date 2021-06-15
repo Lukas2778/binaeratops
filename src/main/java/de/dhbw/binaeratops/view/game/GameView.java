@@ -44,6 +44,8 @@ import reactor.core.publisher.UnicastProcessor;
 
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Oberfläche für die Komponente "Spieler Ansicht".
@@ -166,8 +168,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
                 createInventory();
             }
         }
-
-
     }
 
     private void takeVirginity() {
@@ -327,8 +327,6 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         add(gameLayout);
 
         setSizeFull();
-
-
     }
 
     void createAvatarDialog() {
@@ -559,7 +557,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     void loadAvatarProgress(Avatar AAvatar) {
         this.myAvatar = AAvatar;
         this.currentRoom = myAvatar.getCurrentRoom();
-        this.visitedRooms = myAvatar.getVisitedRooms();
+        this.visitedRooms = myGameService.attendanceToRooms(myDungeon.getDungeonId(), AAvatar.getAvatarId());
         if (currentRoom == null || myRoomRepo.findByRoomId(currentRoom.getRoomId()) == null) {
             currentRoom = myRoomRepo.findByRoomId(myDungeon.getStartRoomId());
         }
@@ -655,7 +653,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         currentRoom = myRoomRepo.findByRoomId(ARoomId);
         myAvatar = myGameService.getAvatarById(myAvatar.getAvatarId());
         //Avatar Fortschritt speichern
-        visitedRooms = myGameService.saveAvatarProgress(myAvatar.getAvatarId(), currentRoom.getRoomId());//Liste updaten
+        visitedRooms = myGameService.saveAvatarProgress(myDungeon.getDungeonId(), myAvatar.getAvatarId(), currentRoom.getRoomId());//Liste updaten
         //Kartenanzeige aktualisieren
         updateMap();
         if (inventoryGrid != null && armorGrid != null)
@@ -663,43 +661,50 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
     }
 
     void updateMap() {
-        //alle Stellen des Dungeons schwarz färben, die noch nicht durch den Avatar erforscht wurden
-        for (int i = 0; i < myTiles.length; i++) {
-            for (int j = 0; j < myTiles[0].length; j++) {
-                //noch nicht besucht -> Raum ausblenden
-                myTiles[i][j].getStyle().set("opacity", "0.0");
+        Lock l=new ReentrantLock();
+        l.lock();
+        try {
+            //alle Stellen des Dungeons schwarz färben, die noch nicht durch den Avatar erforscht wurden
+            for (int i = 0; i < myTiles.length; i++) {
+                for (int j = 0; j < myTiles[0].length; j++) {
+                    //noch nicht besucht -> Raum ausblenden
+                    myTiles[i][j].getStyle().set("opacity", "0.0");
+                }
             }
-        }
 
-        for (RoomI room : visitedRooms) {
-            //schon besucht
-            myTiles[room.getXcoordinate()][room.getYcoordinate()].getStyle().set("opacity", "1.0");
-        }
-
-        //alle anderen Räume roten Rand abwählen
-
-        for (Image[] tL : myTiles) {
-            for (Image t : tL) {
-                t.getStyle().set("width", "100px");
-                t.getStyle().set("height", "100px");
-                t.getStyle().set("border-style", "none");
-                t.getStyle().set("border-color", "inherit");
+            for (RoomI room : visitedRooms) {
+                //schon besucht
+                myTiles[room.getXcoordinate()][room.getYcoordinate()].getStyle().set("opacity", "1.0");
             }
-        }
 
-        //aktuellen Raum roten Rand anwählen
-        int x = currentRoom.getXcoordinate();
-        int y = currentRoom.getYcoordinate();
-        //zum aktuellen Raum mithilfe von JavaScript scrollen
-        UI.getCurrent().getPage().executeJs("arguments[0].scrollIntoView({\n" +
-                "            behavior: 'auto',\n" +
-                "            block: 'center',\n" +
-                "            inline: 'center'\n" +
-                "        });", myTiles[x][y]);
-        myTiles[x][y].getStyle().set("width", "99px");
-        myTiles[x][y].getStyle().set("height", "99px");
-        myTiles[x][y].getStyle().set("border-style", "solid");
-        myTiles[x][y].getStyle().set("border-color", "red");
+            //alle anderen Räume roten Rand abwählen
+
+            for (Image[] tL : myTiles) {
+                for (Image t : tL) {
+                    t.getStyle().set("width", "100px");
+                    t.getStyle().set("height", "100px");
+                    t.getStyle().set("border-style", "none");
+                    t.getStyle().set("border-color", "inherit");
+                }
+            }
+
+            //aktuellen Raum roten Rand anwählen
+            int x = currentRoom.getXcoordinate();
+            int y = currentRoom.getYcoordinate();
+            //zum aktuellen Raum mithilfe von JavaScript scrollen
+            UI.getCurrent().getPage().executeJs("arguments[0].scrollIntoView({\n" +
+                    "            behavior: 'auto',\n" +
+                    "            block: 'center',\n" +
+                    "            inline: 'center'\n" +
+                    "        });", myTiles[x][y]);
+            myTiles[x][y].getStyle().set("width", "99px");
+            myTiles[x][y].getStyle().set("height", "99px");
+            myTiles[x][y].getStyle().set("border-style", "solid");
+            myTiles[x][y].getStyle().set("border-color", "red");
+        }
+        finally {
+            l.unlock();
+        }
     }
 
     @Override

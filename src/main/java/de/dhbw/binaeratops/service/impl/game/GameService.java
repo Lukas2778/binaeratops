@@ -6,14 +6,19 @@ import de.dhbw.binaeratops.model.entitys.*;
 import de.dhbw.binaeratops.model.enums.Gender;
 import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.repository.*;
+import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.api.game.GameServiceI;
+import de.dhbw.binaeratops.service.impl.configurator.ConfiguratorService;
 import de.dhbw.binaeratops.view.dungeonmaster.DungeonMasterView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Komponente "GameService".
@@ -57,6 +62,9 @@ public class GameService implements GameServiceI {
 
     @Autowired
     RaceRepositoryI raceRepositoryI;
+
+    @Autowired
+    AttendanceRepositoryI attendanceRepositoryI;
 
     /**
      * Standardkonstruktor zum erzeugen des GameService.
@@ -104,7 +112,8 @@ public class GameService implements GameServiceI {
                         avatar.removeInventoryItem(inventItem);
                         itemInstanceRepositoryI.delete(inventItem);
                     }
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
             for (int i = 0; i <= avatar.getEquipment().size(); i++) {
                 try {
@@ -112,7 +121,8 @@ public class GameService implements GameServiceI {
                         avatar.removeEquipmentItem(equipItem);
                         itemInstanceRepositoryI.delete(equipItem);
                     }
-                } catch (Exception e) { }
+                } catch (Exception e) {
+                }
             }
             try {
                 dungeon.removeAvatar(avatar);
@@ -120,18 +130,50 @@ public class GameService implements GameServiceI {
                 userRepositoryI.save(user);
                 dungeonRepositoryI.save(dungeon);
                 avatarRepositoryI.delete(avatar);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
 
     @Override
-    public List<Room> saveAvatarProgress(Long AAvatarId, Long ACurrentRoomId) {
+    public List<Room> saveAvatarProgress(Long ADungeonId, Long AAvatarId, Long ACurrentRoomId) {
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
         Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
         Room room = roomRepositoryI.findByRoomId(ACurrentRoomId);
-        avatar.addVisitedRoom(room);
+
+        Attendance newAttendance = new Attendance(dungeon, room);
+        boolean duplicate=false;
+
+        //falls der Raum nicht schon hinzugefügt wurde
+        for (Attendance visitedR : attendanceRepositoryI.findByAvatarAndDungeon(avatar, dungeon)) {
+            if (newAttendance.getRoom().getRoomId().equals(visitedR.getRoom().getRoomId())) {
+                duplicate=true;
+                break;
+            }
+        }
+        if(!duplicate){
+            avatar.addVisitedRoom(newAttendance);
+            attendanceRepositoryI.save(newAttendance);
+        }
+
         avatar.setCurrentRoom(room);
         avatarRepositoryI.save(avatar);
-        return avatar.getVisitedRooms();
+
+        return attendanceToRooms(ADungeonId, AAvatarId);
+    }
+
+    @Override
+    public List<Room> attendanceToRooms(Long ADungeonId, Long AAvatarId){
+        Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
+        Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
+
+        List<Attendance> myAttendances = attendanceRepositoryI.findByAvatarAndDungeon(avatar, dungeon);
+
+        List<Room> returnRooms = new ArrayList<>();
+        for(Attendance roomAtt : myAttendances){
+            returnRooms.add(roomAtt.getRoom());
+        }
+        return returnRooms;
     }
 
     @Override

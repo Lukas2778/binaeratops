@@ -70,11 +70,20 @@ public interface GameServiceI {
     /**
      * Avatarfortschritt im Dungeon speichern.
      *
+     * @param ADungeonId Dungeon in welchem gearbeitet wird.
      * @param AAvatarId      Avatar der aktualisiert werden soll.
      * @param ACurrentRoomId Raum der der Liste der vom Avatar besuchten Räume hinzugefügt werden soll.
      * @return Liste der schon besuchten Räume (inklusive dem aktuell übergebenen Raum).
      */
-    List<Room> saveAvatarProgress(Long AAvatarId, Long ACurrentRoomId);
+    List<Room> saveAvatarProgress(Long ADungeonId, Long AAvatarId, Long ACurrentRoomId);
+
+    /**
+     * Räume mittels Dungeon und Avatar zurückgeben.
+     * @param ADungeonId Dungeon ID in welchem sich der Avatar befindet.
+     * @param AAvatarId Avatar ID welcher gesucht werden soll.
+     * @return Raumliste.
+     */
+    List<Room> attendanceToRooms(Long ADungeonId, Long AAvatarId);
 
     /**
      * Spieler den aktiven Spielern hinzufügen.

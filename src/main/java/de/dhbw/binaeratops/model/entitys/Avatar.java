@@ -54,8 +54,8 @@ public class Avatar implements AvatarI {
     @OneToMany(mappedBy = "equipmentAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ItemInstance> equipment = new ArrayList<>();
 
-    @OneToMany(mappedBy = "visitedByAvatar", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Room> visitedRooms = new ArrayList<>();
+    @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Attendance> visitedRooms = new ArrayList<>();
 
     @OneToOne
     private Race race;
@@ -216,24 +216,18 @@ public class Avatar implements AvatarI {
         AItem.setEquipmentAvatar(null);
     }
 
-    public List<Room> getVisitedRooms() {
+    public List<Attendance> getVisitedRooms() {
         return visitedRooms;
     }
 
-    public void addVisitedRoom(Room ARoom) {
-        //falls der Raum nicht schon hinzugefügt wurde
-        for (Room visitedR : visitedRooms) {
-            if (ARoom.getRoomId().equals(visitedR.getRoomId())) {
-                return;
-            }
-        }
-        ARoom.setVisitedByAvatar(this);
-        visitedRooms.add(ARoom);
+    public void addVisitedRoom(Attendance AAttendance) {
+        AAttendance.setAvatar(this);
+        visitedRooms.add(AAttendance);
     }
 
-    public void removeVisitedRoom(Room ARoom) {
-        visitedRooms.remove(ARoom);
-        ARoom.setVisitedByAvatar(null);
+    public void removeVisitedRoom(Attendance AAttendance) {
+        visitedRooms.remove(AAttendance);
+        AAttendance.setAvatar(null);
     }
 
     public Long getLifepoints() {

@@ -195,21 +195,21 @@ public interface AvatarI {
      *
      * @return Liste der besuchten Räume.
      */
-    List<Room> getVisitedRooms();
+    List<Attendance> getVisitedRooms();
 
     /**
      * Fügt der Liste der besuchten Räume den übergebenen Raum hinzu.
      *
-     * @param ARoom Raum, der hinzugefügt werden soll.
+     * @param AAttendance Raum, der hinzugefügt werden soll.
      */
-    void addVisitedRoom(Room ARoom);
+    void addVisitedRoom(Attendance AAttendance);
 
     /**
      * Entfernt der Liste der besuchten Räume den übergebenen Raum.
      *
-     * @param ARoom Raum, der entfernt werden soll.
+     * @param AAttendance Raum, der entfernt werden soll.
      */
-    void removeVisitedRoom(Room ARoom);
+    void removeVisitedRoom(Attendance AAttendance);
 
     /**
      * Gibt die Lebenspunkte des Avatars zurück.

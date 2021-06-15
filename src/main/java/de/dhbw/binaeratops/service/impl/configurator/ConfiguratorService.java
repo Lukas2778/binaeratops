@@ -56,6 +56,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     PermissionRepositoryI permissionRepo;
     @Autowired
     MapServiceI mapService;
+    @Autowired
+    AvatarRepositoryI avatarRepository;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -83,6 +85,15 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteDungeon(Long ADungeonId) {
         setDungeon(ADungeonId);
+        for(Avatar deleteAvatar : dungeon.getAvatars()){
+            for(ItemInstance itemInstance : deleteAvatar.getEquipment()){
+                itemInstanceRepo.delete(itemInstance);
+            }
+            for(ItemInstance itemInstance : deleteAvatar.getInventory()){
+                itemInstanceRepo.delete(itemInstance);
+            }
+            avatarRepository.delete(deleteAvatar);
+        }
         for (Role deleteRole : getAllRoles()) {
             roleRepo.delete(deleteRole);
         }
