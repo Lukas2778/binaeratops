@@ -64,3 +64,8 @@ padding-left:   10px;
 .boldtext{
     font-weight: bold;
 }
+
+.actionColor{
+    color: #00bfff;
+    font-weight: bold;
+}

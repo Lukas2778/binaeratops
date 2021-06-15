@@ -1132,11 +1132,15 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
     private Dialog createLeaveDialog() {
         Dialog leaveDialog = new Dialog();
+        leaveDialog.setWidth(50, Unit.PERCENTAGE);
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
 
-        H3 leaveHeadline = new H3(res.getString("view.dungeon.master.dialog.leave.h3"));
-        String leaveOrNewDMText = res.getString("view.dungeon.master.dialog.leave.text");
+        H2 leaveHeadline = new H2(res.getString("view.dungeon.master.dialog.leave.h3")); // TODO Mehrsprachigkeit
+        String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen? Sofern du den Dungeon verlässt, werden auch alle Spieler aus dem Dungeon gekickt. Daher ist es besser, wenn du ihnen vorher eine Benachrichtigung zukommen lässt!<br>Du hast allerdings auch die Möglichkeit die Rolle des Dungeon-Masters an einen anderen Spieler zu übergeben.</div>";//res.getString("view.dungeon.master.dialog.leave.text");
+
+        H3 dmHeadline = new H3("Neuen Dungeon-Master bestimmen");
+        String newDMText = "<div>Wähle aus der unteren Tabelle einen Spieler aus, um ihm die Dungeon-Master Rolle zu übergeben. Sofern du ihm die Rolle übergibst, kann dieser den Dungeon an deiner Stelle weiterführen.</div>";
 
         Button continueButton = new Button(res.getString("view.dungeon.master.dialog.leave.continue"));
         Button chooseDMButton = new Button(res.getString("view.dungeon.master.dialog.leave.new.dm"));
@@ -1190,7 +1194,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         newDMGrid.setVerticalScrollingEnabled(true);
         VerticalLayout myGridLayoutVert = new VerticalLayout(newDMGrid);
 
-        leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), myGridLayoutVert,
+        leaveDialog.add(leaveHeadline, new Html(leaveOrNewDMText), dmHeadline, new Html(newDMText), myGridLayoutVert,
                 new HorizontalLayout(leaveForSureButton, chooseDMButton, continueButton));
 
         return leaveDialog;

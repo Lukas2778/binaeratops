@@ -140,7 +140,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException, InvalidImplementationException {
         User user = User.check(AUser);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (ADungeon.getDungeonMasterId() == user.getUserId()) {
+        if (ADungeon.getDungeonMasterId().equals(user.getUserId())) {
             for (Room room : dungeon.getRooms()) {
                 if (room.getRoomName().equalsIgnoreCase(ARoomName)) {
                     List<User> users = getUsersOfRoom(dungeon, room);
@@ -162,12 +162,11 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException, InvalidImplementationException {
         User user = User.check(AUser);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
+        if (ADungeon.getDungeonMasterId().equals(user.getUserId())) {
             for (User tempUser : dungeon.getCurrentUsers()) {
                 User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
                 myChatService.whisperDungeonMaster(AMessage, tempUser, dungeonMaster);
             }
-            //myChatService.notifyAll(AMessage, ADungeon.getCurrentUsers(), ADungeon.getUser());
             return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
         } else {
             throw new CmdScannerInsufficientPermissionException("NOTIFY ALL");

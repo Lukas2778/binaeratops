@@ -87,11 +87,14 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         dungeonGrid.addComponentColumn(dungeon -> {
             Button button = new Button(res.getString("view.my.dungeons.grid.button.start"));
             button.addClickListener(e -> {
-                if (dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION)
+                if (dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION){
                     showErrorNotification(new Span("Der Dungeon muss auf Public oder Private gesetzt werden")); // TODO Mehrsprachigkeit
-                else
+                }
+                else{
                     UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
-                dungeonServiceI.activateDungeon(dungeon.getDungeonId());
+                    dungeonServiceI.activateDungeon(dungeon.getDungeonId());
+                }
+
             });
             return button;
         }).setHeader(res.getString("view.my.dungeons.grid.start"));
