@@ -54,10 +54,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     NpcInstanceRepositoryI npcInstanceRepository;
     @Autowired
     PermissionRepositoryI permissionRepo;
-    @Autowired
-    MapServiceI mapService;
-    @Autowired
-    AvatarRepositoryI avatarRepository;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -85,36 +81,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Override
     public void deleteDungeon(Long ADungeonId) {
         setDungeon(ADungeonId);
-        for(Avatar deleteAvatar : dungeon.getAvatars()){
-            for(ItemInstance itemInstance : deleteAvatar.getEquipment()){
-                itemInstanceRepo.delete(itemInstance);
-            }
-            for(ItemInstance itemInstance : deleteAvatar.getInventory()){
-                itemInstanceRepo.delete(itemInstance);
-            }
-            avatarRepository.delete(deleteAvatar);
-        }
-        for (Role deleteRole : getAllRoles()) {
-            roleRepo.delete(deleteRole);
-        }
-        for (Permission deleteAllowedPermission : getAllowedPermissions()) {
-            permissionRepo.delete(deleteAllowedPermission);
-        }
-        for (Permission deleteBlockedPermission : getBlockedPermissions()) {
-            permissionRepo.delete(deleteBlockedPermission);
-        }
-        for (Room deleteRoom : getAllDungeonRooms()) {
-            deleteRoom(deleteRoom);
-        }
-        for (Item deleteItem : getAllItems()) {
-            deleteItem(deleteItem);
-        }
-        for (NPC deleteNpc : getAllNPCs()) {
-            deleteNPC(deleteNpc);
-        }
-        for (Race deleteRace : getAllRace()) {
-            raceRepo.delete(deleteRace);
-        }
         dungeonRepo.delete(dungeon);
     }
 
