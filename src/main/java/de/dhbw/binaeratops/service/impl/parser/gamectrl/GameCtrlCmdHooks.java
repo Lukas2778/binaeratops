@@ -57,7 +57,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.equals(new Avatar())) {
-            throw new CmdScannerInsufficientPermissionException("INFO ALL");
+            throw new CmdScannerInsufficientPermissionException("WHEREAMI");
         }
 
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
@@ -73,7 +73,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.equals(new Avatar())) {
-            throw new CmdScannerInsufficientPermissionException("INFO ALL");
+            throw new CmdScannerInsufficientPermissionException("WHOAMI");
         }
 
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
@@ -120,7 +120,7 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
         if (avatar.equals(new Avatar())) {
-            throw new CmdScannerInsufficientPermissionException("INFO ALL");
+            throw new CmdScannerInsufficientPermissionException("INFO ROOM");
         }
 
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
