@@ -19,9 +19,9 @@ import java.util.List;
 public interface AttendanceRepositoryI extends JpaRepository<Attendance, Long> {
 
     /**
-     * Sucht alle Berechtigungseinträge aus der Datenbank.
+     * Sucht alle Aufenthaltseinträge aus der Datenbank.
      *
-     * @return Alle Berechtigungseinträge aus der Datenbank.
+     * @return Alle Aufenthaltseinträge aus der Datenbank.
      */
     @Override
     @NonNull

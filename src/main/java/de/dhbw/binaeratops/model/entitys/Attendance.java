@@ -1,5 +1,7 @@
 package de.dhbw.binaeratops.model.entitys;
 
+import de.dhbw.binaeratops.model.api.AttendanceI;
+
 import javax.persistence.*;
 
 /**
@@ -9,7 +11,7 @@ import javax.persistence.*;
  */
 
 @Entity
-public class Attendance{
+public class Attendance implements AttendanceI {
 
     @Id
     @GeneratedValue
@@ -31,34 +33,42 @@ public class Attendance{
         this.room=ARoom;
     }
 
+    @Override
     public Long getAttendanceId() {
         return attendanceId;
     }
 
+    @Override
     public void setAttendanceId(Long AAttendanceId) {
         this.attendanceId = AAttendanceId;
     }
 
+    @Override
     public Dungeon getDungeon() {
         return dungeon;
     }
 
+    @Override
     public void setDungeon(Dungeon ADungeon) {
         this.dungeon = ADungeon;
     }
 
+    @Override
     public Avatar getAvatar() {
         return avatar;
     }
 
+    @Override
     public void setAvatar(Avatar AAvatar) {
         this.avatar = AAvatar;
     }
 
+    @Override
     public Room getRoom() {
         return room;
     }
 
+    @Override
     public void setRoom(Room ARoom) {
         this.room = ARoom;
     }
