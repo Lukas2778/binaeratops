@@ -54,6 +54,10 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     NpcInstanceRepositoryI npcInstanceRepository;
     @Autowired
     PermissionRepositoryI permissionRepo;
+    @Autowired
+    AvatarRepositoryI avatarRepo;
+    @Autowired
+    AttendanceRepositoryI attendanceRepo;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -80,8 +84,46 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void deleteDungeon(Long ADungeonId) {
-        setDungeon(ADungeonId);
-        dungeonRepo.delete(dungeon);
+        Dungeon adungeon = dungeonRepo.findById(ADungeonId).get();
+
+        //alle avatare löschen die im dungeon sind:
+
+        for (Attendance a: attendanceRepo.findByDungeon(adungeon)) {
+            attendanceRepo.delete(a);
+        }
+        adungeon.getAvatars().clear();
+        dungeonRepo.save(adungeon);
+        for (Avatar a:avatarRepo.findByDungeon(adungeon)) {
+            a.setDungeon(null);
+            a.getEquipment().clear();
+            a.getInventory().clear();
+            a.getVisitedRooms().clear();
+            avatarRepo.save(a);
+            avatarRepo.delete(a);
+        }
+
+
+        for (Room r: roomRepo.findByDungeon(adungeon)) {
+            r.setVisitedByAvatar(null);
+            r.setDungeon(null);
+            r.getItems().clear();
+            r.getNpcs().clear();
+            roomRepo.delete(r);
+        }
+        adungeon.getRoles().clear();
+        adungeon.getRaces().clear();
+        adungeon.getAllowedUsers().clear();
+        adungeon.getBlockedUsers().clear();
+        adungeon.getCurrentUsers().clear();
+        adungeon.getItems().clear();
+        adungeon.getNpcs().clear();
+        adungeon.setUser(null);
+
+        dungeonRepo.save(adungeon);
+
+        dungeonRepo.delete(adungeon);
+
+
     }
 
     @Override

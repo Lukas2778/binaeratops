@@ -125,25 +125,18 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
 
             deleteDungeonButt.addClickListener(e -> {
                 try {
-                    dataProvider.getItems().remove(ADungeon);
-                    configuratorServiceI.deleteDungeon(ADungeon.getDungeonId());
-                    dataProvider.refreshAll();
-                    Span label = new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.success"), ADungeon.getDungeonName()));
-                    Notification notification = new Notification();
-                    Button closeButton = new Button("", es -> {
-                        notification.close();
-                    });
-                    closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
-                    closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-
-                    notification.add(label, closeButton);
-                    label.getStyle().set("margin-right", "0.3rem");
-                    notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                    notification.setDuration(10000);
-                    notification.setPosition(Notification.Position.TOP_END);
-                    notification.open();
+                    removeDungeon(ADungeon, dataProvider);
                 } catch (Exception d) {
-                    showErrorNotification(new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName())));
+                    try {
+                        removeDungeon(ADungeon, dataProvider);
+                    }catch (Exception s){
+                        try {
+                            removeDungeon(ADungeon, dataProvider);
+                        }catch (Exception t){
+                            showErrorNotification(new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.failure"), ADungeon.getDungeonName())));
+                        }
+                    }
+
                 }
                 deleteDungeonDialog.close();
             });
@@ -157,6 +150,26 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
         button.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
 
         return button;
+    }
+
+    private void removeDungeon(Dungeon ADungeon, ListDataProvider<Dungeon> dataProvider) {
+        dataProvider.getItems().remove(ADungeon);
+        configuratorServiceI.deleteDungeon(ADungeon.getDungeonId());
+        dataProvider.refreshAll();
+        Span label = new Span(MessageFormat.format(res.getString("view.my.dungeons.notification.delete.success"), ADungeon.getDungeonName()));
+        Notification notification = new Notification();
+        Button closeButton = new Button("", es -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(label, closeButton);
+        label.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     private void initButtonsLayout() {

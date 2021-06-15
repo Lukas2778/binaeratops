@@ -34,4 +34,6 @@ public interface AttendanceRepositoryI extends JpaRepository<Attendance, Long> {
      * @return Aufenthaltsort.
      */
     List<Attendance> findByAvatarAndDungeon(Avatar AAvatar, Dungeon ADungeon);
+
+    List<Attendance> findByDungeon(Dungeon ADungeon);
 }
