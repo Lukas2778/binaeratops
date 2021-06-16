@@ -750,7 +750,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         Button leaveButt = new Button(res.getString("view.game.button.leave.dungeon"));
         leaveButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
         leaveButt.addClickListener(e -> {
-            myGameService.removeActivePlayer(myDungeon.getDungeonId(), currentUser.getUserId(), myAvatar.getAvatarId());
+            myGameService.removeActivePlayer(myDungeon.getDungeonId(), currentUser.getUserId(), myAvatar.getAvatarId(), false);
             myConfirmLeavingDialog.close();
             action.proceed();
         });

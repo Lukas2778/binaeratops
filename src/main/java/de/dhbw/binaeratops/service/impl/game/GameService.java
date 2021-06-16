@@ -85,7 +85,8 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void createNewAvatar(Long ADungeonId, Long AUserId, Long ACurrentRoomId, String AAvatarName, Gender AAvatarGender, Long AAvatarRoleId, Long AAvatarRaceId, Long ALifepoints) {
+    public void createNewAvatar(Long ADungeonId, Long AUserId, Long ACurrentRoomId, String AAvatarName,
+                                Gender AAvatarGender, Long AAvatarRoleId, Long AAvatarRaceId, Long ALifepoints) {
         Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
         User user = userRepositoryI.findByUserId(AUserId);
         Room room = roomRepositoryI.findByRoomId(ACurrentRoomId);
@@ -201,7 +202,7 @@ public class GameService implements GameServiceI {
     }
 
     @Override
-    public void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId) {
+    public void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId, boolean ALobbyRequest) {
         Dungeon dungeon = dungeonRepositoryI.findByDungeonId(ADungeonId);
         User user = userRepositoryI.findByUserId(AUserId);
         Avatar avatar = avatarRepositoryI.findByAvatarId(AAvatarId);
@@ -211,6 +212,11 @@ public class GameService implements GameServiceI {
             avatarRepositoryI.save(avatar);
             user.removeCurrentDungeon();
             dungeonRepositoryI.save(dungeon);
+            userRepositoryI.save(user);
+        }
+        else if (ALobbyRequest){
+            avatar.setActive(false);
+            avatarRepositoryI.save(avatar);
             userRepositoryI.save(user);
         }
     }

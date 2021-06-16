@@ -100,8 +100,9 @@ public interface GameServiceI {
      * @param ADungeonId Dungeon der verlassen wird.
      * @param AUserId    Benutzer, der den Dungeon verlässt.
      * @param AAvatarId  Avatar, der auf active gesetzt werden soll.
+     * @param ALobbyRequest Wahrheitswert, ob Anfrage von Lobby kommt, keine Ahnung.
      */
-    void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId);
+    void removeActivePlayer(Long ADungeonId, Long AUserId, Long AAvatarId, boolean ALobbyRequest);
 
     /**
      * Gibt die Standard-Lebenspunkte eines Avatars in einem Dungeon zurück.
