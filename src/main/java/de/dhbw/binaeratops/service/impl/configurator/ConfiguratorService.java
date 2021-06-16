@@ -7,14 +7,11 @@ import de.dhbw.binaeratops.model.enums.Status;
 import de.dhbw.binaeratops.model.enums.Visibility;
 import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
-import de.dhbw.binaeratops.service.api.map.MapServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Komponente "ConfiguratorService".
@@ -317,8 +314,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
                 myItem.setRoom(ARoom);
                 itemInstanceRepo.save(myItem);
             }
-            System.out.println("FALSCH");
-            //Notification.show("Hier findet er den Entity nicht!");
         }
     }
 
@@ -354,8 +349,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
                 myNpc.setRoom(ARoom);
                 npcInstanceRepository.save(myNpc);
             }
-            System.out.println("FALSCH");
-            //Notification.show("Hier findet er den Entity nicht!");
         }
     }
 

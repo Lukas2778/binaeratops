@@ -244,7 +244,6 @@ public class RoomConfigurationTab extends VerticalLayout implements HasDynamicTi
                 roomName.setValue(currentRoom.getRoomName());
             }
         } catch (Exception e) {
-            System.out.println(e);
         }
         roomName.addValueChangeListener(e -> {
             if (isRoomNameUnique(roomName.getValue())) {
