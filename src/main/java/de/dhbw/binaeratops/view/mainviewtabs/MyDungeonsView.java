@@ -114,7 +114,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
             Dialog deleteDungeonDialog = new Dialog();
             Text deleteCheckTitle = new Text(MessageFormat.format(res.getString("view.my.dungeons.text.delete.dungeon.question"), ADungeon.getDungeonName()));
             Button deleteDungeonButt = new Button(res.getString("view.my.dungeons.button.delete.dungeon"));
-            deleteDungeonButt.getStyle().set("color", "red");
+            deleteDungeonButt.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
             Button cancelButt = new Button(res.getString("view.my.dungeons.button.cancel"));
 
             HorizontalLayout buttonLayout = new HorizontalLayout(deleteDungeonButt, cancelButt);
