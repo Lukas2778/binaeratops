@@ -19,48 +19,56 @@ public interface AttendanceI {
 
     /**
      * Gibt ID des Raumaufenthalts zurück.
+     *
      * @return ID des Raumaufenthalts.
      */
     Long getAttendanceId();
 
     /**
      * Setze Raumaufenthalts ID
+     *
      * @param AAttendanceId Raumaufenthalts ID.
      */
     void setAttendanceId(Long AAttendanceId);
 
     /**
      * Gibt den Dungeon des Raumaufenthalts zurück.
+     *
      * @return Dungeon.
      */
     Dungeon getDungeon();
 
     /**
      * Setzt den Dungeon des Raumaufenthalts.
+     *
      * @param ADungeon Dungeon.
      */
     void setDungeon(Dungeon ADungeon);
 
     /**
      * Gibt den Avatar des Raumaufenthalts zurück.
+     *
      * @return Avatar.
      */
     Avatar getAvatar();
 
     /**
      * Setzt den Avatar des Raumaufenthalts.
+     *
      * @param AAvatar Avatar.
      */
     void setAvatar(Avatar AAvatar);
 
     /**
      * Gibt den Raum des Raumaufenthalts zurück.
+     *
      * @return Raum.
      */
     Room getRoom();
 
     /**
      * Setzt den Raum des Raumaufenthalts.
+     *
      * @param ARoom Raum.
      */
     void setRoom(Room ARoom);

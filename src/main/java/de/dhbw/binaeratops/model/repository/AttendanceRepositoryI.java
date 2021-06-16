@@ -28,12 +28,19 @@ public interface AttendanceRepositoryI extends JpaRepository<Attendance, Long> {
     List<Attendance> findAll();
 
     /**
-     * Sucht den Aufenthaltseintrag zu einem bestimmten Avatar in einem Dungeon.
-     * @param AAvatar Avatar, zu dem der Aufenthalt gesucht werden soll.
+     * Sucht alle Aufenthaltseinträge zu einem bestimmten Avatar in einem Dungeon.
+     *
+     * @param AAvatar  Avatar, zu dem die Aufenthaltseinträge gesucht werden sollen.
      * @param ADungeon Dungeon, in dem sich der Avatar aufhält.
-     * @return Aufenthaltsort.
+     * @return Aufenthaltsorte.
      */
     List<Attendance> findByAvatarAndDungeon(Avatar AAvatar, Dungeon ADungeon);
 
+    /**
+     * Sucht alle Aufenthaltseinträge zu einem Dungeon.
+     *
+     * @param ADungeon Dungeon, zu dem alle Aufenthalseinträge gesucht werden sollen.
+     * @return Aufenthaltseinträge.
+     */
     List<Attendance> findByDungeon(Dungeon ADungeon);
 }

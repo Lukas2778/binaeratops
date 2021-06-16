@@ -5,11 +5,16 @@ import de.dhbw.binaeratops.model.api.AttendanceI;
 import javax.persistence.*;
 
 /**
- * @author Lukas Göpel
- * Date: 15.06.2021
- * Time: 09:28
+ * Entity Objekt für einen Raumaufenthalt.
+ * <p>
+ * Es repräsentiert die Entity "Raumaufenthalt" der Datenbank in der Programmlogik.
+ * <p>
+ * Es implementiert dazu alle Funktionalitäten der Raumaufenthalt Schnittstelle.
+ * <p>
+ *
+ * @author Lukas Göpel, Nicolas Haug
+ * @see AttendanceI
  */
-
 @Entity
 public class Attendance implements AttendanceI {
 
@@ -26,11 +31,21 @@ public class Attendance implements AttendanceI {
     @ManyToOne
     private Room room;
 
-    public Attendance(){}
+    /**
+     * Konstruktor zum Erzeugen eines Raumaufenhalts mit Dungeon und Raum.
+     *
+     * @param ADungeon Dungeon, des Aufenthalts.
+     * @param ARoom    Raum, des Aufenthalts.
+     */
+    public Attendance(Dungeon ADungeon, Room ARoom) {
+        this.dungeon = ADungeon;
+        this.room = ARoom;
+    }
 
-    public Attendance(Dungeon ADungeon, Room ARoom){
-        this.dungeon=ADungeon;
-        this.room=ARoom;
+    /**
+     * Standardkonstruktor zum Erzeugen eines Raumaufenthalts.
+     */
+    public Attendance() {
     }
 
     @Override
