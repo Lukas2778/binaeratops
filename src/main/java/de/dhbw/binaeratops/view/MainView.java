@@ -7,16 +7,20 @@ import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -28,9 +32,12 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.service.impl.game.GameService;
 import de.dhbw.binaeratops.view.mainviewtabs.AboutUsView;
 import de.dhbw.binaeratops.view.mainviewtabs.LobbyView;
 import de.dhbw.binaeratops.view.mainviewtabs.MyDungeonsView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Locale;
@@ -63,7 +70,11 @@ public class MainView extends AppLayout {
     private HorizontalLayout menuLayout;
     private ResourceBundle res = ResourceBundle.getBundle("language", VaadinSession.getCurrent().getLocale());
     private TranslationProvider transProv = new TranslationProvider();
-    public MainView() {
+
+    private GameService gameService;
+
+    public MainView(@Autowired GameService AGameService) {
+        this.gameService = AGameService;
         setPrimarySection(Section.DRAWER);
         createTopRightMenu();
         addToNavbar(true, createHeaderContent());
@@ -171,7 +182,22 @@ public class MainView extends AppLayout {
         super.afterNavigation();
         getTabForComponent(getContent()).ifPresent(menu::setSelectedTab);
         viewTitle.setText(getCurrentPageTitle());
+
+        var user = VaadinSession.getCurrent().getAttribute(User.class);
+        var myUser = gameService.getUser(user.getUserId());
+        var dungeon = myUser.getCurrentDungeon();
+        if(dungeon != null){
+            var avatars = user.getAvatars();
+            avatars.forEach(avatar -> {
+                gameService.removeActivePlayer(dungeon.getDungeonId(), user.getUserId(), avatar.getAvatarId(), false);
+            });
+            VaadinSession.getCurrent().setAttribute("Noti", true);
+            UI.getCurrent().navigate("logout");
+        }
+
     }
+
+
 
     private Optional<Tab> getTabForComponent(Component component) {
         return menu.getChildren().filter(tab -> ComponentUtil.getData(tab, Class.class).equals(component.getClass()))

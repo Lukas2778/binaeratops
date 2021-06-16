@@ -78,7 +78,7 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
             }
         }, 0, 2000);
 
-        this.currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+        this.currentUser =  gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
 
         titleText = new H1(res.getString("view.lobby.headline"));
         explanationText = res.getString("view.lobby.text");
@@ -115,7 +115,10 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
         Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
         Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
         Button entryButton = new Button("", clickEvent -> {
-            currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+            currentUser = gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
+
+
+
             if (permissionGranted == null && permissionBlocked == null) { // TODO User
                 if (permission == null) {
                     Permission requested = new Permission(currentUser);
@@ -134,14 +137,20 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                 Span label = new Span(res.getString("view.lobby.notification.request.denied"));
                 showRequestStatusNotification(label, BLOCKED);
             } else {
-                var user = VaadinSession.getCurrent().getAttribute(User.class);
-                var avatars = user.getAvatars();
-                if (avatars != null){
-                    avatars.forEach(avatar -> {
-                        gameService.removeActivePlayer(ADungeon.getDungeonId(), user.getUserId(), avatar.getAvatarId(), true);
-                    });
+                if (currentUser.getCurrentDungeon() == null){
+                    var user = gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
+                    var avatars = user.getAvatars();
+                    if (avatars != null){
+                        avatars.forEach(avatar -> {
+                            gameService.removeActivePlayer(ADungeon.getDungeonId(), user.getUserId(), avatar.getAvatarId(), true);
+                        });
+                    }
+                    UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
                 }
-                UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
+                else {
+                    Span label = new Span("Du spielst bereits in einem Dungeon");
+                    showRequestStatusNotification(label, BLOCKED);
+                }
             }
         });
 

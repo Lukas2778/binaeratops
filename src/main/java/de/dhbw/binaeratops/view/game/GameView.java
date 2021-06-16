@@ -383,10 +383,11 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
         createAvatar.focus();
 
         Button enterDungeon = new Button(res.getString("view.game.grid.button.enter.dungeon"), e -> {
-            currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+            currentUser = myGameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
             Set<Avatar> selectedAvatar = avatarGrid.getSelectedItems();
             if (selectedAvatar.size() > 0) {
                 selectedInDialogAvatar = myGameService.getAvatarById(((Avatar) selectedAvatar.toArray()[0]).getAvatarId());
+                //myGameService.addActivePlayer();
                 myAvatarDialog.close();
                 textField.focus();
                 loadAvatarProgress(selectedInDialogAvatar);

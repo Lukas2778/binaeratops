@@ -69,11 +69,23 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         //UI.getCurrent().addBeforeLeaveListener(e->System.out.println("test"));
         setId("SomeViewL");
 
-        if (VaadinSession.getCurrent().getAttribute(User.class) != null){
+        Object isOnline = VaadinSession.getCurrent().getAttribute("IsOnline");
+        boolean isOn = false;
+        if(isOnline == null){
+            isOn = false;
+        }
+        else{
+            isOn = (boolean)isOnline;
+        }
+
+        if (VaadinSession.getCurrent().getAttribute(User.class) != null && isOn){
             UI.getCurrent().navigate("aboutUs");
             UI.getCurrent().getPage().reload();
+            VaadinSession.getCurrent().setAttribute("IsOnline", true);
             return;
         }
+
+
 
         TextField name = new TextField(res.getString("view.login.field.username"));
         PasswordField password = new PasswordField(res.getString("view.login.field.password"));
@@ -158,6 +170,19 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         );
         name.focus();
 
+        Object noti = VaadinSession.getCurrent().getAttribute("Noti");
+        boolean IsNoti = false;
+        if(noti == null){
+            IsNoti = false;
+        }
+        else{
+            IsNoti = (boolean) noti;
+            if(IsNoti){
+                Span label = new Span("Du warst in einem Dungeon noch aktiv und wurdest aus Sicherheitsgründen abgemeldet!");
+                showErrorNotification(label);
+            }
+        }
+        VaadinSession.getCurrent().setAttribute("IsOnline", true);
 
     }
 
@@ -181,4 +206,6 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
     public String getPageTitle() {
         return res.getString("view.login.pagetitle");
     }
+
+
 }
