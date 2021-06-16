@@ -1,11 +1,13 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.server.VaadinSession;
@@ -71,13 +73,16 @@ public class ItemSelectionDialog extends Dialog {
         itemGrid.addColumn(Item::getSize).setHeader(res.getString("view.configurator.dialog.item.select.grid.size"));
         itemGrid.addColumn(Item::getDescription).setHeader(res.getString("view.configurator.dialog.item.select.grid.description"));
 
-        add(new VerticalLayout(title, headline, itemGrid, confirmButton, cancelButton));
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.add(confirmButton, cancelButton);
+        add(new VerticalLayout(title, headline, itemGrid, buttonLayout));
 
         cancelButton.addClickListener(e->{
             dialogResult = false;
             close();
         });
 
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         confirmButton.addClickListener(e->{
             if(validate()) {
                 List<ItemInstance> instances = new ArrayList<>();

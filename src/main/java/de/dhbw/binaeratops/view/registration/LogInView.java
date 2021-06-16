@@ -3,18 +3,17 @@ package de.dhbw.binaeratops.view.registration;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 import com.vaadin.flow.component.menubar.MenuBarVariant;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.select.Select;
@@ -70,6 +69,23 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         //UI.getCurrent().addBeforeLeaveListener(e->System.out.println("test"));
         setId("SomeViewL");
 
+        Object isOnline = VaadinSession.getCurrent().getAttribute("IsOnline");
+        boolean isOn = false;
+        if(isOnline == null){
+            isOn = false;
+        }
+        else{
+            isOn = (boolean)isOnline;
+        }
+
+        if (VaadinSession.getCurrent().getAttribute(User.class) != null && isOn){
+            UI.getCurrent().navigate("aboutUs");
+            UI.getCurrent().getPage().reload();
+            VaadinSession.getCurrent().setAttribute("IsOnline", true);
+            return;
+        }
+
+
 
         TextField name = new TextField(res.getString("view.login.field.username"));
         PasswordField password = new PasswordField(res.getString("view.login.field.password"));
@@ -88,17 +104,16 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         loginButton.addClickListener(e ->
         {
             try {
-                if (VaadinSession.getCurrent().getAttribute(User.class) != null &&
-                        VaadinSession.getCurrent().getAttribute(User.class).getName().equals(name.getValue())) {
-                    Notification.show(res.getString("view.login.notification.already.logged.in"));
+                if (VaadinSession.getCurrent().getAttribute(User.class) != null) {
+                    showErrorNotification(new Span(res.getString("view.login.notification.already.logged.in")));
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());
                 }
                 UI.getCurrent().navigate("aboutUs");
             } catch (AuthException authException) {
-                Notification.show(res.getString("view.login.notification.invalid.password"));
+                showErrorNotification(new Span(res.getString("view.login.notification.invalid.password")));
             } catch (NotVerifiedException notVerifiedException) {
-                Notification.show(res.getString("view.login.notification.not.verified"));
+                showErrorNotification(new Span(res.getString("view.login.notification.not.verified")));
                 UI.getCurrent().navigate("validateRegistration");
             }
         });
@@ -154,10 +169,43 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
                 login
         );
         name.focus();
+
+        Object noti = VaadinSession.getCurrent().getAttribute("Noti");
+        boolean IsNoti = false;
+        if(noti == null){
+            IsNoti = false;
+        }
+        else{
+            IsNoti = (boolean) noti;
+            if(IsNoti){
+                Span label = new Span("Du warst in einem Dungeon noch aktiv und wurdest aus Sicherheitsgründen abgemeldet!");
+                showErrorNotification(label);
+            }
+        }
+        VaadinSession.getCurrent().setAttribute("IsOnline", true);
+
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override
     public String getPageTitle() {
         return res.getString("view.login.pagetitle");
     }
+
+
 }

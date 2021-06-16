@@ -1,10 +1,15 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -62,6 +67,7 @@ public class NPCDialog extends Dialog {
 
         currentRace.setItems(configuratorService.getAllRace());
 
+        saveDialog.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveDialog.addClickListener(e -> {
             if (validate()) {
                 currentNPC.setNpcName(currentName.getValue());
@@ -75,7 +81,8 @@ public class NPCDialog extends Dialog {
                 refreshGrid();
                 this.close();
             } else {
-                Notification.show(res.getString("view.configurator.dialog.npc.notification.check.input"));
+                Span label = new Span(res.getString("view.configurator.dialog.npc.notification.check.input"));
+                showErrorNotification(label);
             }
         });
         closeDialog.addClickListener(e -> this.close());
@@ -90,6 +97,22 @@ public class NPCDialog extends Dialog {
             return false;
         }
         return true;
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     /**

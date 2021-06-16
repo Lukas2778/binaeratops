@@ -7,9 +7,14 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -83,21 +88,40 @@ public class RoleDialog extends Dialog {
                     refreshGrid();
                     this.close();
                 } else {
-                    Notification.show(res.getString("view.configurator.dialog.role.notification.duplicate"));
+                    Span label = new Span(res.getString("view.configurator.dialog.role.notification.duplicate"));
+                    showErrorNotification(label);
                 }
 
             } else {
-                Notification.show(res.getString("view.configurator.dialog.role.notification.forgot"));
-
+                Span label = new Span(res.getString("view.configurator.dialog.role.notification.forgot"));
+                showErrorNotification(label);
             }
 
         });
+        saveDialog.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
         closeDialog.addClickListener(e -> this.close());
     }
 
     private void refreshGrid() {
 
         grid.setItems(configuratorServiceI.getAllRoles());
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     private boolean findRole(String ARoleName, String ARoleDescription) {

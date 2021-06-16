@@ -347,13 +347,13 @@ public class Dungeon implements DungeonI {
 
     public void addCurrentUser(User AUser) {
         currentUsers.add(AUser);
-        setPlayerCount(Long.valueOf(currentUsers.size()));
+        setPlayerCount((long) currentUsers.size());
         AUser.setCurrentDungeon(this);
     }
 
     public void removeCurrentUser(User AUser) {
         currentUsers.remove(AUser);
-        setPlayerCount(Long.valueOf(currentUsers.size()));
+        setPlayerCount((long) currentUsers.size());
         AUser.setCurrentDungeon(null);
     }
 
@@ -441,7 +441,7 @@ public class Dungeon implements DungeonI {
 
         if (!equals && AOther instanceof Dungeon) {
             Dungeon other = (Dungeon) AOther;
-            equals = (dungeonId == other.dungeonId);
+            equals = (dungeonId.equals(other.dungeonId));
         }
 
         return equals;

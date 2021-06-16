@@ -2,16 +2,20 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.VaadinSession;
 import de.dhbw.binaeratops.model.entitys.NPC;
 import de.dhbw.binaeratops.service.api.configuration.ConfiguratorServiceI;
@@ -29,7 +33,6 @@ import java.util.ResourceBundle;
  *
  * @author Pedro Treuer, Timon Gartung, Nicolas Haug, Lars Rösel, Mattias Rall, Lukas Göpel
  */
-@PageTitle("Raum")
 @CssImport("./views/mainviewtabs/configurator/roomconfigurator-view.css")
 public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTitle {
 
@@ -70,6 +73,7 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
             NPCDialog dialog = createNPCDialog();
             dialog.open();
         });
+        addNPCButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         editNPCButton.addClickListener(e -> {
             NPC[] selectedItems = grid.getSelectedItems().toArray(NPC[]::new);
@@ -79,7 +83,8 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
                 npcDialog.fillDialog(currentNPC);
                 npcDialog.open();
             } else {
-                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
+                Span label = new Span(res.getString("view.configurator.npc.notification.select.npc"));
+                showErrorNotification(label);
             }
         });
 
@@ -90,7 +95,8 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
                 configuratorService.deleteNPC(currentNPC);
                 refreshGrid();
             } else {
-                Notification.show(res.getString("view.configurator.npc.notification.select.npc"));
+                Span label = new Span(res.getString("view.configurator.npc.notification.select.npc"));
+                showErrorNotification(label);
             }
         });
     }
@@ -128,6 +134,22 @@ public class NPCConfigurationTab extends VerticalLayout implements HasDynamicTit
 
     private void refreshGrid() {
         grid.setItems(configuratorService.getAllNPCs());
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

@@ -97,9 +97,10 @@ public interface DungeonServiceI {
      * Setzt den Dungeon-Master des übergebenen Dungeons.
      *
      * @param ADungeonId Dungeon, für den der Dungeon-Master gesetzt werden soll.
-     * @param AUserId  Benutzer ID des Benutzers, der Dungeon-Master werden soll.
+     * @param ANewUserId Benutzer ID des Benutzers, der Dungeon-Master werden soll.
+     * @param AOldUserId Alter DungeonMaster
      */
-    void setDungeonMaster(Long ADungeonId, Long AUserId);
+    void changeDungeonMaster(Long ADungeonId, Long ANewUserId, Long AOldUserId);
 
     /**
      * Gibt die aktuellen Benutzer zurück.
@@ -201,5 +202,35 @@ public interface DungeonServiceI {
      * @param APermission Berechtigung, die gespeichert werden soll.
      */
     void savePermission(Permission APermission);
+
+    /**
+     * Speichert die Benutzeraktion in die Datenbank.
+     *
+     * @param AUserAction Benutzeraktion, die gespeichert werden soll.
+     */
+    void saveUserAction(UserAction AUserAction);
+
+    /**
+     * Gibt alle Berechtigungsanfragen für einen Dungeon zurück.
+     *
+     * @param ADungeon Dungeon, für den alle Berechtigungsanfragen zurückgegeben werden sollen.
+     * @return Alle Berechtigungsanfragend des Dungeons.
+     */
+    List<Permission> getRequestedPermissions(Dungeon ADungeon);
+
+    /**
+     * Löscht die Benutzeraktion in der Datenbank.
+     *
+     * @param AUserAction Benutzeraktion, die gelöscht werden soll.
+     */
+    void deleteUserAction(UserAction AUserAction);
+
+    /**
+     * Gibt alle Benutzeraktionen eines Dungeon zurück.
+     *
+     * @param ADungeon Dungeon, für den alle Benutzeraktionen zurückgegeben werden sollen.
+     * @return Alle Benutzeraktionen des Dungeons.
+     */
+    List<UserAction> getUserActions(Dungeon ADungeon);
 }
 

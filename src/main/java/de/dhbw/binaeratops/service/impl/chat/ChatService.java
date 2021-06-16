@@ -44,12 +44,20 @@ public class ChatService implements ChatServiceI {
     @Override
     public void sendMessage(String AMessage, List<User> AReceiverList) {
         List<Long> receiverList = convertToUserIDList(AReceiverList);
-        sendChatMessage(new ChatMessage(AMessage, receiverList));
+        Label sender = new Label("Aktion: " + AMessage);
+        sender.addClassName("boldtext");
+        Paragraph paragraph = new Paragraph(sender);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, receiverList));
     }
 
     @Override
     public void sendActionMessage(String AMessage, User AReceiver) {
-        sendChatMessage(new ChatMessage(AMessage, AReceiver.getUserId()));
+        Label mess = new Label(AMessage);
+        Label action= new Label("Aktion: ");
+        action.addClassName("actionColor");
+        mess.addClassName("boldtext");
+        Paragraph paragraph = new Paragraph(action, mess);
+        sendChatMessage(new ChatMessage(paragraph, AMessage, AReceiver.getUserId()));
     }
 
     @Override

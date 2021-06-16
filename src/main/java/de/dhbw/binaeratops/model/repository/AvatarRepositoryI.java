@@ -1,6 +1,7 @@
 package de.dhbw.binaeratops.model.repository;
 
 import de.dhbw.binaeratops.model.entitys.Avatar;
+import de.dhbw.binaeratops.model.entitys.Dungeon;
 import de.dhbw.binaeratops.model.entitys.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.lang.NonNull;
@@ -20,7 +21,7 @@ import java.util.List;
 public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
 
     /**
-     * Sucht alle Avatareinträge aus der Datenbank zurück.
+     * Gibt alle Avatareinträge aus der Datenbank zurück.
      *
      * @return Alle Avatareinträge aus der Datenbank.
      */
@@ -37,4 +38,7 @@ public interface AvatarRepositoryI extends JpaRepository<Avatar, Long> {
     Avatar findByAvatarId(Long AAvatarId);
 
     List<Avatar> findByUserAndActive(User AUser, boolean AActive);
+
+    List<Avatar> findByDungeon(Dungeon ADungeon);
+
 }

@@ -48,9 +48,15 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     @Autowired
     ItemInstanceRepositoryI itemInstanceRepo;
     @Autowired
-    NpcInstanceRepositoryI npcInstanceRepositoryI;
+    NpcInstanceRepositoryI npcInstanceRepository;
     @Autowired
     PermissionRepositoryI permissionRepo;
+    @Autowired
+    AvatarRepositoryI avatarRepo;
+    @Autowired
+    AttendanceRepositoryI attendanceRepo;
+    @Autowired
+    UserActionRepositoryI userActionRepo;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -77,8 +83,51 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public void deleteDungeon(Long ADungeonId) {
-        setDungeon(ADungeonId);
-        dungeonRepo.delete(dungeon);
+        Dungeon adungeon = dungeonRepo.findById(ADungeonId).get();
+
+        //alle avatare löschen die im dungeon sind:
+
+        for(UserAction a: userActionRepo.findByDungeon(adungeon)){
+            userActionRepo.delete(a);
+        }
+
+        for (Attendance a: attendanceRepo.findByDungeon(adungeon)) {
+            attendanceRepo.delete(a);
+        }
+        adungeon.getAvatars().clear();
+        dungeonRepo.save(adungeon);
+
+        for (Avatar a:avatarRepo.findByDungeon(adungeon)) {
+            a.setDungeon(null);
+            a.getEquipment().clear();
+            a.getInventory().clear();
+            a.getVisitedRooms().clear();
+            avatarRepo.save(a);
+            avatarRepo.delete(a);
+        }
+
+
+        for (Room r: roomRepo.findByDungeon(adungeon)) {
+            r.setVisitedByAvatar(null);
+            r.setDungeon(null);
+            r.getItems().clear();
+            r.getNpcs().clear();
+            roomRepo.delete(r);
+        }
+        adungeon.getRoles().clear();
+        adungeon.getRaces().clear();
+        adungeon.getAllowedUsers().clear();
+        adungeon.getBlockedUsers().clear();
+        adungeon.getCurrentUsers().clear();
+        adungeon.getItems().clear();
+        adungeon.getNpcs().clear();
+        adungeon.setUser(null);
+
+        dungeonRepo.save(adungeon);
+
+        dungeonRepo.delete(adungeon);
+
+
     }
 
     @Override
@@ -272,8 +321,6 @@ public class ConfiguratorService implements ConfiguratorServiceI {
                 myItem.setRoom(ARoom);
                 itemInstanceRepo.save(myItem);
             }
-            System.out.println("FALSCH");
-            //Notification.show("Hier findet er den Entity nicht!");
         }
     }
 
@@ -292,12 +339,12 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     public void setNpcInstances(Room ARoom, List<NPCInstance> ANPCList) {
         ARoom.getItems()
                 .clear();
-        for (NPCInstance myNpc : npcInstanceRepositoryI.findByRoom(ARoom)) {
-            npcInstanceRepositoryI.delete(myNpc);
+        for (NPCInstance myNpc : npcInstanceRepository.findByRoom(ARoom)) {
+            npcInstanceRepository.delete(myNpc);
         }
         for (NPCInstance myNpc : ANPCList) {
             myNpc.setRoom(ARoom);
-            npcInstanceRepositoryI.save(myNpc);
+            npcInstanceRepository.save(myNpc);
         }
         ARoom.getNpcs()
                 .addAll(ANPCList);
@@ -307,10 +354,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
             for (NPCInstance myNpc : ANPCList) {
                 myNpc.setRoom(ARoom);
-                npcInstanceRepositoryI.save(myNpc);
+                npcInstanceRepository.save(myNpc);
             }
-            System.out.println("FALSCH");
-            //Notification.show("Hier findet er den Entity nicht!");
         }
     }
 
@@ -332,14 +377,18 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
     @Override
     public List<NPCInstance> getAllNPCs(Room ARoom) {
-        return npcInstanceRepositoryI.findByRoom(ARoom);
+        return npcInstanceRepository.findByRoom(ARoom);
     }
 
     @Override
     public void deleteRoom(Room ARoom) {
+        for (ItemInstance deleteItemInstance : ARoom.getItems()) {
+            itemInstanceRepo.delete(deleteItemInstance);
+        }
+        for (NPCInstance deleteNpcInstance : ARoom.getNpcs()) {
+            npcInstanceRepository.delete(deleteNpcInstance);
+        }
         dungeon.getRooms().remove(ARoom);
-        //dungeonRepo.save(dungeon);
-        //dungeonRepo.delete(dungeon);
         roomRepo.delete(ARoom);
     }
 

@@ -2,12 +2,17 @@ package de.dhbw.binaeratops.view.configurator.tabs;
 
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.details.Details;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
@@ -68,6 +73,7 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
             ItemDialog dialog = createDialog();
             dialog.open();
         });
+        addItemButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         editItemButton.addClickListener(e -> {
             Item[] selectedItems = grid.getSelectedItems().toArray(Item[]::new);
@@ -77,7 +83,8 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
                 itemDialog.fillDialog(currentItem);
                 itemDialog.open();
             } else {
-                Notification.show(res.getString("view.configurator.item.notification.select.item"));
+                Span label = new Span(res.getString("view.configurator.item.notification.select.item"));
+                showErrorNotification(label);
             }
         });
 
@@ -88,7 +95,8 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
                 configuratorServiceI.deleteItem(currentItem);
                 refreshGrid();
             } else {
-                Notification.show(res.getString("view.configurator.item.notification.select.item"));
+                Span label = new Span(res.getString("view.configurator.item.notification.select.item"));
+                showErrorNotification(label);
             }
         });
     }
@@ -118,6 +126,22 @@ public class ItemConfigurationTab extends VerticalLayout implements HasDynamicTi
 
     private void refreshGrid() {
         grid.setItems(configuratorServiceI.getAllItems());
+    }
+
+    private void showErrorNotification(Span ALabel) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     @Override

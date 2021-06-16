@@ -1,11 +1,13 @@
 package de.dhbw.binaeratops.view.configurator.tabs.dialog;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.listbox.ListBox;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.server.VaadinSession;
@@ -34,7 +36,7 @@ public class NpcSelectionDialog extends Dialog {
     public boolean dialogResult = false;
     List<NPC> selectedNpcs = new ArrayList<NPC>();
 
-    public Button comfirmButton = new Button(res.getString("view.configurator.dialog.npc.select.button.confirm"));
+    public Button confirmButton = new Button(res.getString("view.configurator.dialog.npc.select.button.confirm"));
     public Button cancelButton = new Button(res.getString("view.configurator.dialog.npc.select.button.cancel"));
     HashMap<NPC, NumberField> npcIntegerFieldHashMap = new HashMap<>();
     private ListBox<NPCInstance> npcList;
@@ -66,14 +68,17 @@ public class NpcSelectionDialog extends Dialog {
         npcGrid.addColumn(npc -> npc.getRace().getRaceName()).setHeader(res.getString("view.configurator.dialog.npc.select.grid.race"));
         npcGrid.addColumn(NPC::getDescription).setHeader(res.getString("view.configurator.dialog.npc.select.grid.description"));
 
-        add(new VerticalLayout(title, headline, npcGrid, comfirmButton, cancelButton));
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+        buttonLayout.add(confirmButton, cancelButton);
+        add(new VerticalLayout(title, headline, npcGrid, buttonLayout));
 
         cancelButton.addClickListener(e->{
             dialogResult = false;
             close();
         });
 
-        comfirmButton.addClickListener(e->{
+        confirmButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        confirmButton.addClickListener(e->{
             if(validate()) {
                 List<NPCInstance> instances = new ArrayList<>();
                 for (NPC npc : npcIntegerFieldHashMap.keySet()) {

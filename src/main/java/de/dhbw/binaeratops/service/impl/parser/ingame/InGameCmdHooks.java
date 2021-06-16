@@ -108,7 +108,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdWhisperMaster(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException {
         Avatar avatar = Avatar.check(AAvatar);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (avatar == null) {
+        if (avatar.equals(new Avatar())) {
             throw new CmdScannerInvalidRecipientException();
         }
         User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
@@ -120,6 +120,11 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdSpeak(DungeonI ADungeon, AvatarI AAvatar, String AMessage) throws CmdScannerException, InvalidImplementationException {
         Avatar avatar = Avatar.check(AAvatar);
         Dungeon dungeon = Dungeon.check(ADungeon);
+
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("SPEAK");
+        }
+
         Room currentRoom = avatar.getCurrentRoom();
         List<User> recipients = getUsersOfRoom(dungeon, currentRoom);
         User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
@@ -135,7 +140,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdNotifyRoom(DungeonI ADungeon, UserI AUser, String ARoomName, String AMessage) throws CmdScannerException, InvalidImplementationException {
         User user = User.check(AUser);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (ADungeon.getDungeonMasterId() == user.getUserId()) {
+        if (ADungeon.getDungeonMasterId().equals(user.getUserId())) {
             for (Room room : dungeon.getRooms()) {
                 if (room.getRoomName().equalsIgnoreCase(ARoomName)) {
                     List<User> users = getUsersOfRoom(dungeon, room);
@@ -157,12 +162,11 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     public UserMessage onCmdNotifyAll(DungeonI ADungeon, UserI AUser, String AMessage) throws CmdScannerException, InvalidImplementationException {
         User user = User.check(AUser);
         Dungeon dungeon = Dungeon.check(ADungeon);
-        if (ADungeon.getDungeonMasterId() == AUser.getUserId()) {
+        if (ADungeon.getDungeonMasterId().equals(user.getUserId())) {
             for (User tempUser : dungeon.getCurrentUsers()) {
                 User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
                 myChatService.whisperDungeonMaster(AMessage, tempUser, dungeonMaster);
             }
-            //myChatService.notifyAll(AMessage, ADungeon.getCurrentUsers(), ADungeon.getUser());
             return new UserMessage("view.game.ingame.cmd.notify.all", AMessage);
         } else {
             throw new CmdScannerInsufficientPermissionException("NOTIFY ALL");
@@ -179,7 +183,7 @@ public class InGameCmdHooks implements InGameCmdHooksI {
     private List<User> getUsersOfRoom(Dungeon ADungeon, Room ARoom) {
         List<User> users = new ArrayList<>();
         for (Avatar avatar : getCurrentAvatars(ADungeon)) {
-            if (avatar.getCurrentRoom().equals(ARoom)) {
+            if (avatar.getCurrentRoom().getRoomId().equals(ARoom.getRoomId())) {
                 users.add(avatar.getUser());
             }
         }

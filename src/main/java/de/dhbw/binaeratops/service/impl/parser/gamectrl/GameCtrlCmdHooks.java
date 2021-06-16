@@ -1,15 +1,13 @@
 package de.dhbw.binaeratops.service.impl.parser.gamectrl;
 
-import de.dhbw.binaeratops.model.actions.UserAction;
+import de.dhbw.binaeratops.model.entitys.UserAction;
 import de.dhbw.binaeratops.model.api.AvatarI;
 import de.dhbw.binaeratops.model.api.DungeonI;
 import de.dhbw.binaeratops.model.api.UserI;
 import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.ActionType;
 import de.dhbw.binaeratops.model.exceptions.InvalidImplementationException;
-import de.dhbw.binaeratops.model.repository.AvatarRepositoryI;
-import de.dhbw.binaeratops.model.repository.ItemInstanceRepositoryI;
-import de.dhbw.binaeratops.model.repository.RoomRepositoryI;
-import de.dhbw.binaeratops.model.repository.UserRepositoryI;
+import de.dhbw.binaeratops.model.repository.*;
 import de.dhbw.binaeratops.service.api.parser.GameCtrlCmdHooksI;
 import de.dhbw.binaeratops.service.exceptions.parser.*;
 import de.dhbw.binaeratops.service.impl.parser.UserMessage;
@@ -46,12 +44,22 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     ItemInstanceRepositoryI itemInstanceRepo;
 
     @Autowired
+    UserActionRepositoryI userActionRepo;
+
+    @Autowired
+    AttendanceRepositoryI attendanceRepo;
+
+    @Autowired
     UnicastProcessor<UserAction> userActionPublisher;
 
     @Override
     public UserMessage onWhereAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("WHEREAMI");
+        }
+
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
             return new UserMessage("view.game.ctrl.cmd.whereami", avatar.getCurrentRoom().getRoomName(), dungeon.getDungeonName(), dungeonMaster.getName(), avatar.getCurrentRoom().getDescription());
@@ -64,6 +72,10 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onWhoAmI(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("WHOAMI");
+        }
+
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             Race race = avatar.getRace();
             Role role = avatar.getRole();
@@ -77,21 +89,26 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onInfoAll(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("INFO ALL");
+        }
+
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             User dungeonMaster = userRepo.findByUserId(dungeon.getDungeonMasterId());
             Room currentRoom = avatar.getCurrentRoom();
+            List<Attendance> attendances = attendanceRepo.findByAvatarAndDungeon(avatar, dungeon);
             boolean alldiscorved = false;
-            if (avatar.getVisitedRooms().size() == dungeon.getRooms().size()) {
+            if (attendances.size() == dungeon.getRooms().size()) {
                 alldiscorved = true;
             }
             if (alldiscorved) {
                 return new UserMessage("view.game.ctrl.cmd.info.all", dungeon.getDungeonName(), dungeonMaster.getName(),
                         String.valueOf(dungeon.getCurrentUsers().size()), getCurrentAvatars(dungeon), currentRoom.getRoomName(),
-                        currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), String.valueOf(dungeon.getRooms().size()));
+                        currentRoom.getDescription(), String.valueOf(attendances.size()), String.valueOf(dungeon.getRooms().size()));
             } else {
                 return new UserMessage("view.game.ctrl.cmd.info.all", dungeon.getDungeonName(), dungeonMaster.getName(),
                         String.valueOf(dungeon.getCurrentUsers().size()), getCurrentAvatars(dungeon), currentRoom.getRoomName(),
-                        currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), "???");
+                        currentRoom.getDescription(), String.valueOf(attendances.size()), "???");
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("INFO ALL");
@@ -102,18 +119,23 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
     public UserMessage onInfoRoom(DungeonI ADungeon, AvatarI AAvatar, UserI AUser) throws CmdScannerException, InvalidImplementationException {
         Dungeon dungeon = Dungeon.check(ADungeon);
         Avatar avatar = Avatar.check(AAvatar);
+        if (avatar.equals(new Avatar())) {
+            throw new CmdScannerInsufficientPermissionException("INFO ROOM");
+        }
+
         if (avatar.getUser().getUserId() != dungeon.getDungeonMasterId()) {
             Room currentRoom = avatar.getCurrentRoom();
+            List<Attendance> attendances = attendanceRepo.findByAvatarAndDungeon(avatar, dungeon);
             boolean alldiscorved = false;
-            if (avatar.getVisitedRooms().size() == dungeon.getRooms().size()) {
+            if (attendances.size() == dungeon.getRooms().size()) {
                 alldiscorved = true;
             }
             if (alldiscorved) {
                 return new UserMessage("view.game.ctrl.cmd.info.room", currentRoom.getRoomName(),
-                        currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), String.valueOf(dungeon.getRooms().size()));
+                        currentRoom.getDescription(), String.valueOf(attendances.size()), String.valueOf(dungeon.getRooms().size()));
             } else {
                 return new UserMessage("view.game.ctrl.cmd.info.room", currentRoom.getRoomName(),
-                        currentRoom.getDescription(), String.valueOf(avatar.getVisitedRooms().size()), "???");
+                        currentRoom.getDescription(), String.valueOf(attendances.size()), "???");
             }
         } else {
             throw new CmdScannerInsufficientPermissionException("INFO ROOM");
@@ -576,11 +598,14 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
             if (!avatar.hasRequested()) { // Sofern noch keine Anfrage gestellt
                 for (ItemInstance item : avatar.getInventory()) {
                     if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
+                        Item tempItem = item.getItem();
                         avatar.removeInventoryItem(item);
                         avatar.setRequested(true);
                         itemInstanceRepo.save(item);
                         avatarRepo.save(avatar);
-                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "CONSUME", AItem));
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.CONSUME, tempItem);
+                        userActionRepo.save(userAction);
+                        userActionPublisher.onNext(userAction);
                         return new UserMessage("view.game.ctrl.cmd.consume", item.getItem().getItemName());
                     }
                 }
@@ -608,18 +633,25 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                             for (ItemInstance alreadyEquipped : avatar.getEquipment()) {
                                 if (alreadyEquipped.getItem().getType().equals(item.getItem().getType())) {
                                     // Ausrüsten
+                                    Item tempItem = item.getItem();
+                                    ItemInstance newItem = new ItemInstance(tempItem);
                                     avatar.removeEquipmentItem(alreadyEquipped);
-                                    avatar.addEquipmentItem(item);
+                                    avatar.removeInventoryItem(item);
+                                    avatar.addEquipmentItem(newItem);
                                     itemInstanceRepo.save(alreadyEquipped);
                                     itemInstanceRepo.save(item);
+                                    itemInstanceRepo.save(newItem);
                                     avatarRepo.save(avatar);
                                     return new UserMessage("view.game.ctrl.cmd.equip.already.equipped", item.getItem().getItemName(), alreadyEquipped.getItem().getItemName());
                                 }
                             }
                         } else { // Wenn noch kein Items dieses Typs darin ist.
-                            avatar.addEquipmentItem(item);
-                            avatar.setRequested(true);
+                            Item tempItem = item.getItem();
+                            ItemInstance newItem = new ItemInstance(tempItem);
+                            avatar.removeInventoryItem(item);
+                            avatar.addEquipmentItem(newItem);
                             itemInstanceRepo.save(item);
+                            itemInstanceRepo.save(newItem);
                             avatarRepo.save(avatar);
                             return new UserMessage("view.game.ctrl.cmd.equip", item.getItem().getItemName());
                         }
@@ -645,8 +677,12 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                 for (ItemInstance item : avatar.getEquipment()) {
                     if (item.getItem().getItemName().equalsIgnoreCase(AItem)) {
                         // Wenn Item in Equipment
+                        Item tempItem = item.getItem();
+                        ItemInstance newItem = new ItemInstance(tempItem);
                         avatar.removeEquipmentItem(item);
+                        avatar.addInventoryItem(newItem);
                         itemInstanceRepo.save(item);
+                        itemInstanceRepo.save(newItem);
                         avatarRepo.save(avatar);
                         return new UserMessage("view.game.ctrl.cmd.laydown", item.getItem().getItemName());
                     }
@@ -683,7 +719,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
                         avatarRepo.save(avatar);
-                        userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage));
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.TALK, AMessage, npc);
+                        userActionRepo.save(userAction);
+                        userActionPublisher.onNext(userAction);
                         return new UserMessage("view.game.ctrl.cmd.talk", npc.getNpc().getNpcName(), AMessage);
                     }
                 }
@@ -708,7 +746,9 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
                         // Wenn Item in Equipment
                         avatar.setRequested(true);
                         avatarRepo.save(avatar);
-                        //userActionPublisher.onNext(new UserAction(dungeon, avatar, "TALK", ANpcName, AMessage)); // TODO HIT
+                        UserAction userAction = new UserAction(dungeon, avatar, ActionType.HIT, npc);
+                        userActionRepo.save(userAction);
+                        userActionPublisher.onNext(userAction); // TODO HIT
                         return new UserMessage("view.game.ctrl.cmd.hit", npc.getNpc().getNpcName());
                     }
                 }
@@ -798,7 +838,10 @@ public class GameCtrlCmdHooks implements GameCtrlCmdHooksI {
      */
     private int getInventorySize(Avatar AAvatar) {
         int sum = 0;
-        for (ItemInstance item : AAvatar.getCurrentRoom().getItems()) {
+        for (ItemInstance item : AAvatar.getInventory()) {
+            sum += item.getItem().getSize();
+        }
+        for (ItemInstance item : AAvatar.getEquipment()) {
             sum += item.getItem().getSize();
         }
         return sum;

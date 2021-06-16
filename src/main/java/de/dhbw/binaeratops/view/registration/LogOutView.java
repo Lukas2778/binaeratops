@@ -5,6 +5,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
+import de.dhbw.binaeratops.model.entitys.User;
 
 /**
  * Oberfläche für die Komponente "Abmeldung".
@@ -23,6 +24,7 @@ public class LogOutView extends Div {
      */
     public LogOutView() {
         VaadinSession.getCurrent().getSession().invalidate();
+        VaadinSession.getCurrent().setAttribute("IsOnline", false);
         VaadinSession.getCurrent().close();
         UI.getCurrent().navigate("login");
     }

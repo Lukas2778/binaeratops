@@ -3,18 +3,19 @@ package de.dhbw.binaeratops.view.mainviewtabs;
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.server.VaadinSession;
-import de.dhbw.binaeratops.model.actions.UserAction;
-import de.dhbw.binaeratops.model.entitys.Dungeon;
-import de.dhbw.binaeratops.model.entitys.Permission;
-import de.dhbw.binaeratops.model.entitys.User;
+import de.dhbw.binaeratops.model.entitys.*;
+import de.dhbw.binaeratops.model.enums.ActionType;
 import de.dhbw.binaeratops.service.api.configuration.DungeonServiceI;
 import de.dhbw.binaeratops.service.impl.game.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,26 +44,30 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
 
     private List<Dungeon> dungeonList;
     Grid<Dungeon> dungeonGrid;
+    private int i = 0;
 
     DungeonServiceI dungeonServiceI;
 
     GameService gameService;
     User currentUser;
 
-    private final UnicastProcessor<UserAction> userActionpublisher;
+    private final String REQUEST_SENT = "REQUEST SENT";
+    private final String REQUEST_ALREADY_SENT = "REQUEST ALREADY SENT";
+    private final String BLOCKED = "BLOCKED";
 
-    private HashMap<Dungeon, Button> entryButtonMap = new HashMap<>();
+    private final UnicastProcessor<UserAction> userActionpublisher;
 
 
     /**
      * Konstruktor zum Erzeugen der View für den Tab 'Lobby'.
-     * @param ADungeonService DungeonService.
-     * @param AGameService GameService.
+     *
+     * @param ADungeonService      DungeonService.
+     * @param AGameService         GameService.
      * @param AUserActionPublisher UserActionPublisher.
      */
-    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> AUserActionPublisher){
+    public LobbyView(@Autowired DungeonServiceI ADungeonService, @Autowired GameService AGameService, UnicastProcessor<UserAction> AUserActionPublisher) {
         this.userActionpublisher = AUserActionPublisher;
-        dungeonServiceI=ADungeonService;
+        dungeonServiceI = ADungeonService;
         this.gameService = AGameService;
 
         timer = new Timer();
@@ -73,62 +78,120 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
             }
         }, 0, 2000);
 
-        this.currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+        this.currentUser =  gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
 
-        titleText=new H1(res.getString("view.lobby.headline"));
-        explanationText=res.getString("view.lobby.text");
-        html=new Html(explanationText);
+        titleText = new H1(res.getString("view.lobby.headline"));
+        explanationText = res.getString("view.lobby.text");
+        html = new Html(explanationText);
+
+        add(titleText, html);
+
+        createGrid();
+
+        setSizeFull();
+    }
+
+    private void createGrid() {
         dungeonList = new ArrayList<>();
 
         User user = VaadinSession.getCurrent().getAttribute(User.class);
         dungeonList.addAll(dungeonServiceI.getDungeonsLobby(user));
-
-        dungeonGrid=new Grid<>();
+        dungeonGrid = new Grid<>();
         dungeonGrid.setItems(dungeonList);
         dungeonGrid.setVerticalScrollingEnabled(true);
         dungeonGrid.addColumn(Dungeon::getDungeonName).setHeader(res.getString("view.lobby.grid.dungeonname"));
-        dungeonGrid.addColumn(Dungeon::getDungeonId).setHeader(res.getString("view.lobby.grid.dungeonid"));
+        dungeonGrid.addColumn(dungeon -> dungeonServiceI.getUser(dungeon.getDungeonMasterId()).getName()).setHeader(res.getString("view.lobby.grid.dungeonmaster"));
         dungeonGrid.addColumn(Dungeon::getDescription).setHeader(res.getString("view.lobby.grid.description"));
         dungeonGrid.addColumn(Dungeon::getDungeonVisibility).setHeader(res.getString("view.lobby.grid.visibility"));
         dungeonGrid.addColumn(Dungeon::getDungeonStatus).setHeader(res.getString("view.lobby.grid.status"));
-        dungeonGrid.addComponentColumn(item -> createEntryButton(dungeonGrid, item)).setHeader(res.getString("view.lobby.grid.action"));
+        dungeonGrid.addComponentColumn(dungeon -> createEntryButton(dungeonGrid, dungeon)).setHeader(res.getString("view.lobby.grid.action"));
 
-        add(titleText, html, dungeonGrid);
-
-        setSizeFull ();
+        add(dungeonGrid);
     }
+
     // TODO Kommentare schreiben
     private Button createEntryButton(Grid<Dungeon> AGrid, Dungeon ADungeon) {
-
+        Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
+        Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
+        Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
         Button entryButton = new Button("", clickEvent -> {
-            currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, ADungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, ADungeon);
-            Permission permission = dungeonServiceI.getPermissionRequest(currentUser, ADungeon);
+            currentUser = gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
+
+
+
             if (permissionGranted == null && permissionBlocked == null) { // TODO User
                 if (permission == null) {
                     Permission requested = new Permission(currentUser);
                     ADungeon.addRequestedUser(requested);
                     dungeonServiceI.savePermission(requested);
-                    userActionpublisher.onNext(new UserAction(ADungeon, currentUser, requested, "REQUEST", "null"));
-                    Notification.show(res.getString("view.lobby.notification.request.sent"));
+                    UserAction userAction = new UserAction(ADungeon, currentUser, requested, ActionType.ENTRY_REQUEST);
+                    dungeonServiceI.saveUserAction(userAction);
+                    userActionpublisher.onNext(userAction);
+                    Span label = new Span(res.getString("view.lobby.notification.request.sent"));
+                    showRequestStatusNotification(label, REQUEST_SENT);
                 } else {
-                    Notification.show(res.getString("view.lobby.notification.request.idle"));
+                    Span label = new Span(res.getString("view.lobby.notification.request.idle"));
+                    showRequestStatusNotification(label, REQUEST_ALREADY_SENT);
                 }
             } else if (permissionBlocked != null) {
-                Notification.show(res.getString("view.lobby.notification.request.denied"));
+                Span label = new Span(res.getString("view.lobby.notification.request.denied"));
+                showRequestStatusNotification(label, BLOCKED);
             } else {
-                UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
+                if (currentUser.getCurrentDungeon() == null){
+                    var user = gameService.getUser(VaadinSession.getCurrent().getAttribute(User.class).getUserId());
+                    var avatars = user.getAvatars();
+                    if (avatars != null){
+                        avatars.forEach(avatar -> {
+                            gameService.removeActivePlayer(ADungeon.getDungeonId(), user.getUserId(), avatar.getAvatarId(), true);
+                        });
+                    }
+                    UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
+                }
+                else {
+                    Span label = new Span("Du spielst bereits in einem Dungeon");
+                    showRequestStatusNotification(label, BLOCKED);
+                }
             }
         });
 
-        entryButtonMap.put(ADungeon, entryButton);
-
         Icon iconEntryButton = new Icon(VaadinIcon.ENTER);
         entryButton.setIcon(iconEntryButton);
-
-        entryButton.getStyle().set("color", "blue");
+        if (permissionGranted != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
+        } else if (permissionBlocked != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
+        } else if (permission != null) {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+            entryButton.getStyle().set("background", "orange");
+        } else {
+            entryButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            entryButton.getStyle().set("color", "white");
+        }
         return entryButton;
+    }
+
+    private void showRequestStatusNotification(Span ALabel, String ACase) {
+        Notification notification = new Notification();
+        Button closeButton = new Button("", e -> {
+            notification.close();
+        });
+        closeButton.setIcon(new Icon(VaadinIcon.CLOSE));
+        closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+
+        if(ACase.equals(REQUEST_SENT)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        } else if (ACase.equals(REQUEST_ALREADY_SENT)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_PRIMARY);
+        } else if (ACase.equals(BLOCKED)) {
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+
+        notification.add(ALabel, closeButton);
+        ALabel.getStyle().set("margin-right", "0.3rem");
+        notification.setDuration(10000);
+        notification.setPosition(Notification.Position.TOP_END);
+        notification.open();
     }
 
     private void refreshView() {
@@ -138,26 +201,8 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
     }
 
     private void reloadGrid() {
-        dungeonList = new ArrayList<>();
-        dungeonList.addAll(dungeonServiceI.getDungeonsLobby(currentUser));
-        dungeonGrid.setItems(dungeonList);
-        for (Map.Entry<Dungeon,Button> entry : entryButtonMap.entrySet()) {
-            Dungeon dungeon = entry.getKey();
-            Button b = entry.getValue();
-            Permission permissionGranted = dungeonServiceI.getPermissionGranted(currentUser, dungeon);
-            Permission permissionBlocked = dungeonServiceI.getPermissionBlocked(currentUser, dungeon);
-            Permission permissionRequest = dungeonServiceI.getPermissionRequest(currentUser, dungeon);
-            if (permissionGranted != null) {
-                b.getStyle().set("background", "green");
-            } else if (permissionBlocked != null) {
-                b.getStyle().set("background", "red");
-            } else if (permissionRequest != null) {
-                b.getStyle().set("background", "orange");
-            } else {
-                b.getStyle().clear();
-                b.getStyle().set("color", "blue");
-            }
-        }
+        remove(dungeonGrid);
+        createGrid();
     }
 
     @Override
