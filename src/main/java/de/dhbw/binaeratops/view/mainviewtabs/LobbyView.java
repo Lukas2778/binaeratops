@@ -134,6 +134,13 @@ public class LobbyView extends VerticalLayout implements HasDynamicTitle {
                 Span label = new Span(res.getString("view.lobby.notification.request.denied"));
                 showRequestStatusNotification(label, BLOCKED);
             } else {
+                var user = VaadinSession.getCurrent().getAttribute(User.class);
+                var avatars = user.getAvatars();
+                if (avatars != null){
+                    avatars.forEach(avatar -> {
+                        gameService.removeActivePlayer(ADungeon.getDungeonId(), user.getUserId(), avatar.getAvatarId(), true);
+                    });
+                }
                 UI.getCurrent().navigate("game/" + ADungeon.getDungeonId());
             }
         });
