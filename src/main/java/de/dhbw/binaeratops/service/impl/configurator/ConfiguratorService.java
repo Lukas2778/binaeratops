@@ -55,6 +55,8 @@ public class ConfiguratorService implements ConfiguratorServiceI {
     AvatarRepositoryI avatarRepo;
     @Autowired
     AttendanceRepositoryI attendanceRepo;
+    @Autowired
+    UserActionRepositoryI userActionRepo;
 
     @Override
     public Dungeon createDungeon(String AName, User AUser, Long APlayerSize, Visibility AVisibility) {
@@ -85,11 +87,16 @@ public class ConfiguratorService implements ConfiguratorServiceI {
 
         //alle avatare löschen die im dungeon sind:
 
+        for(UserAction a: userActionRepo.findByDungeon(adungeon)){
+            userActionRepo.delete(a);
+        }
+
         for (Attendance a: attendanceRepo.findByDungeon(adungeon)) {
             attendanceRepo.delete(a);
         }
         adungeon.getAvatars().clear();
         dungeonRepo.save(adungeon);
+
         for (Avatar a:avatarRepo.findByDungeon(adungeon)) {
             a.setDungeon(null);
             a.getEquipment().clear();
