@@ -69,6 +69,11 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         //UI.getCurrent().addBeforeLeaveListener(e->System.out.println("test"));
         setId("SomeViewL");
 
+        if (VaadinSession.getCurrent().getAttribute(User.class) != null){
+            UI.getCurrent().navigate("aboutUs");
+            UI.getCurrent().getPage().reload();
+            return;
+        }
 
         TextField name = new TextField(res.getString("view.login.field.username"));
         PasswordField password = new PasswordField(res.getString("view.login.field.password"));
@@ -87,8 +92,7 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
         loginButton.addClickListener(e ->
         {
             try {
-                if (VaadinSession.getCurrent().getAttribute(User.class) != null &&
-                        VaadinSession.getCurrent().getAttribute(User.class).getName().equals(name.getValue())) {
+                if (VaadinSession.getCurrent().getAttribute(User.class) != null) {
                     showErrorNotification(new Span(res.getString("view.login.notification.already.logged.in")));
                 } else {
                     authServiceI.authenticate(name.getValue(), password.getValue());
@@ -153,6 +157,8 @@ public class LogInView extends VerticalLayout implements HasDynamicTitle {
                 login
         );
         name.focus();
+
+
     }
 
     private void showErrorNotification(Span ALabel) {
