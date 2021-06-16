@@ -207,9 +207,9 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
 
         //FilterButtons
         HorizontalLayout filterButtonsLayout = new HorizontalLayout();
-        Label s = new Label("Filter: ");
+        Label s = new Label(res.getString("view.game.label.filter"));
         s.getStyle().set("padding-top", "8px");
-        filterActionButton = new Button("Aktionen");
+        filterActionButton = new Button(res.getString("view.game.button.filter.actions"));
         filterActionButton.addClickListener(e -> {
             myDungeonChatView.setFilterModeAction();
             filterActionButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
@@ -217,14 +217,14 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         });
 
-        filterChatButton = new Button("Nachrichten");
+        filterChatButton = new Button(res.getString("view.game.button.filter.messages"));
         filterChatButton.addClickListener(e -> {
             myDungeonChatView.setFilterModeChat();
             filterChatButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
             resetFilterButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
             filterActionButton.removeThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         });
-        resetFilterButton = new Button("Alles");
+        resetFilterButton = new Button(res.getString("view.game.button.filter.all"));
         resetFilterButton.addClickListener(e -> {
             myDungeonChatView.setFilterModeAll();
             resetFilterButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
@@ -817,7 +817,7 @@ public class GameView extends VerticalLayout implements HasDynamicTitle, HasUrlP
             Dialog dialog = new Dialog();
             VerticalLayout vl = new VerticalLayout();
             Label dungeonMasterLeft = new Label(res.getString("view.game.label.dm.left"));
-            Button closeButton = new Button("Schließen", es -> dialog.close());
+            Button closeButton = new Button(res.getString("view.game.button.close"), es -> dialog.close());
             vl.add(dungeonMasterLeft, closeButton);
             closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
             myAvatar = null;

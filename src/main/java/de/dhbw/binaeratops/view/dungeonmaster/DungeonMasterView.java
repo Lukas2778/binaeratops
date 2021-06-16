@@ -170,13 +170,13 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                     dungeonServiceI.deleteUserAction(action);
                     notification.open();
                 } else if (action.getActionType().equals(ActionType.CONSUME)) {
-                    Span label = new Span("Avatar '" + action.getAvatar().getName() + "' möchte den Gegenstand '" + action.getInteractedItem().getItemName() + "' konsumieren");
+                    Span label = new Span(MessageFormat.format(res.getString("view.dungeon.master.notification.action.consume"), action.getAvatar().getName(), action.getInteractedItem().getItemName()));
                     showActionNotification(label);
                 } else if (action.getActionType().equals(ActionType.TALK)) {
-                    Span label = new Span("Avatar '" + action.getAvatar().getName() + "' möchte mit dem NPC '" + action.getInteractedNpc().getNpcName() + "' sprechen");
+                    Span label = new Span(MessageFormat.format(res.getString("view.dungeon.master.notification.action.talk"), action.getAvatar().getName(), action.getInteractedNpc().getNpcName()));
                     showActionNotification(label);
                 } else if (action.getActionType().equals(ActionType.HIT)) {
-                    Span label = new Span("Avatar '" + action.getAvatar().getName() + "' möchte den NPC '" + action.getInteractedNpc().getNpcName() + "' angreifen");
+                    Span label = new Span(MessageFormat.format(res.getString("view.dungeon.master.notification.action.hit"), action.getAvatar().getName(), action.getInteractedNpc().getNpcName()));
                     showActionNotification(label);
                 }
             }
@@ -185,7 +185,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
     private void showActionNotification(Span ALabel) {
         Notification notification = new Notification();
-        Button answerButton = new Button("Beantworten", b -> {
+        Button answerButton = new Button(res.getString("view.dungeon.master.grid.button.answer"), b -> {
             notification.close();
             createInteractionsDialog().open();
         });
@@ -339,8 +339,8 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
         userGridAndButtLayoutH.setSizeFull();
         Button leaveButton = new Button(res.getString("view.dungeon.master.button.leave.game"));
-        Button requestButton = new Button("Beitrittsanfragen");
-        Button interactionsButton = new Button("Interaktionsanfragen");
+        Button requestButton = new Button(res.getString("view.dungeon.master.button.joinrequests"));
+        Button interactionsButton = new Button(res.getString("view.dungeon.master.button.interactionrequests"));
         leaveButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_PRIMARY);
         addClickListeners(leaveButton, requestButton, interactionsButton);
         VerticalLayout leaveAndPause = new VerticalLayout();
@@ -369,9 +369,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
     private Dialog createRequestDialog() {
         Dialog requestDialog = new Dialog();
-        H1 headline = new H1("Beitrittsanfragen");
+        H1 headline = new H1(res.getString("view.dungeon.master.button.joinrequests"));
         Grid<Permission> perms = new Grid<>();
-        perms.addColumn(e -> e.getUser().getName()).setHeader("Benutzer");
+        perms.addColumn(e -> e.getUser().getName()).setHeader(res.getString("view.dungeon.master.dialog.joinrequests.grid.user"));
         perms.addComponentColumn(permission -> {
             HorizontalLayout hl = new HorizontalLayout();
             Button acceptButton = new Button("", v -> {
@@ -397,7 +397,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         });
         perms.setItems(dungeonServiceI.getRequestedPermissions(dungeon));
 
-        Button closeButton = new Button("Schließen", b -> requestDialog.close());
+        Button closeButton = new Button(res.getString("view.dungeon.master.dialog.joinrequests.button.close"), b -> requestDialog.close());
 
         closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
@@ -409,12 +409,12 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
     private Dialog createInteractionsDialog() {
         Dialog interactionsDialog = new Dialog();
-        H1 headline = new H1("Interaktionsanfragen");
+        H1 headline = new H1(res.getString("view.dungeon.master.button.interactionrequests"));
         Grid<UserAction> interactions = new Grid<>();
-        interactions.addColumn(userAction -> userAction.getAvatar().getName()).setHeader("Avatarname");
-        interactions.addColumn(userAction -> userAction.getActionType().toString().toUpperCase()).setHeader("Aktionstyp");
+        interactions.addColumn(userAction -> userAction.getAvatar().getName()).setHeader(res.getString("view.dungeon.master.dialog.interactionrequests.grid.name"));
+        interactions.addColumn(userAction -> userAction.getActionType().toString().toUpperCase()).setHeader(res.getString("view.dungeon.master.dialog.interactionrequests.grid.type"));
         interactions.addComponentColumn(userAction -> {
-            Button answerButton = new Button("Beantworten", b -> {
+            Button answerButton = new Button(res.getString("view.dungeon.master.grid.button.answer"), b -> {
                 switch (userAction.getActionType()) {
                     case CONSUME:
                         Dialog consumeDialog = createConsumeDialog(userAction, interactions);
@@ -454,7 +454,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         });
         interactions.setItems(dungeonServiceI.getUserActions(dungeon));
 
-        Button closeButton = new Button("Schließen", b -> {
+        Button closeButton = new Button(res.getString("view.dungeon.master.dialog.joinrequests.button.close"), b -> {
             interactionsDialog.close();
         });
         closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -489,24 +489,24 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlNpc.setWidth(40, Unit.PERCENTAGE);
 
         // Avatar
-        H2 headlineAvatar = new H2("Avatar des Spielers");
+        H2 headlineAvatar = new H2(res.getString("view.dungeon.master.dialog.talk.headline.avatar"));
 
         TextField nameField = new TextField();
-        nameField.setLabel("Name: ");
+        nameField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.name"));
         nameField.setReadOnly(true);
         nameField.setValue(AUserAction.getAvatar().getName());
 
         TextField raceField = new TextField();
-        raceField.setLabel("Rasse: ");
+        raceField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.race"));
         raceField.setReadOnly(true);
         raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
 
         TextField roleField = new TextField();
-        roleField.setLabel("Rolle: ");
+        roleField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.role"));
         roleField.setReadOnly(true);
         roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
 
-        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
+        IntegerField avatarLifePointsField = new IntegerField(res.getString("view.dungeon.master.dialog.talk.integerfield.avatar.lifepoints"));
         avatarLifePointsField.setStep(1);
         avatarLifePointsField.setHasControls(true);
         avatarLifePointsField.setMin(1);
@@ -519,9 +519,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
 
         Grid<ItemInstance> inventory = new Grid<>();
-        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
-        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
-        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.name"));
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.description"));
+        inventory.addColumn(item -> item.getItem().getType()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.type"));
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
@@ -531,29 +531,29 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
             });
             return deleteButton;
-        }).setHeader("Löschen");
+        }).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.delete"));
         inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
 
         // REQUEST
-        H2 requestHeadline = new H2("Anfragenbehandlung");
+        H2 requestHeadline = new H2(res.getString("view.dungeon.master.dialog.talk.headline.request"));
 
         TextArea senderMessageArea = new TextArea();
         senderMessageArea.setReadOnly(true);
         senderMessageArea.setWidthFull();
         senderMessageArea.setValue(AUserAction.getMessage());
-        senderMessageArea.setLabel("Nachricht des Avatars: ");
+        senderMessageArea.setLabel(res.getString("view.dungeon.master.dialog.talk.textarea.sender"));
 
-        Label questionLabel = new Label("Was antwortet der NPC \"" + AUserAction.getInteractedNpc().getNpcName() + "\"?");
+        Label questionLabel = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.talk.label.question"), AUserAction.getInteractedNpc().getNpcName()));
 
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
         receiverMessageArea.focus();
         receiverMessageArea.setHeight(30, Unit.PERCENTAGE);
-        receiverMessageArea.setLabel("Antwort des NPCs: ");
+        receiverMessageArea.setLabel(res.getString("view.dungeon.master.dialog.talk.textarea.receiver"));
 
-        Button sendButton = new Button("Senden");
+        Button sendButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.send"));
         sendButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         sendButton.addClickListener(e -> {
             chatService.whisperFromNpc(receiverMessageArea.getValue(), AUserAction.getAvatar().getUser(), AUserAction.getInteractedNpc().getNpcName());
@@ -564,7 +564,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             talkDialog.close();
         });
 
-        Button cancelButton = new Button("Abbrechen");
+        Button cancelButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.cancel"));
         cancelButton.addClickListener(e -> talkDialog.close());
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -573,21 +573,21 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlRequest.add(requestHeadline, senderMessageArea, makeDice(), questionLabel, receiverMessageArea, buttonLayout);
 
         // NPC
-        H2 npcHeadline = new H2("Angesprochener NPC");
+        H2 npcHeadline = new H2(res.getString("view.dungeon.master.dialog.talk.headline.npc"));
 
         TextField npcNameField = new TextField();
-        npcNameField.setLabel("Name des NPCs");
+        npcNameField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.npc.name"));
         npcNameField.setReadOnly(true);
         npcNameField.setValue(AUserAction.getInteractedNpc().getNpcName());
 
         TextField npcRace = new TextField();
-        npcRace.setLabel("Rasse des NPCs");
+        npcRace.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.npc.race"));
         npcRace.setReadOnly(true);
         npcRace.setValue(AUserAction.getInteractedNpc().getNpc().getRace().getRaceName());
 
         TextArea npcDescription = new TextArea();
         npcDescription.setReadOnly(true);
-        npcDescription.setLabel("Beschreibung des NPCs");
+        npcDescription.setLabel(res.getString("view.dungeon.master.dialog.talk.textarea.npc.description"));
         if (AUserAction.getInteractedNpc().getNpc().getDescription() != null) {
             npcDescription.setValue(AUserAction.getInteractedNpc().getNpc().getDescription());
         } else {
@@ -624,24 +624,24 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlItem.setWidth(40, Unit.PERCENTAGE);
 
         // Avatar
-        H2 headlineAvatar = new H2("Avatar des Spielers");
+        H2 headlineAvatar = new H2(res.getString("view.dungeon.master.dialog.talk.headline.avatar"));
 
         TextField nameField = new TextField();
-        nameField.setLabel("Name: ");
+        nameField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.name"));
         nameField.setReadOnly(true);
         nameField.setValue(AUserAction.getAvatar().getName());
 
         TextField raceField = new TextField();
-        raceField.setLabel("Rasse: ");
+        raceField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.race"));
         raceField.setReadOnly(true);
         raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
 
         TextField roleField = new TextField();
-        roleField.setLabel("Rolle: ");
+        roleField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.role"));
         roleField.setReadOnly(true);
         roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
 
-        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
+        IntegerField avatarLifePointsField = new IntegerField(res.getString("view.dungeon.master.dialog.talk.integerfield.avatar.lifepoints"));
         avatarLifePointsField.setStep(1);
         avatarLifePointsField.setHasControls(true);
         avatarLifePointsField.setMin(1);
@@ -654,9 +654,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
 
 
         Grid<ItemInstance> inventory = new Grid<>();
-        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
-        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
-        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.name"));
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.description"));
+        inventory.addColumn(item -> item.getItem().getType()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.type"));
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
@@ -666,21 +666,21 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
             });
             return deleteButton;
-        }).setHeader("Löschen");
+        }).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.delete"));
         inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
 
         // REQUEST
-        H2 requestHeadline = new H2("Anfragenbehandlung");
+        H2 requestHeadline = new H2(res.getString("view.dungeon.master.dialog.talk.headline.request"));
 
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
         receiverMessageArea.focus();
         receiverMessageArea.setHeight(20, Unit.PERCENTAGE);
-        receiverMessageArea.setLabel("Effekt des konsumierten Gegenstandes: ");
+        receiverMessageArea.setLabel(res.getString("view.dungeon.master.dialog.consume.textare.receiver"));
 
-        Button sendButton = new Button("Senden");
+        Button sendButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.send"));
         sendButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         sendButton.addClickListener(e -> {
             chatService.sendActionMessage(receiverMessageArea.getValue(), AUserAction.getAvatar().getUser());
@@ -691,7 +691,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             consumeDialog.close();
         });
 
-        Button cancelButton = new Button("Abbrechen");
+        Button cancelButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.cancel"));
         cancelButton.addClickListener(e -> consumeDialog.close());
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -700,21 +700,21 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlRequest.add(requestHeadline, makeDice(), receiverMessageArea, buttonLayout);
 
         // ITEM
-        H2 itemHeadline = new H2("Konsumierter Gegenstand");
+        H2 itemHeadline = new H2(res.getString("view.dungeon.master.dialog.consume.headline.item"));
 
         TextField itemNameField = new TextField();
-        itemNameField.setLabel("Name des Gegenstandes");
+        itemNameField.setLabel(res.getString("view.dungeon.master.dialog.consume.textfield.item.name"));
         itemNameField.setWidthFull();
         itemNameField.setReadOnly(true);
         itemNameField.setValue(AUserAction.getInteractedItem().getItemName());
 
         TextField itemType = new TextField();
-        itemType.setLabel("Typ des Gegenstandes");
+        itemType.setLabel(res.getString("view.dungeon.master.dialog.consume.textfield.item.type"));
         itemType.setWidthFull();
         itemType.setReadOnly(true);
         itemType.setValue(AUserAction.getInteractedItem().getType().toString());
 
-        IntegerField itemSizeField = new IntegerField("Größe des Gegenstandes");
+        IntegerField itemSizeField = new IntegerField(res.getString("view.dungeon.master.dialog.consume.integerfield.item.size"));
         itemSizeField.setStep(1);
         itemSizeField.setHasControls(true);
         itemSizeField.setWidthFull();
@@ -725,7 +725,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         TextArea itemDescription = new TextArea();
         itemDescription.setReadOnly(true);
         itemDescription.setWidthFull();
-        itemDescription.setLabel("Beschreibung des Gegenstandes");
+        itemDescription.setLabel(res.getString("view.dungeon.master.dialog.consume.textarea.item.description"));
         if (AUserAction.getInteractedItem().getDescription() != null) {
             itemDescription.setValue(AUserAction.getInteractedItem().getDescription());
         } else {
@@ -763,24 +763,24 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlNpc.setWidth(40, Unit.PERCENTAGE);
 
         // Avatar
-        H2 headlineAvatar = new H2("Avatar des Spielers");
+        H2 headlineAvatar = new H2(res.getString("view.dungeon.master.dialog.talk.headline.avatar"));
 
         TextField nameField = new TextField();
-        nameField.setLabel("Name: ");
+        nameField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.name"));
         nameField.setReadOnly(true);
         nameField.setValue(AUserAction.getAvatar().getName());
 
         TextField raceField = new TextField();
-        raceField.setLabel("Rasse: ");
+        raceField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.race"));
         raceField.setReadOnly(true);
         raceField.setValue(AUserAction.getAvatar().getRace().getRaceName());
 
         TextField roleField = new TextField();
-        roleField.setLabel("Rolle: ");
+        roleField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.avatar.role"));
         roleField.setReadOnly(true);
         roleField.setValue(AUserAction.getAvatar().getRole().getRoleName());
 
-        IntegerField avatarLifePointsField = new IntegerField("Lebenspunkte: ");
+        IntegerField avatarLifePointsField = new IntegerField(res.getString("view.dungeon.master.dialog.talk.integerfield.avatar.lifepoints"));
         avatarLifePointsField.setStep(1);
         avatarLifePointsField.setHasControls(true);
         avatarLifePointsField.setMin(1);
@@ -792,9 +792,9 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         });
 
         Grid<ItemInstance> inventory = new Grid<>();
-        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
-        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
-        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.name"));
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.description"));
+        inventory.addColumn(item -> item.getItem().getType()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.type"));
         inventory.addComponentColumn(item -> {
             Button deleteButton = new Button();
             deleteButton.setIcon(new Icon(VaadinIcon.CLOSE));
@@ -804,23 +804,23 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
                 inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
             });
             return deleteButton;
-        }).setHeader("Löschen");
+        }).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.delete"));
         inventory.setItems(gameService.getInventory(AUserAction.getAvatar().getAvatarId()));
 
         vlAvatar.add(headlineAvatar, nameField, raceField, roleField, avatarLifePointsField, inventory);
 
         // REQUEST
-        H2 requestHeadline = new H2("Anfragenbehandlung");
+        H2 requestHeadline = new H2(res.getString("view.dungeon.master.dialog.talk.headline.request"));
 
-        Label infoLabel = new Label("Der Avatar '" + AUserAction.getAvatar().getName() + "' greift den NPC '" + AUserAction.getInteractedNpc().getNpcName() + "' an. Wie läuft der Kampf ab?");
+        Label infoLabel = new Label(MessageFormat.format(res.getString("view.dungeon.master.dialog.hit.label.requesthandling"), AUserAction.getAvatar().getName(), AUserAction.getInteractedNpc().getNpcName()));
 
         TextArea receiverMessageArea = new TextArea();
         receiverMessageArea.setWidthFull();
         receiverMessageArea.setHeight(30, Unit.PERCENTAGE);
         receiverMessageArea.focus();
-        receiverMessageArea.setLabel("Verlauf des Kampfes: ");
+        receiverMessageArea.setLabel(res.getString("view.dungeon.master.dialog.hit.textarea.receiver"));
 
-        Button sendButton = new Button("Senden");
+        Button sendButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.send"));
         sendButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         sendButton.addClickListener(e -> {
             chatService.sendActionMessage(receiverMessageArea.getValue(), AUserAction.getAvatar().getUser());
@@ -831,7 +831,7 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
             hitDialog.close();
         });
 
-        Button cancelButton = new Button("Abbrechen");
+        Button cancelButton = new Button(res.getString("view.dungeon.master.dialog.talk.button.cancel"));
         cancelButton.addClickListener(e -> hitDialog.close());
 
         HorizontalLayout buttonLayout = new HorizontalLayout();
@@ -840,21 +840,21 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlRequest.add(requestHeadline, infoLabel, makeDice(), receiverMessageArea, buttonLayout);
 
         // NPC
-        H2 npcHeadline = new H2("Angesprochener NPC");
+        H2 npcHeadline = new H2(res.getString("view.dungeon.master.dialog.talk.headline.npc"));
 
         TextField npcNameField = new TextField();
-        npcNameField.setLabel("Name des NPCs");
+        npcNameField.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.npc.name"));
         npcNameField.setReadOnly(true);
         npcNameField.setValue(AUserAction.getInteractedNpc().getNpcName());
 
         TextField npcRace = new TextField();
-        npcRace.setLabel("Rasse des NPCs");
+        npcRace.setLabel(res.getString("view.dungeon.master.dialog.talk.textfield.npc.race"));
         npcRace.setReadOnly(true);
         npcRace.setValue(AUserAction.getInteractedNpc().getNpc().getRace().getRaceName());
 
         TextArea npcDescription = new TextArea();
         npcDescription.setReadOnly(true);
-        npcDescription.setLabel("Beschreibung des NPCs");
+        npcDescription.setLabel(res.getString("view.dungeon.master.dialog.talk.textarea.npc.description"));
         if (AUserAction.getInteractedNpc().getNpc().getDescription() != null) {
             npcDescription.setValue(AUserAction.getInteractedNpc().getNpc().getDescription());
         } else {
@@ -892,63 +892,63 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         vlAvatarEquipment.setWidth(40, Unit.PERCENTAGE);
 
         // Attributes
-        H2 attributesHeadline = new H2("Eigenschaften");
+        H2 attributesHeadline = new H2(res.getString("view.dungeon.master.dialog.info.headline.attributes"));
 
         TextField nameField = new TextField();
-        nameField.setLabel("Name");
+        nameField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.name"));
         nameField.setReadOnly(true);
         nameField.setValue(AAvatar.getName());
 
         TextField genderField = new TextField();
-        genderField.setLabel("Geschlecht");
+        genderField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.gender"));
         genderField.setReadOnly(true);
         genderField.setValue(AAvatar.getGender().toString());
 
         TextField raceField = new TextField();
-        raceField.setLabel("Rasse");
+        raceField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.race"));
         raceField.setReadOnly(true);
         raceField.setValue(AAvatar.getRace().getRaceName());
 
         TextField roleField = new TextField();
-        roleField.setLabel("Rolle");
+        roleField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.role"));
         roleField.setReadOnly(true);
         roleField.setValue(AAvatar.getRole().getRoleName());
 
         TextField currentRoomField = new TextField();
-        currentRoomField.setLabel("Aktueller Raum");
+        currentRoomField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.current.room"));
         currentRoomField.setReadOnly(true);
         currentRoomField.setValue(AAvatar.getCurrentRoom().getRoomName());
 
         IntegerField lifePointsField = new IntegerField();
-        lifePointsField.setLabel("Lebenspunkte");
+        lifePointsField.setLabel(res.getString("view.dungeon.master.dialog.info.avatar.lifepoints"));
         lifePointsField.setReadOnly(true);
         lifePointsField.setHasControls(true);
         lifePointsField.setValue(AAvatar.getLifepoints().intValue());
 
-        Button closeButton = new Button("Schließen");
+        Button closeButton = new Button(res.getString("view.dungeon.master.dialog.info.button.close"));
         closeButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         closeButton.addClickListener(es -> infoDialog.close());
 
         vlAvatarAttributes.add(attributesHeadline, nameField, genderField, raceField, roleField, currentRoomField, lifePointsField, closeButton);
 
         // INVENTORY
-        H2 inventoryHeadline = new H2("Inventar");
+        H2 inventoryHeadline = new H2(res.getString("view.dungeon.master.dialog.info.headline.inventory"));
 
         Grid<ItemInstance> inventory = new Grid<>();
-        inventory.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
-        inventory.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
-        inventory.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        inventory.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.name"));
+        inventory.addColumn(item -> item.getItem().getDescription()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.description"));
+        inventory.addColumn(item -> item.getItem().getType()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.type"));
         inventory.setItems(gameService.getInventory(AAvatar.getAvatarId()));
 
         vlAvatarInventory.add(inventoryHeadline, inventory);
 
         // EQUIPMENT
-        H2 equipmentHeadline = new H2("Ausrüstung");
+        H2 equipmentHeadline = new H2(res.getString("view.dungeon.master.dialog.info.headline.equipment"));
 
         Grid<ItemInstance> equipment = new Grid<>();
-        equipment.addColumn(item -> item.getItem().getItemName()).setHeader("Name");
-        equipment.addColumn(item -> item.getItem().getDescription()).setHeader("Beschreibung");
-        equipment.addColumn(item -> item.getItem().getType()).setHeader("Typ");
+        equipment.addColumn(item -> item.getItem().getItemName()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.name"));
+        equipment.addColumn(item -> item.getItem().getDescription()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.description"));
+        equipment.addColumn(item -> item.getItem().getType()).setHeader(res.getString("view.dungeon.master.dialog.talk.grid.inventory.type"));
         equipment.setItems(gameService.getEquipment(AAvatar.getAvatarId()));
 
         vlAvatarEquipment.add(equipmentHeadline, equipment);
@@ -1136,11 +1136,11 @@ public class DungeonMasterView extends Div implements HasDynamicTitle, HasUrlPar
         leaveDialog.setCloseOnEsc(false);
         leaveDialog.setCloseOnOutsideClick(false);
 
-        H2 leaveHeadline = new H2(res.getString("view.dungeon.master.dialog.leave.h3")); // TODO Mehrsprachigkeit
-        String leaveOrNewDMText = "<div>Willst du den Dungeon wirklich verlassen? Sofern du den Dungeon verlässt, werden auch alle Spieler aus dem Dungeon gekickt. Daher ist es besser, wenn du ihnen vorher eine Benachrichtigung zukommen lässt!<br>Du hast allerdings auch die Möglichkeit die Rolle des Dungeon-Masters an einen anderen Spieler zu übergeben.</div>";//res.getString("view.dungeon.master.dialog.leave.text");
+        H2 leaveHeadline = new H2(res.getString("view.dungeon.master.dialog.leave.h3"));
+        String leaveOrNewDMText = res.getString("view.dungeon.master.dialog.leave.text.leave");
 
-        H3 dmHeadline = new H3("Neuen Dungeon-Master bestimmen");
-        String newDMText = "<div>Wähle aus der unteren Tabelle einen Spieler aus, um ihm die Dungeon-Master Rolle zu übergeben. Sofern du ihm die Rolle übergibst, kann dieser den Dungeon an deiner Stelle weiterführen.</div>";
+        H3 dmHeadline = new H3(res.getString("view.dungeon.master.dialog.leave.dm.headline"));
+        String newDMText = res.getString("view.dungeon.master.dialog.leave.text.dm");
 
         Button continueButton = new Button(res.getString("view.dungeon.master.dialog.leave.continue"));
         Button chooseDMButton = new Button(res.getString("view.dungeon.master.dialog.leave.new.dm"));

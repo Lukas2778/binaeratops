@@ -88,7 +88,7 @@ public class MyDungeonsView extends VerticalLayout implements HasDynamicTitle {
             Button button = new Button(res.getString("view.my.dungeons.grid.button.start"));
             button.addClickListener(e -> {
                 if (dungeon.getDungeonVisibility() == Visibility.IN_CONFIGURATION){
-                    showErrorNotification(new Span("Der Dungeon muss auf Public oder Private gesetzt werden")); // TODO Mehrsprachigkeit
+                    showErrorNotification(new Span(res.getString("view.my.dungeons.notification.dungeon.public")));
                 }
                 else{
                     UI.getCurrent().navigate("play/dungeonmaster/" + dungeon.getDungeonId().toString());
