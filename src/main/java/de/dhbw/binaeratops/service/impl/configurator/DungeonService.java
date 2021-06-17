@@ -61,17 +61,15 @@ public class DungeonService implements DungeonServiceI {
         List<Dungeon> userDungeons = new ArrayList<>();
 
         for (Dungeon myDungeon : dungeonRepo.findAll()) {
-            if (
-                    myDungeon.getDungeonVisibility() != null
+            if (myDungeon.getDungeonVisibility() != null
                             && myDungeon.getDungeonStatus() != null
                             && myDungeon.getDungeonStatus().equals(Status.ACTIVE)
                             && !myDungeon.getDungeonMasterId().equals(AUser.getUserId())
-                            && (
-                            myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
+                            && (myDungeon.getDungeonVisibility().equals(Visibility.PUBLIC)
                                     || (
                                     myDungeon.getDungeonVisibility().equals(Visibility.PRIVATE)
-                                            && myDungeon.getAllowedUsers().contains(AUser)
-                                            && !myDungeon.getBlockedUsers().contains(AUser)
+                                            && getPermissionGranted(AUser, myDungeon) != null
+                                            && getPermissionBlocked(AUser, myDungeon) == null
                             )
                     )
             ) {
